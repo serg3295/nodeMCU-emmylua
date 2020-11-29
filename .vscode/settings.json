@@ -1,0 +1,7 @@
+{
+    "Lua.diagnostics.disable": [
+        "lowercase-global",
+        "duplicate-doc-class"
+    ],
+    "Lua.runtime.version": "Lua 5.1"
+}
