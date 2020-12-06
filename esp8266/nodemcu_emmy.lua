@@ -139,7 +139,7 @@ gossip = {}
 hdc1000 = {}
 
 ---@class hdc1000
-local HDC1000 = require("HDC1000")
+local HDC1000 = require('HDC1000')
 
 ---Function to setup the HDC1000 sensor.
 ---@param drdyn number DRDYn pin number.
@@ -177,7 +177,7 @@ function httpserver.createServer(port, handler) end
 --*********** IMAP TODO *************--
 imap = {}
 
---*********** LiquidCrystal TODO *************--
+--*********** LIQUID CRYSTAL TODO *************--
 liquidcrystal = {}
 
 --*********** LM92 TODO *************--
@@ -595,8 +595,43 @@ function bmp085.pressure_raw(oversampling_setting) end
 --*********** CoAP TODO *************--
 coap = {}
 
---*********** cCOLOR UTILS TODO *************--
+--*********** COLOR UTILS *************--
 color_utils = {}
+
+---Convert HSV color to GRB color.
+---@param hue number value, between 0 and 360
+---@param saturation number value, between 0 and 255
+---@param value number value, between 0 and 255
+---@return number green as values between 0 and 255
+---@return number red
+---@return number blue
+function color_utils.hsv2grb(hue, saturation, value) end
+
+---Convert HSV color to GRB color and explicitly return a white value.
+---@param hue number value, between 0 and 360
+---@param saturation number value, between 0 and 255
+---@param value number value, between 0 and 255
+---@return number green as values between 0 and 255
+---@return number red
+---@return number blue
+---@return number white
+function color_utils.hsv2grbw(hue, saturation, value) end
+
+---Convert GRB color to HSV color.
+---@param green number is the green value, between 0 and 255
+---@param red number is the red value, between 0 and 255
+---@param blue number is the blue value, between 0 and 255
+---@return number hue as values between 0 and 360, respective 0 and 255
+---@return number saturation
+---@return number value
+function color_utils.grb2hsv(green, red, blue) end
+
+---makes use of the HSV color space and calculates colors based on the color circle.
+---@param angle number is the angle on the color circle, between 0 and 359
+---@return number green as values between 0 and 255
+---@return number red
+---@return number blue
+function color_utils.colorWheel(angle) end
 
 --*********** CRON *************--
 cron = {}
@@ -740,6 +775,23 @@ function encoder.fromHex(hexstr) end
 
 --*********** WiFi Manager TODO *************--
 enduser_setup = {}
+
+---Controls whether manual AP configuration is used.
+---@param on_off boolean value indicating whether to use manual mode;
+---@return boolean b The current setting, true if manual mode is enabled, false if it is not.
+function enduser_setup.manual(on_off) end
+
+---Starts the captive portal.
+---@param AP_SSID? any the SSID to use for the AP.
+---@param onConnected? function
+---@param onError? function onError(err_num, string)
+---@param onDebug? function onDebug (string)
+---@return nil
+function enduser_setup.start(AP_SSID, onConnected, onError, onDebug) end
+
+---Stops the captive portal.
+---@return nil
+function enduser_setup.stop() end
 
 --************* FILE  ******************--
 file = {}
@@ -1894,9 +1946,43 @@ function sntp.setoffset(offset) end
 ---@return number
 function sntp.getoffset() end
 
---*********** SOFTUART TODO *************--
+--*********** SOFTUART *************--
+softuart = {}
 
---*********** SOMFY TODO *************--
+---@class softuart
+softuart.port = softuart.setup()
+
+---Creates new SoftUART instance.
+---@param baudrate number :SoftUART baudrate. Maximum supported is 230400.
+---@param txPin number :SoftUART tx pin. If set to nil write method will not be supported.
+---@param rxPin number :SoftUART rx pin. If set to nil on("data") method will not be supported.
+---@return any swp softuart instance.
+function softuart.setup(baudrate, txPin, rxPin) end
+
+---Sets up the callback function to receive data.
+---@param event string|"data"
+---@param trigger number Can be a character or a number.
+---@param fun function
+---@return nil
+function softuart.port:on(event, trigger, fun) end
+
+---Transmits a byte or sequence of them.
+---@param data number|string
+---@return nil
+function softuart.port:write(data) end
+
+--*********** SOMFY *************--
+somfy = {}
+
+---Builds an frame defined by Somfy protocol and sends it to the RF transmitter.
+---@param pin integer GPIO pin the RF transmitter is connected to.
+---@param remote_address number address of the remote control.
+---@param command integer|' somfy.SOMFY_UP'|' somfy.SOMFY_DOWN'|' somfy.SOMFY_PROG'|' somfy.SOMFY_STOP'
+---@param rolling_code number The rolling code is increased every time a button is pressed.
+---@param repeat_count integer how many times the command is repeated
+---@param call_back function to be called after the command is transmitted.
+---@return nil
+function somfy.sendcommand(pin, remote_address, command, rolling_code, repeat_count, call_back) end
 
 --************ SPI ********************--
 spi = {}
@@ -2317,13 +2403,13 @@ function wifi.resume(resume_cb) end
 ---@return boolean
 function wifi.setcountry(country_info) end
 
----@alias modwifi integer
+---@alias wifi_a1 integer
 ---|'wifi.STATION' #for when the device is connected to a WiFi router.
 ---|'wifi.SOFTAP'  #for when the device is acting only as an access point.
 ---|'wifi.STATIONAP' #is the combination of wifi.STATION and wifi.SOFTAP
 ---|'wifi.NULLMODE' # disables the WiFi interface(s).
 ---Configures the WiFi mode to use. NodeMCU can run in one of four WiFi modes.
----@param mode modwifi
+---@param mode wifi_a1
 ---@param save? boolean choose whether or not to save wifi mode to flash
 ---@return any mod current mode after setup
 function wifi.setmode(mode, save) end
@@ -2499,11 +2585,35 @@ function wifi.eventmon.unregister(Event) end
 --*********** WiFi MONITOR TODO *************--
 wifi.monitor = {}
 
---*********** WPS TODO *************--
+--*********** WPS *************--
 wps ={}
+
+---Disable WiFi WPS function.
+---@return nil
+function wps.disable() end
+
+---Enable WiFi WPS function.
+---@return nil
+function wps.enable() end
+
+---Start WiFi WPS function. WPS must be enabled prior calling this function.
+---@param foo? function callback `function(status)` for when the WPS function ends.
+---@return nil
+function wps.start(foo) end
 
 --*********** WS2801 TODO *************--
 ws2801 = {}
+
+---Initializes the module and sets the pin configuration.
+---@param pin_clk integer pin for the clock. Supported are GPIO 0, 2, 4, 5.
+---@param pin_data integer pin for the data. Supported are GPIO 0, 2, 4, 5.
+---@return nil
+function ws2801.init(pin_clk, pin_data) end
+
+---Sends a string of RGB Data in 24 bits to WS2801.
+---@param str string payload to be sent to one or more WS2801.
+---@return nil
+function ws2801.write(str) end
 
 --*********** WS2812 *************--
 ws2812 = {}
@@ -2590,6 +2700,51 @@ function buffer:sub(i, j) end
 
 --*********** WS2812-EFFECTS TODO *************--
 ws2812_effects = {}
+--Deprecate and remove ws2812 effects (and provide an in-Lua replacement)
+function ws2812_effects.init(buffer) end
+function ws2812_effects.start() end
+function ws2812_effects.set_brightness(brightness) end
+function ws2812_effects.set_color(g, r, b, w) end
+function ws2812_effects.set_speed(speed) end
+function ws2812_effects.get_speed() end
+function ws2812_effects.set_delay(delay) end
+function ws2812_effects.get_delay() end
+function ws2812_effects.set_mode(mode, effect_param) end
 
---*********** XPT2046 TODO *************--
+--*********** XPT2046 *************--
 xpt2046 = {}
+
+---Initiates the XPT2046 module to read touch values from the display.
+---@param cs_pin integer GPIO pin for cs
+---@param irq_pin integer GPIO pin for irq
+---@param height integer display height in pixel
+---@param width integer display width in pixel
+---@return nil
+function xpt2046.init(cs_pin, irq_pin, height, width) end
+
+---Sets the calibration of the display.
+---@param x1 integer raw x value at top left
+---@param y1 integer raw y value at top left
+---@param x2 integer raw x value at bottom right
+---@param y2 integer raw y value at bottom right
+---@return nil
+function xpt2046.setCalibration(x1, y1, x2, y2) end
+
+---Checks if the touch panel is touched.
+---@return boolean touch true if the display is touched, else false
+function xpt2046.isTouched() end
+
+---Returns the position the display is touched using the calibration values and given width and height.
+---@return integer posX
+---@return integer posY
+function xpt2046.getPosition() end
+
+---reads the position three times and averages the two positions with the least distance.
+---@return integer posX
+---@return integer posY
+function xpt2046.getPositionAvg() end
+
+---Reads the raw value from the display.
+---@return integer rawX position X as a raw value.
+---@return integer rawY position Y as a raw value.
+function xpt2046.getRaw() end
