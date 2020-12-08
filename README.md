@@ -2,6 +2,9 @@
 
 for Auto Completion of nodemcu functions
 
+<img src="https://github.com/serg3295/nodeMCU-emmy/blob/main/images/nodemcu_emmy1.gif" style="max-width:100%;">
+
+
 Works with VS Code extension **[Sumneko lua-language-server](https://github.com/sumneko/lua-language-server)**
 
 <h2>Install</h2>
