@@ -1751,7 +1751,7 @@ function rtcfifo.peek(offset) end
 function rtcfifo.pop() end
 
 ---Initializes the rtcfifo module for use.
----@param tbl table
+---@param tbl? table
 ---@return nil
 function rtcfifo.prepare(tbl) end
 
@@ -1771,50 +1771,61 @@ function rtcfifo.ready() end
 rtcmem = {}
 
 ---Reads one or more 32bit values from RTC user memory.
----@param idx integer
----@param num number
----@return any
+---@param idx integer zero-based index to start reading from
+---@param num? number number of slots to read (default 1)
+---@return any v The value(s) read from RTC user memory.
 function rtcmem.read32(idx , num) end
 
 ---Writes one or more values to RTC user memory, starting at index idx.
----@param idx integer
----@param val number
+---@param idx integer zero-based index to start writing to.
+---@param val number value to store (32bit)
+---@vararg number additional values to store (optional)
 ---@return nil
-function rtcmem.write32(idx , val) end
+function rtcmem.write32(idx , val, ...) end
 
 --*********** RTCTIME *************--
 rtctime = {}
 
----Puts the ESP8266 into deep sleep mode, like node.
----@param microseconds number
----@param option any
+---Puts the ESP8266 into deep sleep mode, like node.dsleep().
+---@param microseconds number of microseconds to sleep for.
+---@param option any sleep option, see node.dsleep() for specifics.
 function rtctime.dsleep(microseconds , option) end
 
 ---For applications where it is necessary to take samples with high regularity, this function is useful.
----@param aligned_us number
----@param minsleep_us number
----@param option any
+---@param aligned_us number boundary interval in microseconds
+---@param minsleep_us number  minimum time that will be slept, if necessary skipping an interval.
+---@param option? any as with dsleep(), the option sets the sleep option, if specified.
 function rtctime.dsleep_aligned(aligned_us, minsleep_us , option) end
 
 ---Converts a Unix timestamp to calendar format.
 ---@param timestamp integer
----@return table
+---@return table rtctbl containing the fields:
+---year 1970 ~ 2038
+---mon month 1 ~ 12 in current year
+---day day 1 ~ 31 in current month
+---hour
+---min
+---sec
+---yday day 1 ~ 366 in current year
+---wday day 1 ~ 7 in current weak (Sunday is 1)
 function rtctime.epoch2cal(timestamp) end
 
 ---Returns the current time.
----@return number, number, number
+---@return number sec seconds since the Unix epoch
+---@return number usec the microseconds part
+---@return number rate the current clock rate offset. This is an offset of rate / 2^32
 function rtctime.get() end
 
----Sets the rtctime to a given timestamp in the Unix epoch (i.
----@param seconds number
----@param microseconds number
----@param rate number
+---Sets the rtctime to a given timestamp in the Unix epoch.
+---@param seconds? number the seconds part, counted from the Unix epoch
+---@param microseconds? number the microseconds part
+---@param rate? number the rate in the same units as for rtctime.get()
 ---@return nil
 function rtctime.set(seconds , microseconds, rate) end
 
 ---This takes a time interval in 'system clock microseconds' based on the timestamps returned by tmr.
----@param microseconds number
----@return number
+---@param microseconds number a time interval measured in system clock microseconds.
+---@return number i The same interval but measured in wall clock microseconds
 function rtctime.adjust_delta(microseconds) end
 
 --*********** SI7021 *************--
@@ -1893,18 +1904,18 @@ local encoder = sjson.encoder()
 local decoder = sjson.decoder()
 
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
----@param tbl table
+---@param tbl table  data to encode
 ---@param opts? table
----@return sjson
+---@return any A sjson.encoder object.
 function sjson.encoder(tbl , opts) end
 
 ---This gets a chunk of JSON encoded data.
----@param size? integer
+---@param size? integer an optional value for the number of bytes to return.
 ---@return string | nil
 function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
----@param tbl table
+---@param tbl table data to encode
 ---@param opts? table
 ---@return string
 function sjson.encode(tbl , opts) end
@@ -1914,7 +1925,7 @@ function sjson.encode(tbl , opts) end
 function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
----@param str string
+---@param str string the next piece of JSON encoded data
 ---@return any | nil
 function decoder:write(str) end
 
@@ -1922,7 +1933,7 @@ function decoder:write(str) end
 function decoder:result() end
 
 ---Decode a JSON string to a Lua table.
----@param str string
+---@param str string JSON string to decode
 ---@param opts? table
 function sjson.decode(str, opts) end
 
@@ -1931,8 +1942,8 @@ sntp = {}
 
 ---Attempts to obtain time synchronization.
 ---@param server_ip string
----@param callback function | ' function (sec, usec, server, info) end'
----@param errcallback function | ' function()'
+---@param callback function|' function (sec, usec, server, info) end'
+---@param errcallback function|' function()'
 ---@param autorepeat boolean
 ---@return nil
 function sntp.sync(server_ip, callback, errcallback, autorepeat) end
@@ -2079,6 +2090,36 @@ switec = {}
 
 --*********** TCS34725  TODO *************--
 tcs34725 ={}
+
+---Initialization via this call is mandatory before values can be read.
+---@return integer i 0 if setup has failed (no sensor connected?), 1 if sensor is TCS34725
+function tcs34725.setup() end
+
+---Enables the sensor. Can be used to wake up after a disable.
+---@param fun function called when the sensor has finished initialising.
+---@return nil
+function tcs34725.enable(fun) end
+
+---Disables the sensor. Enables a low-power sleep mode.
+---@return nil
+function tcs34725.disable() end
+
+---Reads the clear, red, green and blue values from the sensor.
+---@return integer clear in uint16_t.
+---@return integer red in uint16_t.
+---@return integer green in uint16_t.
+---@return integer blue in uint16_t.
+function tcs34725.raw() end
+
+---Sets the gain of the sensor. Must be called after the sensor is enabled.
+---@param gain number
+---@return nil
+function tcs34725.setGain(gain) end
+
+---Sets the integration time of the sensor. Must be called after the sensor is enabled.
+---@param time number
+---@return nil
+function tcs34725.setIntegrationTime(time) end
 
 --************ TLS TODO ********************--
 tls = {}
@@ -2369,35 +2410,56 @@ function websocket:on(eventName, fun) end
 ---@return nil
 function websocket:send(message, opcode) end
 
---*********** WIEGANG TODO *************--
+--*********** WIEGANG *************--
 wiegand = {}
+
+---@class wiegang
+wiegandobj = wiegand.create()
+
+---Creates a dynamic wiegand object that receives a callback when data is received.
+---@param pinD0 number This is a GPIO number (excluding 0) and connects to the D0 data line
+---@param pinD1 number This is a GPIO number (excluding 0) and connects to the D1 data line
+---@param callback function This is a function that will invoked when a full card or keypress is read.
+---@return any wiegandobj If the arguments are in error, or the operation cannot be completed, then an error is thrown.
+function wiegand.create(pinD0, pinD1, callback) end
+
+---Releases the resources associated with the card reader.
+---@return nil
+function wiegandobj:close() end
 
 --*********** WIFI *************--
 wifi = {}
 
 ---Gets the current WiFi channel.
----@return integer
+---@return integer ch current WiFi channel
 function wifi.getchannel() end
+
 ---Get the current country info.
 ---@return table
 function wifi.getcountry() end
+
 ---Gets default WiFi operation mode.
----@return any
+---@return integer
 function wifi.getdefaultmode() end
+
 ---Gets WiFi operation mode.
----@return any
+---@return integer
 function wifi.getmode() end
+
 ---Gets WiFi physical mode.
----@return any
+---@return integer
 function wifi.getphymode() end
+
 ---Configures whether or not WiFi automatically goes to sleep in NULL_MODE.
 ---@param enable? boolean
 ---@return any
 function wifi.nullmodesleep(enable) end
+
 ---Wake up WiFi from suspended state or cancel pending wifi suspension.
 ---@param resume_cb function|'function() end'
 ---@return nil
 function wifi.resume(resume_cb) end
+
 ---Set the current country info.
 ---@param country_info table
 ---@return boolean
@@ -2453,130 +2515,178 @@ function wifi.sta.autoconnect(auto) end
 ---@param ap_index integer
 ---@return boolean
 function wifi.sta.changeap(ap_index) end
+
 ---Clears the currently saved WiFi station configuration, erasing it from the flash.
 ---@return boolean
 function wifi.sta.clearconfig() end
+
 ---Sets the WiFi station configuration.
 ---@param station_config table
 ---@return boolean
 function wifi.sta.config(station_config) end
+
+---connected_cb function. Items returned in table :
+---SSID: SSID of access point. (format: string)
+---BSSID: BSSID of access point. (format: string)
+---channel: The channel the access point is on. (format: number)
 ---Connects to the configured AP in station mode.
----@param connected_cb function
+---@param connected_cb? function Callback to execute when station is connected to an access point.
 ---@return nil
 function wifi.sta.connect(connected_cb) end
+
+---disconnected_cb function. Items returned in table :
+---SSID: SSID of access point. (format: string)
+---BSSID: BSSID of access point. (format: string)
+---reason: See wifi.eventmon.reason below. (format: number)
 ---Disconnects from AP in station mode.
----@param disconnected_cb function
+---@param disconnected_cb? function Callback to execute when station is disconnected from an access point.
 ---@return nil
 function wifi.sta.disconnect(disconnected_cb) end
+
+---CFG TABLE contains scan configuration:
+---`ssid` SSID == nil, don't filter SSID
+---`bssid` BSSID == nil, don't filter BSSID
+---`channel` channel == 0, scan all channels, otherwise scan set channel (default is 0)
+---`show_hidden` show_hidden == 1, get info for router with hidden SSID (default is 0)
 ---Scans AP list as a Lua table into callback function.
----@param cfg table
----@param format integer|'0'|'1'
----@param callback function
+---@param cfg? table that contains scan configuration
+---@param format? integer|'1'|'0'
+---@param callback function to receive the AP table when the scan is done.
 ---@return nil
 function wifi.sta.getap(cfg, format, callback) end
+
 ---Get index of current Access Point stored in AP cache.
----@return integer
+---@return integer current_index index of currently selected Access Point. (Range:1-5)
 function wifi.sta.getapindex() end
+
 ---Get information of APs cached by ESP8266 station.
 ---@return table
 function wifi.sta.getapinfo() end
+
 ---Gets the broadcast address in station mode.
 ---@return string | nil
 function wifi.sta.getbroadcast() end
+
 ---Gets the WiFi station configuration.
 ---@param return_table boolean
 ---@return table
 function wifi.sta.getconfig(return_table) end
+
 ---Gets the default WiFi station configuration stored in flash.
 ---@param return_table boolean
 ---@return table
 function wifi.sta.getdefaultconfig(return_table) end
+
 ---Gets current station hostname.
 ---@return string
 function wifi.sta.gethostname() end
+
 ---Gets IP address, netmask, and gateway address in station mode.
 ---@return ...
 function wifi.sta.getip() end
+
 ---Gets MAC address in station mode.
 ---@return string
 function wifi.sta.getmac() end
+
 ---Get RSSI(Received Signal Strength Indicator) of the Access Point which ESP8266 station connected to.
 ---@return number | nil
 function wifi.sta.getrssi() end
+
 ---Set Maximum number of Access Points to store in flash. - This value is written to flash
 ---@param qty integer
 ---@return boolean
 function wifi.sta.setaplimit(qty) end
+
 ---Sets station hostname.
 ---@param hostname string|'""'
 ---@return boolean
 function wifi.sta.sethostname(hostname) end
+
 ---Sets IP address, netmask, gateway address in station mode.
 ---@param cfg table
 ---@return boolean
 function wifi.sta.setip(cfg) end
+
 ---Sets MAC address in station mode.
 ---@param mac string|'""'
 ---@return boolean
 function wifi.sta.setmac(mac) end
+
 ---Configures the WiFi modem sleep type to be used while station is connected to an Access Point.
 ---@param type_wanted integer|'wifi.NONE_SLEEP'|'wifi.LIGHT_SLEEP'|'wifi.MODEM_SLEEP'
 ---@return any
 function wifi.sta.sleeptype(type_wanted) end
+
 ---Gets the current status in station mode.
 ---@return integer
 function wifi.sta.status() end
+
 ---Sets SSID and password in AP mode.
 ---@param cfg table
 ---@return boolean
 function wifi.ap.config(cfg) end
+
 ---Deauths (forcibly removes) a client from the ESP access point.
 ---@param MAC string|'""'
 ---@return boolean
 function wifi.ap.deauth(MAC) end
+
 ---Gets broadcast address in AP mode.
 ---@return string
 function wifi.ap.getbroadcast() end
+
 ---Gets table of clients connected to device in AP mode.
 ---@return table
 function wifi.ap.getclient() end
+
 ---Gets the current SoftAP configuration.
 ---@param return_table boolean
 ---@return table | any
 function wifi.ap.getconfig(return_table) end
+
 ---Gets the default SoftAP configuration stored in flash.
 ---@param return_table boolean
 ---@return table | any
 function wifi.ap.getdefaultconfig(return_table) end
+
 ---Gets IP address, netmask and gateway in AP mode.
 ---@return string
 function wifi.ap.getip() end
+
 ---Gets MAC address in AP mode.
 ---@return string
 function wifi.ap.getmac() end
+
 ---Sets IP address, netmask and gateway address in AP mode.
 ---@param cfg table
 ---@return boolean
 function wifi.ap.setip(cfg) end
+
 ---Sets MAC address in AP mode.
 ---@param mac string|'""'
 ---@return boolean
 function wifi.ap.setmac(mac) end
+
 ---Configure the dhcp service. Currently only supports setting the start address of the dhcp address pool.
 ---@param dhcp_config table
 ---@return integer
 function wifi.ap.dhcp.config(dhcp_config) end
+
 ---Starts the DHCP service.
 ---@return boolean
 function wifi.ap.dhcp.start() end
+
 ---Stops the DHCP service.
 ---@return boolean
 function wifi.ap.dhcp.stop() end
+
 ---Register callbacks for WiFi event monitor
 ---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'
 ---@param fun function
 ---@return nil
 function wifi.eventmon.register(Event, fun) end
+
 ---Unregister callbacks for WiFi event monitor
 ---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'|'wifi.eventmon.WIFI_MODE_CHANGED'
 ---@return nil
@@ -2601,7 +2711,7 @@ function wps.enable() end
 ---@return nil
 function wps.start(foo) end
 
---*********** WS2801 TODO *************--
+--*********** WS2801 *************--
 ws2801 = {}
 
 ---Initializes the module and sets the pin configuration.
@@ -2698,17 +2808,57 @@ function buffer:shift(value, mode, i, j) end
 ---@return any buff A buffer containing the extracted piece.
 function buffer:sub(i, j) end
 
---*********** WS2812-EFFECTS TODO *************--
+--*********** WS2812-EFFECTS *************--
 ws2812_effects = {}
---Deprecate and remove ws2812 effects (and provide an in-Lua replacement)
+
+---Initialize the effects library with the provided buffer for the connected LED strip.
+---@param buffer any is a ws2812.buffer for the connected strip.
+---@return nil
 function ws2812_effects.init(buffer) end
+
+---Start the animation effect.
+---@return nil
 function ws2812_effects.start() end
+
+---Stop the animation effect.
+---@return nil
+function ws2812_effects.stop() end
+
+---Set the brightness.
+---@param brightness integer brightness between 0 and 255
+---@return nil
 function ws2812_effects.set_brightness(brightness) end
+
+---Set the color.
+---@param g integer is the green value between 0 and 255
+---@param r integer is the red value between 0 and 255
+---@param b integer is the blue value between 0 and 255
+---@param w? integer is the white value between 0 and 255
+---@return nil
 function ws2812_effects.set_color(g, r, b, w) end
+
+---Set the speed.
+---@param speed integer speed between 0 and 255
+---@return nil
 function ws2812_effects.set_speed(speed) end
+
+---Get current speed.
+---@return integer speed between 0 and 255
 function ws2812_effects.get_speed() end
+
+---Set the delay between two effect steps in milliseconds.
+---@param delay number is the delay in milliseconds, minimum 10ms
+---@return nil
 function ws2812_effects.set_delay(delay) end
+
+---Get current delay.
+---@return number delay is the current effect delay in milliseconds
 function ws2812_effects.get_delay() end
+
+---Set the active effect mode.
+---@param mode string|'"static"'|'"blink"'|'"gradient"'|'"gradient_rgb"'|'"random_color"'|'"rainbow"'|'"rainbow_cycle"'|'"flicker"'|'"fire"'|'"fire_soft"'|'"fire_intense"'|'"halloween"'|'"circus_combustus"'|'"larson_scanner"'|'"color_wipe"'|'"random_dot"'|'"cycle"'
+---@param effect_param? integer|string
+---@return nil
 function ws2812_effects.set_mode(mode, effect_param) end
 
 --*********** XPT2046 *************--
