@@ -180,11 +180,99 @@ imap = {}
 --*********** LIQUID CRYSTAL TODO *************--
 liquidcrystal = {}
 
---*********** LM92 TODO *************--
+--*********** LM92 *************--
 lm92 ={}
 
---*********** MCP23008 TODO *************--
+---Function used to setup the address for lm92.
+---@param address number I²C address used by LM92.
+---@return nil
+function lm92.setup(address) end
+
+---Returns the temperature register's content.
+---@return number Temperature in degree Celsius.
+function lm92.getTemperature() end
+
+---Makes the chip enter the low power shutdown mode.
+---@return nil
+function lm92.shutdown() end
+
+---Makes the chip exit the low power shutdown mode.
+---@return nil
+function lm92.wakeup() end
+
+---Set hysteresis Temperature.
+---@param htemp number : Hysteresis temperature from 130 to -55 in ºC
+---@return nil
+function lm92.setThyst(htemp) end
+
+---Set Critical Temperature.
+---@param ctemp number : Critical temperature from 130 to -55 in ºC
+---@return nil
+function lm92.setTcrit(ctemp) end
+
+---Set Low Window Temperature.
+---@param lwtemp number : Low window temperature from 130 to -55 in ºC
+---@return nil
+function lm92.setTlow(lwtemp) end
+
+---Set High Window Temperature.
+---@param hwtemp number : High window temperature from 130 to -55 in ºC
+---@return nil
+function lm92.setThigh(hwtemp) end
+
+---Get hysteresis Temperature.
+---@return number Hysteresis Temperature in degree Celsius.
+function lm92.getThyst() end
+
+---Get Critical Temperature.
+---@return number Critical Temperature in degree Celsius.
+function lm92.getTcrit() end
+
+---Get Low Window Temperature.
+---@return number Low Window Temperature in degree Celsius.
+function lm92.getTlow() end
+
+---Get High Window Temperature.
+---@return number High Window Temperature in degree Celsius.
+function lm92.getThigh() end
+
+--*********** MCP23008 *************--
 mcp23008 = {}
+
+---Sets the MCP23008 device address's last three bits.
+---@param address number : The 3 least significant bits (LSB) of the address
+---@param pinSDA number : The pin to use for SDA
+---@param pinSCL number : The pin to use for SCL
+---@param speed number : The speed of the I2C signal
+---@return nil
+function mcp23008.begin(address, pinSDA, pinSCL, speed) end
+
+---Writes a byte of data to the GPIO register.
+---@param dataByte number : The byte of data to write
+---@return nil
+function mcp23008.writeGPIO(dataByte) end
+
+---Reads a byte of data from the GPIO register
+---@return number byte One byte of data
+function mcp23008.readGPIO() end
+
+---Writes one byte of data to the IODIR register.
+---@param dataByte number : The byte of data to write
+---@return nil
+function mcp23008.writeIODIR(dataByte) end
+
+---Writes one byte of data to the IODIR register.
+---@return number byte The byte of data in IODIR
+function mcp23008.readIODIR() end
+
+---Writes a byte of data to the GPPU (Pull-UP resistors register)
+---@param dataByte number : the value to write to the GPPU register.
+---@return nil
+function mcp23008.writeIODIR(dataByte) end
+
+---Reads the GPPU (Pull-UP resistors register) byte
+---@return number byte The GPPU byte i.e. state of all internal pull-up resistors
+function mcp23008.readGPPU() end
 
 --*********** MCP23017 *************--
 mcp23017 = {}
@@ -1218,27 +1306,27 @@ local UDPSOCKET = net.createUDPSocket()
 function net.createConnection() end
 
 ---Creates a TCP listening socket (a server).
----@param timeout integer
----@return any
+---@param timeout integer seconds until disconnecting an inactive client
+---@return any net.server sub module
 function net.createServer(timeout) end
 
 ---Creates an UDP socket.
 function net.createUDPSocket() end
 
 ---Return information about a network interface, specified by index.
----@param if_index integer|'0'|'1'
+---@param if_index integer the interface index; on ESP8266, 0 is the wifi client (STA) and 1 is the wifi AP.
 ---@return nil|table
 function net.ifinfo(if_index) end
 
 ---Join multicast group.
 ---@param if_ip string
----@param multicast_ip string
+---@param multicast_ip stringof the group to join
 ---@return nil
 function net.multicastJoin(if_ip, multicast_ip) end
 
 ---Leave multicast group.
 ---@param if_ip string
----@param multicast_ip string
+---@param multicast_ip string of the group to leave
 ---@return nil
 function net.multicastLeave(if_ip, multicast_ip) end
 
@@ -1247,15 +1335,15 @@ function net.multicastLeave(if_ip, multicast_ip) end
 function NETSRV.close() end
 
 ---Listen on port from IP address. net.server.listen()
----@param port? integer
----@param ip? string
+---@param port? integer port number, can be omitted (random port will be chosen)
+---@param ip? string IP address string, can be omitted
 ---@param fun function |'function(net.socket) end'
 ---@return nil
 function NETSRV.listen(port, ip, fun) end
 
 ---Returns server local address/port. net.server.getaddr()
----@return integer port |nil
----@return string ip |nil
+---@return integer port|nil
+---@return string ip|nil
 function NETSRV.getaddr() end
 
 ---Closes socket. net.socket:close()
@@ -1295,14 +1383,14 @@ function NETSOCKET:hold() end
 function NETSOCKET:on(event, fun) end
 
 ---Sends data to remote peer. net.socket:send()
----@param str string
+---@param str string data in string which will be sent to server
 ---@param fun function|' function(sent) end'
 ---@return nil
 function NETSOCKET:send(str, fun) end
 
 ---Changes or retrieves Time-To-Live value on socket. net.socket:ttl()
----@param ttl integer
----@return integer
+---@param ttl? integer (optional) new time-to-live value
+---@return integer ttl current / new ttl value
 function NETSOCKET:ttl(ttl) end
 
 ---Unblock TCP receiving data by revocation of a preceding hold(). net.socket:unhold()
@@ -1325,10 +1413,10 @@ function UDPSOCKET:listen(port, ip) end
 ---@return nil
 function UDPSOCKET:on(event, fun) end
 
----Sends data to specific remote peer. net.udpsocket:send()
----@param port integer
----@param ip string
----@param data any
+---Sends data to specific remote peer.
+---@param port integer remote socket port
+---@param ip string  remote socket IP
+---@param data any the payload to send
 ---@return nil
 function send(port, ip, data) end
 
@@ -1348,23 +1436,32 @@ function UDPSOCKET:getaddr() end
 ---@return integer
 function UDPSOCKET:ttl(ttl) end
 
----Gets the IP address of the DNS server used to resolve hostnames. net.dns.getdnsserver()
----@param dns_index integer|'0'|'1'
----@return string
+---Gets the IP address of the DNS server used to resolve hostnames.
+---@param dns_index integer which DNS server to get (range 0~1)
+---@return string IP address (string) of DNS server
 function net.dns.getdnsserver(dns_index) end
 
 ---Resolve a hostname to an IP address. net.dns.resolve()
 ---Doesn't require a socket like net.socket.dns().
----@param host string
+---@param host string hostname to resolve
 ---@param fun function|' function(sk, ip) end'
----@return nil
+---callback called when the name was resolved. sk is always nil
+---@return nil|string IP address.
 function net.dns.resolve(host, fun) end
 
----Sets the IP of the DNS server used to resolve hostnames. net.dns.setdnsserver()
----@param dns_ip_addr string
----@param dns_index integer|'0'|'1'
+---Sets the IP of the DNS server used to resolve hostnames.
+---@param dns_ip_addr string IP address of a DNS server
+---@param dns_index integer which DNS server to set (range 0~1).
 ---@return nil
 function net.dns.setdnsserver(dns_ip_addr, dns_index) end
+
+---Pings a server. A callback function is called when response is or is not received.
+---@param domain string destination domain or IP address
+---@param count? number number of ping packets to be sent (default value is 4)
+---@param callback_received function function(bytes, ipaddr, seqno, rtt) callback function which is invoked when response is received
+---@param callback_sent? function function(ipaddr, total_count, timeout_count, total_bytes, total_time) callback function which is invoked when response is received
+---@return nil
+function net.ping(domain, count, callback_received, callback_sent) end
 
 --************* NODE *******************--
 node = {}
