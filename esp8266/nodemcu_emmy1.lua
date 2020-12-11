@@ -1210,11 +1210,70 @@ function i2c.stop(id) end
 ---@return number number of bytes written
 function i2c.write(id, data1, ...) end
 
---*********** L3G4200D TODO *************--
+--*********** L3G4200D *************--
+l3g4200d = {}
 
---*********** MCP4725 TODO *************--
+---Samples the sensor and returns the gyroscope output.
+---@return number X gyroscope output
+---@return number Y gyroscope output
+---@return number Z gyroscope output
+function l3g4200d.read() end
 
---*********** MDNS TODO *************--
+---Initializes the module.
+---@return nil
+function l3g4200d.setup() end
+
+--*********** MCP4725 *************--
+mcp4725 = {}
+
+---Gets contents of the dac register and EEPROM.
+---@param tbl table
+---tbl:  {[a0], [a1], [a2]}
+---A0 Address bit 0. This bit is user configurable via MCP4725 pin 6(A0). (valid states: 0 or 1) (default: 0)
+---A1 Address bit 1. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
+---A2 Address bit 2. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
+---@return number cur_pwrdn Current power down configuration value.
+---@return number cur_val Current value stored in dac register.
+---@return number eeprom_pwrdn Power down configuration stored in EEPROM.
+---@return number eeprom_val DAC value stored in EEPROM.
+---@return number eeprom_state EEPROM write status
+--- 0 EEPROM write is incomplete.
+--- 1 EEPROM write has completed
+---@return number por_state Power-On-Reset status;
+--- 0 The MCP4725 is performing reset and is not ready.
+--- 1 The MCP4725 has successfully performed reset.
+function mcp4725.read(tbl) end
+
+---Write configuration to dac register or dac register and eeprom.
+---@param tbl table
+--- tbl:  {[a0], [a1], [a2], value, [pwrdn], [save]}
+---A0 Address bit 0. This bit is user configurable via MCP4725 pin 6(A0). (valid states: 0 or 1) (default: 0)
+---A1 Address bit 1. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
+---A2 Address bit 2. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
+---value The value to be used to configure DAC (and EEPROM). (Range: 0 - 4095)
+---pwrdn Set power down bits.
+--- mcp4725.PWRDN_NONE MCP4725 output enabled. (Default)
+--- mcp4725.PWRDN_1K MCP4725 output disabled, output pulled to ground via 1K restistor.
+--- mcp4725.PWRDN_100K MCP4725 output disabled, output pulled to ground via 100K restistor.
+--- mcp4725.PWRDN_500K MCP4725 output disabled, output pulled to ground via 500K restistor.
+---save Save pwrdn and dac values to EEPROM. (Values are loaded on power-up or during reset.)
+--- true Save configuration to EEPROM.
+--- false Do not save configuration to EEPROM. (Default)
+---@return nil
+function mcp4725.write(tbl) end
+
+--*********** MDNS *************--
+mdns ={}
+
+---Register a hostname and start the mDNS service.
+---@param hostname string The hostname for this device. Alphanumeric characters are best.
+---@param attributes? table A optional table of options. The keys must all be strings.
+---@return nil
+function mdns.register(hostname , attributes) end
+
+---Shut down the mDNS service. This is not normally needed.
+---@return nil
+function mdns.close() end
 
 --*********** MQTT **************--
 mqtt = {}
@@ -1224,10 +1283,10 @@ local MQTT = mqtt.Client()
 
 ---Creates a MQTT client.
 ---@param clientid string client ID
----@param keepalive integer  keepalive seconds
----@param username? string
----@param password? string
----@param cleansession? integer|' 1'|' 0'
+---@param keepalive integer keepalive seconds
+---@param username? string user name
+---@param password? string user password
+---@param cleansession? integer 0/1 for false/true. Default is 1 (true).
 ---@param max_message_length? integer how large messages to accept. Default is 1024.
 ---@return any
 function mqtt.Client(clientid, keepalive, username, password, cleansession, max_message_length) end
@@ -1237,8 +1296,8 @@ function mqtt.Client(clientid, keepalive, username, password, cleansession, max_
 function MQTT:close() end
 
 ---Connects to the broker specified by the given host, port, and secure options.
----@param host string|'""'
----@param port? integer|' 1883'
+---@param host string host, domain or IP
+---@param port? integer broker port (number), default 1883
 ---@param secure? boolean if true, use TLS.
 ---@param conn_est? function|' function(client) end'
 ---@param conn_notest? function|' function(client, reason) end'
@@ -1246,8 +1305,8 @@ function MQTT:close() end
 function MQTT:connect(host, port, secure, conn_est, conn_notest) end
 
 ---Setup Last Will and Testament.
----@param topic string|'""'
----@param message string
+---@param topic string the topic to publish to (string)
+---@param message string the message to publish, (buffer or string)
 ---@param qos? integer|' 0'|' 1'|' 2'
 ---@param retain? integer|' 0'|' 1'
 ---@return nil
@@ -1260,8 +1319,8 @@ function MQTT:lwt(topic, message, qos, retain) end
 function MQTT:on(event, handler) end
 
 ---Publishes a message.
----@param topic string|'""'
----@param payload string
+---@param topic string the topic to publish to (topic string)
+---@param payload string the message to publish, (buffer or string)
 ---@param qos integer|' 0'|' 1'|' 2'
 ---@param retain integer|' 0'|' 1'
 ---@param fpuback? function|' function(client) end'
@@ -1269,26 +1328,26 @@ function MQTT:on(event, handler) end
 function MQTT:publish(topic, payload, qos, retain, fpuback) end
 
 ---Subscribes to one or several topics.
----@param topic string|'""'
+---@param topic string a topic string
 ---@param qos integer|' 0'|' 1'|' 2'
 ---@param f_client? function|' function(client) end'
 ---@return boolean
 function MQTT:subscribe(topic, qos, f_client) end
 
 ---Subscribes to one or several topics.
----@param tbl table
+---@param tbl table array of 'topic, qos' pairs to subscribe to
 ---@param f_client? function|' function(client) end'
 ---@return boolean
 function MQTT:subscribe(tbl, f_client) end
 
 ---Unsubscribes from one or several topics.
----@param topic string|'""'
+---@param topic string a topic string
 ---@param f_client? function|' function(client) end'
 ---@return boolean
 function MQTT:unsubscribe(topic, f_client) end
 
 ---Unsubscribes from one or several topics.
----@param tbl table
+---@param tbl table array of 'topic, anything' pairs to unsubscribe from
 ---@param f_client? function|' function(client) end'
 ---@return boolean
 function MQTT:unsubscribe(tbl, f_client) end
