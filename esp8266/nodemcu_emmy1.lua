@@ -1168,7 +1168,37 @@ function http.put(url, headers, body, callback) end
 ---@return nil
 function http.request(url, method, headers, body, callback) end
 
---*********** HX711 TODO *************--
+--*********** HX711 *************--
+hx711 = {}
+
+---Initialize io pins for hx711 clock and data.
+---@param clk integer pin the hx711 clock signal is connected to
+---@param data integer pin the hx711 data signal is connected to
+---@return nil
+function hx711.init(clk, data) end
+
+---@alias hx711_a1 integer
+---|'0' channel A, gain 128
+---|'1' channel B, gain 32
+---|'2' channel A, gain 64
+---Read digital loadcell ADC value.
+---@param mode hx711_a1 ADC mode. This parameter specifies which input and the gain to apply to that input.
+---@return number val 24 bit signed ADC value extended to the machine int size
+function hx711.read(mode) end
+
+---Starts to read multiple samples from the ADC.
+---@param mode hx711_a1
+---@param samples number The number of samples before the callback is invoked.
+---@param callback function The callback is invoked with three arguments
+---'s' A string which contains samples packed 24 bit values.
+---'t' The time in microseconds of the reception of the last sample in the buffer.
+---'d' The number of samples dropped before the start of this buffer
+---@return nil
+function hx711.start(mode, samples, callback) end
+
+---Stops a previously started set of reads.
+---@return nil
+function hx711.stop() end
 
 --*********** I2C *************--
 i2c = {}
@@ -1315,6 +1345,11 @@ function MQTT:lwt(topic, message, qos, retain) end
 ---Registers a callback function for an event.
 ---@param event string|'"connect"'|'"connfail"'|'"suback"'|'"unsuback"'|'"puback"'|'"message"'|'"overflow"'|'"offline"'
 ---@param handler function|' function(client, topic?, message?) end'
+---`client` - callback function. The first parameter is always the client object itself.
+---If event is `"message"`, the 2nd and 3rd parameters are received topic and message, respectively, as Lua strings.
+---If the event is `"overflow"`, the parameters are as with "message",
+---  save that the message string is truncated to the maximum message size.
+---If the event is `"connfail"`, the 2nd parameter will be the connection failure code;
 ---@return nil
 function MQTT:on(event, handler) end
 
