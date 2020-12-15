@@ -1,4 +1,4 @@
---*********** 1-wire *************--
+--*** 1-wire ***
 ow = {}
 
 ---Computes the 1-Wire CRC16 and compare it against the received CRC.
@@ -88,13 +88,13 @@ function ow.write(pin, v, power) end
 ---@return nil
 function ow.write_bytes(pin, buf, power) end
 
---*********** PCM TODO *************--
+--*** PCM TODO ***
 
---*********** PERF TODO *************--
+--*** PERF TODO ***
 
---*********** PIPE TODO *************--
+--*** PIPE TODO ***
 
---*********** PWM *************--
+--*** PWM ***
 pwm = {}
 
 ---Quit PWM mode for the specified GPIO pin.
@@ -141,7 +141,7 @@ function pwm.start(pin) end
 ---@return nil
 function pwm.stop(pin) end
 
---*********** PWM2 TODO *************--
+--*** PWM2 TODO ***
 pwm2 = {}
 
 ---Assigns PWM frequency expressed as Hz to given pin.
@@ -190,11 +190,11 @@ function pwm2.get_timer_data() end
 ---@return nil
 function pwm2.get_pin_data(pin) end
 
---*********** RFSWITCH TODO *************--
+--*** RFSWITCH TODO ***
 
---*********** ROTARY TODO *************--
+--*** ROTARY TODO ***
 
---*********** RTCFIFO TODO *************--
+--*** RTCFIFO TODO ***
 rtcfifo = {}
 
 ---@param minsleep_us number minimum sleep time, in microseconds
@@ -233,7 +233,7 @@ function rtcfifo.put(timestamp, value, neg_e, name) end
 ---@return number Non-zero if the rtcfifo has been prepared and is ready for use, zero if not.
 function rtcfifo.ready() end
 
---*********** RTCMEM  *************--
+--*** RTCMEM  ***
 rtcmem = {}
 
 ---Reads one or more 32bit values from RTC user memory.
@@ -249,7 +249,7 @@ function rtcmem.read32(idx , num) end
 ---@return nil
 function rtcmem.write32(idx , val, ...) end
 
---*********** RTCTIME *************--
+--*** RTCTIME ***
 rtctime = {}
 
 ---Puts the ESP8266 into deep sleep mode, like node.dsleep().
@@ -294,7 +294,7 @@ function rtctime.set(seconds , microseconds, rate) end
 ---@return number i The same interval but measured in wall clock microseconds
 function rtctime.adjust_delta(microseconds) end
 
---*********** SI7021 *************--
+--*** SI7021 ***
 si7021 = {}
 
 ---Read the internal firmware revision of the Si7021 sensor.
@@ -334,7 +334,7 @@ function si7021.setting(RESOLUTION, HEATER, HEATER_SETTING) end
 ---@return nil
 function si7021.setup() end
 
---*********** SIGMA DELTA *************--
+--*** SIGMA DELTA ***
 sigma_delta = {}
 
 ---Stops signal generation and reenables GPIO functionality at the specified pin.
@@ -362,7 +362,7 @@ function sigma_delta.settarget(value) end
 ---@return nil
 function sigma_delta.setup(pin) end
 
---*********** SJSON  *************--
+--*** SJSON  ***
 sjson = {}
 
 ---@class sjson
@@ -403,7 +403,7 @@ function decoder:result() end
 ---@param opts? table
 function sjson.decode(str, opts) end
 
---*********** SNTP *************--
+--*** SNTP ***
 sntp = {}
 
 ---Attempts to obtain time synchronization.
@@ -423,7 +423,7 @@ function sntp.setoffset(offset) end
 ---@return number
 function sntp.getoffset() end
 
---*********** SOFTUART *************--
+--*** SOFTUART ***
 softuart = {}
 
 ---@class softuart
@@ -448,7 +448,7 @@ function softuart.port:on(event, trigger, fun) end
 ---@return nil
 function softuart.port:write(data) end
 
---*********** SOMFY *************--
+--*** SOMFY ***
 somfy = {}
 
 ---Builds an frame defined by Somfy protocol and sends it to the RF transmitter.
@@ -461,7 +461,7 @@ somfy = {}
 ---@return nil
 function somfy.sendcommand(pin, remote_address, command, rolling_code, repeat_count, call_back) end
 
---************ SPI ********************--
+--*** SPI ***
 spi = {}
 
 ---Receive data from SPI.
@@ -529,7 +529,7 @@ function spi.set_mosi(id, str) end
 ---@return nil
 function spi.transaction(id, cmd_bitlen, cmd_data, addr_bitlen, addr_data, mosi_bitlen, dummy_bitlen, miso_bitlen) end
 
---*********** STRUCT *************--
+--*** STRUCT ***
 struct = {}
 
 ---Returns a string containing the values d1, d2, etc. packed according to the format string fmt.
@@ -551,10 +551,10 @@ function struct.unpack (fmt, s, offset) end
 ---@return integer sz The size of the string that would be output in a pack operation with this format string.
 function struct.size (fmt) end
 
---*********** SWITEC TODO *************--
+--*** SWITEC TODO ***
 switec = {}
 
---*********** TCS34725  TODO *************--
+--*** TCS34725  TODO ***
 tcs34725 ={}
 
 ---Initialization via this call is mandatory before values can be read.
@@ -587,7 +587,7 @@ function tcs34725.setGain(gain) end
 ---@return nil
 function tcs34725.setIntegrationTime(time) end
 
---************ TLS TODO ********************--
+--*** TLS TODO ***
 tls = {}
 
 ---@class tls
@@ -663,7 +663,7 @@ function tls.cert.auth(pemdata, pemdata1) end
 ---@return boolean|any
 function tls.cert.auth(callback) end
 
---************ TM1829 ********************--
+--*** TM1829 ***
 tm1829 = {}
 
 ---Send data to a led strip using native chip format.
@@ -671,7 +671,7 @@ tm1829 = {}
 ---@return nil
 function tm1829.write(str) end
 
---************ TMR ********************--
+--*** TMR ***
 tmr = {}
 
 ---@class tmr
@@ -748,7 +748,7 @@ function tObj:stop() end
 ---@return nil
 function tObj:unregister() end
 
---*********** TSL2561 *************--
+--*** TSL2561 ***
 tsl2561 = {}
 
 ---Reads sensor values from the device and returns calculated lux value.
@@ -798,49 +798,65 @@ function tsl2561.init(sdapin, sclpin, address, pckg) end
 ---tsl2561.TSL2561_ERROR_LAST
 function tsl2561.settiming(integration, gain) end
 
---*********** U8G2 TODO *************--
+--*** U8G2 TODO ***
 u8g2 = {}
 
---*********** UART *************--
+--*** UART ***
 uart = {}
 ---Change UART pin assignment.
----@param on integer |'0'|'1'
+---@param on integer
+---`0` for standard pins
+---`1` to use alternate pins GPIO13 and GPIO15
 ---@return nil
 function uart.alt(on) end
+
 ---Sets the callback function to handle UART events.
----@param method string | '"data"'
----@param number_end_char any
----@param fun function | 'function(data) end'
----@param run_input integer |'0'|'1'
+---@param method string|'"data"'
+---`"data"`, data has been received on the UART
+---@param number_end_char? any
+---`number/end_char` if n=0, will receive every char in buffer
+---`number/end_char` if n<255, the callback is called when n chars are received
+---`number/end_char` if one char "c", the callback will be called when "c" is encountered, or max n=255 received
+---@param fun? function|'function(data) end'
+---@param run_input? integer|'0'|'1'
 ---@return nil
 function uart.on(method, number_end_char, fun, run_input) end
+
 ---(Re-)configures the communication parameters of the UART.
----@param id integer |'0'|'1'
+---@param id integer UART id (0 or 1).
 ---@param baud integer|' 300'|' 600'|' 1200'|' 2400'|' 4800'|' 9600'|' 19200'|' 31250'|' 34400'|' 57600'|' 74880'|' 115200'|' 230000'|' 256000'|' 460800'|' 921600'|' 1843200'|' 3686400'
 ---@param databits integer|' 8'|' 7'|' 6'|' 5'
 ---@param parity integer|' uart.PARITY_NONE'|' uart.PARITY_ODD'|' uart.PARITY_EVEN'
 ---@param stopbits integer|' uart.STOPBITS_1'|' uart.STOPBITS_1_5'|' uart.STOPBITS_2'
----@param echo integer |' 1'|' 0'
----@return number
+---@param echo integer 0 - disable echo, 1 - enable echo (default if omitted)
+---@return number br configured baud rate
 function uart.setup(id, baud, databits, parity, stopbits, echo) end
+
 ---Returns the current configuration parameters of the UART.
----@param id integer |'0'|'1'
+---@param id integer UART id (0 or 1).
+---@return number baud one of 300, ..., 3686400
+---@return number databits one of 5, 6, 7, 8
+---@return number parity uart.PARITY_NONE, uart.PARITY_ODD, or uart.PARITY_EVEN
+---@return number stopbits uart.STOPBITS_1, uart.STOPBITS_1_5, or uart.STOPBITS_2
 function uart.getconfig(id) end
+
 ---Write string or byte to the UART.
----@param id integer |'0'|'1'
----@param data1 any
+---@param id integer UART id (0 or 1).
+---@param data1 string|number ... string or byte to send via UART
+---@vararg string|number
 ---@return nil
-function uart.write(id, data1) end
+function uart.write(id, data1, ...) end
+
 ---Report the depth, in bytes, of TX or RX hardware queues associated with the UART.
----@param id integer |'0'|'1'
----@param dir string |' "uart.DIR_RX"'|' "uart.DIR_TX"'
----@return integer
+---@param id integer UART id (0 or 1).
+---@param dir string|' "uart.DIR_RX"'|' "uart.DIR_TX"'
+---@return integer num The number of bytes in the selected FIFO.
 function uart.fifodepth(id, dir) end
 
---*********** UCG TODO *************--
+--*** UCG TODO ***
 ucg ={}
 
---*********** WEBSOCKET *************--
+--*** WEBSOCKET ***
 websocket = {}
 
 ---@class websocket
@@ -876,7 +892,7 @@ function websocket:on(eventName, fun) end
 ---@return nil
 function websocket:send(message, opcode) end
 
---*********** WIEGANG *************--
+--*** WIEGANG ***
 wiegand = {}
 
 ---@class wiegang
@@ -893,7 +909,7 @@ function wiegand.create(pinD0, pinD1, callback) end
 ---@return nil
 function wiegandobj:close() end
 
---*********** WIFI *************--
+--*** WIFI ***
 wifi = {}
 
 ---Gets the current WiFi channel.
@@ -1158,10 +1174,10 @@ function wifi.eventmon.register(Event, fun) end
 ---@return nil
 function wifi.eventmon.unregister(Event) end
 
---*********** WiFi MONITOR TODO *************--
+--*** WiFi MONITOR TODO ***
 wifi.monitor = {}
 
---*********** WPS *************--
+--*** WPS ***
 wps ={}
 
 ---Disable WiFi WPS function.
@@ -1177,7 +1193,7 @@ function wps.enable() end
 ---@return nil
 function wps.start(foo) end
 
---*********** WS2801 *************--
+--*** WS2801 ***
 ws2801 = {}
 
 ---Initializes the module and sets the pin configuration.
@@ -1191,7 +1207,7 @@ function ws2801.init(pin_clk, pin_data) end
 ---@return nil
 function ws2801.write(str) end
 
---*********** WS2812 *************--
+--*** WS2812 ***
 ws2812 = {}
 
 ---@class ws2812
@@ -1274,7 +1290,7 @@ function buffer:shift(value, mode, i, j) end
 ---@return any buff A buffer containing the extracted piece.
 function buffer:sub(i, j) end
 
---*********** WS2812-EFFECTS *************--
+--*** WS2812-EFFECTS ***
 ws2812_effects = {}
 
 ---Initialize the effects library with the provided buffer for the connected LED strip.
@@ -1327,7 +1343,7 @@ function ws2812_effects.get_delay() end
 ---@return nil
 function ws2812_effects.set_mode(mode, effect_param) end
 
---*********** XPT2046 *************--
+--*** XPT2046 ***
 xpt2046 = {}
 
 ---Initiates the XPT2046 module to read touch values from the display.
