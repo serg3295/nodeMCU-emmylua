@@ -1,4 +1,4 @@
---*********** BH1750 *************--
+--*** BH1750 ***--
 bh1750 = {}
 
 ---Initializes the module and sets up I²C with hardcoded device address.
@@ -15,12 +15,12 @@ function bh1750.read() end
 ---@return number val Last known lux value.
 function bh1750.getlux() end
 
---*********** Lua module BME280 TODO *************--
+--*** Lua module BME280 TODO ***--
 
---*********** COHELPER TODO *************--
+--*** COHELPER TODO ***--
 cohelper = {}
 
---*********** DS18B20 *************--
+--*** DS18B20 ***--
 ds18b20 = {}
 
 ---@class ds18b20
@@ -40,7 +40,7 @@ function ds18:enable_debug() end
 ---@return nil
 function ds18:read_temp(callback, pin, unit, force_search, save_search) end
 
---*********** DS3231 *************--
+--*** DS3231 ***--
 ds3231 = {}
 
 ---Sets the current date and time.
@@ -105,10 +105,10 @@ function ds3231.getBytes() end
 ---@return nil
 function ds3231.resetStopFlag() end
 
---*********** FIFO TODO *************--
+--*** FIFO TODO ***--
 fifo = {}
 
---********* FTP server ****************--
+--***** FTP server **--
 ---@class ftp
 local FTP = node.LFS.ftpserver()
 
@@ -132,10 +132,10 @@ function FTP:open(user, pass, ssid, wifipwd, dbgFlag) end
 ---@return nil
 function FTP:close() end
 
---*********** GOSSIP TODO *************--
+--*** GOSSIP TODO ***--
 gossip = {}
 
---*********** HDC1000 *************--
+--*** HDC1000 ***--
 hdc1000 = {}
 
 ---@class hdc1000
@@ -165,7 +165,7 @@ function HDC1000.getHumi() end
 ---@return boolean bool true if battery voltage is bellow 2.8V, false otherwise.
 function HDC1000.batteryDead() end
 
---*********** HTTP server *************--
+--*** HTTP server ***--
 httpserver = {}
 
 ---Function to start HTTP server.
@@ -174,13 +174,13 @@ httpserver = {}
 ---@return any h net.server sub module.
 function httpserver.createServer(port, handler) end
 
---*********** IMAP TODO *************--
+--*** IMAP TODO ***--
 imap = {}
 
---*********** LIQUID CRYSTAL TODO *************--
+--*** LIQUID CRYSTAL TODO ***--
 liquidcrystal = {}
 
---*********** LM92 *************--
+--*** LM92 ***--
 lm92 ={}
 
 ---Function used to setup the address for lm92.
@@ -236,7 +236,7 @@ function lm92.getTlow() end
 ---@return number High Window Temperature in degree Celsius.
 function lm92.getThigh() end
 
---*********** MCP23008 *************--
+--*** MCP23008 ***--
 mcp23008 = {}
 
 ---Sets the MCP23008 device address's last three bits.
@@ -274,7 +274,7 @@ function mcp23008.writeIODIR(dataByte) end
 ---@return number byte The GPPU byte i.e. state of all internal pull-up resistors
 function mcp23008.readGPPU() end
 
---*********** MCP23017 *************--
+--*** MCP23017 ***--
 mcp23017 = {}
 
 ---@class mcp23017
@@ -329,7 +329,7 @@ function mcp17:writeGPIO(register, byte) end
 ---@return number byte with states
 function mcp17:readGPIO(register) end
 
---*********** REDIS *************--
+--*** REDIS ***--
 redis = {}
 
 ---@class redis
@@ -362,7 +362,7 @@ function rds:unsubscribe(channel) end
 ---@return nil
 function rds:close() end
 
---********* Telnet server *************--
+--*** Telnet server ***--
 ---@class telnet
 local TELNET = require('telnet')
 
@@ -377,7 +377,7 @@ function TELNET:open(ssid, pwd, port) end
 ---@return nil
 function TELNET:close() end
 
---*********** YEELINK *************--
+--*** YEELINK ***--
 yeelink = {}
 
 ---Initializes Yeelink client.
@@ -396,7 +396,7 @@ function yeelink.getDNS() end
 ---@return nil
 function yeelink.update(datapoint) end
 
---************ ADC  ********************--
+--*** ADC  ***--
 adc = {}
 
 ---Checks and if necessary reconfigures the ADC `mode` setting in the ESP init data block.
@@ -413,19 +413,52 @@ function adc.read(channel) end
 ---@return number
 function adc.readvdd33() end
 
---*********** ADS1115 TODO *************--
+--*** ADS1115 TODO ***--
 ads1115 ={}
 
---*********** ADXL345  TODO *************--
+--*** ADXL345 ***--
 adxl345 = {}
 
---*********** AM2320  TODO *************--
+---Samples the sensor and returns X,Y and Z data from the accelerometer.
+---@return integer x data
+---@return integer y data
+---@return integer z data
+function adxl345.read() end
+
+---Initializes the module.
+---@return nil
+function adxl345.setup() end
+
+--*** AM2320 ***--
 am2320 = {}
 
---*********** APA102  TODO *************--
+---Samples the sensor and returns the relative humidity in % and temperature in celsius, as an integer multiplied with 10.
+---@return integer rh relative humidity percentage multiplied with 10
+---@return integer t temperature in celcius multiplied with 10
+function am2320.read() end
+
+---Initializes the module.
+---@return number model 16 bits number of model
+---@return number version 8 bits version number
+---@return number serial 32 bits serial number
+function am2320.setup() end
+
+--*** APA102 ***--
 apa102 = {}
 
---*********** BIT *************--
+---Send ABGR data in 8 bits to a APA102 chain.
+---@param data_pin integer any GPIO pin 0, 1, 2, ...
+---@param clock_pin integer any GPIO pin 0, 1, 2, ...
+---@param str string payload to be sent to one or more APA102 LEDs. It should be composed from a ABGR quadruplet per element.
+---A1 the first pixel's Intensity channel (0-31)
+---B1 the first pixel's Blue channel (0-255)
+---G1 the first pixel's Green channel (0-255)
+---R1 the first pixel's Red channel (0-255) ... You can connect a lot of APA102 ...
+---A2, B2, G2, R2 are the next APA102s Intensity, Blue, Green and Red channel parameters
+---@return nil
+function apa102.write(data_pin, clock_pin, str) end
+
+--*** BIT ***--
 bit = {}
 
 ---Arithmetic right shift a number equivalent to `value` >> `shift` in C.
@@ -498,10 +531,10 @@ function bit.rshift(value, shift) end
 ---@return integer
 function bit.set(value, pos1, ...) end
 
---*********** BLOOM TODO *************--
+--*** BLOOM TODO ***--
 bloom = {}
 
---*********** BME280 *************--
+--*** BME280 ***--
 bme280 = {}
 
 ---For given air pressure and sea level air pressure returns the altitude in meters
@@ -565,7 +598,7 @@ function bme280.setup(temp_oss, press_oss, humi_oss, power_mode, inactive_durati
 ---@return integer t_fine temperature measure used in pressure and humidity compensation formulas
 function bme280.temp() end
 
---*********** BME280_MATH TODO *************--
+--*** BME280_MATH ***--
 bme280_math = {}
 
 ---For given air pressure and sea level air pressure returns the altitude in meters
@@ -611,7 +644,7 @@ function bme280_math.read(bme280sensor, registers, altitude) end
 ---@return table
 function bme280_math.setup(registers, temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter) end
 
---*********** BME680 *************--
+--*** BME680 ***--
 bme680 = {}
 
 ---For given air pressure and sea level air pressure returns
@@ -659,7 +692,7 @@ function bme680.startreadout(delay, callback) end
 ---@return nil
 function bme680.setup(temp_oss, press_oss, humi_oss, heater_temp, heater_duration, IIR_filter, cold_start) end
 
---*********** BMP085 *************--
+--*** BMP085 ***--
 bmp085 = {}
 
 ---Initializes the module.
@@ -680,10 +713,10 @@ function bmp085.pressure(oversampling_setting) end
 ---@return integer p raw pressure sampling value (integer)
 function bmp085.pressure_raw(oversampling_setting) end
 
---*********** CoAP TODO *************--
+--*** CoAP TODO ***--
 coap = {}
 
---*********** COLOR UTILS *************--
+--*** COLOR UTILS ***--
 color_utils = {}
 
 ---Convert HSV color to GRB color.
@@ -721,7 +754,7 @@ function color_utils.grb2hsv(green, red, blue) end
 ---@return number blue
 function color_utils.colorWheel(angle) end
 
---*********** CRON *************--
+--*** CRON ***--
 cron = {}
 
 ---@class cron
@@ -750,7 +783,7 @@ function CRON:schedule(mask) end
 ---@return nil
 function CRON:unschedule() end
 
---*********** crypto TODO *************--
+--*** crypto TODO ***--
 crypto = {}
 
 ---Encrypts Lua strings.
@@ -805,10 +838,10 @@ function crypto.new_hmac(algo, key) end
 ---@return any
 function crypto.mask(message, mask) end
 
---*********** DCC  TODO *************--
+--*** DCC  TODO ***--
 dcc = {}
 
---*********** DHT *************--
+--*** DHT ***--
 dht = {}
 
 ---Read all kinds of DHT sensors, including DHT11, 21, 22, 33, 44 humidity temperature combo sensor.
@@ -838,7 +871,7 @@ function dht.read11(pin) end
 ---@return number humi_dec  humidity decimal
 function dht.readxx(pin) end
 
---********* ENCODER ***********--
+--*** ENCODER ***--
 encoder = {}
 
 ---Provides a Base64 representation of a (binary) Lua string.
@@ -861,7 +894,7 @@ function encoder.toHex(binary) end
 ---@return string
 function encoder.fromHex(hexstr) end
 
---*********** WiFi Manager TODO *************--
+--*** WiFi Manager TODO ***--
 enduser_setup = {}
 
 ---Controls whether manual AP configuration is used.
@@ -881,7 +914,7 @@ function enduser_setup.start(AP_SSID, onConnected, onError, onDebug) end
 ---@return nil
 function enduser_setup.stop() end
 
---************* FILE  ******************--
+--*** FILE  ***--
 file = {}
 
 ---@class file
@@ -1026,10 +1059,10 @@ function file.writeline(str) end
 ---@return boolean | nil
 function fObj:writeline(str) end
 
---*********** GDBSTUB TODO *************--
+--*** GDBSTUB TODO ***--
 gdbstub = {}
 
---*********** GPIO  *************--
+--*** GPIO  ***--
 gpio = {}
 
 ---@class gpio
@@ -1119,13 +1152,31 @@ function pulser:adjust(offset) end
 ---@param entrytable table is a table containing the same keys as for gpio.pulse.build
 function pulser:update(entrynum, entrytable) end
 
---*********** HDC1080 TODO *************--
+--*** HDC1080 ***--
 hdc1080 = {}
 
---*********** HMC5883L TODO *************--
+---Samples the sensor then returns temperature and humidity value.
+---@return number TH Temperature data in centigrade and humidity data in percentage (0-100)
+function hdc1080.read() end
+
+---Initializes the module.
+---@return nil
+function hdc1080.setup() end
+
+--*** HMC5883L ***--
 hmc5883l = {}
 
---*********** HTTP *************--
+---Samples the sensor and returns X,Y and Z data.
+---@return integer x measurements temperature multiplied with 10
+---@return integer y measurements temperature multiplied with 10
+---@return integer z measurements temperature multiplied with 10
+function hmc5883l.read() end
+
+---Initializes the module.
+---@return nil
+function hmc5883l.setup() end
+
+--*** HTTP ***--
 http = {}
 
 ---Executes a HTTP DELETE request.
@@ -1168,7 +1219,7 @@ function http.put(url, headers, body, callback) end
 ---@return nil
 function http.request(url, method, headers, body, callback) end
 
---*********** HX711 *************--
+--*** HX711 ***--
 hx711 = {}
 
 ---Initialize io pins for hx711 clock and data.
@@ -1200,7 +1251,7 @@ function hx711.start(mode, samples, callback) end
 ---@return nil
 function hx711.stop() end
 
---*********** I2C *************--
+--*** I2C ***--
 i2c = {}
 
 ---Setup I²C address and read/write mode for the next transfer.
@@ -1240,7 +1291,7 @@ function i2c.stop(id) end
 ---@return number number of bytes written
 function i2c.write(id, data1, ...) end
 
---*********** L3G4200D *************--
+--*** L3G4200D ***--
 l3g4200d = {}
 
 ---Samples the sensor and returns the gyroscope output.
@@ -1253,7 +1304,7 @@ function l3g4200d.read() end
 ---@return nil
 function l3g4200d.setup() end
 
---*********** MCP4725 *************--
+--*** MCP4725 ***--
 mcp4725 = {}
 
 ---Gets contents of the dac register and EEPROM.
@@ -1292,7 +1343,7 @@ function mcp4725.read(tbl) end
 ---@return nil
 function mcp4725.write(tbl) end
 
---*********** MDNS *************--
+--*** MDNS ***--
 mdns ={}
 
 ---Register a hostname and start the mDNS service.
@@ -1305,7 +1356,7 @@ function mdns.register(hostname , attributes) end
 ---@return nil
 function mdns.close() end
 
---*********** MQTT **************--
+--*** MQTT ***--
 mqtt = {}
 
 ---@class mqtt
@@ -1387,7 +1438,7 @@ function MQTT:unsubscribe(topic, f_client) end
 ---@return boolean
 function MQTT:unsubscribe(tbl, f_client) end
 
---*********** NET **************--
+--*** NET ***--
 net = {}
 
 ---@class net
@@ -1557,7 +1608,7 @@ function net.dns.setdnsserver(dns_ip_addr, dns_index) end
 ---@return nil
 function net.ping(domain, count, callback_received, callback_sent) end
 
---************* NODE *******************--
+--*** NODE ***--
 node = {}
 
 ---Returns the boot reason and extended reset info.
