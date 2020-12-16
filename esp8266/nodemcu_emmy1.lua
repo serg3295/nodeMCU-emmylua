@@ -1,4 +1,4 @@
---*** BH1750 ***--
+--*** BH1750 ***
 bh1750 = {}
 
 ---Initializes the module and sets up I²C with hardcoded device address.
@@ -15,12 +15,12 @@ function bh1750.read() end
 ---@return number val Last known lux value.
 function bh1750.getlux() end
 
---*** Lua module BME280 TODO ***--
+--*** Lua module BME280 TODO ***
 
---*** COHELPER TODO ***--
+--*** COHELPER TODO ***
 cohelper = {}
 
---*** DS18B20 ***--
+--*** DS18B20 ***
 ds18b20 = {}
 
 ---@class ds18b20
@@ -40,7 +40,7 @@ function ds18:enable_debug() end
 ---@return nil
 function ds18:read_temp(callback, pin, unit, force_search, save_search) end
 
---*** DS3231 ***--
+--*** DS3231 ***
 ds3231 = {}
 
 ---Sets the current date and time.
@@ -105,7 +105,7 @@ function ds3231.getBytes() end
 ---@return nil
 function ds3231.resetStopFlag() end
 
---*** FIFO TODO ***--
+--*** FIFO TODO ***
 fifo = {}
 
 --***** FTP server **--
@@ -132,10 +132,10 @@ function FTP:open(user, pass, ssid, wifipwd, dbgFlag) end
 ---@return nil
 function FTP:close() end
 
---*** GOSSIP TODO ***--
+--*** GOSSIP TODO ***
 gossip = {}
 
---*** HDC1000 ***--
+--*** HDC1000 ***
 hdc1000 = {}
 
 ---@class hdc1000
@@ -165,7 +165,7 @@ function HDC1000.getHumi() end
 ---@return boolean bool true if battery voltage is bellow 2.8V, false otherwise.
 function HDC1000.batteryDead() end
 
---*** HTTP server ***--
+--*** HTTP server ***
 httpserver = {}
 
 ---Function to start HTTP server.
@@ -174,13 +174,13 @@ httpserver = {}
 ---@return any h net.server sub module.
 function httpserver.createServer(port, handler) end
 
---*** IMAP TODO ***--
+--*** IMAP TODO ***
 imap = {}
 
---*** LIQUID CRYSTAL TODO ***--
+--*** LIQUID CRYSTAL TODO ***
 liquidcrystal = {}
 
---*** LM92 ***--
+--*** LM92 ***
 lm92 ={}
 
 ---Function used to setup the address for lm92.
@@ -236,7 +236,7 @@ function lm92.getTlow() end
 ---@return number High Window Temperature in degree Celsius.
 function lm92.getThigh() end
 
---*** MCP23008 ***--
+--*** MCP23008 ***
 mcp23008 = {}
 
 ---Sets the MCP23008 device address's last three bits.
@@ -274,7 +274,7 @@ function mcp23008.writeIODIR(dataByte) end
 ---@return number byte The GPPU byte i.e. state of all internal pull-up resistors
 function mcp23008.readGPPU() end
 
---*** MCP23017 ***--
+--*** MCP23017 ***
 mcp23017 = {}
 
 ---@class mcp23017
@@ -329,7 +329,7 @@ function mcp17:writeGPIO(register, byte) end
 ---@return number byte with states
 function mcp17:readGPIO(register) end
 
---*** REDIS ***--
+--*** REDIS ***
 redis = {}
 
 ---@class redis
@@ -362,7 +362,7 @@ function rds:unsubscribe(channel) end
 ---@return nil
 function rds:close() end
 
---*** Telnet server ***--
+--*** Telnet server ***
 ---@class telnet
 local TELNET = require('telnet')
 
@@ -377,7 +377,7 @@ function TELNET:open(ssid, pwd, port) end
 ---@return nil
 function TELNET:close() end
 
---*** YEELINK ***--
+--*** YEELINK ***
 yeelink = {}
 
 ---Initializes Yeelink client.
@@ -396,7 +396,7 @@ function yeelink.getDNS() end
 ---@return nil
 function yeelink.update(datapoint) end
 
---*** ADC  ***--
+--*** ADC  ***
 adc = {}
 
 ---Checks and if necessary reconfigures the ADC `mode` setting in the ESP init data block.
@@ -413,10 +413,119 @@ function adc.read(channel) end
 ---@return number
 function adc.readvdd33() end
 
---*** ADS1115 TODO ***--
+--*** ADS1115 ***
 ads1115 ={}
 
---*** ADXL345 ***--
+---@class ads1115
+local ads1x15 = ads1115.ADS1115()
+
+---Registers ADS1115 (ADS1113, ADS1114) device.
+---`I2C_ID` - always 0
+---@param I2C_ID number
+---|'0'
+---`ADDRESS` - I²C address of a device
+---@param I2C_ADDR number
+---|' ads1115.ADDR_GND'
+---|' ads1115.ADDR_VDD'
+---|' ads1115.ADDR_SDA'
+---|' ads1115.ADDR_SCL'
+---@return any ads1x15 Registered device object
+function ads1115.ADS1115(I2C_ID, I2C_ADDR) end
+
+---Registers ADS1015 (ADS1013, ADS1014) device.
+---`I2C_ID` - always 0
+---@param I2C_ID number
+---|'0'
+---`ADDRESS` - I²C address of a device
+---@param I2C_ADDR number
+---|' ads1115.ADDR_GND'
+---|' ads1115.ADDR_VDD'
+---|' ads1115.ADDR_SDA'
+---|' ads1115.ADDR_SCL'
+---@return any ads1x15 Registered device object
+function ads1115.ads1015(I2C_ID, I2C_ADDR) end
+
+---Reset all devices connected to I²C interface.
+---@return nil
+function ads1115.reset() end
+
+---Gets the result stored in the register of a previously issued conversion, e.g. in continuous mode or with a conversion ready interrupt.
+---@return number volt voltage in mV
+---@return number volt_dec voltage decimal in uV
+---@return number adc raw adc register value
+---@return number|nil sign sign of the result
+function ads1x15:read() end
+
+---Configuration settings for the ADC.
+---@param GAIN number
+---|'ads1115.GAIN_6_144V' #2/3x Gain
+---|'ads1115.GAIN_4_096V' #1x Gain
+---|'ads1115.GAIN_2_048V' #2x Gain
+---|'ads1115.GAIN_1_024V' #4x Gain
+---|'ads1115.GAIN_0_512V' #8x Gain
+---|'ads1115.GAIN_0_256V' #16x Gain
+---`GAIN` Programmable gain amplifier
+---@param SAMPLES number
+---|' ads1115.DR_8SPS' #ADS1115 only
+---|' ads1115.DR_16SPS' #ADS1115 only
+---|' ads1115.DR_32SPS' #ADS1115 only
+---|' ads1115.DR_64SPS' #ADS1115 only
+---|' ads1115.DR_128SPS'
+---|' ads1115.DR_250SPS'
+---|' ads1115.DR_475SPS' #ADS1115 only
+---|' ads1115.DR_490SPS' #ADS1015 only
+---|' ads1115.DR_860SPS' #ADS1115 only
+---|' ads1115.DR_920SPS' #ADS1015 only
+---|' ads1115.DR_1600SPS' #ADS1015 only
+---|' ads1115.DR_2400SPS' #ADS1015 only
+---|' ads1115.DR_3300SPS' #ADS1015 only
+---`SAMPLES` Data rate in samples per second
+---@param CHANNEL number
+---|' ads1115.SINGLE_0' #channel 0 to GND
+---|' ads1115.SINGLE_1' #channel 1 to GND
+---|' ads1115.SINGLE_2' #channel 2 to GND
+---|' ads1115.SINGLE_3' #channel 3 to GND
+---|' ads1115.DIFF_0_1' #channel 0 to 1
+---|' ads1115.DIFF_0_3' #channel 0 to 3
+---|' ads1115.DIFF_1_3' #channel 1 to 3
+---|' ads1115.DIFF_2_3' #channel 2 to 3
+---`CHANNEL` Input multiplexer for single-ended or differential measurement
+---@param MODE number
+---|' ads1115.SINGLE_SHOT' #single-shot mode
+---|' ads1115.CONTINUOUS' #continuous mode
+---`MODE` Device operating mode
+---@param CONVERSION_RDY? number
+---|' ads1115.CONV_RDY_1'
+---|' ads1115.CONV_RDY_2'
+---|' ads1115.CONV_RDY_4'
+---`CONVERSION_RDY` Number of conversions after conversion ready asserts
+---@param COMPARATOR? number
+---|' ads1115.COMP_1CONV'
+---|' ads1115.COMP_2CONV'
+---|' ads1115.COMP_4CONV'
+---`COMPARATOR` Number of conversions after comparator asserts
+---@param THRESHOLD_LOW number
+---`THRESHOLD_LOW`
+---`0` - `+ GAIN_MAX` in mV for single-ended inputs
+---`- GAIN_MAX` - `+ GAIN_MAX` in mV for differential inputs
+---@param THRESHOLD_HI number
+---`THRESHOLD_HI`
+---`0` - `+ GAIN_MAX` in mV for single-ended inputs
+---`- GAIN_MAX` - `+ GAIN_MAX` in mV for differential inputs
+---@param COMP_MODE? number
+---|' ads1115.CMODE_TRAD' #traditional comparator mode (with hysteresis)
+---|' ads1115.CMODE_WINDOW' #window comparator mode
+---COMP_MODE Comparator mode
+---@return nil
+function ads1x15:setting(GAIN, SAMPLES, CHANNEL, MODE, CONVERSION_RDY, COMPARATOR, THRESHOLD_LOW, THRESHOLD_HI,COMP_MODE) end
+
+---Starts the ADC reading for single-shot mode and after the conversion is done it will invoke an optional callback function in which the ADC conversion result can be obtained.
+---@param CALLBACK function callback function which will be invoked after the adc conversion is done
+---|'function(volt, volt_dec, adc, sign) end'
+---@return nil
+function ads1x15:startread(CALLBACK) end
+
+--*** ADXL345 ***
 adxl345 = {}
 
 ---Samples the sensor and returns X,Y and Z data from the accelerometer.
@@ -429,7 +538,7 @@ function adxl345.read() end
 ---@return nil
 function adxl345.setup() end
 
---*** AM2320 ***--
+--*** AM2320 ***
 am2320 = {}
 
 ---Samples the sensor and returns the relative humidity in % and temperature in celsius, as an integer multiplied with 10.
@@ -443,7 +552,7 @@ function am2320.read() end
 ---@return number serial 32 bits serial number
 function am2320.setup() end
 
---*** APA102 ***--
+--*** APA102 ***
 apa102 = {}
 
 ---Send ABGR data in 8 bits to a APA102 chain.
@@ -458,7 +567,7 @@ apa102 = {}
 ---@return nil
 function apa102.write(data_pin, clock_pin, str) end
 
---*** BIT ***--
+--*** BIT ***
 bit = {}
 
 ---Arithmetic right shift a number equivalent to `value` >> `shift` in C.
@@ -531,10 +640,10 @@ function bit.rshift(value, shift) end
 ---@return integer
 function bit.set(value, pos1, ...) end
 
---*** BLOOM TODO ***--
+--*** BLOOM TODO ***
 bloom = {}
 
---*** BME280 ***--
+--*** BME280 ***
 bme280 = {}
 
 ---For given air pressure and sea level air pressure returns the altitude in meters
@@ -598,7 +707,7 @@ function bme280.setup(temp_oss, press_oss, humi_oss, power_mode, inactive_durati
 ---@return integer t_fine temperature measure used in pressure and humidity compensation formulas
 function bme280.temp() end
 
---*** BME280_MATH ***--
+--*** BME280_MATH ***
 bme280_math = {}
 
 ---For given air pressure and sea level air pressure returns the altitude in meters
@@ -644,7 +753,7 @@ function bme280_math.read(bme280sensor, registers, altitude) end
 ---@return table
 function bme280_math.setup(registers, temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter) end
 
---*** BME680 ***--
+--*** BME680 ***
 bme680 = {}
 
 ---For given air pressure and sea level air pressure returns
@@ -692,7 +801,7 @@ function bme680.startreadout(delay, callback) end
 ---@return nil
 function bme680.setup(temp_oss, press_oss, humi_oss, heater_temp, heater_duration, IIR_filter, cold_start) end
 
---*** BMP085 ***--
+--*** BMP085 ***
 bmp085 = {}
 
 ---Initializes the module.
@@ -713,10 +822,10 @@ function bmp085.pressure(oversampling_setting) end
 ---@return integer p raw pressure sampling value (integer)
 function bmp085.pressure_raw(oversampling_setting) end
 
---*** CoAP TODO ***--
+--*** CoAP TODO ***
 coap = {}
 
---*** COLOR UTILS ***--
+--*** COLOR UTILS ***
 color_utils = {}
 
 ---Convert HSV color to GRB color.
@@ -754,7 +863,7 @@ function color_utils.grb2hsv(green, red, blue) end
 ---@return number blue
 function color_utils.colorWheel(angle) end
 
---*** CRON ***--
+--*** CRON ***
 cron = {}
 
 ---@class cron
@@ -783,7 +892,7 @@ function CRON:schedule(mask) end
 ---@return nil
 function CRON:unschedule() end
 
---*** crypto TODO ***--
+--*** crypto TODO ***
 crypto = {}
 
 ---Encrypts Lua strings.
@@ -838,10 +947,10 @@ function crypto.new_hmac(algo, key) end
 ---@return any
 function crypto.mask(message, mask) end
 
---*** DCC  TODO ***--
+--*** DCC  TODO ***
 dcc = {}
 
---*** DHT ***--
+--*** DHT ***
 dht = {}
 
 ---Read all kinds of DHT sensors, including DHT11, 21, 22, 33, 44 humidity temperature combo sensor.
@@ -871,7 +980,7 @@ function dht.read11(pin) end
 ---@return number humi_dec  humidity decimal
 function dht.readxx(pin) end
 
---*** ENCODER ***--
+--*** ENCODER ***
 encoder = {}
 
 ---Provides a Base64 representation of a (binary) Lua string.
@@ -894,7 +1003,7 @@ function encoder.toHex(binary) end
 ---@return string
 function encoder.fromHex(hexstr) end
 
---*** WiFi Manager TODO ***--
+--*** WiFi Manager TODO ***
 enduser_setup = {}
 
 ---Controls whether manual AP configuration is used.
@@ -914,7 +1023,7 @@ function enduser_setup.start(AP_SSID, onConnected, onError, onDebug) end
 ---@return nil
 function enduser_setup.stop() end
 
---*** FILE  ***--
+--*** FILE  ***
 file = {}
 
 ---@class file
@@ -1059,10 +1168,10 @@ function file.writeline(str) end
 ---@return boolean | nil
 function fObj:writeline(str) end
 
---*** GDBSTUB TODO ***--
+--*** GDBSTUB TODO ***
 gdbstub = {}
 
---*** GPIO  ***--
+--*** GPIO  ***
 gpio = {}
 
 ---@class gpio
@@ -1152,7 +1261,7 @@ function pulser:adjust(offset) end
 ---@param entrytable table is a table containing the same keys as for gpio.pulse.build
 function pulser:update(entrynum, entrytable) end
 
---*** HDC1080 ***--
+--*** HDC1080 ***
 hdc1080 = {}
 
 ---Samples the sensor then returns temperature and humidity value.
@@ -1163,7 +1272,7 @@ function hdc1080.read() end
 ---@return nil
 function hdc1080.setup() end
 
---*** HMC5883L ***--
+--*** HMC5883L ***
 hmc5883l = {}
 
 ---Samples the sensor and returns X,Y and Z data.
@@ -1176,7 +1285,7 @@ function hmc5883l.read() end
 ---@return nil
 function hmc5883l.setup() end
 
---*** HTTP ***--
+--*** HTTP ***
 http = {}
 
 ---Executes a HTTP DELETE request.
@@ -1219,7 +1328,7 @@ function http.put(url, headers, body, callback) end
 ---@return nil
 function http.request(url, method, headers, body, callback) end
 
---*** HX711 ***--
+--*** HX711 ***
 hx711 = {}
 
 ---Initialize io pins for hx711 clock and data.
@@ -1251,7 +1360,7 @@ function hx711.start(mode, samples, callback) end
 ---@return nil
 function hx711.stop() end
 
---*** I2C ***--
+--*** I2C ***
 i2c = {}
 
 ---Setup I²C address and read/write mode for the next transfer.
@@ -1291,7 +1400,7 @@ function i2c.stop(id) end
 ---@return number number of bytes written
 function i2c.write(id, data1, ...) end
 
---*** L3G4200D ***--
+--*** L3G4200D ***
 l3g4200d = {}
 
 ---Samples the sensor and returns the gyroscope output.
@@ -1304,7 +1413,7 @@ function l3g4200d.read() end
 ---@return nil
 function l3g4200d.setup() end
 
---*** MCP4725 ***--
+--*** MCP4725 ***
 mcp4725 = {}
 
 ---Gets contents of the dac register and EEPROM.
@@ -1343,7 +1452,7 @@ function mcp4725.read(tbl) end
 ---@return nil
 function mcp4725.write(tbl) end
 
---*** MDNS ***--
+--*** MDNS ***
 mdns ={}
 
 ---Register a hostname and start the mDNS service.
@@ -1356,7 +1465,7 @@ function mdns.register(hostname , attributes) end
 ---@return nil
 function mdns.close() end
 
---*** MQTT ***--
+--*** MQTT ***
 mqtt = {}
 
 ---@class mqtt
@@ -1438,7 +1547,7 @@ function MQTT:unsubscribe(topic, f_client) end
 ---@return boolean
 function MQTT:unsubscribe(tbl, f_client) end
 
---*** NET ***--
+--*** NET ***
 net = {}
 
 ---@class net
@@ -1464,14 +1573,14 @@ function net.createUDPSocket() end
 function net.ifinfo(if_index) end
 
 ---Join multicast group.
----@param if_ip string
----@param multicast_ip stringof the group to join
+---@param if_ip string string containing the interface ip to join the multicast group. "any" or "" affects all interfaces.
+---@param multicast_ip string string of the group to join
 ---@return nil
 function net.multicastJoin(if_ip, multicast_ip) end
 
 ---Leave multicast group.
----@param if_ip string
----@param multicast_ip string of the group to leave
+---@param if_ip string  string containing the interface ip to leave the multicast group. "any" or "" affects all interfaces.
+---@param multicast_ip string string of the group to leave
 ---@return nil
 function net.multicastLeave(if_ip, multicast_ip) end
 
@@ -1496,13 +1605,13 @@ function NETSRV.getaddr() end
 function NETSOCKET:close() end
 
 ---Connect to a remote server. net.socket:connect()
----@param port integer
----@param ip_domain string
+---@param port integer port number
+---@param ip_domain string IP address or domain name string
 ---@return nil
 function NETSOCKET:connect(port, ip_domain) end
 
 ---Provides DNS resolution for a hostname. net.socket:dns()
----@param domain string
+---@param domain string domain name
 ---@param fun function|' function(net.socket, ip) end'
 ---@return nil
 function NETSOCKET:dns(domain, fun) end
@@ -1563,7 +1672,7 @@ function UDPSOCKET:on(event, fun) end
 ---@param ip string  remote socket IP
 ---@param data any the payload to send
 ---@return nil
-function send(port, ip, data) end
+function UDPSOCKET:send(port, ip, data) end
 
 ---Provides DNS resolution for a hostname. net.udpsocket:dns()
 ---@param domain string
@@ -1605,10 +1714,15 @@ function net.dns.setdnsserver(dns_ip_addr, dns_index) end
 ---@param count? number number of ping packets to be sent (default value is 4)
 ---@param callback_received function function(bytes, ipaddr, seqno, rtt) callback function which is invoked when response is received
 ---@param callback_sent? function function(ipaddr, total_count, timeout_count, total_bytes, total_time) callback function which is invoked when response is received
+---`ipaddrstr` destination server IP address
+---`total_count` total number of packets sent
+---`timeout_count` total number of packets lost (not received)
+---`total_bytes` total number of bytes received from destination server
+---`total_time` total time to perform ping
 ---@return nil
 function net.ping(domain, count, callback_received, callback_sent) end
 
---*** NODE ***--
+--*** NODE ***
 node = {}
 
 ---Returns the boot reason and extended reset info.
@@ -1737,20 +1851,20 @@ function node.startup(tbl) end
 function node.stripdebug(level, fun) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
----@param enabled boolean
+---@param enabled boolean This is either true to enable printing, or false to disable it. The default is false.
 function node.osprint(enabled) end
 
 ---This behaves like math.random except that it uses true random numbers derived from the ESP8266 hardware.
 ---It returns uniformly distributed numbers in the required range.
----@param l number
----@param u number
----@return number
+---@param l number the lower bound of the range
+---@param u number the upper bound of the range
+---@return number num The random number in the appropriate range.
 function node.random(l, u) end
 
 ---This behaves like math.random except that it uses true random numbers derived from the ESP8266 hardware.
 ---It returns uniformly distributed numbers in the required range.
----@param n? integer
----@return number
+---@param n? integer the number of distinct integer values that can be returned -- in the (inclusive) range 1 .. n
+---@return number num The random number in the appropriate range.
 function node.random(n) end
 
 ---Sets the Emergency Garbage Collector mode.
