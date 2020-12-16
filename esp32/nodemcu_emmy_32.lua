@@ -1,4 +1,4 @@
---*********** ADC *************--
+--*** ADC ***
 adc = {}
 
 ---The configuration is in effect for all channels of ADC1.
@@ -7,7 +7,9 @@ adc = {}
 ---@return nil
 function adc.setwidth(adc_number, bits) end
 
----@alias chan_adc
+---Configuration ADC1 capture attenuation of channels.
+---@param adc_number integer|'adc.ADC1'
+---@param channel integer
 ---|' 0' # GPIO36
 ---|' 1' # GPIO37
 ---|' 2' # GPIO38
@@ -16,16 +18,11 @@ function adc.setwidth(adc_number, bits) end
 ---|' 5' # GPIO33
 ---|' 6' # GPIO34
 ---|' 7' # GPIO35
----@alias atten_adc
+---@param atten number
 ---|' adc.ATTEN_0db' #Vinp will be reduced to about 1/1
 ---|' adc.ATTEN_2_5db' #Vinp will be reduced to about 1/1.34
 ---|' adc.ATTEN_6db' #Vinp will be reduced to about 1/2
 ---|' adc.ATTEN_11db' #Vinp will be reduced to about 1/3.6
-
----Configuration ADC1 capture attenuation of channels.
----@param adc_number integer|'adc.ADC1'
----@param channel chan_adc
----@param atten atten_adc
 ---@return nil
 function adc.setup(adc_number, channel, atten) end
 
@@ -39,7 +36,7 @@ function adc.read(adc_number, channel) end
 ---@return number num the sampled value
 function adc.read_hall_sensor() end
 
---*********** BIT *************--
+--*** BIT ***
 bit = {}
 
 ---Arithmetic right shift a number equivalent to `value` >> `shift` in C.
@@ -113,17 +110,17 @@ function bit.rshift(value, shift) end
 ---@return integer num the number with the bit(s) set in the given position(s)
 function bit.set(value, pos1, ...) end
 
---********** BTHCI ************--
+--*** BTHCI ***
 bthci = {}
 
 ---Sends a raw HCI command to the BlueTooth controller.
 ---@param hcibytes any raw HCI command bytes to send to the BlueTooth controller.
 ---@param callback? function optional function to be invoked when the reset completes.
 ---@return nil
-function bthci.rawhci(hcibytes , callback) end
+function bthci.rawhci(hcibytes, callback) end
 
 ---Resets the BlueTooth controller.
----@param callback? function  optional function to be invoked when the reset completes.
+---@param callback? function optional function to be invoked when the reset completes.
 ---@return nil
 function bthci.reset(callback) end
 
@@ -131,51 +128,62 @@ function bthci.reset(callback) end
 ---@param onoff integer|'0'|'1' 1 or 0 to enable or disable advertisements, respectively.
 ---@param callback? function  optional function to be invoked when the reset completes.
 ---@return nil
-function bthci.adv.enable(onoff , callback) end
+function bthci.adv.enable(onoff, callback) end
 
 ---Configures the data to advertise.
 ---@param advbytes any the raw bytes to advertise (up to 31 bytes), in the correct format
 ---@param callback? function optional function to be invoked when the reset completes.
 ---@return nil
-function bthci.adv.setdata(advbytes , callback) end
+function bthci.adv.setdata(advbytes, callback) end
 
 ---Configures advertisement parameters.
 ---@param paramtable table
 ---@param callback? function
 ---@return nil
-function bthci.adv.setparams(paramtable , callback) end
+function bthci.adv.setparams(paramtable, callback) end
 
 ---Enables or disable scanning for advertisements from other BlueTooth devices.
 ---@param onoff integer|'0'|'1' 1 or 0 to enable or disable advertisements, respectively.
 ---@param callback? function
 ---@return nil
-function bthci.scan.enable(onoff , callback) end
+function bthci.scan.enable(onoff, callback) end
 
 ---Configures scan parameters.
 ---@param paramstable table
 ---@param callback? function
 ---@return nil
-function bthci.scan.setparams(paramstable , callback) end
+function bthci.scan.setparams(paramstable, callback) end
 
 ---Registers the callback to be passed any received advertisements.
 ---@param event string|'"adv_report"'
 ---@param callback? function
 ---@return nil
-function bthci.scan.on(event , callback) end
+function bthci.scan.on(event, callback) end
 
---*********** CAN *************--
+--*** CAN ***
 can = {}
 
 ---Send a frame.
 ---@param format integer|'can.STANDARD_FRAME'|'can.EXTENDED_FRAME'
----@param msg_id any
----@param data any
+---@param msg_id any msg_id CAN Messge ID
+---@param data any data CAN data, up to 8 bytes
 ---@return nil
 function can.send(format, msg_id, data) end
 
 ---Configuration CAN controller.
 ---@param tbl table
----@param fun function
+---config table
+---`speed` kbps. One of following value: 1000, 800, 500, 250, 100.
+---`tx` Pin num for TX.
+---`rx` Pin num for RX.
+---`dual_filter` true dual filter mode, false single filter mode (default)
+---`code` 4-bytes integer. Use this with mask to filter CAN frame. Default: 0. See SJA1000
+---`mask` 4-bytes integer. Default: 0xffffffff
+---@param fun function|' function(format, msg_id, data) end'
+---callback function to be called when CAN data received.
+---*format* Frame format. can.STANDARD_FRAME or can.EXTENDED_FRAME
+---*msg_id* CAN Messge ID
+---*data* CAN data, up to 8 bytes
 ---@return nil
 function can.setup(tbl, fun) end
 
@@ -187,7 +195,7 @@ function can.start() end
 ---@return nil
 function can.stop() end
 
---********* CRYPTO ************--
+--*** CRYPTO ***
 crypto = {}
 
 ---Create a digest/hash object that can have any number of strings added to it.
@@ -203,7 +211,7 @@ function crypto.new_hash(algo) end
 ---@return any finalize
 function crypto.new_hmac(algo, key) end
 
---*********** DAC *************--
+--*** DAC ***
 dac = {}
 
 ---Disables DAC output on the related GPIO.
@@ -218,11 +226,11 @@ function dac.enable(channel) end
 
 ---Sets the output value of the DAC.
 ---@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2'
----@param value number
+---@param value number value output value
 ---@return nil
 function dac.write(channel, value) end
 
---*********** DHT *************--
+--*** DHT ***
 dht = {}
 
 ---Read DHT11 humidity temperature combo sensor.
@@ -231,7 +239,7 @@ dht = {}
 ---@return number temp temperature
 ---@return number humi humidity
 ---@return number temp_dec temperature decimal (always 0)
----@return number humi_dec  humidity decimal (always 0)
+---@return number humi_dec humidity decimal (always 0)
 function dht.read11(pin) end
 
 ---Read DHT21/22/33/43 and AM2301/2302/2303 humidity temperature combo sensors.
@@ -243,7 +251,7 @@ function dht.read11(pin) end
 ---@return number humi_dec humidity decimal (always 0)
 function dht.read2x(pin) end
 
---********* ENCODER ***********--
+--*** ENCODER ***
 encoder = {}
 
 ---Provides a Base64 representation of a (binary) Lua string.
@@ -266,7 +274,7 @@ function encoder.toHex(binary) end
 ---@return string
 function encoder.fromHex(hexstr) end
 
---*********** ETH *************--
+--*** ETH ***
 eth = {}
 
 ---Get MAC address.
@@ -292,10 +300,10 @@ function eth.on(event, callback) end
 ---@return nil
 function eth.set_mac(mac) end
 
---********** FILE *************--
+--*** FILE ***
 file = {}
 
----@class file
+---@class File
 local fObj = file.open()
 
 ---Change current directory (and drive).
@@ -334,17 +342,15 @@ function file.list(pattern) end
 ---@return nil
 function file.on(event, foo) end
 
----@alias mode32_f
+---Opens a file for access, potentially creating it (for write modes).
+---@param filename string | '""'
+---@param mode string
 ---|>' "r"' # read mode
 ---| ' "w"' # write mode
 ---| ' "a"' # append mode
 ---| ' "r+"' # update mode, all previous data is preserved
 ---| ' "w+"' # update mode, all previous data is erased
 ---| ' "a+"' # append update mode, previous data is preserved, writing is only allowed at the end of file
-
----Opens a file for access, potentially creating it (for write modes).
----@param filename string | '""'
----@param mode mode32_f
 ---@return nil | any
 function file.open(filename, mode) end
 
@@ -426,7 +432,7 @@ function file.writeline(str) end
 ---@return boolean | nil
 function fObj:writeline(str) end
 
---********** GPIO *************--
+--*** GPIO ***
 gpio = {}
 
 ---`gpio` integer one or more (given as list) pins,
@@ -447,39 +453,36 @@ function gpio.config(tbl) end
 ---@return integer val 0 = low, 1 = high
 function gpio.read(pin) end
 
----@alias strenght32
+---Set the drive strength of a given GPIO pin.
+---@param pin integer a valid GPIO pin number.
+---@param strength number
 ---|' gpio.DRIVE_0' #weakest drive strength
 ---|' gpio.DRIVE_1' #stronger drive strength
 ---|' gpio.DRIVE_2' #default drive strength
 ---|' gpio.DRIVE_DEFAULT' #default drive strength (same as DRIVE_2)
 ---|' gpio.DRIVE_3' #maximum drive strength
----Set the drive strength of a given GPIO pin.
----@param pin integer a valid GPIO pin number.
----@param strength strenght32
 ---@return nil
 function gpio.set_drive(pin, strength) end
 
----@alias type_trig32
+---Establish or clear a callback function to run on interrupt for a GPIO.
+---@param pin integer
+---@param type number
 ---|' "gpio.INTR_DISABLE"' #or nil to disable interrupts on this pin (in which case callback is ignored and should be nil or omitted)
 ---|' gpio.INTR_UP' #for trigger on rising edge
 ---|' gpio.INTR_DOWN' #for trigger on falling edge
 ---|' gpio.INTR_UP_DOWN' #for trigger on both edges
 ---|' gpio.INTR_LOW' #for trigger on low level
 ---|' gpio.INTR_HIGH' #for trigger on high level
----Establish or clear a callback function to run on interrupt for a GPIO.
----@param pin integer
----@param type type_trig32
 ---@param callback function
 ---@return nil
 function gpio.trig(pin , type , callback) end
 
----@alias level_gpio32
+---Configuring wake-from-sleep-on-GPIO-level.
+---@param pin integer
+---@param level number
 ---|' gpio.INTR_NONE'  #to disable wake-up
 ---|' gpio.INTR_LOW'   #for wake-up on low level
 ---|' gpio.INTR_HIGH'  #for wake-up on high level
----Configuring wake-from-sleep-on-GPIO-level.
----@param pin integer
----@param level level_gpio32
 ---@return nil
 function gpio.wakeup(pin, level) end
 
@@ -489,26 +492,25 @@ function gpio.wakeup(pin, level) end
 ---@return nil
 function gpio.write(pin, level) end
 
---********** HTTP *************--
+--*** HTTP ***
 http = {}
 
----@class http
+---@class Http
 local HTTP = http.createConnection()
 
 ---Creates a connection object which can be configured and then executed.
 ---@param url string|'"http://"'|'"https://"'
 ---@param method? integer|' http.GET'|' http.POST'|' http.DELETE'|' http.HEAD'
 ---@param options? any
----@return http
+---@return any
 function http.createConnection(url, method, options) end
 
----@alias event32_http
+---Set a callback to be called when a certain event occurs.
+---@param event string
 ---|' "connect"' #Called when the connection is first established. Callback receives no arguments.
 ---|' "headers"' #Called once the HTTP headers from the remote end have been received. Callback is called as callback(status_code, headers_table).
 ---|' "data"' #Can be called multiple times, each time more (non-headers) data is received. Callback is called as callback(status_code, data).
 ---|' "complete"' #Called once all data has been received. Callback is called as callback status_code, connected) where connected is true if the connection is still open.
----Set a callback to be called when a certain event occurs.
----@param event event32_http
 ---@param callback? function|nil|' function() end'
 ---@return nil
 function HTTP:on(event, callback) end
@@ -563,7 +565,7 @@ function http.get(url, options, callback) end
 ---@return nil|any
 function http.post(url, options, body, callback) end
 
---*********** I2C *************--
+--*** I2C ***
 i2c = {}
 
 ---Send (SW) or queue (HWx) I²C address and read/write mode for the next transfer.
@@ -634,7 +636,7 @@ function i2c.slave.setup(id, slave_config) end
 ---@return number
 function i2c.slave.send(id, data1, ...) end
 
---*********** I2S *************--
+--*** I2S ***
 i2s ={}
 
 ---Mute the I2S channel. The hardware buffer is instantly filled with silence.
@@ -667,10 +669,10 @@ function i2s.stop(i2s_num) end
 ---@return nil
 function i2s.write(i2s_num, data) end
 
---********** LEDC *************--
+--*** LEDC ***
 ledc = {}
 
----@class ledc
+---@class Ledc
 local channel = ledc.newChannel()
 
 ---Configures a PIN to be controlled by the LEDC system.
@@ -738,10 +740,10 @@ function channel:fadewithstep(targetDuty, scale, cycleNum, wait) end
 ---@return nil
 function channel:fade(duty, direction, scale, cycleNum, stepNum, wait) end
 
---********** MQTT *************--
+--*** MQTT ***
 mqtt = {}
 
----@class mqtt
+---@class Mqtt
 local MQTT32 = mqtt.Client()
 
 ---Creates a MQTT client.
@@ -802,10 +804,10 @@ function MQTT32:subscribe(topic, qos, f32_client) end
 ---@return boolean
 function MQTT32:unsubscribe(topic, f32_client) end
 
---*********** NET *************--
+--*** NET ***
 net = {}
 
----@class net
+---@class Net
 local NETSOCKET32 = net.createConnection()
 local NETSRV32= net.createServer()
 local UDPSOCKET32 = net.createUDPSocket()
@@ -952,7 +954,7 @@ function net.dns.resolve(host, fun) end
 ---@return nil
 function net.dns.setdnsserver(dns_ip_addr, dns_index) end
 
---********** NODE *************--
+--*** NODE ***
 node = {}
 
 ---Returns the boot reason and extended reset info.
@@ -1024,13 +1026,11 @@ function node.restore() end
 ---@return number
 function node.setcpufreq(speed) end
 
----@alias level_n32
+---Controls the amount of debug information kept during node.compile(), and allows removal of debug information from already compiled Lua code.
+---@param level? number
 ---|'1' #don't discard debug info
 ---|'2' #discard Local and Upvalue debug info
 ---|'3' #discard Local, Upvalue and line-number debug info
----Controls the amount of debug information kept during node.compile(),
----and allows removal of debug information from already compiled Lua code.
----@param level? level_n32
 ---@param fun? function
 ---@return integer|nil
 function node.stripdebug(level, fun) end
@@ -1051,17 +1051,16 @@ function node.uptime() end
 ---@return nil
 function node.egc.setmode(mode, level) end
 
----@alias task_prio32
+---Enable a Lua callback or task to post another task request.
+---@param task_priority? number
 ---|'0' #node.task.LOW_PRIORITY
 ---|'1' #node.task.MEDIUM_PRIORITY
 ---|'2' #node.task.HIGH_PRIORITY
----Enable a Lua callback or task to post another task request.
----@param task_priority? task_prio32
 ---@param fun function|' function() end'
 ---@return nil
 function node.task.post(task_priority, fun) end
 
---*********** OTA *************--
+--*** OTA ***
 otaupgrade = {}
 
 ---The boot info and application state and version info can be queried with this function.
@@ -1093,7 +1092,7 @@ function otaupgrade.accept() end
 ---and request an explicit rollback to the previous version.
 function otaupgrade.rollback() end
 
---********* 1-WIRE ************--
+--*** 1-WIRE ***
 ow = {}
 
 ---Computes the 1-Wire CRC16 and compare it against the received CRC.
@@ -1183,10 +1182,10 @@ function ow.write(pin, v, power) end
 ---@return nil
 function ow.write_bytes(pin, buf, power) end
 
---********* PULCECNT **********--
+--* PULCECNT **--
 pulsecnt = {}
 
----@class pulsecnt
+---@class Pulsecnt
 local pulsecntObj = pulsecnt.create()
 
 ---Create the pulse counter object.
@@ -1246,7 +1245,7 @@ function pulsecntObj:clear() end
 ---@return integer
 function pulsecntObj:getCnt() end
 
---******** QRCODEGEN **********--
+-- QRCODEGEN **--
 qrcodegen = {}
 
 ---Generates a QR Code from a text string.
@@ -1266,10 +1265,10 @@ function qrcodegen.getSize(qrcode) end
 ---@return boolean
 function qrcodegen.getPixel(qrcode, x, y) end
 
---********** SDMMC ************--
+--*** SDMMC ***
 sdmmc = {}
 
----@class sdmmc
+---@class Sdmmc
 local card = sdmmc.init()
 
 ---Initialize the SDMMC and probe the attached SD card. SDMMC Mode.
@@ -1310,7 +1309,7 @@ function card:umount() end
 ---@return nil
 function card:write(start_sec, data) end
 
---******* SIGMA DELTA *********--
+--******* SIGMA DELTA *--
 sigma_delta = {}
 
 ---Reenables GPIO functionality at the related pin.
@@ -1336,10 +1335,10 @@ function sigma_delta.setduty(channel, value) end
 ---@return nil
 function sigma_delta.setup(channel, pin) end
 
---********** SJSON ************--
+--*** SJSON ***
 sjson = {}
 
----@class sjson
+---@class Sjson
 local encoder = sjson.encoder()
 local decoder = sjson.decoder()
 
@@ -1376,7 +1375,7 @@ function decoder:result() end
 ---@param opts table
 function sjson.decode(str, opts) end
 
---********** SODIUM ***********--
+--** SODIUM ***
 sodium = {}
 
 ---Returns a random integer between `0` and `0xFFFFFFFF` inclusive.
@@ -1411,12 +1410,12 @@ function sodium.crypto_box.seal(message, public_key) end
 ---@return any|nil
 function sodium.crypto_box.seal_open(ciphertext, public_key, secret_key) end
 
---********** SPI **************--
+--*** SPI ***
 spi = {}
 
----@class spi
+---@class Spi
 local busmaster = spi.master()
----@class spidev
+---@class Spidev
 local device = busmaster:device()
 
 ---Initializes a bus in master mode and returns a bus master object.
@@ -1447,7 +1446,7 @@ function device:transfer(trans) end
 ---Initializes a bus in slave mode and returns a slave object. `Not yet supported.`
 function spi.slave() end
 
---********* STRUCT ************--
+--*** STRUCT ***
 struct = {}
 
 ---Returns a string containing the values d1, d2, etc. packed according to the format string fmt.
@@ -1469,7 +1468,7 @@ function struct.unpack (fmt, s, offset) end
 ---@return integer sz The size of the string that would be output in a pack operation with this format string.
 function struct.size (fmt) end
 
---*********** TIME ************--
+--*** TIME ***
 time = {}
 
 ---Converts calendar table to a timestamp in Unix epoch
@@ -1514,10 +1513,10 @@ function time.set(time) end
 ---@return nil
 function time.settimezone(timezone) end
 
---*********** TMR *************--
+--*** TMR ***
 tmr = {}
 
----@class tmr
+---@class Tmr
 local tObj = tmr.create()
 
 ---Creates a dynamic timer object.
@@ -1563,10 +1562,10 @@ function tObj:stop() end
 ---@return nil
 function tObj:unregister() end
 
---********** TOUCH ************--
+--*** TOUCH ***
 touch ={}
 
----@class touch
+---@class Touch
 local tp = touch.create()
 
 ---Create the touch sensor object.
@@ -1598,10 +1597,10 @@ function tp:intrEnable() end
 ---@return nil
 function tp:intrDisable() end
 
---*********** U8G2 TODO ************--
+--*** U8G2 TODO ***
 u8g2 = {}
 
---*********** UART ************--
+--*** UART ***
 uart = {}
 
 ---Sets the callback function to handle UART events.
@@ -1653,10 +1652,10 @@ function uart.setmode(id, mode) end
 ---@return nil
 function uart.write(id, data1, ...) end
 
---*********** UCG TODO *************--
+--*** UCG TODO ***
 ucg = {}
 
---*********** WIFI ************--
+--*** WIFI ***
 wifi = {}
 
 ---Gets the current WiFi channel.
@@ -1668,13 +1667,12 @@ function wifi.getchannel() end
 ---@return integer mod The WiFi mode.
 function wifi.getmode() end
 
----@alias modwifi32 integer
+---Configures the WiFi mode to use.
+---@param mode integer
 ---|'wifi.STATION' #for when the device is connected to a WiFi router.
 ---|'wifi.SOFTAP'  #for when the device is acting only as an access point.
 ---|'wifi.STATIONAP' #is the combination of wifi.STATION and wifi.SOFTAP
 ---|'wifi.NULLMODE' # disables the WiFi interface(s).
----Configures the WiFi mode to use.
----@param mode modwifi32
 ---@param save? boolean choose whether or not to save wifi mode to flash
 ---@return any cm current mode after setup
 function wifi.mode(mode, save) end
@@ -1753,10 +1751,10 @@ function wifi.ap.setip(cfg) end
 ---@return boolean
 function wifi.ap.sethostname(hostname) end
 
---********** WS2812 TODO ***********--
+--** WS2812 TODO ***
 ws2812 = {}
 
----@class ws2812
+---@class Ws2812
 local buffer =  ws2812.newBuffer()
 
 ---Send data to up to 8 led strip using its native format.
