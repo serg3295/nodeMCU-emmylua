@@ -303,7 +303,7 @@ function eth.set_mac(mac) end
 --*** FILE ***
 file = {}
 
----@class File
+---@class file
 local fObj = file.open()
 
 ---Change current directory (and drive).
@@ -495,7 +495,7 @@ function gpio.write(pin, level) end
 --*** HTTP ***
 http = {}
 
----@class Http
+---@class http
 local HTTP = http.createConnection()
 
 ---Creates a connection object which can be configured and then executed.
@@ -672,7 +672,7 @@ function i2s.write(i2s_num, data) end
 --*** LEDC ***
 ledc = {}
 
----@class Ledc
+---@class ledc
 local channel = ledc.newChannel()
 
 ---Configures a PIN to be controlled by the LEDC system.
@@ -718,7 +718,7 @@ function channel:resume() end
 ---Set LEDC fade function, with a limited time.
 ---@param targetDuty number Target duty of fading.
 ---@param maxFadeTime number The maximum time of the fading ( ms ).
----@param wait? integer|'ledc.FADE_NO_WAIT'|'ledc.FADE_WAIT_DONE'
+---@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE'
 ---@return nil
 function channel:fadewithtime(targetDuty, maxFadeTime, wait) end
 
@@ -726,7 +726,7 @@ function channel:fadewithtime(targetDuty, maxFadeTime, wait) end
 ---@param targetDuty number Target duty of fading.
 ---@param scale number Controls the increase or decrease step scale.
 ---@param cycleNum integer Increase or decrease the duty every cycle_num cycles
----@param wait? integer|'ledc.FADE_NO_WAIT'|'ledc.FADE_WAIT_DONE'
+---@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE'
 ---@return nil
 function channel:fadewithstep(targetDuty, scale, cycleNum, wait) end
 
@@ -736,23 +736,23 @@ function channel:fadewithstep(targetDuty, scale, cycleNum, wait) end
 ---@param scale number Set gradient change amplitude.
 ---@param cycleNum number Set how many LEDC tick each time the gradient lasts.
 ---@param stepNum number  Set the number of the gradient.
----@param wait? integer|'ledc.FADE_NO_WAIT'|'ledc.FADE_WAIT_DONE'
+---@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE'
 ---@return nil
 function channel:fade(duty, direction, scale, cycleNum, stepNum, wait) end
 
 --*** MQTT ***
 mqtt = {}
 
----@class Mqtt
+---@class mqtt
 local MQTT32 = mqtt.Client()
 
 ---Creates a MQTT client.
----@param clientid string|'""'
----@param keepalive integer
----@param username? string|' ""'
----@param password? string|' ""'
----@param cleansession? integer|' 1'|' 0'
----@return mqtt
+---@param clientid string clientid client ID
+---@param keepalive integer keepalive keepalive seconds
+---@param username? string username user name
+---@param password? string password user password
+---@param cleansession? integer cleansession 0/1 for false/true. Default is 1 (true).
+---@return any MQTT32 MQTT client
 function mqtt.Client(clientid, keepalive, username, password, cleansession) end
 
 ---Closes connection to the broker.
@@ -760,17 +760,20 @@ function mqtt.Client(clientid, keepalive, username, password, cleansession) end
 function MQTT32:close() end
 
 ---Connects to the broker specified by the given host, port, and secure options.
----@param host string|'""'
----@param port? integer|' 1883'
----@param secure? boolean
----@param conn_est? function function(client: any)
----@param conn_notest? function function(client: any, reason: any)
+---@param host string host host, domain or IP (string)
+---@param port? integer port broker port (number), default 1883
+---@param secure? boolean|table secure either an interger with 0/1 for false/true (default 0), or a table with optional entries
+---*ca_cert CA* certificate data in PEM format for server verify with SSL
+---*client_cert* client certificate data in PEM format for SSL mutual authentication
+---*client_key* client private key data in PEM format for SSL mutual authentication Note that both client_cert and client_key have to be provided for mutual authentication.
+---@param conn_est? function|' function(client: any)'
+---@param conn_notest? function|' function(client: any, reason: any)'
 ---@return boolean
 function MQTT32:connect(host, port, secure, conn_est, conn_notest) end
 
 ---Setup Last Will and Testament.
----@param topic string|'""'
----@param message string|' ""'
+---@param topic string topic the topic to publish to (string)
+---@param message string message the message to publish, (buffer or string)
 ---@param qos? integer|' 0'|' 1'|' 2'
 ---@param retain? integer|' 0'|' 1'
 ---@return nil
@@ -783,18 +786,18 @@ function MQTT32:lwt(topic, message, qos, retain) end
 function MQTT32:on(event, handler) end
 
 ---Publishes a message.
----@param topic string|'""'
----@param payload string|' ""'
+---@param topic string topic the topic to publish to (topic string)
+---@param payload string message the message to publish, (buffer or string)
 ---@param qos integer|' 0'|' 1'|' 2'
 ---@param retain integer|' 0'|' 1'
----@param f_puback function?|' function(client) end'
+---@param f_puback? function|' function(client) end'
 ---@return boolean
 function MQTT32:publish(topic, payload, qos, retain, f_puback) end
 
 ---Subscribes to one or several topics.
 ---@param topic string|'""'
 ---@param qos integer|' 0'|' 1'|' 2'
----@param f32_client? function |' function(client) end'
+---@param f32_client? function|' function(client) end'
 ---@return boolean
 function MQTT32:subscribe(topic, qos, f32_client) end
 
@@ -807,7 +810,7 @@ function MQTT32:unsubscribe(topic, f32_client) end
 --*** NET ***
 net = {}
 
----@class Net
+---@class net
 local NETSOCKET32 = net.createConnection()
 local NETSRV32= net.createServer()
 local UDPSOCKET32 = net.createUDPSocket()
@@ -1185,7 +1188,7 @@ function ow.write_bytes(pin, buf, power) end
 --* PULCECNT **--
 pulsecnt = {}
 
----@class Pulsecnt
+---@class pulsecnt
 local pulsecntObj = pulsecnt.create()
 
 ---Create the pulse counter object.
@@ -1268,7 +1271,7 @@ function qrcodegen.getPixel(qrcode, x, y) end
 --*** SDMMC ***
 sdmmc = {}
 
----@class Sdmmc
+---@class sdmmc
 local card = sdmmc.init()
 
 ---Initialize the SDMMC and probe the attached SD card. SDMMC Mode.
@@ -1338,7 +1341,7 @@ function sigma_delta.setup(channel, pin) end
 --*** SJSON ***
 sjson = {}
 
----@class Sjson
+---@class sjson
 local encoder = sjson.encoder()
 local decoder = sjson.decoder()
 
@@ -1413,9 +1416,9 @@ function sodium.crypto_box.seal_open(ciphertext, public_key, secret_key) end
 --*** SPI ***
 spi = {}
 
----@class Spi
+---@class spi
 local busmaster = spi.master()
----@class Spidev
+---@class spidev
 local device = busmaster:device()
 
 ---Initializes a bus in master mode and returns a bus master object.
@@ -1516,7 +1519,7 @@ function time.settimezone(timezone) end
 --*** TMR ***
 tmr = {}
 
----@class Tmr
+---@class tmr
 local tObj = tmr.create()
 
 ---Creates a dynamic timer object.
@@ -1565,7 +1568,7 @@ function tObj:unregister() end
 --*** TOUCH ***
 touch ={}
 
----@class Touch
+---@class touch
 local tp = touch.create()
 
 ---Create the touch sensor object.
@@ -1754,7 +1757,7 @@ function wifi.ap.sethostname(hostname) end
 --** WS2812 TODO ***
 ws2812 = {}
 
----@class Ws2812
+---@class ws2812
 local buffer =  ws2812.newBuffer()
 
 ---Send data to up to 8 led strip using its native format.
