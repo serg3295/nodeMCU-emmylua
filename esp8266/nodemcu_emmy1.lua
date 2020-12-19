@@ -391,7 +391,7 @@ local rds = redis.connect()
 ---Function used to connect to Redis server.
 ---@param host any Redis host name or address
 ---@param port any Redis database port. Default value is 6379.
----@return any rdsObj Object with rest of the functions.
+---@return redis rdsObj Object with rest of the functions.
 function redis.connect(host, port) end
 
 ---Subscribe to a Redis channel.
@@ -482,7 +482,7 @@ local ads1x15 = ads1115.ADS1115()
 ---|' ads1115.ADDR_VDD'
 ---|' ads1115.ADDR_SDA'
 ---|' ads1115.ADDR_SCL'
----@return any ads1x15 Registered device object
+---@return ads1115 obj Registered device object
 function ads1115.ADS1115(I2C_ID, I2C_ADDR) end
 
 ---Registers ADS1015 (ADS1013, ADS1014) device.
@@ -702,7 +702,7 @@ local filter = bloom.create()
 ---Create a filter object.
 ---@param elements number elements The largest number of elements to be added to the filter.
 ---@param errorrate number errorrate The error rate (the false positive rate).
----@return any objfilter A filter object.
+---@return bloom objfilter A filter object.
 function bloom.create(elements, errorrate) end
 
 ---Adds a string to the set and returns an indication of whether the string was already present.
@@ -954,7 +954,7 @@ local CRON = cron.schedule()
 ---Creates a new schedule entry.
 ---@param mask string | '"* * * * *"'
 ---@param callback function | ' function(e) end'
----@return function
+---@return cron cron.entry sub module
 function cron.schedule(mask, callback) end
 
 ---Removes all scheduled entries.
@@ -1167,7 +1167,7 @@ function file.on(event, foo) end
 ---Opens a file for access, potentially creating it (for write modes).
 ---@param filename string | '""'
 ---@param mode mode_f
----@return nil | file
+---@return file object if file opened ok. nil if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
 ---Remove a file from the file system. The file must not be currently open.
@@ -1301,7 +1301,7 @@ function gpio.write(pin, level) end
 
 ---This builds the gpio.
 ---@param tbl table
----@return any
+---@return gpio obj gpio.pulse object.
 function gpio.pulse.build(tbl) end
 
 ---This starts the output operations.
@@ -1560,7 +1560,7 @@ local MQTT = mqtt.Client()
 ---@param password? string user password
 ---@param cleansession? integer 0/1 for false/true. Default is 1 (true).
 ---@param max_message_length? integer how large messages to accept. Default is 1024.
----@return any
+---@return mqtt MQTT client
 function mqtt.Client(clientid, keepalive, username, password, cleansession, max_message_length) end
 
 ---Closes connection to the broker.
@@ -1638,15 +1638,16 @@ local NETSRV = net.createServer()
 local UDPSOCKET = net.createUDPSocket()
 
 ---Creates a TCP client.
----@return any
+---@return net
 function net.createConnection() end
 
 ---Creates a TCP listening socket (a server).
 ---@param timeout integer seconds until disconnecting an inactive client
----@return any net.server sub module
+---@return net net.server sub module
 function net.createServer(timeout) end
 
 ---Creates an UDP socket.
+---@return net
 function net.createUDPSocket() end
 
 ---Return information about a network interface, specified by index.

@@ -379,18 +379,20 @@ function sigma_delta.settarget(value) end
 ---@return nil
 function sigma_delta.setup(pin) end
 
---*** SJSON  ***
+--*** SJSON  TODO ***
+---@class sjson
 sjson = {}
 
----@class sjson
+---@class sjsonenc : sjson
 local encoder = sjson.encoder()
+---@class sjsondec : sjson
 local decoder = sjson.decoder()
 
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
 ---@param tbl table  data to encode
 ---@param opts? table
----@return any A sjson.encoder object.
-function sjson.encoder(tbl , opts) end
+---@return sjsonenc obj A sjson.encoder object.
+function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
 ---@param size? integer an optional value for the number of bytes to return.
@@ -401,10 +403,11 @@ function encoder:read(size) end
 ---@param tbl table data to encode
 ---@param opts? table
 ---@return string
-function sjson.encode(tbl , opts) end
+function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object.
 ---@param opts? table
+---@return sjsondec obj A sjson.decoder object
 function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
@@ -444,13 +447,13 @@ function sntp.getoffset() end
 softuart = {}
 
 ---@class softuart
-softuart.port = softuart.setup()
+local softuart = softuart.setup()
 
 ---Creates new SoftUART instance.
 ---@param baudrate number :SoftUART baudrate. Maximum supported is 230400.
 ---@param txPin number :SoftUART tx pin. If set to nil write method will not be supported.
 ---@param rxPin number :SoftUART rx pin. If set to nil on("data") method will not be supported.
----@return any swp softuart instance.
+---@return softuart swp softuart instance.
 function softuart.setup(baudrate, txPin, rxPin) end
 
 ---Sets up the callback function to receive data.
@@ -458,12 +461,12 @@ function softuart.setup(baudrate, txPin, rxPin) end
 ---@param trigger number Can be a character or a number.
 ---@param fun function
 ---@return nil
-function softuart.port:on(event, trigger, fun) end
+function softuart:on(event, trigger, fun) end
 
 ---Transmits a byte or sequence of them.
 ---@param data number|string
 ---@return nil
-function softuart.port:write(data) end
+function softuart:write(data) end
 
 --*** SOMFY ***
 somfy = {}
@@ -611,7 +614,7 @@ tls = {}
 local TLS = tls.createConnection()
 
 ---Creates TLS connection.
----@return any
+---@return tls tls.socket sub module
 function tls.createConnection() end
 
 ---Closes socket.
@@ -722,7 +725,7 @@ function tmr.wdclr() end
 function tmr.ccount() end
 
 ---Creates a dynamic timer object; see below for its method table.
----@return any
+---@return tmr
 function tmr.create() end
 
 ---@alias tmr_n
@@ -880,7 +883,7 @@ websocket = {}
 local ws = websocket.createClient()
 
 ---Creates a new websocket client.
----@return any
+---@return websocket websocketclient
 function websocket.createClient() end
 
 ---Closes a websocket connection.
@@ -912,14 +915,14 @@ function websocket:send(message, opcode) end
 --*** WIEGANG ***
 wiegand = {}
 
----@class wiegang
+---@class wiegand
 wiegandobj = wiegand.create()
 
 ---Creates a dynamic wiegand object that receives a callback when data is received.
 ---@param pinD0 number This is a GPIO number (excluding 0) and connects to the D0 data line
 ---@param pinD1 number This is a GPIO number (excluding 0) and connects to the D1 data line
 ---@param callback function This is a function that will invoked when a full card or keypress is read.
----@return any wiegandobj If the arguments are in error, or the operation cannot be completed, then an error is thrown.
+---@return wiegand wiegand object. If the arguments are in error, or the operation cannot be completed, then an error is thrown.
 function wiegand.create(pinD0, pinD1, callback) end
 
 ---Releases the resources associated with the card reader.
@@ -1228,7 +1231,7 @@ function ws2801.write(str) end
 ws2812 = {}
 
 ---@class ws2812
-local buffer =  ws2812.newBuffer()
+local buffer = ws2812.newBuffer()
 
 ---Initialize UART1 and GPIO2, should be called once and before write().
 ---@param mode? integer|'ws2812.MODE_SINGLE'|'ws2812.MODE_DUAL'
@@ -1244,7 +1247,7 @@ function ws2812.write(data1, data2) end
 ---Allocate a new memory buffer to store led values.
 ---@param numberOfLeds integer
 ---@param bytesPerLed integer  3 for RGB strips and 4 for RGBW strips
----@return any
+---@return ws2812
 function ws2812.newBuffer(numberOfLeds, bytesPerLed) end
 
 ---Return the value at the given position

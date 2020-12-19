@@ -365,7 +365,7 @@ function file.on(event, foo) end
 ---| ' "r+"' # update mode, all previous data is preserved
 ---| ' "w+"' # update mode, all previous data is erased
 ---| ' "a+"' # append update mode, previous data is preserved, writing is only allowed at the end of file
----@return nil | any
+---@return file
 function file.open(filename, mode) end
 
 ---Remove a file from the file system. The file must not be currently open.
@@ -519,7 +519,7 @@ local HTTP = http.createConnection()
 ---@param url string|'"http://"'|'"https://"'
 ---@param method? integer|' http.GET'|' http.POST'|' http.DELETE'|' http.HEAD'
 ---@param options? table
----@return any
+---@return http
 function http.createConnection(url, method, options) end
 
 ---Set a callback to be called when a certain event occurs.
@@ -694,7 +694,7 @@ local channel = ledc.newChannel()
 
 ---Configures a PIN to be controlled by the LEDC system.
 ---@param tbl table
----@return any obj ledc.channel
+---@return ledc obj ledc.channel
 function ledc.newChannel(tbl) end
 
 ---Disable LEDC output, and set idle level.
@@ -769,7 +769,7 @@ local MQTT32 = mqtt.Client()
 ---@param username? string username user name
 ---@param password? string password user password
 ---@param cleansession? integer cleansession 0/1 for false/true. Default is 1 (true).
----@return any MQTT32 MQTT client
+---@return mqtt MQTT client
 function mqtt.Client(clientid, keepalive, username, password, cleansession) end
 
 ---Closes connection to the broker.
@@ -824,7 +824,7 @@ function MQTT32:subscribe(topic, qos, f32_client) end
 ---@return boolean
 function MQTT32:unsubscribe(topic, f32_client) end
 
---*** NET ***
+--*** NET TODO ***
 net = {}
 
 ---@class net
@@ -835,7 +835,7 @@ local UDPSOCKET32 = net.createUDPSocket()
 ---Creates a client.
 ---@param type? integer|'net.TCP'|'net.UDP'
 ---@param secure? integer|' 0'
----@return any
+---@return net
 function net.createConnection(type, secure) end
 
 ---Creates a server.
@@ -1211,7 +1211,7 @@ local pulsecntObj = pulsecnt.create()
 ---Create the pulse counter object.
 ---@param unit integer ESP32 has 0 thru 7 units to count pulses on.
 ---@param callbackOnEvents? function Your Lua method to call on event.
----@return any
+---@return pulsecnt
 function pulsecnt.create(unit, callbackOnEvents) end
 
 ---@alias pulse_mode1
@@ -1294,13 +1294,13 @@ local card = sdmmc.init()
 ---Initialize the SDMMC and probe the attached SD card. SDMMC Mode.
 ---@param slot integer|'sdmmc.HS1'|'sdmmc.HS2'
 ---@param cfg? table
----@return any card Card object.
+---@return sdmmc card Card object.
 function sdmmc.init(slot, cfg) end
 
 ---Initialize the SDMMC and probe the attached SD card. SD SPI Mode.
 ---@param slot integer|'sdmmc.HSPI'|'sdmmc.VSPI'
 ---@param cfg table
----@return any card Card object.
+---@return sdmmc card Card object.
 function sdmmc.init(slot, cfg) end
 
 ---Retrieve information from the SD card.
@@ -1355,17 +1355,19 @@ function sigma_delta.setduty(channel, value) end
 ---@return nil
 function sigma_delta.setup(channel, pin) end
 
---*** SJSON ***
-sjson = {}
-
+--*** SJSON TODO ***
 ---@class sjson
+sjson = {}
+---@class encoder : sjson
 local encoder = sjson.encoder()
+---@class decoder : sjson
 local decoder = sjson.decoder()
 
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
----@param tbl table
----@param opts table
-function sjson.encoder(tbl , opts) end
+---@param tbl table data to encode
+---@param opts? table
+---@return encoder obj A sjson.encoder object.
+function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
 ---@param size integer
@@ -1376,10 +1378,11 @@ function encoder:read(size) end
 ---@param tbl table
 ---@param opts table
 ---@return string
-function sjson.encode(tbl , opts) end
+function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object.
 ---@param opts table
+---@return decoder
 function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
@@ -1590,7 +1593,7 @@ local tp = touch.create()
 
 ---Create the touch sensor object.
 ---@param tbl table
----@return any
+---@return touch
 function touch.create(tbl) end
 
 ---Read the touch sensor counter values for all pads configured in touch.create() method.
@@ -1785,7 +1788,7 @@ function ws2812.write(tbl, ...) end
 ---Allocate a new memory buffer to store led values.
 ---@param numberOfLeds integer length of the led strip
 ---@param bytesPerLed integer  3 for RGB strips and 4 for RGBW strips
----@return any
+---@return ws2812
 function ws2812.newBuffer(numberOfLeds, bytesPerLed) end
 
 ---Return the value at the given position
