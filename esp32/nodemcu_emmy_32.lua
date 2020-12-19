@@ -255,8 +255,8 @@ function dht.read2x(pin) end
 encoder = {}
 
 ---Provides a Base64 representation of a (binary) Lua string.
----@param binary string
----@return string
+---@param binary string binary input string to Base64 encode
+---@return string s A Base64 encoded string.
 function encoder.toBase64(binary) end
 
 ---Decodes a Base64 representation of a (binary) Lua string back into the original string.
@@ -265,28 +265,42 @@ function encoder.toBase64(binary) end
 function encoder.fromBase64(b64) end
 
 ---Provides an ASCII hex representation of a (binary) Lua string.
----@param binary string
----@return string
+---@param binary string binary input string to get hex representation for
+---@return string s An ASCII hex string.
 function encoder.toHex(binary) end
 
 ---Returns the Lua binary string decode of a ASCII hex string.
----@param hexstr string
----@return string
+---@param hexstr string hexstr An ASCII hex string.
+---@return string s Decoded string of hex representation.
 function encoder.fromHex(hexstr) end
 
 --*** ETH ***
 eth = {}
 
 ---Get MAC address.
----@return string
+---@return string mac MAC address as string "aa:bb:cc:dd:ee:dd".
 function eth.get_mac() end
 
 ---Get Ethernet connection speed.
----@return any
+---@return any sp Connection speed in Mbit/s, or error if not connected. - 10 - 100
 function eth.get_speed() end
 
 ---Initialize the PHY chip and set up its tcpip adapter.
 ---@param cfg table
+---*cfg* table containing configuration data. All entries are mandatory:
+---`addr` PHY address, 0 to 31
+---`clock_mode` external/internal clock mode selection, one of
+---    eth.CLOCK_GPIO0_IN
+---    eth.CLOCK_GPIO0_OUT
+---    eth.CLOCK_GPIO16_OUT
+---    eth.CLOCK_GPIO17_OUT
+---`mdc` MDC pin number
+---`mdio` MDIO pin number
+---`phy` PHY chip model, one of
+---    eth.PHY_IP101
+---    eth.PHY_LAN8720
+---    eth.PHY_TLK110
+---`power` power enable pin, optional
 ---@return nil
 function eth.init(cfg) end
 
@@ -296,7 +310,7 @@ function eth.init(cfg) end
 function eth.on(event, callback) end
 
 ---Set MAC address.
----@param mac string
+---@param mac string mac MAC address as string "aa:bb:cc:dd:ee:ff"
 ---@return nil
 function eth.set_mac(mac) end
 
@@ -435,16 +449,19 @@ function fObj:writeline(str) end
 --*** GPIO ***
 gpio = {}
 
----`gpio` integer one or more (given as list) pins,
----`dir` integer |' dir=gpio.IN'|'dir=gpio.OUT'|'dir=gpio.IN_OUT'
----`opendrain` 1 enables opendrain mode, defaults to 0 if omitted
----`pull`=gpio.FLOATING #disables both pull-up and -down
----`pull`=gpio.PULL_UP #enables pull-up and disables pull-down
----`pull`=gpio.PULL_DOWN #enables pull-down and disables pull-up
----`pull`=gpio.PULL_UP_DOWN #enables both pull-up and -down
----
 ---Configure GPIO mode for one or more pins.
 ---@param tbl table
+---`gpio` one or more (given as list) pins,
+---`dir` direction, one of
+---    gpio.IN
+---    gpio.OUT
+---    gpio.IN_OUT
+---`opendrain` 1 enables opendrain mode, defaults to 0 if omitted
+---`pull` enable pull-up and -down resistors, one of
+---    gpio.FLOATING --disables both pull-up and -down
+---    gpio.PULL_UP --enables pull-up and disables pull-down
+---    gpio.PULL_DOWN --enables pull-down and disables pull-up
+---    gpio.PULL_UP_DOWN --enables both pull-up and -down
 ---@return nil
 function gpio.config(tbl) end
 
@@ -501,7 +518,7 @@ local HTTP = http.createConnection()
 ---Creates a connection object which can be configured and then executed.
 ---@param url string|'"http://"'|'"https://"'
 ---@param method? integer|' http.GET'|' http.POST'|' http.DELETE'|' http.HEAD'
----@param options? any
+---@param options? table
 ---@return any
 function http.createConnection(url, method, options) end
 
