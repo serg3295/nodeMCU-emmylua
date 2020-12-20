@@ -824,152 +824,155 @@ function MQTT32:subscribe(topic, qos, f32_client) end
 ---@return boolean
 function MQTT32:unsubscribe(topic, f32_client) end
 
---*** NET TODO ***
+--*** NET ***
 net = {}
 
----@class net
-local NETSOCKET32 = net.createConnection()
-local NETSRV32= net.createServer()
-local UDPSOCKET32 = net.createUDPSocket()
+---@class netsocket
+local NETSOCKET = net.createConnection()
+---@class netsrv
+local NETSRV= net.createServer()
+---@class udpsocket
+local UDPSOCKET = net.createUDPSocket()
 
 ---Creates a client.
 ---@param type? integer|'net.TCP'|'net.UDP'
----@param secure? integer|' 0'
----@return net
+---@param secure? integer 0 for plain (default)
+---@return netsocket submodule net.socket (for net.TCP) or net.udpsocket (for net.UDP)
 function net.createConnection(type, secure) end
 
 ---Creates a server.
 ---@param type? integer|'net.TCP'|'net.UDP'
----@param timeout? integer
----@return any
+---@param timeout? integer for a TCP server timeout is 1~28'800 seconds, 30 sec by default (for an inactive client to be disconnected)
+---@return netsrv submodule net.server (for net.TCP), net.udpsocket (for net.UDP)
 function net.createServer(type, timeout) end
 
 ---Creates an UDP socket.
----@return any
+---@return udpsocket submodule net.udpsocket
 function net.createUDPSocket() end
 
 ---Join multicast group.
----@param if_ip string
----@param multicast_ip string
----@return any
+---@param if_ip string string containing the interface ip to join the multicast group. "any" or "" affects all interfaces.
+---@param multicast_ip string of the group to join
+---@return nil
 function net.multicastJoin(if_ip, multicast_ip) end
 
 ---Leave multicast group.
----@param if_ip string
----@param multicast_ip string
+---@param if_ip string string containing the interface ip to leave the multicast group. "any" or "" affects all interfaces.
+---@param multicast_ip string of the group to leave
 ---@return nil
 function net.multicastLeave(if_ip, multicast_ip) end
 
----Closes the server. net.server.close()
+---Closes the server.
 ---@return nil
-function NETSRV32.close() end
+function NETSRV.close() end
 
----Listen on port from IP address. net.server.listen()
----@param port? integer
----@param ip? string
+---Listen on port from IP address.
+---@param port? integer number, can be omitted (random port will be chosen)
+---@param ip? string IP address string
 ---@param fun function |' function(net.socket) end'
----@return nil
-function NETSRV32.listen(port, ip, fun) end
+---@return integer port or nil if not listening
+---@return string ip or nil if not listening
+function NETSRV.listen(port, ip, fun) end
 
----Returns server local address/port. net.server.getaddr()
+---Returns server local address/port.
 ---@return integer port |nil
 ---@return string ip |nil
-function NETSRV32.getaddr() end
+function NETSRV.getaddr() end
 
----Closes socket. net.socket:close()
+---Closes socket.
 ---@return nil
-function NETSOCKET32:close() end
+function NETSOCKET:close() end
 
----Connect to a remote server. net.socket:connect()
----@param port integer
----@param ip_domain string
+---Connect to a remote server.
+---@param port integer port number
+---@param ip_domain string IP address or domain name string
 ---@return nil
-function NETSOCKET32:connect(port, ip_domain) end
+function NETSOCKET:connect(port, ip_domain) end
 
----Provides DNS resolution for a hostname. net.socket:dns()
----@param domain string
+---Provides DNS resolution for a hostname.
+---@param domain string domain name
 ---@param fun function|' function(net.socket, ip) end'
 ---@return nil
-function NETSOCKET32:dns(domain, fun) end
+function NETSOCKET:dns(domain, fun) end
 
----Retrieve port and ip of remote peer. net.socket:getpeer()
+---Retrieve port and ip of remote peer.
+---@return integer port or nil if not connected
+---@return string ip or nil if not connected
+function NETSOCKET:getpeer() end
+
+---Retrieve local port and ip of socket.
 ---@return integer port |nil
 ---@return string ip |nil
-function NETSOCKET32:getpeer() end
-
----Retrieve local port and ip of socket. net.socket:getaddr()
----@return integer port |nil
----@return string ip |nil
-function NETSOCKET32:getaddr() end
+function NETSOCKET:getaddr() end
 
 ---Throttle data reception by placing a request to block the TCP receive function. net.socket:hold()
 ---@return nil
-function NETSOCKET32:hold() end
+function NETSOCKET:hold() end
 
----Register callback functions for specific events. net.socket:on()
----@param event string|' "connection"'|' "reconnection"'|' "disconnection"'|' "receive"'|' "sent"'
+---Register callback functions for specific events.
+---@param event string|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"'
 ---@param fun nil|function|' function(net.socket, string?) end)'
 ---@return nil
-function NETSOCKET32:on(event, fun) end
+function NETSOCKET:on(event, fun) end
 
----Sends data to remote peer. net.socket:send()
----@param str string
+---Sends data to remote peer.
+---@param str string data in string which will be sent to server
 ---@param fun function|' function(sent) end'
 ---@return nil
-function NETSOCKET32:send(str, fun) end
+function NETSOCKET:send(str, fun) end
 
----Unblock TCP receiving data by revocation of a preceding hold(). net.socket:unhold()
+---Unblock TCP receiving data by revocation of a preceding hold().
 ---@return nil
-function NETSOCKET32:unhold() end
+function NETSOCKET:unhold() end
 
----Closes UDP socket. net.udpsocket:close()
+---Closes UDP socket.
 ---@return nil
-function UDPSOCKET32:close() end
+function UDPSOCKET:close() end
 
----Listen on port from IP address. net.udpsocket:listen()
+---Listen on port from IP address.
 ---@param port? integer
 ---@param ip? string
 ---@return nil
-function UDPSOCKET32:listen(port, ip) end
+function UDPSOCKET:listen(port, ip) end
 
----Register callback functions for specific events. net.udpsocket:on()
----@param event string|' "receive"'|' "sent"'|' "dns"'
+---Register callback functions for specific events.
+---@param event string|'"receive"'|'"sent"'|'"dns"'
 ---@param fun nil|function|' function(net.socket, string?) end)'
 ---@return nil
-function UDPSOCKET32:on(event, fun) end
+function UDPSOCKET:on(event, fun) end
 
----Sends data to specific remote peer. net.udpsocket:send()
----@param port integer
----@param ip string
----@param data any
+---Sends data to specific remote peer.
+---@param port integer remote socket port
+---@param ip string remote socket IP
+---@param data any the payload to send
 ---@return nil
-function UDPSOCKET32:send(port, ip, data) end
+function UDPSOCKET:send(port, ip, data) end
 
----Provides DNS resolution for a hostname. net.udpsocket:dns()
----@param domain string
+---Provides DNS resolution for a hostname.
+---@param domain string domain name
 ---@param fun function|' function(net.socket, ip) end'
 ---@return nil
-function UDPSOCKET32:dns(domain, fun) end
+function UDPSOCKET:dns(domain, fun) end
 
----Retrieve local port and ip of socket. net.udpsocket:getaddr()
----@return integer port |nil
----@return string ip |nil
-function UDPSOCKET32:getaddr() end
+---Retrieve local port and ip of socket.
+---@return integer port or nil if not connected
+---@return string ip or nil if not connected
+function UDPSOCKET:getaddr() end
 
----Gets the IP address of the DNS server used to resolve hostnames. net.dns.getdnsserver()
+---Gets the IP address of the DNS server used to resolve hostnames.
 ---@param dns_index integer|'0'|'1'
----@return string
+---@return string IP address (string) of DNS server
 function net.dns.getdnsserver(dns_index) end
 
----Resolve a hostname to an IP address. net.dns.resolve()
+---Resolve a hostname to an IP address.
 ---Doesn't require a socket like net.socket.dns().
----@param host string
+---@param host string hostname to resolve
 ---@param fun function|' function(sk, ip) end'
 ---@return nil
 function net.dns.resolve(host, fun) end
 
----Sets the IP of the DNS server used to resolve hostnames. net.dns.setdnsserver()
----@param dns_ip_addr string
+---Sets the IP of the DNS server used to resolve hostnames.
+---@param dns_ip_addr string IP address of a DNS server
 ---@param dns_index integer|'0'|'1'
 ---@return nil
 function net.dns.setdnsserver(dns_ip_addr, dns_index) end
@@ -1355,47 +1358,58 @@ function sigma_delta.setduty(channel, value) end
 ---@return nil
 function sigma_delta.setup(channel, pin) end
 
---*** SJSON TODO ***
----@class sjson
+--*** SJSON ***
 sjson = {}
----@class encoder : sjson
+
+---@class sjsonenc
 local encoder = sjson.encoder()
----@class decoder : sjson
+---@class sjsondec
 local decoder = sjson.decoder()
 
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
 ---@param tbl table data to encode
 ---@param opts? table
----@return encoder obj A sjson.encoder object.
+---*opts* an optional table of options. The possible entries are:
+---`depth` the maximum encoding depth needed to encode the table. The default is 20.
+---`null` the string value to treat as null.
+---@return sjsonenc obj A sjson.encoder object.
 function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
----@param size integer
----@return string | nil
+---@param size? integer an optional value for the number of bytes to return. The default is 1024.
+---@return string|nil A `string` of up to size bytes, or `nil` if the encoding is complete and all data has been returned.
 function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
 ---@param tbl table
----@param opts table
+---@param opts? table
 ---@return string
 function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object.
----@param opts table
----@return decoder
+---@param opts? table
+---*opts* an optional table of options. The possible entries are:
+---`depth` the maximum encoding depth needed to encode the table. The default is 20.
+---`null` the string value to treat as null.
+---`metatable` a table to use as the metatable for all the new tables in the returned object.
+---@return sjsondec
 function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
----@param str string
----@return any | nil
+---@param str string the next piece of JSON encoded data
+---@return any | nil The constructed Lua object or nil if the decode is not yet complete.
 function decoder:write(str) end
 
 ---This gets the decoded Lua object, or raises an error if the decode is not yet complete.
 function decoder:result() end
 
 ---Decode a JSON string to a Lua table.
----@param str string
----@param opts table
+---@param str string JSON string to decode
+---@param opts? table
+---*opts* an optional table of options. The possible entries are:
+---`depth` the maximum encoding depth needed to encode the table. The default is 20.
+---`null` the string value to treat as null.
+---`metatable` a table to use as the metatable for all the new tables in the returned object.
 function sjson.decode(str, opts) end
 
 --** SODIUM ***
@@ -1445,7 +1459,7 @@ local device = busmaster:device()
 ---@param host integer|'spi.VSPI'|'spi.HSPI'|'spi.SPI1'
 ---@param config? table
 ---@param dma? integer|'1'|'2'|'0'
----@return any
+---@return spi
 function spi.master(host, config, dma) end
 
 ---Close the bus host. This fails if there are still devices registered on this bus.
@@ -1454,7 +1468,7 @@ function busmaster:close() end
 
 ---Adds a device on the given master bus. Up to three devices per bus are supported.
 ---@param config table
----@return any
+---@return spidev
 function busmaster:device(config) end
 
 ---Removes a device from the related bus master.
