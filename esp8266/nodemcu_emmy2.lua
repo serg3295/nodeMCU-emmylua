@@ -379,40 +379,49 @@ function sigma_delta.settarget(value) end
 ---@return nil
 function sigma_delta.setup(pin) end
 
---*** SJSON  TODO ***
----@class sjson
+--*** SJSON ***
 sjson = {}
 
----@class sjsonenc : sjson
+---@class sjsonenc
 local encoder = sjson.encoder()
----@class sjsondec : sjson
+---@class sjsondec
 local decoder = sjson.decoder()
 
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
 ---@param tbl table  data to encode
 ---@param opts? table
+---*opts* an optional table of options. The possible entries are:
+---`depth` the maximum encoding depth needed to encode the table. The default is 20.
+---`null` the string value to treat as null.
 ---@return sjsonenc obj A sjson.encoder object.
 function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
----@param size? integer an optional value for the number of bytes to return.
----@return string | nil
+---@param size? integer an optional value for the number of bytes to return. The default is 1024.
+---@return string | nil A string of up to size bytes, or nil if the encoding is complete and all data has been returned.
 function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
 ---@param tbl table data to encode
 ---@param opts? table
----@return string
+---*opts* an optional table of options. The possible entries are:
+---`depth` the maximum encoding depth needed to encode the table. The default is 20.
+---`null` the string value to treat as null.
+---@return string s JSON string
 function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object.
 ---@param opts? table
+---*opts* an optional table of options. The possible entries are:
+---`depth` the maximum encoding depth needed to encode the table. The default is 20.
+---`null` the string value to treat as null.
+---`metatable` a table to use as the metatable for all the new tables in the returned object.
 ---@return sjsondec obj A sjson.decoder object
 function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
 ---@param str string the next piece of JSON encoded data
----@return any | nil
+---@return any|nil The constructed Lua object or nil if the decode is not yet complete.
 function decoder:write(str) end
 
 ---This gets the decoded Lua object, or raises an error if the decode is not yet complete.
@@ -421,6 +430,10 @@ function decoder:result() end
 ---Decode a JSON string to a Lua table.
 ---@param str string JSON string to decode
 ---@param opts? table
+---*opts* an optional table of options. The possible entries are:
+---`depth` the maximum encoding depth needed to encode the table. The default is 20.
+---`null` the string value to treat as null.
+---`metatable` a table to use as the metatable for all the new tables in the returned object.
 function sjson.decode(str, opts) end
 
 --*** SNTP ***
@@ -447,7 +460,7 @@ function sntp.getoffset() end
 softuart = {}
 
 ---@class softuart
-local softuart = softuart.setup()
+local s_uart = softuart.setup()
 
 ---Creates new SoftUART instance.
 ---@param baudrate number :SoftUART baudrate. Maximum supported is 230400.
@@ -461,12 +474,12 @@ function softuart.setup(baudrate, txPin, rxPin) end
 ---@param trigger number Can be a character or a number.
 ---@param fun function
 ---@return nil
-function softuart:on(event, trigger, fun) end
+function s_uart:on(event, trigger, fun) end
 
 ---Transmits a byte or sequence of them.
 ---@param data number|string
 ---@return nil
-function softuart:write(data) end
+function s_uart:write(data) end
 
 --*** SOMFY ***
 somfy = {}
