@@ -198,17 +198,30 @@ function can.stop() end
 --*** CRYPTO ***
 crypto = {}
 
+---@class hashobj
+local hashobj = {}
+---for streaming data through the hash function
+function hashobj:update(str) end
+---for finalizing and returning the resulting signature
+function hashobj:finalize() end
+
+---@alias crypto_algo string
+---|'"MD5"'
+---|'"SHA1"'
+---|'"RIPEMD160"'
+---|'"SHA224"'
+---|'"SHA256"'
+---|'"SHA384"'
+---|'"SHA512"'
 ---Create a digest/hash object that can have any number of strings added to it.
----@param algo any
----@return any
+---@param algo crypto_algo the hash algorithm to use, case insensitive string
+---@return hashobj obj Hasher object with update and finalize functions available.
 function crypto.new_hash(algo) end
 
----Create an object for calculating a HMAC
----(Hashed Message Authentication Code, aka "signature").
----@param algo any
----@param key any
----@return any update
----@return any finalize
+---Create an object for calculating a HMAC (Hashed Message Authentication Code, aka "signature").
+---@param algo crypto_algo the hash algorithm to use, case insensitive string
+---@param key any the signing key (may be a binary string)
+---@return hashobj obj Hasher object with update and finalize functions available.
 function crypto.new_hmac(algo, key) end
 
 --*** DAC ***
@@ -420,13 +433,13 @@ function fObj:readline() end
 ---@param whence? seekwhence32_f
 ---@param offset? integer
 ---@return integer offset | nil
-function file.seek(whence , offset) end
+function file.seek(whence, offset) end
 ---Sets and gets the file position, measured from the beginning of the file,
 ---to the position given by offset plus a base specified by the string whence.
 ---@param whence? seekwhence32_f
 ---@param offset? integer
 ---@return integer offset | nil
-function fObj:seek(whence , offset) end
+function fObj:seek(whence, offset) end
 
 ---Write a string to the open file.
 ---@param str string | '""'
