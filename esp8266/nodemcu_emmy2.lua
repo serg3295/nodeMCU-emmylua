@@ -149,7 +149,46 @@ function perf.start(start, endaddr, nbins) end
 ---@return number binsize The number of bytes per histogram bin.
 function perf.stop() end
 
---*** PIPE TODO ***
+--*** PIPE ***
+pipe = {}
+
+---@class pipe
+pobj = pipe.create()
+
+---Create a pipe.
+---@param CB_function? function optional reader callback which is called through the *node.task.post()* when the pipe is written to.
+---@param task_priority? integer
+---|'node.task.LOW_PRIORITY' #0
+---|'node.task.MEDIUM_PRIORITY' #1
+---|'node.task.HIGH_PRIORITY' #2
+---@return pipe obj A pipe resource.
+function pipe.create(CB_function,task_priority) end
+
+---Read a record from a pipe object.
+---@param size_end_char? number|string
+-- `size/end_char`
+-- If numeric then a string of size length will be returned from the pipe.
+-- If a string then this is a single character delimiter, followed by an optional "+" flag. The delimiter is used as an end-of-record to split the character stream into separate records. If the flag "+" is specified then the delimiter is also returned at the end of the record, otherwise it is discarded.
+-- If omitted, then this defaults to "\n+"
+---@return string|nil
+function pobj:read(size_end_char) end
+
+---Returns a Lua iterator function for a pipe object.
+---@param size_end_char? number|string
+-- `size/end_char`
+-- If numeric then a string of size length will be returned from the pipe.
+-- If a string then this is a single character delimiter, followed by an optional "+" flag. The delimiter is used as an end-of-record to split the character stream into separate records. If the flag "+" is specified then the delimiter is also returned at the end of the record, otherwise it is discarded.
+-- If omitted, then this defaults to "\n+"
+---@return any myFunc iterator function
+function pobj:reader(size_end_char) end
+
+---Write a string to the head of a pipe object. This can be used to back-out a previous read.
+---@param s string Any input string. Note that with all Lua strings, these may contain all character values including "\0".
+function pobj:unread(s) end
+
+---Write a string to a pipe object.
+---@param s string Any input string. Note that with all Lua strings, these may contain all character values including "\0".
+function pobj:write(s) end
 
 --*** PWM ***
 pwm = {}
@@ -970,7 +1009,7 @@ function websocket:send(message, opcode) end
 wiegand = {}
 
 ---@class wiegand
-wiegandobj = wiegand.create()
+local wiegandobj = wiegand.create()
 
 ---Creates a dynamic wiegand object that receives a callback when data is received.
 ---@param pinD0 number This is a GPIO number (excluding 0) and connects to the D0 data line
