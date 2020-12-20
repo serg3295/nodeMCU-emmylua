@@ -90,7 +90,47 @@ function ow.write(pin, v, power) end
 ---@return nil
 function ow.write_bytes(pin, buf, power) end
 
---*** PCM TODO ***
+--*** PCM ***
+pcm ={}
+
+---@class pcm
+local pcmdrv = pcm.new()
+
+---Initializes the audio driver.
+---@param pcm_SD any pcm.SD use sigma-delta hardware
+---@param pin integer pin 1~10, IO index
+---@return pcm obj Audio driver object.
+function pcm.new(pcm_SD, pin) end
+
+---Stops playback and releases the audio hardware.
+---@return nil
+function pcmdrv:close() end
+
+---Register callback functions for events.
+---@param event string
+---|'"data"' #callback function is supposed to return a string containing the next chunk of data.
+---|'"drained"' #playback was stopped due to lack of data. The last 2 invocations of the data callback didn't provide new chunks in time (intentionally or unintentionally) and the internal buffers were fully consumed.
+---|'"paused"' #playback was paused by pcm.drv:pause().
+---|'"stopped"' #playback was stopped by pcm.drv:stop().
+---|'"vu"' #new peak data, cb_fn is triggered freq times per second (1 to 200 Hz).
+---`event` identifier, one of:
+---@param cb_fn? function callback function for the specified event. Unregisters previous function if omitted. First parameter is drv, followed by peak data for vu callback.
+---@param freq? number
+---@return nil
+function pcmdrv:on(event, cb_fn, freq) end
+
+---Starts playback.
+---@param rate integer|'pcm.RATE_1K'|'pcm.RATE_2K'|'pcm.RATE_4K'|'pcm.RATE_5K'|'pcm.RATE_8K'|'pcm.RATE_10K'|'pcm.RATE_12K'|'pcm.RATE_16K'
+---@return nil
+function pcmdrv:play(rate) end
+
+---Pauses playback. A call to drv:play() will resume from the last position.
+---@return nil
+function pcmdrv:pause() end
+
+---Stops playback and releases buffered chunks.
+---@return nil
+function pcmdrv:stop() end
 
 --*** PERF ***
 perf = {}
@@ -836,6 +876,7 @@ u8g2 = {}
 
 --*** UART ***
 uart = {}
+
 ---Change UART pin assignment.
 ---@param on integer
 ---`0` for standard pins
@@ -845,11 +886,11 @@ function uart.alt(on) end
 
 ---Sets the callback function to handle UART events.
 ---@param method string|'"data"'
----`"data"`, data has been received on the UART
+---`"data"`, data has been received on the UART. To unregister the callback, provide only the "data" parameter.
 ---@param number_end_char? any
----`number/end_char` if n=0, will receive every char in buffer
----`number/end_char` if n<255, the callback is called when n chars are received
----`number/end_char` if one char "c", the callback will be called when "c" is encountered, or max n=255 received
+---`number` if n=0, will receive every char in buffer
+---`number` if n<255, the callback is called when n chars are received
+---`end_char` if one char "c", the callback will be called when "c" is encountered, or max n=255 received
 ---@param fun? function|' function(data) end'
 ---@param run_input? integer|' 0'|' 1'
 ---@return nil
@@ -869,8 +910,8 @@ function uart.setup(id, baud, databits, parity, stopbits, echo) end
 ---@param id integer UART id (0 or 1).
 ---@return number baud one of 300, ..., 3686400
 ---@return number databits one of 5, 6, 7, 8
----@return number parity uart.PARITY_NONE, uart.PARITY_ODD, or uart.PARITY_EVEN
----@return number stopbits uart.STOPBITS_1, uart.STOPBITS_1_5, or uart.STOPBITS_2
+---@return number parity uart.PARITY_NONE | uart.PARITY_ODD | or uart.PARITY_EVEN
+---@return number stopbits uart.STOPBITS_1 | uart.STOPBITS_1_5 | or uart.STOPBITS_2
 function uart.getconfig(id) end
 
 ---Write string or byte to the UART.
@@ -882,7 +923,7 @@ function uart.write(id, data1, ...) end
 
 ---Report the depth, in bytes, of TX or RX hardware queues associated with the UART.
 ---@param id integer UART id (0 or 1).
----@param dir string|' "uart.DIR_RX"'|' "uart.DIR_TX"'
+---@param dir integer|' uart.DIR_RX'|' uart.DIR_TX'
 ---@return integer num The number of bytes in the selected FIFO.
 function uart.fifodepth(id, dir) end
 
