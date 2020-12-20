@@ -470,12 +470,10 @@ function adc.readvdd33() end
 ads1115 ={}
 
 ---@class ads1115
-local ads1x15 = ads1115.ADS1115()
+local ads1x15
 
 ---Registers ADS1115 (ADS1113, ADS1114) device.
----`I2C_ID` - always 0
----@param I2C_ID number
----|'0'
+---@param I2C_ID number - always 0
 ---`ADDRESS` - I²C address of a device
 ---@param I2C_ADDR number
 ---|' ads1115.ADDR_GND'
@@ -483,19 +481,17 @@ local ads1x15 = ads1115.ADS1115()
 ---|' ads1115.ADDR_SDA'
 ---|' ads1115.ADDR_SCL'
 ---@return ads1115 obj Registered device object
-function ads1115.ADS1115(I2C_ID, I2C_ADDR) end
+function ads1115.ads1115(I2C_ID, I2C_ADDR) end
 
 ---Registers ADS1015 (ADS1013, ADS1014) device.
----`I2C_ID` - always 0
----@param I2C_ID number
----|'0'
+---@param I2C_ID number - always 0
 ---`ADDRESS` - I²C address of a device
 ---@param I2C_ADDR number
 ---|' ads1115.ADDR_GND'
 ---|' ads1115.ADDR_VDD'
 ---|' ads1115.ADDR_SDA'
 ---|' ads1115.ADDR_SCL'
----@return any ads1x15 Registered device object
+---@return ads1115 obj Registered device object
 function ads1115.ads1015(I2C_ID, I2C_ADDR) end
 
 ---Reset all devices connected to I²C interface.
@@ -573,8 +569,9 @@ function ads1x15:read() end
 function ads1x15:setting(GAIN, SAMPLES, CHANNEL, MODE, CONVERSION_RDY, COMPARATOR, THRESHOLD_LOW, THRESHOLD_HI,COMP_MODE) end
 
 ---Starts the ADC reading for single-shot mode and after the conversion is done it will invoke an optional callback function in which the ADC conversion result can be obtained.
----@param CALLBACK function callback function which will be invoked after the adc conversion is done
+---@param CALLBACK function
 ---|'function(volt, volt_dec, adc, sign) end'
+---callback function which will be invoked after the adc conversion is done
 ---@return nil
 function ads1x15:startread(CALLBACK) end
 
@@ -1632,22 +1629,24 @@ function MQTT:unsubscribe(tbl, f_client) end
 --*** NET ***
 net = {}
 
----@class net
+---@class netsocket
 local NETSOCKET = net.createConnection()
+---@class netsrv
 local NETSRV = net.createServer()
+---@class udpsocket
 local UDPSOCKET = net.createUDPSocket()
 
 ---Creates a TCP client.
----@return net
+---@return netsocket
 function net.createConnection() end
 
 ---Creates a TCP listening socket (a server).
 ---@param timeout integer seconds until disconnecting an inactive client
----@return net net.server sub module
+---@return netsrv net.server sub module
 function net.createServer(timeout) end
 
 ---Creates an UDP socket.
----@return net
+---@return udpsocket
 function net.createUDPSocket() end
 
 ---Return information about a network interface, specified by index.
