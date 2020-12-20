@@ -901,8 +901,75 @@ function bmp085.pressure(oversampling_setting) end
 ---@return integer p raw pressure sampling value (integer)
 function bmp085.pressure_raw(oversampling_setting) end
 
---*** CoAP TODO ***
+--*** CoAP ***
 coap = {}
+
+---@class coapClnt
+local coap_client = coap.Client()
+---@class coapSrv
+local coap_server = coap.Server()
+
+---Creates a CoAP client.
+---@return coapClnt CoAP client
+function coap.Client() end
+
+---Creates a CoAP server.
+---@return coapSrv CoAP server
+function coap.Server() end
+
+---Issues a GET request to the server.
+---@param type number|'coap.CON'|'coap.NON'
+---`type` defaults to CON. If the type is CON and request fails, the library retries four more times before giving up.
+---@param uri string the URI such as "coap://192.168.18.103:5683/v1/v/myvar", only IP addresses are supported i.e. no hostname resoltion.
+---@param payload? any optional, the payload will be put in the payload section of the request.
+---@return nil
+function coap_client:get(type, uri, payload) end
+
+---Issues a PUT request to the server.
+---@param type number|'coap.CON'|'coap.NON'
+---`type` defaults to CON. If the type is CON and request fails, the library retries four more times before giving up.
+---@param uri string the URI such as "coap://192.168.18.103:5683/v1/v/myvar", only IP addresses are supported i.e. no hostname resoltion.
+---@param payload? any optional, the payload will be put in the payload section of the request.
+---@return nil
+function coap_client:put(type, uri, payload) end
+
+---Issues a POST request to the server.
+---@param type number|'coap.CON'|'coap.NON'
+---`type` defaults to CON. when type is CON, and request failed, the request will retry another 4 times before giving up.
+---@param uri string the uri such as coap://192.168.18.103:5683/v1/v/myvar, only IP is supported.
+---@param payload? any optional, the payload will be put in the payload section of the request.
+---@return nil
+function coap_client:post(type, uri, payload) end
+
+---Issues a DELETE request to the server.
+---@param type number|'coap.CON'|'coap.NON'
+---`type` defaults to CON. If the type is CON and request fails, the library retries four more times before giving up.
+---@param uri string the URI such as "coap://192.168.18.103:5683/v1/v/myvar", only IP addresses are supported i.e. no hostname resoltion.
+---@param payload? any optional, the payload will be put in the payload section of the request.
+---@return nil
+function coap_client:delete(type, uri, payload) end
+
+---Starts the CoAP server on the given port.
+---@param port number server port
+---@param ip? any optional IP address
+---@return nil
+function coap_server:listen(port, ip) end
+
+---Closes the CoAP server.
+---@return nil
+function coap_server:close() end
+
+---Registers a Lua variable as an endpoint in the server.
+---@param name string the Lua variable's name
+---@param content_type? any optional, defaults to coap.TEXT_PLAIN
+---@return nil
+function coap_server:var(name, content_type) end
+
+---Registers a Lua function as an endpoint in the server.
+---@param name string the Lua function's name
+---@param content_type? any optional, defaults to coap.TEXT_PLAIN
+---@return nil
+function coap_server:func(name, content_type) end
 
 --*** COLOR UTILS ***
 color_utils = {}
@@ -1637,16 +1704,16 @@ local NETSRV = net.createServer()
 local UDPSOCKET = net.createUDPSocket()
 
 ---Creates a TCP client.
----@return netsocket
+---@return netsocket submodule net.socket
 function net.createConnection() end
 
 ---Creates a TCP listening socket (a server).
----@param timeout integer seconds until disconnecting an inactive client
----@return netsrv net.server sub module
+---@param timeout integer seconds until disconnecting an inactive client; 1~28'800 seconds, 30 sec by default.
+---@return netsrv submodule net.server
 function net.createServer(timeout) end
 
 ---Creates an UDP socket.
----@return udpsocket
+---@return udpsocket submodule net.udpsocket
 function net.createUDPSocket() end
 
 ---Return information about a network interface, specified by index.
