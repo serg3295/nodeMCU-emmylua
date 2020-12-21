@@ -15,8 +15,6 @@ function bh1750.read() end
 ---@return number val Last known lux value.
 function bh1750.getlux() end
 
---*** Lua module BME280 TODO ***
-
 --*** COHELPER TODO ***
 cohelper = {}
 
@@ -110,21 +108,21 @@ fifo = {}
 
 --***** FTP server **--
 ---@class ftp
-local FTP = node.LFS.ftpserver()
+local FTP = require('ftpserver')
 
----Create the FTP server on the standard ports 20 and 21.
----@param user string|'""'
----@param pass string|' ""'
----@param dbgFlag? boolean
+---Create the FTP server on the standard ports 20 and 21. The global variable FTP is set to the server object.
+---@param user string Username for access to the server
+---@param pass string Password for access to the server
+---@param dbgFlag? boolean optional flag. If set true then internal debug output is printed
 ---@return nil
 function FTP:createServer(user, pass, dbgFlag) end
 
 ---Wrapper to createServer() which also connects to the WiFi channel.
----@param user string|'""'
----@param pass string|' ""'
----@param ssid string|' ""'
----@param wifipwd string|' ""'
----@param dbgFlag? boolean
+---@param user string Username for access to the server
+---@param pass string Password for access to the server
+---@param ssid string SSID for WiFi service
+---@param wifipwd string password for WiFi service
+---@param dbgFlag? boolean optional flag. If set true then internal debug output is printed
 ---@return nil
 function FTP:open(user, pass, ssid, wifipwd, dbgFlag) end
 
@@ -722,18 +720,93 @@ function filter:reset() end
 ---@return number fprate The approximate chance that the next check will return true when it should return false
 function filter:info() end
 
---*** BME280 ***
+--*** BME280 Lua module ***
 bme280 = {}
+
+---@class bme280
+local sobj = require('bme280')
+
+---Creates bme280sensor object and initializes module.
+---@param id number - I2C bus number
+---@param address? number (optional) address - BME280 sensor address. 1 for BME280_I2C_ADDRESS1 = 0x76, 2 for BME280_I2C_ADDRESS2 = 0x77. Default sensor address is BME280_I2C_ADDRESS1.
+---@param temp_oss? number (optional) temp_oss - Controls oversampling of temperature data.
+---@param press_oss? number (optional) press_oss - Controls oversampling of pressure data
+---@param humi_oss? number (optional) humi_oss - Controls oversampling of humidity data.
+---@param power_mode? number (optional) sensor_mode - Controls the sensor mode of the device.
+---@param inactive_duration? number (optional) inactive_duration - Controls inactive duration in normal mode.
+---@param IIR_filter? number (optional) IIR_filter - Controls the time constant of the IIR filter.
+-- (optional) cold_start - If 0 then the BME280 chip is not initialised.
+---@return bme280 sobj - BME280 Sensor Object (nil if initialization has failed)
+function bme280.setup(id, address, temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter) end
+
+---Re-initializes the sensor.
+---@param id number - I2C bus number
+---@param address? number (optional) address - BME280 sensor address. 1 for BME280_I2C_ADDRESS1 = 0x76, 2 for BME280_I2C_ADDRESS2 = 0x77. Default sensor address is BME280_I2C_ADDRESS1.
+---@param temp_oss? number (optional) temp_oss - Controls oversampling of temperature data.
+---@param press_oss? number (optional) press_oss - Controls oversampling of pressure data
+---@param humi_oss? number (optional) humi_oss - Controls oversampling of humidity data.
+---@param power_mode? number (optional) sensor_mode - Controls the sensor mode of the device.
+---@param inactive_duration? number (optional) inactive_duration - Controls inactive duration in normal mode.
+---@param IIR_filter? number (optional) IIR_filter - Controls the time constant of the IIR filter.
+-- (optional) cold_start - If 0 then the BME280 chip is not initialised.
+---@return bme280 sobj - BME280 Sensor Object (nil if initialization has failed)
+function sobj:setup(id, address, temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter) end
+
+---For given air pressure (called QFE in aviation - see wiki QNH article) and sea level air pressure returns the altitude in meters, i.e. altimeter function.
+---@param P number measured pressure
+---@param QNH number current sea level pressure
+---@return number alt altitude in meters of measurement point
+function sobj:altitude(P, QNH) end
+
+---For given temperature and relative humidity returns the dew point in celsius.
+---@param H number relative humidity in percent (100 means 100%)
+---@param T number temperate in celsius
+---@return number dwp dew point in celsisus
+function sobj:dewpoint(H, T) end
+
+---For given altitude converts the air pressure to sea level air pressure (QNH).
+---@param P number measured pressure
+---@param altitude number altitude in meters of measurement point
+---@return number P sea level pressure
+function sobj:qfe2qnh(P, altitude) end
+
+---Reads the sensor and returns the temperature, the air pressure, the air relative humidity and see level pressure when altitude is specified.
+---@param altitude? number (optional) altitude- altitude in meters of measurement point.
+---@return number T temperature in celsius
+---@return number P air pressure in hectopascals
+---@return number H relative humidity in percent
+---@return number QNH (optional) QNH air pressure in hectopascals (when altitude is specified)
+-- Returns nil if the readout is not successful.
+function sobj:read(altitude) end
+
+---Starts readout (turns the sensor into forced mode).
+---@param delay number sets sensor to forced mode and calls the callback (if provided) after given number of milliseconds.
+---@param callback function if provided it will be invoked after given delay. Callback parameters are identical to sobj:read results.
+---@param altitude number altitude in meters of measurement point
+---@return nil
+function sobj:startreadout(delay, callback, altitude) end
+
+--*** BME280 C module***
+
+-- Warning, deprecated API! bme280. It will be removed soon. Use bme280math and bme280 Lua module instead. See documentation for details.
+---Initializes module. Initialization is mandatory before read values.
+---@param temp_oss? number Controls oversampling of temperature data.
+---@param press_oss? number Controls oversampling of pressure data.
+---@param humi_oss? number Controls oversampling of humidity data.
+---@param power_mode? number Controls the sensor mode of the device.
+---@param inactive_duration? number Controls inactive duration in normal mode.
+---@param IIR_filter? number Controls the time constant of the IIR filter.
+---@return nil|integer rslt nil if initialization has failed (no sensor connected?), 2 if sensor is BME280, 1 if sensor is BMP280
+function bme280.setup(temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter) end
 
 ---For given air pressure and sea level air pressure returns the altitude in meters
 ---as an integer multiplied with 100, i.e. altimeter function.
----@param P number
----@param QNH number
----@return number
+---@param P number measured pressure
+---@param QNH number current sea level pressure
+---@return number alt altitude in meters of measurement point
 function bme280.altitude(P, QNH) end
 
----Reads the sensor and returns the air pressure in hectopascals as an integer
----multiplied with 1000 or nil when readout is not successful.
+---Reads the sensor and returns the air pressure in hectopascals as an integer multiplied with 1000 or nil when readout is not successful.
 ---@return number P air pressure in hectopascals multiplied by 1000
 ---@return number T temperature in celsius as an integer multiplied with 100
 function bme280.baro() end
@@ -765,46 +838,35 @@ function bme280.qfe2qnh(P, altitude) end
 function bme280.read(altitude) end
 
 ---Starts readout (turns the sensor into forced mode).
----@param delay any
----@param callback function
+---@param delay number sets sensor to forced mode and calls the callback (if provided) after given number of milliseconds.
+---@param callback function if provided it will be invoked after given delay.
 ---@return nil
 function bme280.startreadout(delay, callback) end
 
----Initializes module. Initialization is mandatory before read values.
----@param temp_oss? any Controls oversampling of temperature data.
----@param press_oss? any Controls oversampling of pressure data.
----@param humi_oss? any Controls oversampling of humidity data.
----@param power_mode? any Controls the sensor mode of the device.
----@param inactive_duration? any Controls inactive duration in normal mode.
----@param IIR_filter? any Controls the time constant of the IIR filter.
----@return nil|integer
-function bme280.setup(temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter) end
-
----Reads the sensor and returns the temperature in celsius
----as an integer multiplied with 100.
+---Reads the sensor and returns the temperature in celsius as an integer multiplied with 100.
 ---@return integer T temperature in celsius as an integer multiplied with 100 or nil when readout is not successful
----@return integer t_fine temperature measure used in pressure and humidity compensation formulas
+---@return integer t_fine temperature measure used in pressure and humidity compensation formulas (generally no need to use this value)
 function bme280.temp() end
 
 --*** BME280_MATH ***
 bme280_math = {}
 
 ---For given air pressure and sea level air pressure returns the altitude in meters
----@param self? userdata|table
+---@param self? userdata|table (optional) self userdata or table structure so that the function can be directly called as object method, parameter is ignored in the calculation
 ---@param P number measured pressure
 ---@param QNH number current sea level pressure
 ---@return number alt altitude in meters of measurement point
 function bme280_math.altitude(self, P, QNH) end
 
 ---For given temperature and relative humidity returns the dew point in celsius.
----@param self? userdata|table
+---@param self? userdata|table (optional) self userdata or table structure so that the function can be directly called as object method, parameter is ignored in the calculation
 ---@param  H number relative humidity in percent (100 means 100%)
 ---@param  T number temperate in celsius
 ---@return number dewp dew point in celsisus
 function bme280_math.dewpoint(self, H, T) end
 
 ---For given altitude converts the air pressure to sea level air pressure (QNH).
----@param self? userdata|table
+---@param self? userdata|table (optional) self userdata or table structure so that the function can be directly called as object method, parameter is ignored in the calculation
 ---@param P number measured pressure
 ---@param altitude number altitude in meters of measurement point
 ---@return number p sea level pressure
@@ -813,11 +875,11 @@ function bme280_math.qfe2qnh(self, P, altitude) end
 ---Reads the sensor
 ---@param bme280sensor userdata BME280 sensor user data returned by bme280_math.setup()
 ---@param registers string string of 8 bytes (chars) registers read from BME280_REGISTER_PRESS
----@param altitude? number  altitude in meters of measurement point.
+---@param altitude? number altitude in meters of measurement point.
 ---@return number T temperature in celsius
 ---@return number P air pressure in hectopascals
 ---@return number H relative humidity in percent
----@return number QNH air pressure in hectopascals
+---@return number QNH (optional) air pressure in hectopascals
 function bme280_math.read(bme280sensor, registers, altitude) end
 
 ---Initializes module. Initialization is mandatory before read values.
@@ -828,8 +890,8 @@ function bme280_math.read(bme280sensor, registers, altitude) end
 ---@param power_mode? number Controls the sensor mode of the device.
 ---@param inactive_duration? number Controls inactive duration in normal mode.
 ---@param IIR_filter? number Controls the time constant of the IIR filter.
----@return userdata|nil
----@return table
+---@return userdata|nil ud bme280sensor user data (nil if initialization has failed)
+---@return table tbl config 3 (2 for BME280) field table with configuration parameters to be written to registers *BME280_REGISTER_CONFIG*, *BME280_REGISTER_CONTROL_HUM*, *BME280_REGISTER_CONTROL* consecutively
 function bme280_math.setup(registers, temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter) end
 
 --*** BME680 ***
@@ -1523,7 +1585,7 @@ function i2c.address(id, device_addr, direction) end
 function i2c.read(id, len) end
 
 ---Initialize the I²C bus with the selected bus number, pins and speed.
----@param id integer  0~9, bus number
+---@param id integer 0~9, bus number
 ---@param pinSDA integer 1~12, IO index
 ---@param pinSCL integer 0~12, IO index
 ---@param speed integer|'i2c.SLOW'|'i2c.FAST'|'i2c.FASTPLUS'
