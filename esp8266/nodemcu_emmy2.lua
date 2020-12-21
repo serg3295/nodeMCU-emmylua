@@ -309,25 +309,61 @@ rfswitch = {}
 ---@return nil
 function rfswitch.send(protocol_id, pulse_length, repeat_val, pin, value, length) end
 
---*** ROTARY TODO ***
+--*** ROTARY ***
+rotary = {}
 
---*** RTCFIFO TODO ***
+---Initialize the nodemcu to talk to a rotary encoder switch.
+---@param channel integer The rotary module supports three switches. The channel is either 0, 1 or 2.
+---@param pina integer This is a GPIO number (excluding 0) and connects to pin phase A on the rotary switch.
+---@param pinb integer This is a GPIO number (excluding 0) and connects to pin phase B on the rotary switch.
+---@param pinpress? integer (optional) This is a GPIO number (excluding 0) and connects to the press switch.
+---@param longpress_time_ms? integer (optional) The number of milliseconds (default 500) of press to be considered a long press.
+---@param dblclick_time_ms? integer (optional) The number of milliseconds (default 500) between a release and a press for the next release to be considered a double click.
+---@return any Nothing. If the arguments are in error, or the operation cannot be completed, then an error is thrown. For all API calls, if the channel number is out of range, then an error will be thrown.
+function rotary.setup(channel, pina, pinb, pinpress, longpress_time_ms, dblclick_time_ms) end
+
+---Sets a callback on specific events.
+---@param channel integer The rotary module supports three switches. The channel is either 0, 1 or 2.
+---@param eventtype integer
+---|' rotary.PRESS' #= 1 The eventtype for the switch press.
+---|' rotary.LONGPRESS' #= 2 The eventtype for a long press.
+---|' rotary.RELEASE' #= 4 The eventtype for the switch release.
+---|' rotary.TURN' #= 8 The eventtype for the switch rotation.
+---|' rotary.CLICK' #= 16 The eventtype for a single click (after release)
+---|' rotary.DBLCLICK' #= 32 The eventtype for a double click (after second release)
+---|' rotary.ALL' #= 63 All event types.
+---`eventtype` This defines the type of event being registered.
+---@param callback? function This is a function that will be invoked when the specified event happens.
+---@return any err If an invalid eventtype is supplied, then an error will be thrown.
+function rotary.on(channel, eventtype, callback) end
+
+---Gets the current position and press status of the switch
+---@param channel integer The rotary module supports three switches. The channel is either 0, 1 or 2.
+---@return number pos The current position of the switch.
+---@return boolean press A boolean indicating if the switch is currently pressed.
+function rotary.getpos(channel) end
+
+---Releases the resources associated with the rotary switch.
+---@param channel integer The rotary module supports three switches. The channel is either 0, 1 or 2.
+function rotary.close(channel) end
+
+--*** RTCFIFO ***
 rtcfifo = {}
 
 ---@param minsleep_us number minimum sleep time, in microseconds
----@return nil
 function rtcfifo.dsleep_until_sample(minsleep_us) end
 
 ---Reads a sample from the rtcfifo.
----@param offset number Peek at sample at position `offset` in the fifo.
----@return number timestamp  timestamp in seconds
+---@param offset? number Peek at sample at position `offset` in the fifo.
+---@return number timestamp timestamp in seconds
 ---@return number value the value
 ---@return number neg_e scaling factor
 ---@return any name sensor name
+-- If no sample is available (at the specified offset), nothing is returned.
 function rtcfifo.peek(offset) end
 
 ---Reads the first sample from the rtcfifo, and removes it from there.
----@return number timestamp  timestamp in seconds
+---@return number timestamp timestamp in seconds
 ---@return number value the value
 ---@return number neg_e scaling factor
 ---@return any name sensor name
@@ -335,6 +371,11 @@ function rtcfifo.pop() end
 
 ---Initializes the rtcfifo module for use.
 ---@param tbl? table
+-- This function takes an optional configuration *table* as an argument. The following items may be configured:
+---`interval_us` If wanting to make use of the rtcfifo.sleep_until_sample() function, this field sets the sample interval (in microseconds) to use. It is effectively the first argument of rtctime.dsleep_aligned().
+---`sensor_count` Specifies the number of different sensors to allocate name space for. This directly corresponds to a number of slots reserved for names in the variable block. The default value is 5, minimum is 1, and maximum is 16.
+---`storage_begin` Specifies the first RTC user memory slot to use for the variable block. Default is 32. Only takes effect if storage_end is also specified.
+---`storage_end` Specified the end of the RTC user memory slots. This slot number will not be touched. Default is 128. Only takes effect if storage_begin is also specified.
 ---@return nil
 function rtcfifo.prepare(tbl) end
 
@@ -342,12 +383,12 @@ function rtcfifo.prepare(tbl) end
 ---@param timestamp number Timestamp in seconds.
 ---@param value any The value to store.
 ---@param neg_e any The effective value stored is valueEneg_e
----@param name any Name of the sensor. Only the first four (ASCII) characters of name are used.
+---@param name string Name of the sensor. Only the first four (ASCII) characters of name are used.
 ---@return nil
 function rtcfifo.put(timestamp, value, neg_e, name) end
 
 ---Returns non-zero if the rtcfifo has been prepared and is ready for use, zero if not.
----@return number Non-zero if the rtcfifo has been prepared and is ready for use, zero if not.
+---@return number ready Non-zero if the rtcfifo has been prepared and is ready for use, zero if not.
 function rtcfifo.ready() end
 
 --*** RTCMEM  ***
@@ -811,22 +852,21 @@ tmr = {}
 local tObj = tmr.create()
 
 ---Busyloops the processor for a specified number of microseconds.
----@param us number
+---@param us number us microseconds to busyloop for
 ---@return nil
 function tmr.delay(us) end
 
 ---Returns the system counter, which counts in microseconds.
----@return number
+---@return number val the current value of the system counter
 function tmr.now() end
 
----Provides a simple software watchdog, which needs to be re-armed or disabled before it expires,
----or the system will be restarted.
----@param timeout_s number
+---Provides a simple software watchdog, which needs to be re-armed or disabled before it expires, or the system will be restarted.
+---@param timeout_s number watchdog timeout, in seconds. To disable the watchdog, use -1 (or any other negative value).
 ---@return nil
 function tmr.softwd(timeout_s) end
 
 ---Returns the system uptime, in seconds.
----@return number
+---@return number time the system uptime, in seconds, possibly wrapped around
 function tmr.time() end
 
 ---Feed the system watchdog.
@@ -834,47 +874,48 @@ function tmr.time() end
 function tmr.wdclr() end
 
 ---Get value of CPU CCOUNT register which contains CPU ticks.
----@return number
+---@return number val The current value of CCOUNT register.
 function tmr.ccount() end
 
 ---Creates a dynamic timer object; see below for its method table.
----@return tmr
+---@return tmr obj timer object
 function tmr.create() end
 
----@alias tmr_n
+---@alias tmr_m
 ---|' tmr.ALARM_AUTO' #automatically repeating alarm
 ---|' tmr.ALARM_SINGLE' #a one-shot alarm
 ---|' tmr.ALARM_SEMI' #manually repeating alarm
 ---This is a convenience function combining tobj:register() and tobj:start() into a single call.
 ---@param interval number
----@param mode tmr_n
+---@param mode tmr_m
 ---@param foo function | " function(t) end"
----@return boolean
+---@return boolean b true if the timer was started, false on error
 function tObj:alarm(interval, mode, foo) end
 
 ---Changes a registered timer's expiry interval.
----@param interval integer
+---@param interval_ms integer  new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@return nil
-function tObj:interval(interval) end
+function tObj:interval(interval_ms) end
 
 ---Configures a timer and registers the callback function to call on expiry.
----@param interval number
----@param mode tmr_n
+---@param interval_ms integer  new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
+---@param mode tmr_m
 ---@param foo function |" function() end"
 ---@return nil
-function tObj:register(interval, mode, foo) end
+function tObj:register(interval_ms, mode, foo) end
 
 ---Starts or restarts a previously configured timer.
----@param restart? boolean
----@return boolean
+---@param restart? boolean optional boolean parameter forcing to restart already running timer
+---@return boolean b true if the timer was (re)started, false on error
 function tObj:start(restart) end
 
 ---Checks the state of a timer.
 ---@return boolean|integer|nil
+-- If the specified timer is registered, returns whether it is currently started and its mode. If the timer is not registered, nil is returned.
 function tObj:state() end
 
 ---Stops a running timer, but does *not* unregister it.
----@return boolean
+---@return boolean b true if the timer was stopped, false on error
 function tObj:stop() end
 
 ---Stops the timer (if running) and unregisters the associated callback.
