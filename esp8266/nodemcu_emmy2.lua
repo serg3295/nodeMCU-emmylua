@@ -237,7 +237,7 @@ function pwm.start(pin) end
 ---@return nil
 function pwm.stop(pin) end
 
---*** PWM2 TODO ***
+--*** PWM2 ***
 pwm2 = {}
 
 ---Assigns PWM frequency expressed as Hz to given pin.
@@ -258,35 +258,56 @@ function pwm2.setup_pin_hz(pin,frequencyAsHz,pulsePeriod,initialDuty ,frequencyD
 ---@return nil
 function pwm2.setup_pin_sec(pin,frequencyAsSec,pulsePeriod,initialDuty ,frequencyDivisor) end
 
----Starts PWM for all setup pins.
----@return nil
+---Starts PWM for all setup pins. At this moment GPIO pins are marked as output and TIMER1 is being reserved for this module.
+---@return boolean b true if PWM started ok, false of TIMER1 is reserved by another module.
 function pwm2.start() end
 
----Stops PWM for all pins.
+---Stops PWM for all pins. All GPIO pins and TIMER1 are being released.
 ---@return nil
 function pwm2.stop() end
 
 ---Sets duty cycle for one or more a pins.
----@param pin any
----@param duty any
+---@param pin integer 1~12, IO index
+---@param duty number 0~period, pwm duty cycle
+---@param pinN? integer 1~12, IO index
+---@param dutyN? number 0~period, pwm duty cycle
 ---@return nil
-function pwm2.set_duty(pin, duty) end
+function pwm2.set_duty(pin, duty, pinN, dutyN) end
 
 ---Releases given pin from previously done setup.
----@param pin any
+---@param pin integer 1~12, IO index
 ---@return nil
 function pwm2.release_pin(pin) end
 
 ---Prints internal data structures related to the timer.
----@return nil
+---@return boolean isStarted if true PWM2 has been started
+---@return integer interruptTimerCPUTicks int, desired timer interrupt period in CPU ticks
+---@return integer interruptTimerTicks int, actual timer interrupt period in timer ticks
 function pwm2.get_timer_data() end
 
 ---Prints internal data structures related to given GPIO pin.
----@param pin any
----@return nil
+---@param pin integer 1~12, IO index
+---@return boolean isPinSetup bool, if 1 pin is setup
+---@return integer duty int, assigned duty
+---@return integer pulseResolutions int, assigned pulse periods
+---@return integer divisableFrequency int, assigned frequency
+---@return integer frequencyDivisor int, assigned frequency divisor
+---@return integer resolutionCPUTicks int, calculated one pulse period in CPU ticks
+---@return integer resolutionInterruptCounterMultiplier int, how many timer interrupts constitute one pulse period
 function pwm2.get_pin_data(pin) end
 
---*** RFSWITCH TODO ***
+--*** RFSWITCH ***
+rfswitch = {}
+
+---Transmit data using the radio module.
+---@param protocol_id integer positive integer value, from 1-6
+---@param pulse_length integer length of one pulse in microseconds, usually from 100 to 650
+---@param repeat_val integer repeat value, usually from 1 to 5. This is a synchronous task.
+---@param pin integer I/O index of pin, example 6 is for GPIO12
+---@param value integer positive integer value, this is the primary data which will be sent
+---@param length integer bit length of value, if value length is 3 bytes, then length is 24
+---@return nil
+function rfswitch.send(protocol_id, pulse_length, repeat_val, pin, value, length) end
 
 --*** ROTARY TODO ***
 
