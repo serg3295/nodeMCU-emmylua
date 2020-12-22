@@ -1704,22 +1704,45 @@ u8g2 = {}
 uart = {}
 
 ---Sets the callback function to handle UART events.
----@param id? integer|'0'|'1'
----@param method string|' "data"'|' "error"'
+---@param id? integer uart id, default value is uart num of the console.
+---@param method string
+---|' "data"' #"data", data has been received on the UART.
+---|' "error"' #error occurred on the UART.
 ---@param number_end_char? number
----@param fun? function|' function() end'
----@param run_input? integer|'0'|'1'
+--- `number/end_char` Only for event data.
+--- if pass in a number n<255, the callback will called when n chars are received.
+--- if n=0, will receive every char in buffer.
+--- if pass in a one char string "c", the callback will called when "c" is encounterd, or max n=255 received.
+---@param fun? function
+---|' function(data) end' #for event "data"
+---|' function(err) end' #for event "error" `err` could be one of "out_of_memory", "break", "rx_error".
+---@param run_input? integer
+---|'0' # input from UART will not go into Lua interpreter, can accept binary data.
+---|'1' # input from UART will go into Lua interpreter, and run.
+--- `run_input` Only for "data" event on console uart.
+-- To unregister the callback, provide only the "data" parameter.
 ---@return nil
 function uart.on(id, method, number_end_char, fun, run_input) end
 
 ---(Re-)configures the communication parameters of the UART.
----@param id integer|'0'|'1'
+---@param id integer uart id
 ---@param baud integer|' 300'|' 600'|' 1200'|' 2400'|' 4800'|' 9600'|' 19200'|' 31250'|' 34400'|' 57600'|' 74880'|' 115200'|' 230000'|' 256000'|' 460800'|' 921600'|' 1843200'|' 3686400'
 ---@param databits integer|' 8'|' 7'|' 6'|' 5'
 ---@param parity integer|' uart.PARITY_NONE'|' uart.PARITY_ODD'|' uart.PARITY_EVEN'
 ---@param stopbits integer|' uart.STOPBITS_1'|' uart.STOPBITS_1_5'|' uart.STOPBITS_2'
----@param echo_or_pins table | integer |' 0'
----@return number
+---@param echo_or_pins integer|table
+--- `echo_or_pins` for console uart, this should be a int. if 0, disable echo, otherwise enable echo
+---for others, this is a table:
+--- `tx` int. TX pin. Required
+--- `rx` int. RX pin. Required
+--- `cts` in. CTS pin. Optional
+--- `rts` in. RTS pin. Optional
+--- `tx_inverse` boolean. Inverse TX pin. Default: false
+--- `rx_inverse` boolean. Inverse RX pin. Default: false
+--- `cts_inverse` boolean. Inverse CTS pin. Default: false
+--- `rts_inverse` boolean. Inverse RTS pin. Default: false
+--- `flow_control` int. Combination of uart.FLOWCTRL_NONE, uart.FLOWCTRL_CTS, uart.FLOWCTRL_RTS. Default: uart.FLOWCTRL_NONE
+---@return number n configured baud rate
 function uart.setup(id, baud, databits, parity, stopbits, echo_or_pins) end
 
 ---Returns the current configuration parameters of the UART.
@@ -1731,24 +1754,29 @@ function uart.setup(id, baud, databits, parity, stopbits, echo_or_pins) end
 function uart.getconfig(id) end
 
 ---Start the UART.
----@param id integer|'0'|'1'
----@return boolean
+---@param id integer uart id, except console uart
+---@return boolean b true if uart is started.
 function uart.start(id) end
 
 ---Stop the UART.
----@param id integer|'0'|'1'
+---@param id integer uart id, except console uart
 ---@return nil
 function uart.stop(id) end
 
 ---Set UART controllers communication mode
----@param id integer|'0'|'1'
----@param mode integer|' uart.MODE_UART'|' uart.MODE_RS485_COLLISION_DETECT'|' uart.MODE_RS485_APP_CONTROL'|' uart.MODE_RS485_HALF_DUPLEX'|' uart.MODE_IRDA'
+---@param id integer uart id
+---@param mode integer
+---|>' uart.MODE_UART' #default UART mode, is set after uart.setup() call
+---|' uart.MODE_RS485_COLLISION_DETECT' #receiver must be always enabled, transmitter is automatically switched using RTS pin, collision is detected by UART hardware (note: no event is generated on collision, limitation of esp-idf)
+---|' uart.MODE_RS485_APP_CONTROL' #receiver/transmitter control is left to the application
+---|' uart.MODE_RS485_HALF_DUPLEX' #receiver/transmitter are controlled by RTS pin
+---|' uart.MODE_IRDA'
 ---@return nil
 function uart.setmode(id, mode) end
 
 ---Write string or byte to the UART.
----@param id integer|'0'|'1'
----@param data1 any
+---@param id integer uart id
+---@param data1 any ... string or byte to send via UART
 ---@return nil
 function uart.write(id, data1, ...) end
 
