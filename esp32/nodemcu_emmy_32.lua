@@ -537,10 +537,10 @@ function http.createConnection(url, method, options) end
 
 ---Set a callback to be called when a certain event occurs.
 ---@param event string
----|' "connect"' #Called when the connection is first established. Callback receives no arguments.
----|' "headers"' #Called once the HTTP headers from the remote end have been received. Callback is called as callback(status_code, headers_table).
----|' "data"' #Can be called multiple times, each time more (non-headers) data is received. Callback is called as callback(status_code, data).
----|' "complete"' #Called once all data has been received. Callback is called as callback status_code, connected) where connected is true if the connection is still open.
+---|'"connect"' #Called when the connection is first established. Callback receives no arguments.
+---|'"headers"' #Called once the HTTP headers from the remote end have been received. Callback is called as callback(status_code, headers_table).
+---|'"data"' #Can be called multiple times, each time more (non-headers) data is received. Callback is called as callback(status_code, data).
+---|'"complete"' #Called once all data has been received. Callback is called as callback status_code, connected) where connected is true if the connection is still open.
 ---@param callback? function|nil|' function() end'
 ---@return nil
 function HTTP:on(event, callback) end
@@ -883,13 +883,13 @@ function NETSRV.close() end
 ---@param port? integer number, can be omitted (random port will be chosen)
 ---@param ip? string IP address string
 ---@param fun function |' function(net.socket) end'
----@return integer port or nil if not listening
----@return string ip or nil if not listening
+--- `fun` callback function, pass to caller function as param if a connection is created successfully
+---@return nil
 function NETSRV.listen(port, ip, fun) end
 
 ---Returns server local address/port.
----@return integer port |nil
----@return string ip |nil
+---@return integer port or nil if not listening
+---@return string ip or nil if not listening
 function NETSRV.getaddr() end
 
 ---Closes socket.
@@ -898,13 +898,14 @@ function NETSOCKET:close() end
 
 ---Connect to a remote server.
 ---@param port integer port number
----@param ip_domain string IP address or domain name string
+---@param ip_or_domain string IP address or domain name string
 ---@return nil
-function NETSOCKET:connect(port, ip_domain) end
+function NETSOCKET:connect(port, ip_or_domain) end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string domain name
 ---@param fun function|' function(net.socket, ip) end'
+--- callback function. The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
 function NETSOCKET:dns(domain, fun) end
 
@@ -914,8 +915,8 @@ function NETSOCKET:dns(domain, fun) end
 function NETSOCKET:getpeer() end
 
 ---Retrieve local port and ip of socket.
----@return integer port |nil
----@return string ip |nil
+---@return integer port or nil if not connected
+---@return string ip or nil if not connected
 function NETSOCKET:getaddr() end
 
 ---Throttle data reception by placing a request to block the TCP receive function. net.socket:hold()
@@ -925,12 +926,13 @@ function NETSOCKET:hold() end
 ---Register callback functions for specific events.
 ---@param event string|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"'
 ---@param fun nil|function|' function(net.socket, string?) end)'
+-- callback function. Can be nil to remove callback.
 ---@return nil
 function NETSOCKET:on(event, fun) end
 
 ---Sends data to remote peer.
 ---@param str string data in string which will be sent to server
----@param fun function|' function(sent) end'
+---@param fun? function|' function(sent) end'
 ---@return nil
 function NETSOCKET:send(str, fun) end
 
@@ -1000,28 +1002,35 @@ node = {}
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
----@return string
+---@return string id chip ID (string)
 function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as.
----@param filename string|'".lua"'
+---@param filename string
+---|'".lua"' #filename name of Lua text file
 ---@return nil
 function node.compile(filename) end
 
 ---Enters deep sleep mode.
----@param usecs number
-function node.dsleep(usecs) end
-
----Enters deep sleep mode.
+---@overload fun(options:number)
+-- For compatibility, a number parameter usecs can be supplied instead of an options table, which is equivalent to node.dsleep({us = usecs}).
 ---@param options table
+-- *options*, a table containing some of:
+-- `secs`, a number of seconds to sleep. This permits longer sleep periods compared to using the us parameter.
+-- `us`, a number of microseconds to sleep. If both secs and us are provided, the values are combined.
+-- `gpio`, a single GPIO number or a list of GPIOs. These pins must all be RTC-capable otherwise an error is raised.
+-- `level`. Whether to trigger when *any* of the GPIOs are high (level=1, which is the default if not specified), or when *all* the GPIOs are low (level=0).
+-- `isolate`. A list of GPIOs to isolate. Isolating a GPIO disables input, output, pullup, pulldown, and enables hold feature for an RTC IO. Use this function if an RTC IO needs to be disconnected from internal circuits in deep sleep, to minimize leakage current.
+-- `pull`, boolean, whether to keep powering previously-configured internal pullup/pulldown resistors. Default is false if not specified.
+-- `touch`, boolean, whether to trigger wakeup from any previously-configured touchpads. Default is false if not specified.
 function node.dsleep(options) end
 
 ---Returns the flash chip ID.
----@return number
+---@return number flash_ID
 function node.flashid() end
 
 ---Returns the current available heap size in bytes.
----@return number
+---@return number heap system heap size left in bytes
 function node.heap() end
 
 ---Returns NodeMCU version, chipid, flashid, flash size, flash mode, flash speed.
@@ -1037,14 +1046,16 @@ function node.info() end
 
 ---Submits a string to the Lua interpreter. Similar to pcall(loadstring(str)),
 ---but without the single-line limitation.
----@param str string
+---@param str string Lua chunk
 ---@return nil
 function node.input(str) end
 
 ---Redirects the Lua interpreter output to a callback function.
 ---Optionally also prints it to the serial console.
----@param fun function |nil
----@param serial_output integer|' 1'|' 0'
+---@param fun function a function accept every output as str, and can send the output to a socket (or maybe a file). nil to unregister the previous function.
+---@param serial_output integer
+---|>' 1' #output also sent out the serial port.
+---|' 0' #no serial output.
 ---@return nil
 function node.output(fun, serial_output) end
 
@@ -1059,7 +1070,7 @@ function node.restore() end
 
 ---Change the working CPU Frequency.
 ---@param speed integer|'node.CPU80MHZ'|'node.CPU160MHZ'
----@return number
+---@return number freq target CPU frequency
 function node.setcpufreq(speed) end
 
 ---Controls the amount of debug information kept during node.compile(), and allows removal of debug information from already compiled Lua code.
@@ -1068,7 +1079,8 @@ function node.setcpufreq(speed) end
 ---|'2' #discard Local and Upvalue debug info
 ---|'3' #discard Local, Upvalue and line-number debug info
 ---@param fun? function
----@return integer|nil
+--- `fun` a compiled function to be stripped per setfenv except 0 is not permitted.
+---@return integer|nil levl If invoked without arguments, returns the current level settings. Otherwise, nil is returned.
 function node.stripdebug(level, fun) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
@@ -1077,22 +1089,27 @@ function node.osprint(enabled) end
 
 ---Returns the value of the system counter,
 ---which counts in microseconds starting at 0 when the device is booted.
----@return number lowbits
----@return number highbits
+---@return number lowbits the time in microseconds since boot or the last time the counter wrapped
+---@return number highbits the number of times the counter has wrapped
 function node.uptime() end
 
 ---Sets the Emergency Garbage Collector mode.
----@param mode integer|'node.egc.NOT_ACTIVE'|'node.egc.ON_ALLOC_FAILURE'|'node.egc.ON_MEM_LIMIT'|'node.egc.ALWAYS'
----@param level number
+---@param mode integer
+---|'node.egc.NOT_ACTIVE' #EGC inactive, no collection cycle will be forced in low memory situations
+---|'node.egc.ON_ALLOC_FAILURE' #Try to allocate a new block of memory, and run the garbage collector if the allocation fails.
+---|'node.egc.ON_MEM_LIMIT' #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit.
+---|'node.egc.ALWAYS' #Run the garbage collector before each memory allocation.
+---@param level number in the case of node.egc.ON_MEM_LIMIT, this specifies the memory limit.
 ---@return nil
 function node.egc.setmode(mode, level) end
 
 ---Enable a Lua callback or task to post another task request.
 ---@param task_priority? number
----|'0' #node.task.LOW_PRIORITY
----|'1' #node.task.MEDIUM_PRIORITY
----|'2' #node.task.HIGH_PRIORITY
+---|'node.task.LOW_PRIORITY' # = 0
+---|>'node.task.MEDIUM_PRIORITY' # = 1
+---|'node.task.HIGH_PRIORITY''0' # = 2
 ---@param fun function|' function() end'
+--- `fun` a callback function to be executed when the task is run.
 ---@return nil
 function node.task.post(task_priority, fun) end
 
