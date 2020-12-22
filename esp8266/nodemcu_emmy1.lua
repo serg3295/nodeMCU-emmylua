@@ -452,16 +452,17 @@ adc = {}
 
 ---Checks and if necessary reconfigures the ADC `mode` setting in the ESP init data block.
 ---@param mode_value integer|'adc.INIT_ADC'|'adc.INIT_VDD33'
----@return boolean
+---@return boolean b True if the function had to change the mode, false if the mode was already configured.
 function adc.force_init_mode(mode_value) end
 
 ---Samples the ADC.
----@param channel integer|'0' always 0 on the ESP8266
+---@param channel integer
+---|'0' #always 0 on the ESP8266
 ---@return number
 function adc.read(channel) end
 
 ---Reads the system voltage.
----@return number
+---@return number v system voltage in millivolts
 function adc.readvdd33() end
 
 --*** ADS1115 ***
@@ -619,73 +620,73 @@ function apa102.write(data_pin, clock_pin, str) end
 bit = {}
 
 ---Arithmetic right shift a number equivalent to `value` >> `shift` in C.
----@param value integer
----@param shift integer
----@return integer
+---@param value integer the value to shift
+---@param shift integer positions to shift
+---@return integer n the number shifted right (arithmetically)
 function bit.arshift(value, shift) end
 
 ---Bitwise *AND*, equivalent to `val1` & `val2` & ... & `valn` in C.
----@param val1 integer
----@param val2 integer
----@return integer
+---@param val1 integer first AND argument
+---@param val2 integer second AND argument
+---@return integer n the bitwise AND of all the arguments
 function bit.band(val1, val2, ...) end
 
----Generate a number with a 1 bit (used for mask generation).
----@param position number
----@return number
+---Generate a number with a 1 bit (used for mask generation). Equivalent to 1 << position in C.
+---@param position number position of the bit that will be set to 1
+---@return number n a number with only one 1 bit at position (the rest are set to 0)
 function bit.bit(position) end
 
 ---Bitwise negation, equivalent to ~value in C.
----@param value number
----@return number
+---@param value number the number to negate
+---@return number the bitwise negated value of the number
 function bit.bnot(value) end
 
 ---Bitwise *OR*, equivalent to `val1` | `val2` | ... | `valn` in C.
----@param val1 integer
----@param val2 integer
----@return integer
+---@param val1 integer first OR argument.
+---@param val2 integer second OR argument.
+---@return integer n the bitwise OR of all the arguments
 function bit.bor(val1, val2, ...) end
 
 ---Bitwise *XOR*, equivalent to `val1` ^ `val2` ^ ... ^ `valn` in C.
----@param val1 integer
----@param val2 integer
----@return integer
+---@param val1 integer first XOR argument
+---@param val2 integer second XOR argument
+---@return integer n the bitwise XOR of all the arguments
 function bit.xor(val1, val2, ...) end
 
 ---Clear bits in a number.
----@param value integer
----@param pos1 integer
----@return integer
+---@param value integer the base number
+---@param pos1 integer position of the first bit to clear
+---@return integer n the number with the bit(s) cleared in the given position(s)
 function bit.clear(value, pos1, ...) end
 
 ---Test if a given bit is cleared.
----@param value integer
----@param position integer
----@return boolean
+---@param value integer the value to test
+---@param position integer bit position to test
+---@return boolean b true if the bit at the given position is 0, false otherwise
 function bit.isclear(value, position) end
 
 ---Test if a given bit is set.
----@param value number
----@param position integer
----@return boolean
+---@param value number the value to test
+---@param position integer bit position to test
+---@return boolean b true if the bit at the given position is 1, false otherwise
 function bit.isset(value, position) end
 
 ---Left-shift a number, equivalent to `value` << `shift` in C.
----@param value integer
----@param shift integer
----@return integer
+---@param value integer the value to shift
+---@param shift integer positions to shift
+---@return integer n the number shifted left
 function bit.lshift(value, shift) end
 
 ---Logical right shift a number, equivalent to ( unsigned )`value` >> `shift` in C.
----@param value integer
----@param shift integer
----@return integer
+---@param value integer the value to shift.
+---@param shift integer positions to shift.
+---@return integer n the number shifted right (logically)
 function bit.rshift(value, shift) end
 
 ---Set bits in a number.
----@param value integer
----@param pos1 integer
----@return integer
+---@param value integer the base number.
+---@param pos1 integer position of the first bit to set.
+---@return integer b the number with the bit(s) set in the given position(s)
 function bit.set(value, pos1, ...) end
 
 --*** BLOOM ***
@@ -1799,80 +1800,81 @@ function net.multicastLeave(if_ip, multicast_ip) end
 ---@return nil
 function NETSRV.close() end
 
----Listen on port from IP address. net.server.listen()
+---Listen on port from IP address.
 ---@param port? integer port number, can be omitted (random port will be chosen)
 ---@param ip? string IP address string, can be omitted
 ---@param fun function |'function(net.socket) end'
 ---@return nil
 function NETSRV.listen(port, ip, fun) end
 
----Returns server local address/port. net.server.getaddr()
----@return integer port|nil
----@return string ip|nil
+---Returns server local address/port.
+---@return integer port or nil if not listening
+---@return string ip or nil if not listening
 function NETSRV.getaddr() end
 
 ---Closes socket. net.socket:close()
 ---@return nil
 function NETSOCKET:close() end
 
----Connect to a remote server. net.socket:connect()
+---Connect to a remote server.
 ---@param port integer port number
 ---@param ip_domain string IP address or domain name string
 ---@return nil
 function NETSOCKET:connect(port, ip_domain) end
 
----Provides DNS resolution for a hostname. net.socket:dns()
+---Provides DNS resolution for a hostname.
 ---@param domain string domain name
 ---@param fun function|' function(net.socket, ip) end'
 ---@return nil
 function NETSOCKET:dns(domain, fun) end
 
----Retrieve port and ip of remote peer. net.socket:getpeer()
+---Retrieve port and ip of remote peer.
 ---@return integer port |nil
 ---@return string ip |nil
 function NETSOCKET:getpeer() end
 
----Retrieve local port and ip of socket. net.socket:getaddr()
----@return integer port |nil
----@return string ip |nil
+---Retrieve local port and ip of socket.
+---@return integer port or nil if not connected
+---@return string ip or nil if not connected
 function NETSOCKET:getaddr() end
 
 ---Throttle data reception by placing a request to block the TCP receive function. net.socket:hold()
 ---@return nil
 function NETSOCKET:hold() end
 
----Register callback functions for specific events. net.socket:on()
+---Register callback functions for specific events.
 ---@param event string|' "connection"'|' "reconnection"'|' "disconnection"'|' "receive"'|'  "sent"'
----@param fun nil|function|' function(net.socket, string?) end)'
+---@param fun nil|function|' function(net.socket, string?) end)' -- callback function. Can be nil to remove callback.
 ---@return nil
 function NETSOCKET:on(event, fun) end
 
----Sends data to remote peer. net.socket:send()
+---Sends data to remote peer.
 ---@param str string data in string which will be sent to server
----@param fun function|' function(sent) end'
+---@param fun? function|' function(sent) end'
+--- callback function for sending string
 ---@return nil
 function NETSOCKET:send(str, fun) end
 
----Changes or retrieves Time-To-Live value on socket. net.socket:ttl()
+---Changes or retrieves Time-To-Live value on socket.
 ---@param ttl? integer (optional) new time-to-live value
 ---@return integer ttl current / new ttl value
 function NETSOCKET:ttl(ttl) end
 
----Unblock TCP receiving data by revocation of a preceding hold(). net.socket:unhold()
+---Unblock TCP receiving data by revocation of a preceding hold().
 ---@return nil
 function NETSOCKET:unhold() end
 
----Closes UDP socket. net.udpsocket:close()
+---Closes UDP socket.
 ---@return nil
 function UDPSOCKET:close() end
 
----Listen on port from IP address. net.udpsocket:listen()
+---Listen on port from IP address.
 ---@param port? integer
 ---@param ip? string
 ---@return nil
 function UDPSOCKET:listen(port, ip) end
 
----Register callback functions for specific events. net.udpsocket:on()
+---Register callback functions for specific events.
 ---@param event string|' "receive"'|' "sent"'|' "dns"'
 ---@param fun nil|function|' function(net.socket, string?) end)'
 ---@return nil
@@ -1885,18 +1887,18 @@ function UDPSOCKET:on(event, fun) end
 ---@return nil
 function UDPSOCKET:send(port, ip, data) end
 
----Provides DNS resolution for a hostname. net.udpsocket:dns()
+---Provides DNS resolution for a hostname.
 ---@param domain string
 ---@param fun function|'function(net.socket, ip) end'
 ---@return nil
 function UDPSOCKET:dns(domain, fun) end
 
----Retrieve local port and ip of socket. net.udpsocket:getaddr()
+---Retrieve local port and ip of socket.
 ---@return integer port |nil
 ---@return string ip |nil
 function UDPSOCKET:getaddr() end
 
----Changes or retrieves Time-To-Live value on socket. net.udpsocket:ttl()
+---Changes or retrieves Time-To-Live value on socket.
 ---@param ttl integer
 ---@return integer
 function UDPSOCKET:ttl(ttl) end
@@ -1906,7 +1908,7 @@ function UDPSOCKET:ttl(ttl) end
 ---@return string IP address (string) of DNS server
 function net.dns.getdnsserver(dns_index) end
 
----Resolve a hostname to an IP address. net.dns.resolve()
+---Resolve a hostname to an IP address.
 ---Doesn't require a socket like net.socket.dns().
 ---@param host string hostname to resolve
 ---@param fun function|' function(sk, ip) end'
