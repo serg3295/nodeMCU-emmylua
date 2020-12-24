@@ -539,7 +539,7 @@ function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
 ---@param size? integer an optional value for the number of bytes to return. The default is 1024.
----@return string | nil A string of up to size bytes, or nil if the encoding is complete and all data has been returned.
+---@return string | nil s A string of up to size bytes, or nil if the encoding is complete and all data has been returned.
 function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
@@ -562,7 +562,7 @@ function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
 ---@param str string the next piece of JSON encoded data
----@return any|nil The constructed Lua object or nil if the decode is not yet complete.
+---@return any|nil obj The constructed Lua object or nil if the decode is not yet complete.
 function decoder:write(str) end
 
 ---This gets the decoded Lua object, or raises an error if the decode is not yet complete.
@@ -575,6 +575,7 @@ function decoder:result() end
 ---`depth` the maximum encoding depth needed to encode the table. The default is 20.
 ---`null` the string value to treat as null.
 ---`metatable` a table to use as the metatable for all the new tables in the returned object.
+---@return table t Lua table representation of the JSON data
 function sjson.decode(str, opts) end
 
 --*** SNTP ***
