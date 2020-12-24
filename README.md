@@ -1,4 +1,4 @@
-<h1>Emmy annotations for NodeMCU ESP8266 & ESP32. Lua.</h1>
+<h1>Emmy Lua annotations for NodeMCU ESP8266 & ESP32.</h1>
 
 for Auto Completion of nodemcu functions
 
@@ -12,7 +12,7 @@ Works with VS Code extension **[Sumneko lua-language-server](https://github.com/
 Set path to the file **nodemcu_emmy_32.lua**, or **nodemcu_emmy.lua** in parameter:
 
         "Lua.workspace.library": {
-        "c:/users/..../": true
+          "c:/users/..../": true
          }
 
 Declarations can also be placed in workspace subdirectory
