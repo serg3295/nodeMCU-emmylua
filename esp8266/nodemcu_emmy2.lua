@@ -581,20 +581,22 @@ function sjson.decode(str, opts) end
 sntp = {}
 
 ---Attempts to obtain time synchronization.
----@param server_ip string
----@param callback function|' function (sec, usec, server, info) end'
----@param errcallback function|' function()'
----@param autorepeat boolean
+---@param server_ip? string|table
+---@param callback? function
+---|' function (sec, usec, server, info) end' # if provided it will be invoked on a successful synchronization, with four parameters: seconds, microseconds, server and info.
+---@param errcallback? function
+---|' function()' #`errcallback` failure callback with two parameters: type of error &  string containing supplementary information.
+---@param autorepeat? boolean if this is non-nil, then the synchronization will happen every 1000 seconds and try and condition the clock if possible.
 ---@return nil
 function sntp.sync(server_ip, callback, errcallback, autorepeat) end
 
 ---Sets the offset between the rtc clock and the NTP time.
----@param offset number
+---@param offset number The offset between NTP time and the rtc time.
 ---@return nil
 function sntp.setoffset(offset) end
 
 ---Gets the offset between the rtc clock and the NTP time.
----@return number
+---@return number ofs The current offset.
 function sntp.getoffset() end
 
 --*** SOFTUART ***
@@ -877,7 +879,7 @@ function tmr.wdclr() end
 ---@return number val The current value of CCOUNT register.
 function tmr.ccount() end
 
----Creates a dynamic timer object; see below for its method table.
+---Creates a dynamic timer object
 ---@return tmr obj timer object
 function tmr.create() end
 
@@ -1084,7 +1086,7 @@ function wiegand.create(pinD0, pinD1, callback) end
 ---@return nil
 function wiegandobj:close() end
 
---*** WIFI ***
+--*** WIFI TODO ***
 wifi = {}
 
 ---Gets the current WiFi channel.
@@ -1153,14 +1155,17 @@ function wifi.startsmart(type, callback) end
 ---@return nil
 function wifi.stopsmart() end
 
----duration number Suspend duration in microseconds(μs).
----suspend_cb? function Callback to execute when WiFi is suspended.
----resume_cb? function Callback to execute when WiFi wakes from suspension.
----preserve_mode? boolean preserve current WiFi mode through node sleep.
----
 ---Suspend Wifi to reduce current consumption.
 ---@param tbl table
+--- `duration` number Suspend duration in microseconds(μs).
+--- `suspend_cb?` function Callback to execute when WiFi is suspended.
+---`resume_cb?` function Callback to execute when WiFi wakes from suspension.
+--- `preserve_mode?` boolean preserve current WiFi mode through node sleep.
 ---@return integer
+--- `suspend_state` if no parameters are provided, current WiFi suspension state will be returned. States:
+--- 0 WiFi is awake.
+--- 1 WiFi suspension is pending. (Waiting for idle task)
+--- 2 WiFi is suspended.
 function wifi.suspend(tbl) end
 
 ---Auto connects to AP in station mode.
@@ -1169,7 +1174,7 @@ function wifi.suspend(tbl) end
 function wifi.sta.autoconnect(auto) end
 
 ---Select Access Point from list returned by wifi.sta.getapinfo()
----@param ap_index integer
+---@param ap_index integer Index of Access Point you would like to change to. (Range:1-5) - Corresponds to index used by wifi.sta.getapinfo() and wifi.sta.getapindex()
 ---@return boolean
 function wifi.sta.changeap(ap_index) end
 
@@ -1182,32 +1187,34 @@ function wifi.sta.clearconfig() end
 ---@return boolean
 function wifi.sta.config(station_config) end
 
----connected_cb function. Items returned in table :
----SSID: SSID of access point. (format: string)
----BSSID: BSSID of access point. (format: string)
----channel: The channel the access point is on. (format: number)
 ---Connects to the configured AP in station mode.
 ---@param connected_cb? function Callback to execute when station is connected to an access point.
+--- `connected_cb` function. Items returned in table :
+--- `SSID`: SSID of access point. (format: string)
+--- `BSSID`: BSSID of access point. (format: string)
+--- `channel`: The channel the access point is on. (format: number)
 ---@return nil
 function wifi.sta.connect(connected_cb) end
 
----disconnected_cb function. Items returned in table :
----SSID: SSID of access point. (format: string)
----BSSID: BSSID of access point. (format: string)
----reason: See wifi.eventmon.reason below. (format: number)
 ---Disconnects from AP in station mode.
 ---@param disconnected_cb? function Callback to execute when station is disconnected from an access point.
+--- `disconnected_cb` function. Items returned in table :
+--- `SSID`: SSID of access point. (format: string)
+--- `BSSID`: BSSID of access point. (format: string)
+--- `reason`: See wifi.eventmon.reason below. (format: number)
 ---@return nil
 function wifi.sta.disconnect(disconnected_cb) end
 
----CFG TABLE contains scan configuration:
----`ssid` SSID == nil, don't filter SSID
----`bssid` BSSID == nil, don't filter BSSID
----`channel` channel == 0, scan all channels, otherwise scan set channel (default is 0)
----`show_hidden` show_hidden == 1, get info for router with hidden SSID (default is 0)
 ---Scans AP list as a Lua table into callback function.
 ---@param cfg? table that contains scan configuration
----@param format? integer|'1'|'0'
+--- `CFG TABLE` contains scan configuration:
+--- `ssid` SSID == nil, don't filter SSID
+--- `bssid` BSSID == nil, don't filter BSSID
+--- `channel` channel == 0, scan all channels, otherwise scan set channel (default is 0)
+--- `show_hidden` show_hidden == 1, get info for router with hidden SSID (default is 0)
+---@param format? integer
+---|' 0' #old format (SSID : Authmode, RSSI, BSSID, Channel), any duplicate SSIDs will be discarded
+---|' 1' #new format (BSSID : SSID, RSSI, auth mode, Channel)
 ---@param callback function to receive the AP table when the scan is done.
 ---@return nil
 function wifi.sta.getap(cfg, format, callback) end
@@ -1218,40 +1225,70 @@ function wifi.sta.getapindex() end
 
 ---Get information of APs cached by ESP8266 station.
 ---@return table
+--- returns table `ap_info`:
+--- `qty` quantity of APs returned
+--- `1-5` index of AP. (the index corresponds to index used by wifi.sta.changeap() and wifi.sta.getapindex())
+--- `ssid` ssid of Access Point
+--- `pwd` password for Access Point, nil if no password was configured
+--- `bssid` MAC address of Access Point
+--- `nil` will be returned if no MAC address was configured during station configuration.
 function wifi.sta.getapinfo() end
 
 ---Gets the broadcast address in station mode.
----@return string | nil
+---@return string |nil s broadcast address as string, for example "192.168.0.255", returns nil if IP address = "0.0.0.0".
 function wifi.sta.getbroadcast() end
 
 ---Gets the WiFi station configuration.
 ---@param return_table boolean
----@return table
+--- `true` returns data in a table
+--- `false` returns data in the old format (default)
+---@return table|string
+--- if *return_table* is true -> config_table:
+--- `ssid` ssid of Access Point.
+--- `pwd` password to Access Point, nil if no password was configured
+--- `bssid_set` will return true if the station was configured specifically to connect to the AP with the matching bssid.
+--- `bssid` If a connection has been made to the configured AP this field will contain the AP's MAC address. Otherwise "ff:ff:ff:ff:ff:ff" will be returned.
+--- If *return_table* is false:
+--- ssid, password, bssid_set, bssid, if bssid_set is equal to 0 then bssid is irrelevant
 function wifi.sta.getconfig(return_table) end
 
 ---Gets the default WiFi station configuration stored in flash.
 ---@param return_table boolean
+--- `true` returns data in a table
+--- `false` returns data in the old format (default)
 ---@return table
+--- if *return_table* is true -> config_table:
+--- `ssid` ssid of Access Point.
+--- `pwd` password to Access Point, nil if no password was configured
+--- `bssid_set` will return true if the station was configured specifically to connect to the AP with the matching bssid.
+--- `bssid` If a connection has been made to the configured AP this field will contain the AP's MAC address. Otherwise "ff:ff:ff:ff:ff:ff" will be returned.
+--- If *return_table* is false:
+--- ssid, password, bssid_set, bssid, if bssid_set is equal to 0 then bssid is irrelevant
 function wifi.sta.getdefaultconfig(return_table) end
 
 ---Gets current station hostname.
----@return string
+---@return string host currently configured hostname
 function wifi.sta.gethostname() end
 
 ---Gets IP address, netmask, and gateway address in station mode.
----@return ...
+---@return string IP_address
+---@return string netmask
+---@return string gateway_address
+--- Returns nil if IP = "0.0.0.0".
 function wifi.sta.getip() end
 
 ---Gets MAC address in station mode.
----@return string
+---@return string MAC address as string e.g. "18:fe:34:a2:d7:34"
 function wifi.sta.getmac() end
 
 ---Get RSSI(Received Signal Strength Indicator) of the Access Point which ESP8266 station connected to.
----@return number | nil
+---@return number|nil
+--- If station is connected to an access point, rssi is returned.
+--- If station is not connected to an access point, nil is returned.
 function wifi.sta.getrssi() end
 
 ---Set Maximum number of Access Points to store in flash. - This value is written to flash
----@param qty integer
+---@param qty integer Quantity of Access Points to store in flash. Range: 1-5 (Default: 1)
 ---@return boolean
 function wifi.sta.setaplimit(qty) end
 
@@ -1261,22 +1298,31 @@ function wifi.sta.setaplimit(qty) end
 function wifi.sta.sethostname(hostname) end
 
 ---Sets IP address, netmask, gateway address in station mode.
----@param cfg table
+---@param cfg table cfg table contain IP address, netmask, and gateway
+-- { ip = "192.168.0.111",
+--  netmask = "255.255.255.0",
+--  gateway = "192.168.0.1" }
 ---@return boolean
 function wifi.sta.setip(cfg) end
 
 ---Sets MAC address in station mode.
----@param mac string|'""'
+---@param mac string MAC address in string e.g. "DE:AD:BE:EF:7A:C0"
 ---@return boolean
 function wifi.sta.setmac(mac) end
 
 ---Configures the WiFi modem sleep type to be used while station is connected to an Access Point.
 ---@param type_wanted integer|'wifi.NONE_SLEEP'|'wifi.LIGHT_SLEEP'|'wifi.MODEM_SLEEP'
----@return any
+---@return number mode The actual sleep mode set, as one of wifi.NONE_SLEEP, wifi.LIGHT_SLEEP or wifi.MODEM_SLEEP.
 function wifi.sta.sleeptype(type_wanted) end
 
 ---Gets the current status in station mode.
----@return integer
+---@return integer state The current state which can be one of the following:
+-- wifi.STA_IDLE
+-- wifi.STA_CONNECTING
+-- wifi.STA_WRONGPWD
+-- wifi.STA_APNOTFOUND
+-- wifi.STA_FAIL
+-- wifi.STA_GOTIP
 function wifi.sta.status() end
 
 ---Sets SSID and password in AP mode.
@@ -1285,8 +1331,8 @@ function wifi.sta.status() end
 function wifi.ap.config(cfg) end
 
 ---Deauths (forcibly removes) a client from the ESP access point.
----@param MAC string|'""'
----@return boolean
+---@param MAC? string|'""'
+---@return boolean Returns true unless called while the ESP is in the STATION opmode
 function wifi.ap.deauth(MAC) end
 
 ---Gets broadcast address in AP mode.
