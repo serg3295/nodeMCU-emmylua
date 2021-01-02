@@ -1008,8 +1008,7 @@ function tsl2561.init(sdapin, sclpin, address, pckg) end
 ---tsl2561.TSL2561_ERROR_LAST
 function tsl2561.settiming(integration, gain) end
 
---*** U8G2 TODO ***
-u8g2 = {}
+--*** u8g2 Module is in nodemcu-emmy3.lua ***
 
 --*** UART ***
 uart = {}
@@ -1064,8 +1063,7 @@ function uart.write(id, data1, ...) end
 ---@return integer num The number of bytes in the selected FIFO.
 function uart.fifodepth(id, dir) end
 
---*** UCG TODO ***
-ucg ={}
+--*** ucg Module is in nodemcu-emmy3.lua ***
 
 --*** WEBSOCKET ***
 websocket = {}
@@ -1411,16 +1409,16 @@ function wifi.ap.setmac(mac) end
 function wifi.ap.dhcp.config(dhcp_config) end
 
 ---Starts the DHCP service.
----@return boolean
+---@return boolean b boolean indicating success
 function wifi.ap.dhcp.start() end
 
 ---Stops the DHCP service.
----@return boolean
+---@return boolean b boolean indicating success
 function wifi.ap.dhcp.stop() end
 
 ---Register callbacks for WiFi event monitor
 ---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'
----@param fun function
+---@param fun? function
 ---@return nil
 function wifi.eventmon.register(Event, fun) end
 
@@ -1430,7 +1428,18 @@ function wifi.eventmon.register(Event, fun) end
 function wifi.eventmon.unregister(Event) end
 
 --*** WiFi MONITOR TODO ***
-wifi.monitor = {}
+
+---This registers a callback function to be called whenever a management frame is received.
+---@param filter_parameters? number This is a byte offset (1 based) into the underlying data structure, a value to match against, and an optional mask to use for matching.
+---@param mgmt_frame_callback function is a function which is invoked with a single argument which is a wifi.packet object which has many methods and attributes.
+function wifi.monitor.start(filter_parameters, mgmt_frame_callback) end
+
+---This disables the monitor mode and returns to normal operation.
+function wifi.monitor.stop() end
+
+---This sets the channel number to monitor.
+---@param channel number sets the channel number in the range 1 to 15.
+function wifi.monitor.channel(channel) end
 
 --*** WPS ***
 wps ={}
@@ -1468,21 +1477,23 @@ ws2812 = {}
 ---@class ws2812
 local buffer = ws2812.newBuffer()
 
----Initialize UART1 and GPIO2, should be called once and before write().
----@param mode? integer|'ws2812.MODE_SINGLE'|'ws2812.MODE_DUAL'
+---Initialize UART1 and GPIO2, should be called once and before write(). Initialize UART0 (TXD0) too if ws2812.MODE_DUAL is set.
+---@param mode? integer
+---|>'ws2812.MODE_SINGLE'
+---|'ws2812.MODE_DUAL' #you will be able to handle two strips in parallel
 ---@return nil
 function ws2812.init(mode) end
 
----Send data to one or two led strip using its native format.
+---Send data to one or two led strip using its native format which is generally Green,Red,Blue for RGB strips and Green,Red,Blue,White for RGBW strips.
 ---@param data1 string|nil payload to be sent to one or more WS2812 like leds through GPIO2
 ---@param data2? string|nil payload to be sent to one or more WS2812 like leds through TXD0
 ---@return nil
 function ws2812.write(data1, data2) end
 
 ---Allocate a new memory buffer to store led values.
----@param numberOfLeds integer
----@param bytesPerLed integer  3 for RGB strips and 4 for RGBW strips
----@return ws2812
+---@param numberOfLeds integer length of the led strip
+---@param bytesPerLed integer 3 for RGB strips and 4 for RGBW strips
+---@return ws2812 ws2812.buffer
 function ws2812.newBuffer(numberOfLeds, bytesPerLed) end
 
 ---Return the value at the given position
@@ -1492,7 +1503,10 @@ function buffer:get(index) end
 
 ---Set the value at the given position
 ---@param index integer position in the buffer (1 for the first led)
----@param color number|any payload of the color
+---@param color number|any payload of the color. Payload could be:
+-- `number, number, ...` you should pass as many arguments as bytesPerLed
+-- `table` should contains bytesPerLed numbers
+-- `string` should contains bytesPerLed bytes
 ---@return nil
 function buffer:set(index, color) end
 
@@ -1500,24 +1514,24 @@ function buffer:set(index, color) end
 ---@return integer
 function buffer:size() end
 
----Fill the buffer with the given color.
+---Fill the buffer with the given color. The number of given bytes must match the number of bytesPerLed of the buffer
 ---@param color any bytes of the color, you should pass as many arguments as bytesPerLed
 ---@return nil
 function buffer:fill(color) end
 
 ---Returns the contents of the buffer (the pixel values) as a string.
----@return string A string containing the pixel values.
+---@return string str A string containing the pixel values.
 function buffer:dump() end
 
 ---Inserts a string (or a buffer) into another buffer with an offset.
----@param source string|any the pixel values to be set into the buffer.
----@param offset? integer the offset where the source is to be placed in the buffer.
+---@param source string|any the pixel values to be set into the buffer. This is either a string or a buffer.
+---@param offset? integer the offset where the source is to be placed in the buffer. Default is 1. Negative values can be used.
 ---@return nil
 function buffer:replace(source, offset) end
 
----This is a general method that loads data into a buffer.
----@param factor1 number This is the factor that the contents of buffer1 are multiplied by.
----@param buffer1 any This is the source buffer.
+---This is a general method that loads data into a buffer that is a linear combination of data from other buffers.
+---@param factor1 number This is the factor that the contents of buffer1 are multiplied by. This factor is scaled by a factor of 256. Thus factor1 value of 256 is a factor of 1.0.
+---@param buffer1 any This is the source buffer. It must be of the same shape as the destination buffer.
 ---@return nil
 function buffer:mix(factor1, buffer1, ...) end
 
@@ -1532,24 +1546,26 @@ function buffer:power() end
 function buffer:fade(value, direction) end
 
 ---Shift the content of (a piece of) the buffer in positive or negative direction.
----@param value number  number of pixels by which to rotate the buffer.
----@param mode? integer|'ws2812.SHIFT_LOGICAL'|'ws2812.SHIFT_CIRCULAR'
----@param i? integer is the first offset in the buffer to be affected.
----@param j? integer is the last offset in the buffer to be affected.
+---@param value number  number of pixels by which to rotate the buffer. Positive values rotate forwards, negative values backwards.
+---@param mode? integer
+---|>' ws2812.SHIFT_LOGICAL' #the freed pixels are set to 0 (off).
+---|' ws2812.SHIFT_CIRCULAR' #the buffer is treated like a ring buffer, inserting the pixels falling out on one end again on the other end
+---@param i? integer is the first offset in the buffer to be affected. Negative values are permitted and count backwards from the end. Default is 1.
+---@param j? integer is the last offset in the buffer to be affected. Negative values are permitted and count backwards from the end. Default is -1.
 ---@return nil
 function buffer:shift(value, mode, i, j) end
 
 ---This implements the extraction function like string.sub.
----@param i integer This is the start of the extracted data.
----@param j? integer  this is the end of the extracted data.
----@return any buff A buffer containing the extracted piece.
+---@param i integer This is the start of the extracted data. Negative values can be used.
+---@param j? integer  this is the end of the extracted data. Negative values can be used. The default is -1.
+---@return ws2812 buff A buffer containing the extracted piece.
 function buffer:sub(i, j) end
 
 --*** WS2812-EFFECTS ***
 ws2812_effects = {}
 
 ---Initialize the effects library with the provided buffer for the connected LED strip.
----@param buffer any is a ws2812.buffer for the connected strip.
+---@param buffer ws2812 is a ws2812.buffer for the connected strip.
 ---@return nil
 function ws2812_effects.init(buffer) end
 
