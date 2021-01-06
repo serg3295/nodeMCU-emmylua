@@ -15,8 +15,7 @@ function bh1750.read() end
 ---@return number val Last known lux value.
 function bh1750.getlux() end
 
---*** COHELPER TODO ***
-cohelper = {}
+-- *** cohelper Module is in nodemcu_emmy3.lua ***
 
 --*** DS18B20 ***
 ds18b20 = {}
@@ -103,8 +102,7 @@ function ds3231.getBytes() end
 ---@return nil
 function ds3231.resetStopFlag() end
 
---*** FIFO TODO ***
-fifo = {}
+-- *** FIFO Module is in nodemcu_emmy3.lua ***
 
 --***** FTP server **--
 ---@class ftp
@@ -130,8 +128,7 @@ function FTP:open(user, pass, ssid, wifipwd, dbgFlag) end
 ---@return nil
 function FTP:close() end
 
---*** GOSSIP TODO ***
-gossip = {}
+-- *** gossip Module is in nodemcu_emmy3.lua ***
 
 --*** HDC1000 ***
 hdc1000 = {}
@@ -1408,8 +1405,7 @@ function file.writeline(str) end
 ---@return boolean | nil
 function fObj:writeline(str) end
 
---*** GDBSTUB TODO ***
-gdbstub = {}
+-- *** gdbstub Module is in nodemcu_emmy3.lua ***
 
 --*** GPIO  ***
 gpio = {}
