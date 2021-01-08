@@ -331,7 +331,7 @@ function eth.set_mac(mac) end
 file = {}
 
 ---@class file
-local fObj = file.open()
+local fObj = {}
 
 ---Change current directory (and drive).
 ---@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"'
@@ -526,7 +526,7 @@ function gpio.write(pin, level) end
 http = {}
 
 ---@class http
-local HTTP = http.createConnection()
+local HTTP = {}
 
 ---Creates a connection object which can be configured and then executed.
 ---@param url string|'"http://"'|'"https://"'
@@ -703,7 +703,7 @@ function i2s.write(i2s_num, data) end
 ledc = {}
 
 ---@class ledc
-local channel = ledc.newChannel()
+local channel = {}
 
 ---Configures a PIN to be controlled by the LEDC system.
 ---@param tbl table
@@ -774,7 +774,7 @@ function channel:fade(duty, direction, scale, cycleNum, stepNum, wait) end
 mqtt = {}
 
 ---@class mqtt
-local MQTT32 = mqtt.Client()
+local MQTT32 = {}
 
 ---Creates a MQTT client.
 ---@param clientid string clientid client ID
@@ -841,11 +841,11 @@ function MQTT32:unsubscribe(topic, f32_client) end
 net = {}
 
 ---@class netsocket
-local NETSOCKET = net.createConnection()
+local NETSOCKET = {}
 ---@class netsrv
-local NETSRV= net.createServer()
+local NETSRV= {}
 ---@class udpsocket
-local UDPSOCKET = net.createUDPSocket()
+local UDPSOCKET = {}
 
 ---Creates a client.
 ---@param type? integer|'net.TCP'|'net.UDP'
@@ -1239,7 +1239,7 @@ function ow.write_bytes(pin, buf, power) end
 pulsecnt = {}
 
 ---@class pulsecnt
-local pulsecntObj = pulsecnt.create()
+local pulsecntObj = {}
 
 ---Create the pulse counter object.
 ---@param unit integer ESP32 has 0 thru 7 units to count pulses on.
@@ -1322,7 +1322,7 @@ function qrcodegen.getPixel(qrcode, x, y) end
 sdmmc = {}
 
 ---@class sdmmc
-local card = sdmmc.init()
+local card = {}
 
 ---Initialize the SDMMC and probe the attached SD card. SDMMC Mode.
 ---@param slot integer|'sdmmc.HS1'|'sdmmc.HS2'
@@ -1392,9 +1392,9 @@ function sigma_delta.setup(channel, pin) end
 sjson = {}
 
 ---@class sjsonenc
-local encoder = sjson.encoder()
+local encoder = {}
 ---@class sjsondec
-local decoder = sjson.decoder()
+local decoder = {}
 
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
 ---@param tbl table data to encode
@@ -1481,9 +1481,9 @@ function sodium.crypto_box.seal_open(ciphertext, public_key, secret_key) end
 spi = {}
 
 ---@class spi
-local busmaster = spi.master()
+local busmaster = {}
 ---@class spidev
-local device = busmaster:device()
+local device = {}
 
 ---Initializes a bus in master mode and returns a bus master object.
 ---@param host integer|'spi.VSPI'|'spi.HSPI'|'spi.SPI1'
@@ -1617,7 +1617,7 @@ function time.settimezone(timezone) end
 tmr = {}
 
 ---@class tmr
-local tObj = tmr.create()
+local tObj = {}
 
 ---Creates a dynamic timer object.
 ---@return tmr
@@ -1666,7 +1666,7 @@ function tObj:unregister() end
 touch ={}
 
 ---@class touch
-local tp = touch.create()
+local tp = {}
 
 ---Create the touch sensor object.
 ---@param tbl table
@@ -1883,7 +1883,7 @@ function wifi.ap.sethostname(hostname) end
 ws2812 = {}
 
 ---@class ws2812
-local buffer =  ws2812.newBuffer()
+local buffer =  {}
 
 ---Send data to up to 8 led strip using its native format.
 ---@param tbl table
