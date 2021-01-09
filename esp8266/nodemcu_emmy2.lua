@@ -94,7 +94,7 @@ function ow.write_bytes(pin, buf, power) end
 pcm ={}
 
 ---@class pcm
-local pcmdrv = pcm.new()
+local pcmdrv = {}
 
 ---Initializes the audio driver.
 ---@param pcm_SD any pcm.SD use sigma-delta hardware
@@ -153,7 +153,7 @@ function perf.stop() end
 pipe = {}
 
 ---@class pipe
-pobj = pipe.create()
+local pobj = {}
 
 ---Create a pipe.
 ---@param CB_function? function optional reader callback which is called through the *node.task.post()* when the pipe is written to.
@@ -524,9 +524,9 @@ function sigma_delta.setup(pin) end
 sjson = {}
 
 ---@class sjsonenc
-local encoder = sjson.encoder()
+local encoder = {}
 ---@class sjsondec
-local decoder = sjson.decoder()
+local decoder = {}
 
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
 ---@param tbl table  data to encode
@@ -604,7 +604,7 @@ function sntp.getoffset() end
 softuart = {}
 
 ---@class softuart
-local s_uart = softuart.setup()
+local s_uart = {}
 
 ---Creates new SoftUART instance.
 ---@param baudrate number :SoftUART baudrate. Maximum supported is 230400.
@@ -801,7 +801,7 @@ function tcs34725.setIntegrationTime(time) end
 tls = {}
 
 ---@class tls
-local TLS = tls.createConnection()
+local TLS = {}
 
 ---Creates TLS connection.
 ---@return tls tls.socket sub module
@@ -885,7 +885,7 @@ function tm1829.write(str) end
 tmr = {}
 
 ---@class tmr
-local tObj = tmr.create()
+local tObj = {}
 
 ---Busyloops the processor for a specified number of microseconds.
 ---@param us number us microseconds to busyloop for
@@ -1069,7 +1069,7 @@ function uart.fifodepth(id, dir) end
 websocket = {}
 
 ---@class websocket
-local ws = websocket.createClient()
+local ws = {}
 
 ---Creates a new websocket client.
 ---@return websocket websocketclient
@@ -1105,7 +1105,7 @@ function websocket:send(message, opcode) end
 wiegand = {}
 
 ---@class wiegand
-local wiegandobj = wiegand.create()
+local wiegandobj = {}
 
 ---Creates a dynamic wiegand object that receives a callback when data is received.
 ---@param pinD0 number This is a GPIO number (excluding 0) and connects to the D0 data line
@@ -1664,7 +1664,7 @@ function ws2801.write(str) end
 ws2812 = {}
 
 ---@class ws2812
-local buffer = ws2812.newBuffer()
+local buffer = {}
 
 ---Initialize UART1 and GPIO2, should be called once and before write(). Initialize UART0 (TXD0) too if ws2812.MODE_DUAL is set.
 ---@param mode? integer

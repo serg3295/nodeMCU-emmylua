@@ -1,4 +1,5 @@
 
+--#region
 --[[ i2c4bit_meta = require("lc-i2c4bit")
 gpio4bit_meta = require("lc-gpio4bit")
 gpio8bit_meta = require("lc-gpio8bit") ]]
@@ -11,6 +12,7 @@ local backend_obj = gpio8bit_meta{}
 
 ---@class i2c4bit : backend_obj
 local backend_obj = i2c4bit_meta{} ]]
+--#endregion
 
 --*** LIQUID CRYSTAL TODO ***
 ---@class liquidcrystal

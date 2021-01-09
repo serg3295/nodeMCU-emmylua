@@ -380,7 +380,7 @@ function mcp17:readGPIO(register) end
 redis = {}
 
 ---@class redis
-local rds = redis.connect()
+local rds = {}
 
 ---Function used to connect to Redis server.
 ---@param host any Redis host name or address
@@ -689,7 +689,7 @@ function bit.set(value, pos1, ...) end
 bloom = {}
 
 ---@class bloom
-local filter = bloom.create()
+local filter = {}
 
 ---Create a filter object.
 ---@param elements number elements The largest number of elements to be added to the filter.
@@ -964,9 +964,9 @@ function bmp085.pressure_raw(oversampling_setting) end
 coap = {}
 
 ---@class coapClnt
-local coap_client = coap.Client()
+local coap_client = {}
 ---@class coapSrv
-local coap_server = coap.Server()
+local coap_server = {}
 
 ---Creates a CoAP client.
 ---@return coapClnt CoAP client
@@ -1072,7 +1072,7 @@ function color_utils.colorWheel(angle) end
 cron = {}
 
 ---@class cron
-local CRON = cron.schedule()
+local CRON = {}
 
 ---Creates a new schedule entry.
 ---@param mask string | '"* * * * *"'
@@ -1264,7 +1264,7 @@ function enduser_setup.stop() end
 file = {}
 
 ---@class file
-local fObj = file.open()
+local fObj = {}
 
 ---Change current directory (and drive).
 ---@param dir string | '"/FLASH"' | '"/SD0"' | '"/SD1"'
@@ -1411,7 +1411,7 @@ function fObj:writeline(str) end
 gpio = {}
 
 ---@class gpio
-local pulser = gpio.pulse.build()
+local pulser = {}
 
 ---Initialize pin to GPIO mode, set the pin in/out direction, and optional internal weak pull-up.
 ---@param pin integer
@@ -1705,7 +1705,7 @@ function mdns.close() end
 mqtt = {}
 
 ---@class mqtt
-local MQTT = mqtt.Client()
+local MQTT = {}
 
 ---Creates a MQTT client.
 ---@param clientid string client ID
@@ -1787,11 +1787,11 @@ function MQTT:unsubscribe(tbl, f_client) end
 net = {}
 
 ---@class netsocket
-local NETSOCKET = net.createConnection()
+local NETSOCKET = {}
 ---@class netsrv
-local NETSRV = net.createServer()
+local NETSRV = {}
 ---@class udpsocket
-local UDPSOCKET = net.createUDPSocket()
+local UDPSOCKET = {}
 
 ---Creates a TCP client.
 ---@return netsocket submodule net.socket
