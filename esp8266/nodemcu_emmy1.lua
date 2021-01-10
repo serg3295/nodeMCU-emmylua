@@ -15,11 +15,9 @@ function bh1750.read() end
 ---@return number val Last known lux value.
 function bh1750.getlux() end
 
--- *** cohelper Module is in nodemcu_emmy3.lua ***
+--*** cohelper Module is in nodemcu_emmy3.lua ***
 
 --*** DS18B20 ***
-ds18b20 = {}
-
 ---@class ds18b20
 local ds18 = require("ds18b20")
 
@@ -102,9 +100,9 @@ function ds3231.getBytes() end
 ---@return nil
 function ds3231.resetStopFlag() end
 
--- *** FIFO Module is in nodemcu_emmy3.lua ***
+--*** FIFO Module is in nodemcu_emmy3.lua ***
 
---***** FTP server **--
+--*** FTP server ***
 ---@class ftp
 local FTP = require('ftpserver')
 
@@ -128,11 +126,9 @@ function FTP:open(user, pass, ssid, wifipwd, dbgFlag) end
 ---@return nil
 function FTP:close() end
 
--- *** gossip Module is in nodemcu_emmy3.lua ***
+--*** gossip Module is in nodemcu_emmy3.lua ***
 
 --*** HDC1000 ***
-hdc1000 = {}
-
 ---@class hdc1000
 local HDC1000 = require('HDC1000')
 
@@ -225,7 +221,7 @@ function imap.fetch_body_plain_text(socket, msg_number) end
 ---@return nil
 function imap.logout(socket) end
 
--- *** LiquidCrystal Module is in nodemcu_emmy3.lua ***
+--*** LiquidCrystal Module is in nodemcu_emmy3.lua ***
 
 --*** LM92 ***
 lm92 ={}
@@ -287,15 +283,15 @@ function lm92.getThigh() end
 mcp23008 = {}
 
 ---Sets the MCP23008 device address's last three bits.
----@param address number : The 3 least significant bits (LSB) of the address
----@param pinSDA number : The pin to use for SDA
----@param pinSCL number : The pin to use for SCL
----@param speed number : The speed of the I2C signal
+---@param address number The 3 least significant bits (LSB) of the address
+---@param pinSDA number The pin to use for SDA
+---@param pinSCL number The pin to use for SCL
+---@param speed number The speed of the I2C signal
 ---@return nil
 function mcp23008.begin(address, pinSDA, pinSCL, speed) end
 
 ---Writes a byte of data to the GPIO register.
----@param dataByte number : The byte of data to write
+---@param dataByte number The byte of data to write
 ---@return nil
 function mcp23008.writeGPIO(dataByte) end
 
@@ -304,7 +300,7 @@ function mcp23008.writeGPIO(dataByte) end
 function mcp23008.readGPIO() end
 
 ---Writes one byte of data to the IODIR register.
----@param dataByte number : The byte of data to write
+---@param dataByte number The byte of data to write
 ---@return nil
 function mcp23008.writeIODIR(dataByte) end
 
@@ -313,17 +309,15 @@ function mcp23008.writeIODIR(dataByte) end
 function mcp23008.readIODIR() end
 
 ---Writes a byte of data to the GPPU (Pull-UP resistors register)
----@param dataByte number : the value to write to the GPPU register.
+---@param dataByte number the value to write to the GPPU register. Each bit in this byte is assigned to an individual GPIO pin
 ---@return nil
-function mcp23008.writeIODIR(dataByte) end
+function mcp23008.writeGPPU(dataByte) end
 
 ---Reads the GPPU (Pull-UP resistors register) byte
 ---@return number byte The GPPU byte i.e. state of all internal pull-up resistors
 function mcp23008.readGPPU() end
 
 --*** MCP23017 ***
-mcp23017 = {}
-
 ---@class mcp23017
 local mcp17 = require('mcp23017')
 
@@ -1240,19 +1234,19 @@ function encoder.toHex(binary) end
 ---@return string
 function encoder.fromHex(hexstr) end
 
---*** WiFi Manager TODO ***
+--*** WiFi Manager ***
 enduser_setup = {}
 
 ---Controls whether manual AP configuration is used.
----@param on_off boolean value indicating whether to use manual mode;
+---@param on_off? boolean value indicating whether to use manual mode; if not given, the function only returns the current setting.
 ---@return boolean b The current setting, true if manual mode is enabled, false if it is not.
 function enduser_setup.manual(on_off) end
 
 ---Starts the captive portal.
----@param AP_SSID? any the SSID to use for the AP.
----@param onConnected? function
----@param onError? function onError(err_num, string)
----@param onDebug? function onDebug (string)
+---@param AP_SSID? any the SSID to use for the AP. This defaults to NodeMCU_<device id>.
+---@param onConnected? function callback will be fired when an IP-address has been obtained, just before the enduser_setup module will terminate itself
+---@param onError? function callback will be fired if an error is encountered. err_num is a number describing the error, and string contains a description of the error.
+---@param onDebug? function callback is disabled by default (controlled by #define ENDUSER_SETUP_DEBUG_ENABLE in enduser_setup.c).
 ---@return nil
 function enduser_setup.start(AP_SSID, onConnected, onError, onDebug) end
 
@@ -1405,7 +1399,7 @@ function file.writeline(str) end
 ---@return boolean | nil
 function fObj:writeline(str) end
 
--- *** gdbstub Module is in nodemcu_emmy3.lua ***
+--*** gdbstub Module is in nodemcu_emmy3.lua ***
 
 --*** GPIO  ***
 gpio = {}
@@ -1839,7 +1833,7 @@ function NETSRV.listen(port, ip, fun) end
 ---@return string ip or nil if not listening
 function NETSRV.getaddr() end
 
----Closes socket. net.socket:close()
+---Closes socket.
 ---@return nil
 function NETSOCKET:close() end
 
