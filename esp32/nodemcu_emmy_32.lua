@@ -1918,8 +1918,8 @@ function wifi.sta.sethostname(hostname) end
 ---`max` maximum number of connections 1-4 default=4
 ---`beacon` beacon interval time in range 100-60000, default = 100
 ---@param save boolean
----|>'true' #configuration will be retained through power cycle.
----|'false' #configuration will not be retained through power cycle.
+---|>' true' #configuration will be retained through power cycle.
+---|' false' #configuration will not be retained through power cycle.
 -- save configuration to flash.
 ---@return nil
 function wifi.ap.config(cfg, save) end
@@ -1960,20 +1960,26 @@ function wifi.ap.setip(cfg) end
 ---@return boolean
 function wifi.ap.sethostname(hostname) end
 
---** WS2812 TODO ***
+--** WS2812 ***
 ws2812 = {}
 
 ---@class ws2812
 local buffer =  {}
 
----Send data to up to 8 led strip using its native format.
+---Send data to up to 8 led strip using its native format which is generally Green,Red,Blue for RGB strips and Green,Red,Blue,White for RGBW strips.
 ---@param tbl table
+--Variable number of tables, each describing a single strip. Required elements are:
+--**pin** IO index, see GPIO Overview
+--**data** payload to be sent to one or more WS2812 like leds through GPIO2
+--Payload type could be:
+--**string** representing bytes to send
+--**ws2812.buffer** see Buffer module
 ---@return nil
 function ws2812.write(tbl, ...) end
 
 ---Allocate a new memory buffer to store led values.
 ---@param numberOfLeds integer length of the led strip
----@param bytesPerLed integer  3 for RGB strips and 4 for RGBW strips
+---@param bytesPerLed integer 3 for RGB strips and 4 for RGBW strips
 ---@return ws2812
 function ws2812.newBuffer(numberOfLeds, bytesPerLed) end
 
@@ -1985,6 +1991,9 @@ function buffer:get(index) end
 ---Set the value at the given position
 ---@param index integer position in the buffer (1 for the first led)
 ---@param color number|any payload of the color
+-- `number, number, ...` you should pass as many arguments as *bytesPerLed*
+-- `table` should contains *bytesPerLed* numbers
+-- `string` should contains *bytesPerLed* bytes
 ---@return nil
 function buffer:set(index, color) end
 
@@ -1992,24 +2001,24 @@ function buffer:set(index, color) end
 ---@return integer
 function buffer:size() end
 
----Fill the buffer with the given color.
----@param color any bytes of the color, you should pass as many arguments as `bytesPerLed`
+---Fill the buffer with the given color. The number of given bytes must match the number of *bytesPerLed* of the buffer
+---@param color number bytes of the color, you should pass as many arguments as *bytesPerLed*
 ---@return nil
 function buffer:fill(color) end
 
----Returns the contents of the buffer (the pixel values) as a string.
----@return string A string containing the pixel values.
+---Returns the contents of the buffer (the pixel values) as a string. This can then be saved to a file or sent over a network.
+---@return string str A string containing the pixel values.
 function buffer:dump() end
 
----Inserts a string (or a buffer) into another buffer with an offset.
----@param source string|any the pixel values to be set into the buffer.
----@param offset? integer the offset where the source is to be placed in the buffer.
+---Inserts a string (or a buffer) into another buffer with an offset.  The buffer must have the same number of colors per led or an error will be thrown.
+---@param source string|any the pixel values to be set into the buffer. This is either a string or a buffer.
+---@param offset? integer the offset where the source is to be placed in the buffer. Default is 1. Negative values can be used.
 ---@return nil
 function buffer:replace(source, offset) end
 
----This is a general method that loads data into a buffer.
----@param factor1 number This is the factor that the contents of buffer1 are multiplied by.
----@param buffer1 any This is the source buffer.
+---This is a general method that loads data into a buffer that is a linear combination of data from other buffers.
+---@param factor1 number This is the factor that the contents of buffer1 are multiplied by. This factor is scaled by a factor of 256. Thus factor1 value of 256 is a factor of 1.0.
+---@param buffer1 any This is the source buffer. It must be of the same shape as the destination buffer.
 ---@return nil
 function buffer:mix(factor1, buffer1, ...) end
 
@@ -2017,22 +2026,24 @@ function buffer:mix(factor1, buffer1, ...) end
 ---@return integer sum An integer which is the sum of all the pixel values.
 function buffer:power() end
 
----Fade in or out. Defaults to out
+---Fade in or out. Defaults to out. Multiply or divide each byte of each led with/by the given value. Useful for a fading effect.
 ---@param value number value by which to divide or multiply each byte
----@param direction? integer|'ws2812.FADE_IN'|' ws2812.FADE_OUT'
+---@param direction? integer|' ws2812.FADE_IN'|' ws2812.FADE_OUT'
 ---@return nil
 function buffer:fade(value, direction) end
 
 ---Shift the content of (a piece of) the buffer in positive or negative direction.
----@param value number  number of pixels by which to rotate the buffer.
----@param mode? integer|'ws2812.SHIFT_LOGICAL'|'ws2812.SHIFT_CIRCULAR'
----@param i? integer is the first offset in the buffer to be affected.
----@param j? integer is the last offset in the buffer to be affected.
+---@param value number number of pixels by which to rotate the buffer. Positive values rotate forwards, negative values backwards.
+---@param mode? integer
+---|>' ws2812.SHIFT_LOGICAL' #the freed pixels are set to 0 (off).
+---|' ws2812.SHIFT_CIRCULAR' #the buffer is treated like a ring buffer, inserting the pixels falling out on one end again on the other end.
+---@param i? integer is the first offset in the buffer to be affected. Negative values are permitted and count backwards from the end. Default is 1.
+---@param j? integer is the last offset in the buffer to be affected. Negative values are permitted and count backwards from the end. Default is -1.
 ---@return nil
 function buffer:shift(value, mode, i, j) end
 
----This implements the extraction function like string.sub.
----@param i integer This is the start of the extracted data.
----@param j? integer  this is the end of the extracted data.
+---This implements the extraction function like string.sub. The indexes are in leds and all the same rules apply.
+---@param i integer This is the start of the extracted data. Negative values can be used.
+---@param j? integer this is the end of the extracted data. Negative values can be used. The default is -1.
 ---@return any buff A buffer containing the extracted piece.
 function buffer:sub(i, j) end
