@@ -185,7 +185,7 @@ gossip = {}
 ---Sets the configuration for gossip.
 ---@param config table
 --- The available options are:
---- `seedList`: the list of seeds gossip will start with; this will be updated as new nodes are discovered. Note that it's enough for all nodes to start with the same IP in the seedList, as once they have one seed in common, the data will propagate. Default: nil.
+--- `seedList`: the list of seeds gossip will start with; this will be updated as new nodes are discovered. Note that it's enough for all nodes to start with the same IP in the seedList, as once they have one seed in common, the data will propagate. Default: *nil*.
 --- `roundInterval`: interval in milliseconds at which gossip will pick a random node from the seed list and send a SYN request. Default: 10000 (10 seconds)
 --- `comPort`: port for the listening UDP socket. Default: 5000.
 --- `debug`: flag that will provide debugging messages. Default: false.
@@ -210,5 +210,18 @@ function gossip.setRevFileValue(number) end
 ---@return string str JSON formatted string regarding the network state.
 function gossip.getNetworkState() end
 
---*** GDBSTUB TODO ***
+--*** GDBSTUB ***
 gdbstub = {}
+
+---Runs gdbstub initialization routine. Note that subsequent calls are ignored and the break functions will do this automatically if not already done so this is options
+function gdbstub.open() end
+
+---Enters gdb by executing a break 0,0 instruction, and if necessary first does initialisation.
+function gdbstub.brk() end
+
+---Enters gdb by executing a break 0,0 instruction, and if necessary first does initialisation; It also set the gdboutput mode to 1 allowing the debug client to capture and echo UART output through the debug session.
+function gdbstub.pbrk() end
+
+---Controls whether system output is encapsulated in gdb remote debugging protocol.
+---@param enable boolean If true, then output is wrapped in gdb remote debugging protocol. If false, then it is sent straight to the UART.
+function gdbstub.gdboutput(enable) end
