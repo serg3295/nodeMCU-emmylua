@@ -1095,55 +1095,55 @@ function CRON:unschedule() end
 crypto = {}
 
 ---Encrypts Lua strings.
----@param algo any
----@param key any
----@param plain any
----@param iv? any
----@return any
+---@param algo string the name of a supported encryption algorithm to use
+---@param key string the encryption key as a string; for AES encryption this MUST be 16 bytes long
+---@param plain string the string to encrypt; it will be automatically zero-padded to a 16-byte boundary if necessary
+---@param iv? any the initilization vector, if using AES-CBC; defaults to all-zero if not given
+---@return any The encrypted data as a binary string. For AES this is always a multiple of 16 bytes in length.
 function crypto.encrypt(algo, key, plain , iv) end
 
 ---Decrypts previously encrypted data.
----@param algo any
----@param key any
----@param cipher any
----@param iv? any
----@return any
+---@param algo string the name of a supported encryption algorithm to use
+---@param key string the encryption key as a string; for AES encryption this MUST be 16 bytes long
+---@param cipher any the cipher text to decrypt (as obtained from crypto.encrypt())
+---@param iv? any the initilization vector, if using AES-CBC; defaults to all-zero if not given
+---@return any str The decrypted string.
 function crypto.decrypt(algo, key, cipher , iv) end
 
 ---Compute a cryptographic hash of a a file.
----@param algo any
----@param filename any
----@return any
+---@param algo any the hash algorithm to use, case insensitive string
+---@param filename string the path to the file to hash
+---@return any s A binary string containing the message digest. To obtain the textual version (ASCII hex characters), please use encoder.toHex().
 function crypto.fhash(algo, filename)	end
 
 ---Compute a cryptographic hash of a Lua string.
----@param algo any
----@param str any
----@return any
+---@param algo any the hash algorithm to use, case insensitive string
+---@param str string to hash contents of
+---@return any A binary string containing the message digest. To obtain the textual version (ASCII hex characters), please use encoder.toHex().
 function crypto.hash(algo, str) end
 
----Create a digest/hash object that can have any number of strings added to it.
----@param algo any
----@return any
+---Create a digest/hash object that can have any number of strings. Object has update and finalize functions.added to it.
+---@param algo any the hash algorithm to use, case insensitive string
+---@return any uObj Userdata object with update and finalize functions available.
 function crypto.new_hash(algo) end
 
 ---	Compute a HMAC (Hashed Message Authentication Code) signature for a Lua string.
----@param algo any
----@param str any
----@param key any
----@return any
+---@param algo string hash algorithm to use, case insensitive string
+---@param str string data to calculate the hash for
+---@param key any key to use for signing, may be a binary string
+---@return any bStr A binary string containing the HMAC signature. Use encoder.toHex() to obtain the textual version.
 function crypto.hmac(algo, str, key) end
 
----Create a hmac object that can have any number of strings added to it.
----@param algo any
----@param key any
----@return any
+---Create a hmac object that can have any number of strings added to it. Object has update and finalize functions.
+---@param algo string he hash algorithm to use, case insensitive string
+---@param key any  the key to use (may be a binary string)
+---@return any uObj Userdata object with update and finalize functions available.
 function crypto.new_hmac(algo, key) end
 
 ---Applies an XOR mask to a Lua string.
----@param message any
----@param mask any
----@return any
+---@param message any message to mask
+---@param mask any the mask to apply, repeated if shorter than the message
+---@return any msg The masked message, as a binary string. Use encoder.toHex() to get a textual representation of it.
 function crypto.mask(message, mask) end
 
 --*** DCC ***
@@ -1215,23 +1215,23 @@ function dht.readxx(pin) end
 encoder = {}
 
 ---Provides a Base64 representation of a (binary) Lua string.
----@param binary string
----@return string
+---@param binary string input string to Base64 encode
+---@return string str A Base64 encoded string.
 function encoder.toBase64(binary) end
 
----Decodes a Base64 representation of a (binary) Lua string back into the original string.
----@param b64 string
----@return string
+---Decodes a Base64 representation of a (binary) Lua string back into the original string. An error is thrown if the string is not a valid base64 encoding.
+---@param b64 string Base64 encoded input string
+---@return string str The decoded Lua (binary) string.
 function encoder.fromBase64(b64) end
 
----Provides an ASCII hex representation of a (binary) Lua string.
----@param binary string
----@return string
+---Provides an ASCII hex representation of a (binary) Lua string. Each byte in the input string is represented as two hex characters in the output.
+---@param binary string input string to get hex representation for
+---@return string str An ASCII hex string.
 function encoder.toHex(binary) end
 
----Returns the Lua binary string decode of a ASCII hex string.
----@param hexstr string
----@return string
+---Returns the Lua binary string decode of a ASCII hex string. Each byte in the output string is represented as two hex characters in the input. An error is thrown if the string is not a valid base64 encoding.
+---@param hexstr string An ASCII hex string.
+---@return string str Decoded string of hex representation.
 function encoder.fromHex(hexstr) end
 
 --*** WiFi Manager ***
@@ -1459,15 +1459,14 @@ function gpio.read(pin) end
 ---@return nil
 function gpio.serout(pin, start_level, delay_times , cycle_num, callback) end
 
----@alias trigger_mod
+---Establish or clear a callback function to run on interrupt for a pin.
+---@param pin integer 1-12, pin to trigger on, IO index.
+---@param type? string
 ---|' "up"'     #rising edge
 ---|' "down"'   #falling edge
 ---|' "both"'   #both edges
 ---|' "low"'    #low level
 ---|' "high"'   #high level
----Establish or clear a callback function to run on interrupt for a pin.
----@param pin integer 1-12, pin to trigger on, IO index.
----@param type? trigger_mod
 ---@param callback_function? function
 ---@return nil
 function gpio.trig(pin, type , callback_function) end
@@ -1637,8 +1636,8 @@ i2c = {}
 ---Setup I²C address and read/write mode for the next transfer.
 ---@param id integer bus number
 ---@param device_addr number 7-bit device address.
----@param direction integer|'i2c.TRANSMITTER'|'i2c.RECEIVER'
----@return boolean
+---@param direction integer|' i2c.TRANSMITTER'|' i2c.RECEIVER'
+---@return boolean b true if ack received, false if no ack received.
 function i2c.address(id, device_addr, direction) end
 
 ---Read data for variable number of bytes.
@@ -1651,8 +1650,8 @@ function i2c.read(id, len) end
 ---@param id integer 0~9, bus number
 ---@param pinSDA integer 1~12, IO index
 ---@param pinSCL integer 0~12, IO index
----@param speed integer|'i2c.SLOW'|'i2c.FAST'|'i2c.FASTPLUS'
----@return integer
+---@param speed integer|' i2c.SLOW'|' i2c.FAST'|' i2c.FASTPLUS'
+---@return integer s speed the selected speed, 0 if bus initialization error.
 function i2c.setup(id, pinSDA, pinSCL, speed) end
 
 ---Send an I²C start condition.
@@ -2001,7 +2000,20 @@ function net.ping(domain, count, callback_received, callback_sent) end
 node = {}
 
 ---Returns the boot reason and extended reset info.
----@return any
+---@return integer rawcode #The first value returned is the raw code, not the new "reset info" code which was introduced in recent SDKs. Values are:
+--1, power-on
+--2, reset (software?)
+--3, hardware reset via reset pin
+--4, WDT reset (watchdog timeout)
+---@return integer reason #The second value returned is the extended reset cause. Values are:
+--0, power-on
+--1, hardware watchdog reset
+--2, exception reset
+--3, software watchdog reset
+--4, software restart
+--5, wake from deep sleep
+--6, external reset
+--In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information. These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
@@ -2009,14 +2021,20 @@ function node.bootreason() end
 function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as.
----@param filename string|'".lua"'
+---@param filename string|'".lua"' #name of Lua text file
 ---@return nil
 function node.compile(filename) end
 
 ---Enters deep sleep mode, wakes up when timed out.
----@param us integer
----@param option integer
----@param instant integer
+---@param us integer number (integer) or nil, sleep time in micro second. If us == 0, it will sleep forever. If us == nil, will not set sleep time.
+---@param option integer number (integer) or nil. If nil, it will use last alive setting as default option.
+--    0, init data byte 108 is valuable
+--    > 0, init data byte 108 is valueless
+--    0, RF_CAL or not after deep-sleep wake up, depends on init data byte 108
+--    1, RF_CAL after deep-sleep wake up, there will be large current
+--    2, no RF_CAL after deep-sleep wake up, there will only be small current
+--    4, disable RF after deep-sleep wake up, just like modem sleep, there will be the smallest current
+---@param instant integer number (integer) or nil. If present and non-zero, the chip will enter Deep-sleep immediately and will not wait for the Wi-Fi core to be shutdown.
 ---@return nil
 function node.dsleep(us, option, instant) end
 
@@ -2035,42 +2053,75 @@ function node.flashsize() end
 ---@return number
 function node.getcpufreq() end
 
----Get the current LFS and SPIFFS partition information.
----@return table
+---Get the current LFS and SPIFFS partition information./
+---@return table tbl An array containing entries for lfs_addr, lfs_size, spiffs_addr and spiffs_size. The address values are offsets relative to the start of the Flash memory.
 function node.getpartitiontable() end
 
 ---Returns the current available heap size in bytes.
----@return number
+---@return number heap system heap size left in bytes
 function node.heap() end
 
 ---Returns information about hardware, software version and build configuration.
----@param group table
----@return table
+--- `group` - A designator for a group of properties. May be one of
+---@param group string|'"hw"'|'"sw_version"'|'"build_config"'
+---@return any
+--If a group is given the return value will be a table containing the following elements:
+--for group = "hw"
+--        chip_id (number)
+--        flash_id (number)
+--        flash_size (number)
+--        flash_mode (number) 0 = QIO, 1 = QOUT, 2 = DIO, 15 = DOUT.
+--        flash_speed (number)
+--for group = "lfs"
+--        lfs_base (number) Flash offset of selected LFS region
+--        lfs_mapped (number) Mapped memory address of selected LFS region
+--        lfs_size (number) size of selected LFS region
+--        lfs_used (number) actual size used by current LFS image
+--for group = "sw_version"
+--        git_branch (string)
+--        git_commit_id (string)
+--        git_release (string) release name +additional commits e.g. "2.0.0-master_20170202 +403"
+--        git_commit_dts (string) commit timestamp in an ordering format. e.g. "201908111200"
+--        node_version_major (number)
+--        node_version_minor (number)
+--        node_version_revision (number)
+--for group = "build_config"
+--        ssl (boolean)
+--        lfs_size (number) as defined at build time
+--        modules (string) comma separated list
+--        number_type (string) integer or float
 function node.info(group) end
 
----Submits a string to the Lua interpreter.
----@param str any
+---Submits a string to the Lua interpreter. Similar to pcall(loadstring(str)), but without the single-line limitation.
+---@param str any Lua chunk
 ---@return nil
 function node.input(str) end
 
 ---Returns the function reference for a function in LFS.
----@param modulename string|'""'
----@return string
+---@param modulename string|'""' #The name of the module to be loaded.
+---@return string|nil
+--If the LFS is loaded and the modulename is a string that is the name of a valid module in the LFS, then the function is returned in the same way the load() and the other Lua load functions do
+--Otherwise nil is returned.
 function node.LFS.get(modulename) end
 
 ---List the modules in LFS.
 ---@return any|nil
+--If no LFS image IS LOADED then nil is returned.
+--Otherwise an sorted array of the name of modules in LFS is returned.
 function node.LFS.list() end
 
 ---Reload LFS with the flash image provided.
----@param imageName string|'""'
+---@param imageName string|'""' #The name of a image file in the filesystem to be loaded into the LFS.
 ---@return any|nil
+--In the case when the imagename is a valid LFS image, this is expanded and loaded into flash, and the ESP is then immediately rebooted, so control is not returned to the calling Lua application in the case of a successful reload.
+--The reload process internally makes multiple passes through the LFS image file. The first pass validates the file and header formats and detects many errors. If any is detected then an error string is returned.
 function node.LFS.reload(imageName) end
 
----Redirects the Lua interpreter to a stdout pipe when a CB function is specified
----(See pipe module) and resets output to normal otherwise.
----@param fun function|'function(pipe) end'
----@param serial_debug integer|'1'|'0'
+---Redirects the Lua interpreter to a stdout pipe when a CB function is specified (See pipe module) and resets output to normal otherwise. Optionally also prints to the serial console.
+---@param fun function|'function(pipe) end' #`output_fn(pipe)` a function accept every output as str, and can send the output to a socket (or maybe a file). Note that this function must conform to the fules for a pipe reader callback.
+---@param serial_debug integer
+---|'1' #output also show in serial.
+---|'0' #no serial output.
 ---@return nil
 function node.output(fun, serial_debug) end
 
@@ -2083,82 +2134,95 @@ function node.restore() end
 
 ---Change the working CPU Frequency.
 ---@param speed integer|'node.CPU80MHZ'|'node.CPU160MHZ'
----@return number
+---@return number f target CPU frequency
 function node.setcpufreq(speed) end
 
 ---Sets the current LFS and / or SPIFFS partition information.
 ---@param partition_info table
+--An array containing one or more of the following enties. The address values are byte offsets relative to the start of the Flash memory. The size values are in bytes. Note that these parameters must be a multiple of 8Kb to align to Flash page boundaries.
+--    lfs_addr. The base address of the LFS region.
+--    lfs_size. The size of the LFS region.
+--    spiffs_addr. The base address of the SPIFFS region.
+--    spiffs_size. The size of the SPIFFS region.
 function node.setpartitiontable(partition_info) end
 
----@alias node_a1
+---@alias node_a1 number
 ---| 'node.INT_UP'   #Rising edge
 ---| 'node.INT_DOWN' #Falling edge
 ---| 'node.INT_BOTH' #Both edges
 ---|>'node.INT_LOW'  #Low level
 ---| 'node.INT_HIGH' #High level
+
 ---Put NodeMCU in light sleep mode to reduce current consumption.
----@param wake_pin integer
----@param int_type? node_a1
----@param resume_cb? function|' function() end'
----@param preserve_mode? boolean
+---@param wake_pin integer 1-12, pin to attach wake interrupt to. Note that pin 0(GPIO 16) does not support interrupts.
+---@param int_type? node_a1 #type of interrupt that you would like to wake on.
+---@param resume_cb? function|' function() end' #Callback to execute when WiFi wakes from suspension.
+---@param preserve_mode? boolean #preserve current WiFi mode through node sleep.
+---|'true' #Station and StationAP modes will automatically reconnect to previously configured Access Point when NodeMCU resumes.
+---|'false' #discard WiFi mode and leave NodeMCU in wifi.NULL_MODE. WiFi mode will be restored to original mode on restart.
 ---@return nil
 function node.sleep(wake_pin, int_type, resume_cb, preserve_mode) end
 
 ---Query the performance of system startup.
----@param marker any
----@return table
+---@param marker? any If present, this will add another entry into the startup counts
+---@return table array An array of tables which indicate how many CPU cycles had been consumed at each step of platform boot.
 function node.startupcounts(marker) end
 
 ---Get/set options that control the startup process. This interface will grow over time.
----@param tbl table
----@return table
+---@param tbl? table #If the argument is omitted, then no change is made to the current set of startup options. If the argument is the empty table {} then all options are reset to their default values. `table` one or more options:
+--**banner** - set to true or false to indicate whether the startup banner should be displayed or not. (default: true)
+--**frequency** - set to node.CPU80MHZ or node.CPU160MHZ to indicate the initial CPU speed. (default: node.CPU80MHZ)
+--**delay_mount** - set to true or false to indicate whether the SPIFFS filesystem mount is delayed until it is first needed or not. (default: false)
+--**command** - set to a string which is the initial command that is run. This is the same string as in the node.startupcommand.
+---@return table tbl This is the complete set of options in the state that will take effect on the next boot. Note that the command key may be missing -- in which case the default value will be used.
 function node.startup(tbl) end
 
 ---@alias level_n
 ---| '1' #don't discard debug info
 ---| '2' #discard Local and Upvalue debug info
 ---| '3' #discard Local, Upvalue and line-number debug info
----Controls the amount of debug information kept during node.compile(),
----and allows removal of debug information from already compiled Lua code.
+
+---Controls the amount of debug information kept during node.compile(),and allows removal of debug information from already compiled Lua code.
 ---@param level? level_n
 ---@param fun? function a compiled function to be stripped per setfenv except 0 is not permitted.
----@return integer|nil
+---@return integer|nil --If invoked without arguments, returns the current level settings. Otherwise, nil is returned.
 function node.stripdebug(level, fun) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
 ---@param enabled boolean This is either true to enable printing, or false to disable it. The default is false.
 function node.osprint(enabled) end
 
----This behaves like math.random except that it uses true random numbers derived from the ESP8266 hardware.
----It returns uniformly distributed numbers in the required range.
+---This behaves like math.random except that it uses true random numbers derived from the ESP8266 hardware. It returns uniformly distributed numbers in the required range.
 ---@param l number the lower bound of the range
 ---@param u number the upper bound of the range
 ---@return number num The random number in the appropriate range.
 function node.random(l, u) end
 
----This behaves like math.random except that it uses true random numbers derived from the ESP8266 hardware.
----It returns uniformly distributed numbers in the required range.
+---This behaves like math.random except that it uses true random numbers derived from the ESP8266 hardware. It returns uniformly distributed numbers in the required range.
 ---@param n? integer the number of distinct integer values that can be returned -- in the (inclusive) range 1 .. n
 ---@return number num The random number in the appropriate range.
 function node.random(n) end
 
 ---Sets the Emergency Garbage Collector mode.
----@param mode integer|'node.egc.NOT_ACTIVE'|'node.egc.ON_ALLOC_FAILURE'|'node.egc.ON_MEM_LIMIT'|'node.egc.ALWAYS'
----@param level number
+---@param mode integer
+---|'node.egc.NOT_ACTIVE' #EGC inactive, no collection cycle will be forced in low memory situations
+---|'node.egc.ON_ALLOC_FAILURE' #ry to allocate a new block of memory, and run the garbage collector if the allocation fails. If the allocation fails even after running the garbage collector, the allocator will return with error.
+---|'node.egc.ON_MEM_LIMIT' #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit. If the upper limit can't be satisfied even after running the garbage collector, the allocator will return with error. If the given limit is negative, it is interpreted as the desired amount of heap which should be left available. Whenever the free heap (as reported by node.heap() falls below the requested limit, the garbage collector will be run.
+---|'node.egc.ALWAYS' #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error. This mode is very efficient with regards to memory savings, but it's also the slowest.
+---@param level number in the case of node.egc.ON_MEM_LIMIT, this specifies the memory limit.
 ---@return nil
 function node.egc.setmode(mode, level) end
 
 ---Returns memory usage information for the Lua runtime.
----@return number total_allocated
----@return number estimated_used
+---@return number total_allocated The total number of bytes allocated by the Lua runtime. This is the number which is relevant when using the node.egc.ON_MEM_LIMIT option with positive limit values.
+---@return number estimated_used This value shows the estimated usage of the allocated memory.
 function node.egc.meminfo() end
 
----@alias node_a2
----| '0' #node.task.LOW_PRIORITY
----|>'1' #node.task.MEDIUM_PRIORITY
----| '2' #node.task.HIGH_PRIORITY
 ---Enable a Lua callback or task to post another task request.
----@param task_priority? node_a2
----@param fun function|' function() end'
+---@param task_priority? integer
+---| 'node.task.LOW_PRIORITY' #=0
+---|>'node.task.MEDIUM_PRIORITY' #=1
+---| 'node.task.HIGH_PRIORITY' #=2
+---@param fun function|' function() end' #a callback function to be executed when the task is run.
 ---@return nil
 function node.task.post(task_priority, fun) end
