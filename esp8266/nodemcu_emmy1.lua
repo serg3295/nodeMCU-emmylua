@@ -1260,49 +1260,51 @@ file = {}
 ---@class file
 local fObj = {}
 
----Change current directory (and drive).
----@param dir string | '"/FLASH"' | '"/SD0"' | '"/SD1"'
+---Change current directory (and drive). This will be used when no drive/directory is prepended to filenames.
+---@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"' #directory name
 ---@return boolean
 function file.chdir(dir) end
 
 ---Determines whether the specified file exists.
----@param filename string | '""'
----@return boolean
+---@param filename string|'""' #file to check
+---@return boolean b true of the file exists (even if 0 bytes in size), and false if it does not exist
 function file.exists(filename) end
 
----Format the file system.
+---Format the file system. Completely erases any existing file system and writes a new one. Function is not supported for SD cards.
 ---@return nil
 function file.format() end
 
----Returns the flash address and physical size of the file system area, in bytes.
+---Returns the flash address and physical size of the file system area, in bytes. Function is not supported for SD cards.
 ---@return number flash_address
 ---@return number size
 function file.fscfg() end
 
----Return size information for the file system.
+---Return size information for the file system. The unit is Byte for SPIFFS and kByte for FatFS.
 ---@return number remaining
 ---@return number used
 ---@return number total
 function file.fsinfo() end
 
 ---Open and read the contents of a file.
----@param filename string | '""'
----@return any | nil
+---@param filename string|'""' #file to be opened and read
+---@return any|nil any file contents if the file exists. *nil* if the file does not exist.
 function file.getcontents(filename) end
 
 ---Lists all files in the file system.
----@return table
+---@return table tbl a Lua table which contains all *{file name: file size}* pairs, if no pattern given. If a pattern is given, only those file names matching the pattern (interpreted as a traditional Lua pattern, not, say, a UNIX shell glob) will be included in the resulting table. file.list will throw any errors encountered during pattern matching.
 function file.list(pattern) end
 
----Mounts a FatFs volume on SD card.
----@param ldrv string|'"/SD0"'|'"/SD1"'
----@param pin? integer
----@return any
+---Mounts a FatFs volume on SD card. Function is only available when FatFS support is compiled into the firmware and it is not supported for internal flash.
+---@param ldrv string|'"/SD0"'|'"/SD1"' #name of the logical drive, /SD0, /SD1, etc.
+---@param pin? integer 1~12, IO index for SS/CS, defaults to 8 if omitted.
+---@return any obj Volume object
 function file.mount(ldrv, pin) end
 
 ---Registers callback functions.
----@param event string|'"rtc"'
----@param foo? function|' function() end'
+---@param event string
+---|'"rtc"' #Trigger events are: `rtc` deliver current date & time to the file system. Function is expected to return a table containing the fields year, mon, day, hour, min, sec of current date and time. Not supported for internal flash.
+---@param foo? function
+---|' function() end' #callback function. Unregisters the callback if function() is omitted or nil.
 ---@return nil
 function file.on(event, foo) end
 
@@ -1313,90 +1315,119 @@ function file.on(event, foo) end
 ---| ' "r+"' # update mode, all previous data is preserved
 ---| ' "w+"' # update mode, all previous data is erased
 ---| ' "a+"' # append update mode, previous data is preserved, writing is only allowed at the end of file
+
 ---Opens a file for access, potentially creating it (for write modes).
----@param filename string | '""'
+---@param filename string|'""' #`filename` file to be opened
 ---@param mode mode_f
----@return file object if file opened ok. nil if file not opened, or not exists (read modes).
+---@return file fileobject if file opened ok. nil if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
 ---Remove a file from the file system. The file must not be currently open.
----@param filename string | '""'
+---@param filename string|'""' #file to remove
 ---@return nil
 function file.remove(filename) end
 
 ---Open and write the contents of a file.
----@param filename string | '""'
----@param contents any
----@return boolean | nil
+---@param filename string|'""' #file to be created
+---@param contents any contents to be written to the file
+---@return boolean|nil b true if the write is ok, nil on error
 function file.putcontents(filename, contents) end
 
 ---Renames a file.
----@param oldname string | '""'
----@param newname string | ' ""'
+---@param oldname string|'""' #old file name
+---@param newname string|' ""' #new file name
 ---@return boolean
 function file.rename(oldname, newname) end
 
 ---Get attribtues of a file or directory in a table.
----@param filename string | '""'
----@return table
+---@param filename string|'""'
+---@return table tbl table containing file attributes. Elements of the table are:
+--`size` file size in bytes
+--`name` file name
+--`time` table with time stamp information. Default is 1970-01-01 00:00:00 in case time stamps are not supported (on SPIFFS).
+--    year    mon    day    hour    min    sec
+--`is_dir` flag true if item is a directory, otherwise false
+--`is_rdonly` flag true if item is read-only, otherwise false
+--`is_hidden` flag true if item is hidden, otherwise false
+--`is_sys` flag true if item is system, otherwise false
+--`is_arch` flag true if item is archive, otherwise false
 function file.stat(filename) end
 
 ---Closes the open file, if any.
 ---@return nil
 function file.close() end
+
+---Closes the open file, if any.
 ---@return nil
 function fObj:close() end
 
----Flushes any pending writes to the file system, ensuring no data is lost on a restart.
+---Flushes any pending writes to the file system, ensuring no data is lost on a restart.Closing the open file using file.close() / fd:close() performs an implicit flush as well.
 ---@return nil
 function file.flush() end
+
+---Flushes any pending writes to the file system, ensuring no data is lost on a restart.Closing the open file using file.close() / fd:close() performs an implicit flush as well.
 ---@return nil
 function fObj:flush() end
 
 ---Read content from the open file.
----@param n_or_char integer
----@return string | nil
+---@param n_or_char integer :
+---if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
+---if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
+---if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+---@return string|nil
 function file.read(n_or_char) end
----@param n_or_char integer
----@return string | nil
+
+---Read content from the open file.
+---@param n_or_char integer :
+--if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
+--  if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
+--  if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+---@return string|nil content File content as a string, or nil when EOF
 function fObj:read(n_or_char) end
 
----Read the next line from the open file.
----@return string | nil
+---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte. If the next line is longer than 1024, this function only returns the first 1024 bytes.
+---@return string|nil content File content in string, line by line, including EOL('\n'). Return *nil* when EOF.
 function file.readline() end
----@return string | nil
+
+---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte. If the next line is longer than 1024, this function only returns the first 1024 bytes.
+---@return string|nil content File content in string, line by line, including EOL('\n'). Return *nil* when EOF.
 function fObj:readline() end
 
 ---@alias seekwhence_f
 ---| '"set"' # Base is position 0 (beginning of the file)
 ---|>'"cur"' # Base is current position
 ---| '"end"' # Base is end of file
----Sets and gets the file position, measured from the beginning of the file,
----to the position given by `offset` plus a base specified by the string whence.
+
+---Sets and gets the file position, measured from the beginning of the file, to the position given by `offset` plus a base specified by the string whence.
 ---@param whence? seekwhence_f
----@param offset? integer
----@return integer offset | nil
+---@param offset? integer default 0
+---@return integer|nil offset the resulting file position, or nil on error
 function file.seek(whence , offset) end
 
+---Sets and gets the file position, measured from the beginning of the file, to the position given by `offset` plus a base specified by the string whence.
 ---@param whence? seekwhence_f
----@param offset? integer
----@return integer offset | nil
+---@param offset? integer default 0
+---@return integer|nil offset the resulting file position, or nil on error
 function fObj:seek(whence , offset) end
 
 ---Write a string to the open file.
----@param str string | '""'
----@return boolean | nil
+---@param str string|'""' #content to be write to file
+---@return boolean|nil
 function file.write(str) end
----@param str string | '""'
----@return boolean | nil
+
+---Write a string to the open file.
+---@param str string|'""' #content to be write to file
+---@return boolean|nil
 function fObj:write(str) end
 
 ---Write a string to the open file and append '\n' at the end.
----@param str string | '""'
----@return boolean | nil
+---@param str string|'""' #content to be write to file
+---@return boolean|nil
 function file.writeline(str) end
----@param str string | '""'
----@return boolean | nil
+
+---Write a string to the open file and append '\n' at the end.
+---@param str string|'""' #content to be write to file
+---@return boolean|nil
 function fObj:writeline(str) end
 
 --*** gdbstub Module is in nodemcu_emmy3.lua ***
@@ -1518,43 +1549,53 @@ function hmc5883l.setup() end
 --*** HTTP ***
 http = {}
 
----Executes a HTTP DELETE request.
----@param url string |'"http://"'|'"https://"'
----@param headers string |' ""'
----@param body string |' ""'
----@param callback function|' function() end'
+---@alias urlHTTP string
+---|'"http://"' #The URL to fetch, including the http:// or https:// prefix
+---|'"https://"'
+---@alias headersHTTP string
+---|' ""' #Optional additional headers to append, including \r\n; may be nil
+---@alias bodyHTTP string
+---|' ""' #The body to post; must already be encoded in the appropriate format, but may be empty
+---@alias callbackHTTP
+---|' function(code, data) end' # The callback function to be invoked when the response has been received or an error occurred; it is invoked with the arguments status_code, body and headers. In case of an error status_code is set to -1.
+
+---Executes a HTTP DELETE request. Note that concurrent requests are not supported.
+---@param url urlHTTP
+---@param headers headersHTTP
+---@param body bodyHTTP
+---@param callback callbackHTTP
 ---@return nil
 function http.delete(url, headers, body, callback) end
 
----Executes a HTTP GET request.
----@param url string |'"http://"'|'"https://"'
----@param headers string |' ""'
----@param callback function |' function() end'
+---Executes a HTTP GET request. Note that concurrent requests are not supported.
+---@param url urlHTTP
+---@param headers headersHTTP
+---@param callback callbackHTTP
 ---@return nil
 function http.get(url, headers, callback) end
 
----Executes a HTTP POST request.
----@param url string |'"http://"'|'"https://"'
----@param headers string |' ""'
----@param body string|' ""'
----@param callback function|' function() end'
+---Executes a HTTP POST request. Note that concurrent requests are not supported.
+---@param url urlHTTP
+---@param headers headersHTTP
+---@param body bodyHTTP
+---@param callback callbackHTTP
 ---@return nil
 function http.post(url, headers, body, callback) end
 
----Executes a HTTP PUT request.
----@param url string | '"http://"'|'"https://"'
----@param headers string | ' ""'
----@param body string | ' ""'
----@param callback function |' function() end'
+---Executes a HTTP PUT request. Note that concurrent requests are not supported.
+---@param url urlHTTP
+---@param headers headersHTTP
+---@param body bodyHTTP
+---@param callback callbackHTTP
 ---@return nil
 function http.put(url, headers, body, callback) end
 
----Execute a custom HTTP request for any HTTP method.
----@param url string |'"http://"'|'"https://"'
+---Execute a custom HTTP request for any HTTP method. Note that concurrent requests are not supported.
+---@param url urlHTTP
 ---@param method string |' "GET"'|' "HEAD"'|' "POST"'|' "PUT"'|' "DELETE"'|' "CONNECT"'|' "TRACE"'|' "PATCH"'|' "OPTIONS"'
----@param headers string |' ""'
----@param body string |' ""'
----@param callback function |' function() end'
+---@param headers headersHTTP
+---@param body bodyHTTP
+---@param callback callbackHTTP
 ---@return nil
 function http.request(url, method, headers, body, callback) end
 
@@ -1968,7 +2009,7 @@ function node.bootreason() end
 function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as.
----@param filename string | '".lua"'
+---@param filename string|'".lua"'
 ---@return nil
 function node.compile(filename) end
 
@@ -2013,16 +2054,16 @@ function node.info(group) end
 function node.input(str) end
 
 ---Returns the function reference for a function in LFS.
----@param modulename string | '""'
+---@param modulename string|'""'
 ---@return string
 function node.LFS.get(modulename) end
 
 ---List the modules in LFS.
----@return nil | any
+---@return any|nil
 function node.LFS.list() end
 
 ---Reload LFS with the flash image provided.
----@param imageName string | '""'
+---@param imageName string|'""'
 ---@return any|nil
 function node.LFS.reload(imageName) end
 
