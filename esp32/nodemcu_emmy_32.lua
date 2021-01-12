@@ -26,88 +26,92 @@ function adc.setwidth(adc_number, bits) end
 ---@return nil
 function adc.setup(adc_number, channel, atten) end
 
----Samples the ADC. You should to call setwidth() before read().
+---Samples the ADC. You should to call *setwidth()* before *read()*.
 ---@param adc_number integer|'adc.ADC1'
 ---@param channel integer|' 0'|' 1'|' 2'|' 3'|' 4'|' 5'|' 6'|' 7'
----@return number num the sampled value
+---@return number --the sampled value
 function adc.read(adc_number, channel) end
 
 ---Read Hall sensor (GPIO36, GPIO39). We recommend using 12-bits width on ADC1.
----@return number num the sampled value
+---@return number --the sampled value
 function adc.read_hall_sensor() end
 
 --*** BIT ***
 bit = {}
 
----Arithmetic right shift a number equivalent to `value` >> `shift` in C.
+---Arithmetic right shift a number equivalent to `value >> shift` in C.
 ---@param value integer the value to shift
 ---@param shift integer positions to shift
----@return integer num the number shifted right (arithmetically)
+---@return integer --the number shifted right (arithmetically)
 function bit.arshift(value, shift) end
 
----Bitwise *AND*, equivalent to `val1` & `val2` & ... & `valn` in C.
----@param val1 integer first AND argument
----@param val2 integer second AND argument
----@return integer num the bitwise AND of all the arguments (number)
+---Bitwise *AND*, equivalent to `val1 & val2 & ... & valn` in C.
+---@param val1 integer first *AND* argument
+---@param val2 integer second *AND* argument
+---@vararg integer
+---@return integer --the bitwise *AND* of all the arguments
 function bit.band(val1, val2, ...) end
 
----Generate a number with a 1 bit (used for mask generation).
----Equivalent to 1 << position in C
+---Generate a number with a 1 bit (used for mask generation). Equivalent to `1 << position` in C
 ---@param position integer position of the bit that will be set to 1
----@return integer num a number with only one 1 bit at position (the rest are set to 0)
+---@return integer --a number with only one 1 bit at position (the rest are set to 0)
 function bit.bit(position) end
 
 ---Bitwise negation, equivalent to `~value in C.
 ---@param value integer the number to negate
----@return integer num the bitwise negated value of the number
+---@return integer --the bitwise negated value of the number
 function bit.bnot(value) end
 
----Bitwise *OR*, equivalent to `val1` | `val2` | ... | `valn` in C.
----@param val1 integer first OR argument.
----@param val2 integer second OR argument.
----@return integer
+---Bitwise *OR*, equivalent to `val1 | val2 | ... | valn` in C.
+---@param val1 integer first *OR* argument.
+---@param val2 integer second *OR* argument.
+---@vararg integer
+---@return integer --the bitwise *OR* of all the arguments
 function bit.bor(val1, val2, ...) end
 
----Bitwise *XOR*, equivalent to `val1` ^ `val2` ^ ... ^ `valn` in C.
----@param val1 integer first XOR argument
----@param val2 integer second XOR argument
----@return integer num the bitwise XOR of all the arguments (number)
+---Bitwise *XOR*, equivalent to `val1 ^ val2 ^ ... ^ valn` in C.
+---@param val1 integer first *XOR* argument
+---@param val2 integer second *XOR* argument
+---@vararg integer
+---@return integer --the bitwise *XOR* of all the arguments
 function bit.xor(val1, val2, ...) end
 
 ---Clear bits in a number.
 ---@param value integer the base number
----@param pos1 integer  position of the first bit to clear
----@return integer num he number with the bit(s) cleared in the given position(s)
+---@param pos1 integer position of the first bit to clear
+---@vararg integer
+---@return integer --the number with the bit(s) cleared in the given position(s)
 function bit.clear(value, pos1, ...) end
 
 ---Test if a given bit is cleared.
----@param value integer  the value to test
+---@param value integer the value to test
 ---@param position integer bit position to test
----@return boolean b true if the bit at the given position is 0, false othewise
+---@return boolean --true if the bit at the given position is 0, false othewise
 function bit.isclear(value, position) end
 
 ---Test if a given bit is set.
 ---@param value integer the value to test
 ---@param position integer bit position to test
----@return boolean b true if the bit at the given position is 0, false othewise
+---@return boolean --true if the bit at the given position is 0, false othewise
 function bit.isset(value, position) end
 
----Left-shift a number, equivalent to `value` << `shift` in C.
+---Left-shift a number, equivalent to `value << shift` in C.
 ---@param value integer the value to shift
 ---@param shift integer positions to shift
----@return integer num the number shifted left
+---@return integer --the number shifted left
 function bit.lshift(value, shift) end
 
----Logical right shift a number, equivalent to ( unsigned )`value` >> `shift` in C.
+---Logical right shift a number, equivalent to `( unsigned )value >> shift` in C.
 ---@param value integer the value to shift.
 ---@param shift integer positions to shift.
----@return integer num the number shifted right (logically)
+---@return integer --the number shifted right (logically)
 function bit.rshift(value, shift) end
 
 ---Set bits in a number.
 ---@param value integer the base number.
 ---@param pos1 integer position of the first bit to set.
----@return integer num the number with the bit(s) set in the given position(s)
+---@vararg integer
+---@return integer --the number with the bit(s) set in the given position(s)
 function bit.set(value, pos1, ...) end
 
 --*** BTHCI ***
@@ -115,48 +119,66 @@ bthci = {}
 
 ---Sends a raw HCI command to the BlueTooth controller.
 ---@param hcibytes any raw HCI command bytes to send to the BlueTooth controller.
----@param callback? function optional function to be invoked when the reset completes.
+---@param callback? function optional function to be invoked when the reset completes. Its first argument is the HCI error code, or *nil* on success. The second argument contains any subsequent raw result bytes, or an empty string if the result only contained the status code.
 ---@return nil
 function bthci.rawhci(hcibytes, callback) end
 
 ---Resets the BlueTooth controller.
----@param callback? function optional function to be invoked when the reset completes.
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
 ---@return nil
 function bthci.reset(callback) end
 
----Enables or disables BlueTooth LE advertisements.
+---Enables or disables BlueTooth LE advertisements. Before enabling advertisements, both parameters and data should be set.
 ---@param onoff integer|'0'|'1' 1 or 0 to enable or disable advertisements, respectively.
----@param callback? function  optional function to be invoked when the reset completes.
+---@param callback? function  optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
 ---@return nil
 function bthci.adv.enable(onoff, callback) end
 
 ---Configures the data to advertise.
 ---@param advbytes any the raw bytes to advertise (up to 31 bytes), in the correct format
----@param callback? function optional function to be invoked when the reset completes.
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
 ---@return nil
 function bthci.adv.setdata(advbytes, callback) end
 
 ---Configures advertisement parameters.
----@param paramtable table
----@param callback? function
+---@param paramtable table #paramtable a table with zero or more of the following fields:
+--**interval_min** value in units of 0.625ms. Default 0x0400 (0.64s).
+--**interval_max** value in units of 0.625ms. Default 0x0800 (1.28s).
+--**type** advertising type, one of following constants:
+--*bthci.adv.CONN_UNDIR*, the default (ADV_IND in BT spec)
+--*bthci.adv.CONN_DIR_HI* (ADV_DIRECT_IND, high duty cycle in the BT spec)
+--*bthci.adv.SCAN_UNDIR* (ADV_SCAN_IND in the BT spec)
+--*bthci.adv.NONCONN_UNDIR* (ADV_NONCONN_IND in the BT spec)
+--*bthci.adv.CONN_DIR_LO* (ADV_DIRECT_IND, low duty cycle in the BT spec)
+--**own_addr_type** own address type. Default 0 (public address).
+--**peer_addr_type** peer address type. Default 0 (public address).
+--**peer_addr** TODO, not yet implemented
+--**channel_map** which channels to advertise on. The constants *bthci.adv.CHAN_37, bthci.adv.CHAN_38, bthci.adv.CHAN_39* or *bthci.adv.CHAN_ALL* may be used. Default is all channels.
+--**filter_policy** filter policy, default 0 (no filtering).
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
 ---@return nil
 function bthci.adv.setparams(paramtable, callback) end
 
 ---Enables or disable scanning for advertisements from other BlueTooth devices.
 ---@param onoff integer|'0'|'1' 1 or 0 to enable or disable advertisements, respectively.
----@param callback? function
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
 ---@return nil
 function bthci.scan.enable(onoff, callback) end
 
 ---Configures scan parameters.
----@param paramstable table
----@param callback? function
+---@param paramstable table #a table with zero or more of the following fields:
+--**mode** scanning mode, 0 for passive, 1 for active. Default 0.
+--**interval** scanning interval in units of 0.625ms. Default 0x0010.
+--**window** length of scanning window in units of 0.625ms. Default 0x0010.
+--**own_addr_type** own address type. Default 0 (public).
+--**filter_policy** filtering policy. Default 0 (no filtering).
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
 ---@return nil
 function bthci.scan.setparams(paramstable, callback) end
 
 ---Registers the callback to be passed any received advertisements.
----@param event string|'"adv_report"'
----@param callback? function
+---@param event string|'"adv_report"' the string describing the event.
+---@param callback? function the callback function to receive the advertising reports, or *nil* to deregister the callback. This callback receives the raw bytes of the advertisement payload.
 ---@return nil
 function bthci.scan.on(event, callback) end
 
@@ -165,25 +187,23 @@ can = {}
 
 ---Send a frame.
 ---@param format integer|'can.STANDARD_FRAME'|'can.EXTENDED_FRAME'
----@param msg_id any msg_id CAN Messge ID
+---@param msg_id any msg_id CAN Message ID
 ---@param data any data CAN data, up to 8 bytes
 ---@return nil
 function can.send(format, msg_id, data) end
 
 ---Configuration CAN controller.
----@param tbl table
----config table
----`speed` kbps. One of following value: 1000, 800, 500, 250, 100.
----`tx` Pin num for TX.
----`rx` Pin num for RX.
----`dual_filter` true dual filter mode, false single filter mode (default)
----`code` 4-bytes integer. Use this with mask to filter CAN frame. Default: 0. See SJA1000
----`mask` 4-bytes integer. Default: 0xffffffff
----@param fun function|' function(format, msg_id, data) end'
----callback function to be called when CAN data received.
----*format* Frame format. can.STANDARD_FRAME or can.EXTENDED_FRAME
----*msg_id* CAN Messge ID
----*data* CAN data, up to 8 bytes
+---@param tbl table config table
+--**speed** kbps. One of following value: 1000, 800, 500, 250, 100.
+--**tx** Pin num for TX.
+--**rx** Pin num for RX.
+--**dual_filter**` true dual filter mode, false single filter mode (default)
+--**code** 4-bytes integer. Use this with mask to filter CAN frame. Default: 0. See SJA1000
+--**mask** 4-bytes integer. Default: 0xffffffff
+---@param fun function|' function(format, msg_id, data) end'callback function to be called when CAN data received.
+--**format** Frame format. can.STANDARD_FRAME or can.EXTENDED_FRAME
+--**msg_id** CAN Messge ID
+--**data** CAN data, up to 8 bytes
 ---@return nil
 function can.setup(tbl, fun) end
 
@@ -215,13 +235,13 @@ function hashobj:finalize() end
 ---|'"SHA512"'
 ---Create a digest/hash object that can have any number of strings added to it.
 ---@param algo crypto_algo the hash algorithm to use, case insensitive string
----@return hashobj obj Hasher object with update and finalize functions available.
+---@return hashobj --Hasher object with update and finalize functions available.
 function crypto.new_hash(algo) end
 
 ---Create an object for calculating a HMAC (Hashed Message Authentication Code, aka "signature").
 ---@param algo crypto_algo the hash algorithm to use, case insensitive string
 ---@param key any the signing key (may be a binary string)
----@return hashobj obj Hasher object with update and finalize functions available.
+---@return hashobj --Hasher object with update and finalize functions available.
 function crypto.new_hmac(algo, key) end
 
 --*** DAC ***
@@ -239,7 +259,7 @@ function dac.enable(channel) end
 
 ---Sets the output value of the DAC.
 ---@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2'
----@param value number value output value
+---@param value number output value
 ---@return nil
 function dac.write(channel, value) end
 
@@ -291,39 +311,47 @@ function encoder.fromHex(hexstr) end
 eth = {}
 
 ---Get MAC address.
----@return string mac MAC address as string "aa:bb:cc:dd:ee:dd".
+---@return string --MAC address as string "aa:bb:cc:dd:ee:dd".
 function eth.get_mac() end
 
 ---Get Ethernet connection speed.
----@return any sp Connection speed in Mbit/s, or error if not connected. - 10 - 100
+---@return any --Connection speed in Mbit/s, or error if not connected. - 10 - 100
 function eth.get_speed() end
 
 ---Initialize the PHY chip and set up its tcpip adapter.
----@param cfg table
----*cfg* table containing configuration data. All entries are mandatory:
----`addr` PHY address, 0 to 31
----`clock_mode` external/internal clock mode selection, one of
----    eth.CLOCK_GPIO0_IN
----    eth.CLOCK_GPIO0_OUT
----    eth.CLOCK_GPIO16_OUT
----    eth.CLOCK_GPIO17_OUT
----`mdc` MDC pin number
----`mdio` MDIO pin number
----`phy` PHY chip model, one of
----    eth.PHY_IP101
----    eth.PHY_LAN8720
----    eth.PHY_TLK110
----`power` power enable pin, optional
+---@param cfg table table containing configuration data. All entries are mandatory:
+--**addr** PHY address, 0 to 31
+--**clock_mode** external/internal clock mode selection, one of
+--    eth.CLOCK_GPIO0_IN
+--    eth.CLOCK_GPIO0_OUT
+--    eth.CLOCK_GPIO16_OUT
+--    eth.CLOCK_GPIO17_OUT
+--**mdc** MDC pin number
+--**mdio** MDIO pin number
+--**phy** PHY chip model, one of
+--    eth.PHY_IP101
+--    eth.PHY_LAN8720
+--    eth.PHY_TLK110
+--**power** power enable pin, optional
 ---@return nil
 function eth.init(cfg) end
 
 ---Register or unregister callback functions for Ethernet events.
 ---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"got_ip"'
----@param callback function | ' function(event, info) end'
+---@param callback function|' function(event, info) end' callback function(event, info) to perform when event occurs, or nil to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
+--Event information provided for each event is as follows:
+--**start**: no additional info
+--**stop**: no additional info
+--**connected**: no additional info
+--**disconnected**: no additional info
+--**got_ip**: IP network information:
+--*ip*: the IP address assigned
+--*netmask*: the IP netmask
+--*gw*: the gateway ("0.0.0.0" if no gateway)
 function eth.on(event, callback) end
 
 ---Set MAC address.
----@param mac string mac MAC address as string "aa:bb:cc:dd:ee:ff"
+---@param mac string MAC address as string "aa:bb:cc:dd:ee:ff"
 ---@return nil
 function eth.set_mac(mac) end
 
@@ -996,16 +1024,27 @@ function net.dns.setdnsserver(dns_ip_addr, dns_index) end
 node = {}
 
 ---Returns the boot reason and extended reset info.
----@return integer rawcode
----@return integer reason
----@return ...
+---@return integer rawcode The first value returned is the raw code, not the new "reset info" code which was introduced in recent SDKs. Values are:
+--1, power-on
+--2, reset (software?)
+--3, hardware reset via reset pin
+--4, WDT reset (watchdog timeout)
+---@return integer reason The second value returned is the extended reset cause. Values are:
+--0, power-on
+--1, hardware watchdog reset
+--2, exception reset
+--3, software watchdog reset
+--4, software restart
+--5, wake from deep sleep
+--6, external reset
+--In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information. These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
----@return string id chip ID (string)
+---@return string --chip ID
 function node.chipid() end
 
----Compiles a Lua text file into Lua bytecode, and saves it as.
+---Compiles a Lua text file into Lua bytecode, and saves it as .lc file.
 ---@param filename string
 ---|'".lua"' #filename name of Lua text file
 ---@return nil
@@ -1014,23 +1053,22 @@ function node.compile(filename) end
 ---Enters deep sleep mode.
 ---@overload fun(options:number)
 -- For compatibility, a number parameter usecs can be supplied instead of an options table, which is equivalent to node.dsleep({us = usecs}).
----@param options table
--- *options*, a table containing some of:
--- `secs`, a number of seconds to sleep. This permits longer sleep periods compared to using the us parameter.
--- `us`, a number of microseconds to sleep. If both secs and us are provided, the values are combined.
--- `gpio`, a single GPIO number or a list of GPIOs. These pins must all be RTC-capable otherwise an error is raised.
--- `level`. Whether to trigger when *any* of the GPIOs are high (level=1, which is the default if not specified), or when *all* the GPIOs are low (level=0).
--- `isolate`. A list of GPIOs to isolate. Isolating a GPIO disables input, output, pullup, pulldown, and enables hold feature for an RTC IO. Use this function if an RTC IO needs to be disconnected from internal circuits in deep sleep, to minimize leakage current.
--- `pull`, boolean, whether to keep powering previously-configured internal pullup/pulldown resistors. Default is false if not specified.
--- `touch`, boolean, whether to trigger wakeup from any previously-configured touchpads. Default is false if not specified.
+---@param options table a table containing some of:
+--**secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the us parameter.
+--**us**, a number of microseconds to sleep. If both secs and us are provided, the values are combined.
+--**gpio**, a single GPIO number or a list of GPIOs. These pins must all be RTC-capable otherwise an error is raised.
+--**level**. Whether to trigger when *any* of the GPIOs are high (level=1, which is the default if not specified), or when *all* the GPIOs are low (level=0).
+--**isolate**. A list of GPIOs to isolate. Isolating a GPIO disables input, output, pullup, pulldown, and enables hold feature for an RTC IO. Use this function if an RTC IO needs to be disconnected from internal circuits in deep sleep, to minimize leakage current.
+--**pull**, boolean, whether to keep powering previously-configured internal pullup/pulldown resistors. Default is false if not specified.
+--**touch**, boolean, whether to trigger wakeup from any previously-configured touchpads. Default is false if not specified.
 function node.dsleep(options) end
 
 ---Returns the flash chip ID.
----@return number flash_ID
+---@return number --flash ID
 function node.flashid() end
 
 ---Returns the current available heap size in bytes.
----@return number heap system heap size left in bytes
+---@return number --system heap size left in bytes
 function node.heap() end
 
 ---Returns NodeMCU version, chipid, flashid, flash size, flash mode, flash speed.
@@ -1044,33 +1082,34 @@ function node.heap() end
 ---@return number flashspeed
 function node.info() end
 
----Submits a string to the Lua interpreter. Similar to pcall(loadstring(str)),
----but without the single-line limitation.
+---Submits a string to the Lua interpreter. Similar to pcall(loadstring(str)), but without the single-line limitation.
 ---@param str string Lua chunk
 ---@return nil
 function node.input(str) end
 
----Redirects the Lua interpreter output to a callback function.
----Optionally also prints it to the serial console.
----@param fun function a function accept every output as str, and can send the output to a socket (or maybe a file). nil to unregister the previous function.
+---Redirects the Lua interpreter output to a callback function. Optionally also prints it to the serial console.
+---@param fun function `output_fn(str)` a function accept every output as str, and can send the output to a socket (or maybe a file). *nil* to unregister the previous function.
 ---@param serial_output integer
 ---|>' 1' #output also sent out the serial port.
 ---|' 0' #no serial output.
 ---@return nil
 function node.output(fun, serial_output) end
 
+---Redirects the debugging output from the Espressif SDK to a callback function allowing it to be captured or processed in Lua.
+---@param fun function `function(str)` a function accepts debugging output as str, and can send the output to a socket (or maybe a file). *nil* to unregister the previous function.
+function node.osoutput(fun) end
+
 ---Restarts the chip.
 ---@return nil
 function node.restart() end
 
----Restores system configuration to defaults using the SDK function system_restore(),
----which doesn't document precisely what it erases/restores.
+---Restores system configuration to defaults using the SDK function *system_restore()*, which doesn't document precisely what it erases/restores.
 ---@return nil
 function node.restore() end
 
 ---Change the working CPU Frequency.
 ---@param speed integer|'node.CPU80MHZ'|'node.CPU160MHZ'
----@return number freq target CPU frequency
+---@return number --target CPU frequency
 function node.setcpufreq(speed) end
 
 ---Controls the amount of debug information kept during node.compile(), and allows removal of debug information from already compiled Lua code.
@@ -1078,17 +1117,17 @@ function node.setcpufreq(speed) end
 ---|'1' #don't discard debug info
 ---|'2' #discard Local and Upvalue debug info
 ---|'3' #discard Local, Upvalue and line-number debug info
----@param fun? function
---- `fun` a compiled function to be stripped per setfenv except 0 is not permitted.
----@return integer|nil levl If invoked without arguments, returns the current level settings. Otherwise, nil is returned.
+---@param fun? function `function` a compiled function to be stripped per setfenv except 0 is not permitted.
+---@return integer|nil --If invoked without arguments, returns the current level settings. Otherwise, *nil* is returned.
 function node.stripdebug(level, fun) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
 ---@param enabled boolean
+---|'true' #to enable printing
+---|>'false' #to disable printing
 function node.osprint(enabled) end
 
----Returns the value of the system counter,
----which counts in microseconds starting at 0 when the device is booted.
+---Returns the value of the system counter, which counts in microseconds starting at 0 when the device is booted.
 ---@return number lowbits the time in microseconds since boot or the last time the counter wrapped
 ---@return number highbits the number of times the counter has wrapped
 function node.uptime() end
@@ -1098,18 +1137,17 @@ function node.uptime() end
 ---|'node.egc.NOT_ACTIVE' #EGC inactive, no collection cycle will be forced in low memory situations
 ---|'node.egc.ON_ALLOC_FAILURE' #Try to allocate a new block of memory, and run the garbage collector if the allocation fails.
 ---|'node.egc.ON_MEM_LIMIT' #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit.
----|'node.egc.ALWAYS' #Run the garbage collector before each memory allocation.
+---|'node.egc.ALWAYS' #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error.
 ---@param level number in the case of node.egc.ON_MEM_LIMIT, this specifies the memory limit.
 ---@return nil
 function node.egc.setmode(mode, level) end
 
 ---Enable a Lua callback or task to post another task request.
 ---@param task_priority? number
----|'node.task.LOW_PRIORITY' # = 0
----|>'node.task.MEDIUM_PRIORITY' # = 1
----|'node.task.HIGH_PRIORITY''0' # = 2
----@param fun function|' function() end'
---- `fun` a callback function to be executed when the task is run.
+---|'node.task.LOW_PRIORITY' #= 0
+---|>'node.task.MEDIUM_PRIORITY' #= 1
+---|'node.task.HIGH_PRIORITY''0' #= 2
+---@param fun function|' function() end' `fun` a callback function to be executed when the task is run.
 ---@return nil
 function node.task.post(task_priority, fun) end
 
