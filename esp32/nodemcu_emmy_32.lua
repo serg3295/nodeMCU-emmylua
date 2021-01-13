@@ -501,14 +501,14 @@ function fObj:writeline(str) end
 gpio = {}
 
 ---Configure GPIO mode for one or more pins.
----@param tbl table
----`gpio` one or more (given as list) pins,
----`dir` direction, one of
+---@param tbl table List of configuration tables:
+---**gpio** one or more (given as list) pins,
+---**dir** direction, one of
 ---    gpio.IN
 ---    gpio.OUT
 ---    gpio.IN_OUT
----`opendrain` 1 enables opendrain mode, defaults to 0 if omitted
----`pull` enable pull-up and -down resistors, one of
+---**opendrain** 1 enables opendrain mode, defaults to 0 if omitted
+---**pull** enable pull-up and -down resistors, one of
 ---    gpio.FLOATING --disables both pull-up and -down
 ---    gpio.PULL_UP --enables pull-up and disables pull-down
 ---    gpio.PULL_DOWN --enables pull-down and disables pull-up
@@ -518,30 +518,32 @@ function gpio.config(tbl) end
 
 ---Read digital GPIO pin value.
 ---@param pin integer pin to read,
----@return integer val 0 = low, 1 = high
+---@return integer --0 = low, 1 = high
 function gpio.read(pin) end
 
----Set the drive strength of a given GPIO pin.
+---Set the drive strength of a given GPIO pin. The higher the drive strength, the more current can be sourced/sunk from the pin. The exact maximum depends on the power domain of the pin and how much current other pins in that domain are consuming.
 ---@param pin integer a valid GPIO pin number.
 ---@param strength number
 ---|' gpio.DRIVE_0' #weakest drive strength
 ---|' gpio.DRIVE_1' #stronger drive strength
----|' gpio.DRIVE_2' #default drive strength
----|' gpio.DRIVE_DEFAULT' #default drive strength (same as DRIVE_2)
+---|>' gpio.DRIVE_2' #default drive strength
+---|>' gpio.DRIVE_DEFAULT' #default drive strength (same as DRIVE_2)
 ---|' gpio.DRIVE_3' #maximum drive strength
 ---@return nil
 function gpio.set_drive(pin, strength) end
 
 ---Establish or clear a callback function to run on interrupt for a GPIO.
 ---@param pin integer
----@param type number
----|' "gpio.INTR_DISABLE"' #or nil to disable interrupts on this pin (in which case callback is ignored and should be nil or omitted)
+---@param type? number
+---|' gpio.INTR_DISABLE' #or `nil` to disable interrupts on this pin (in which case `callback` is ignored and should be `nil` or omitted)
 ---|' gpio.INTR_UP' #for trigger on rising edge
 ---|' gpio.INTR_DOWN' #for trigger on falling edge
 ---|' gpio.INTR_UP_DOWN' #for trigger on both edges
 ---|' gpio.INTR_LOW' #for trigger on low level
 ---|' gpio.INTR_HIGH' #for trigger on high level
----@param callback function
+---@param callback? function optional function to be called when trigger fires. If `nil` or omitted (and `type` is not `gpio.INTR_DISABLE`) then any previously-set callback will continue to be used. Parameters are:
+--    pin
+--    level
 ---@return nil
 function gpio.trig(pin , type , callback) end
 
@@ -567,10 +569,16 @@ http = {}
 local HTTP = {}
 
 ---Creates a connection object which can be configured and then executed.
----@param url string|'"http://"'|'"https://"'
----@param method? integer|' http.GET'|' http.POST'|' http.DELETE'|' http.HEAD'
----@param options? table
----@return http
+---@param url string|'"http://"'|'"https://"' The URL to fetch, including the http:// or https:// prefix. Required.
+---@param method? integer|' http.GET'|' http.POST'|' http.DELETE'|' http.HEAD' #The HTTP method to use. Optional and may be omitted, the default is http.GET.
+---@param options? table #An optional table containing any or all of:
+--**async** If true, the request is processed asynchronously, meaning `request()` returns immediately rather than blocking until the connection is complete and all callbacks have been made. Some other connection APIs behave differently in asynchronous mode, see their documentation for details. If not specified, the default is false, meaning requests are processed synchronously.
+--**bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
+--**cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
+--**headers** Table of headers to add to the request.
+--**max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
+--**timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
+---@return http --The connection object.
 function http.createConnection(url, method, options) end
 
 ---Set a callback to be called when a certain event occurs.
@@ -579,12 +587,12 @@ function http.createConnection(url, method, options) end
 ---|'"headers"' #Called once the HTTP headers from the remote end have been received. Callback is called as callback(status_code, headers_table).
 ---|'"data"' #Can be called multiple times, each time more (non-headers) data is received. Callback is called as callback(status_code, data).
 ---|'"complete"' #Called once all data has been received. Callback is called as callback status_code, connected) where connected is true if the connection is still open.
----@param callback? function|nil|' function() end'
+---@param callback? function|nil|' function() end' a function to be called when the given event occurs. Can be `nil` to remove a previously configured callback.
 ---@return nil
 function HTTP:on(event, callback) end
 
 ---Opens the connection to the server and issues the request.
----@return nil |any
+---@return any|nil --In asynchronous mode, always returns `nil`. In synchronous mode, it returns 2 results, `status_code`, `connected` where connected is `true` if the connection is still open.
 function HTTP:request() end
 
 ---Sets the connection method.
@@ -593,18 +601,18 @@ function HTTP:request() end
 function HTTP:setmethod(method) end
 
 ---Sets the connection URL.
----@param url string|'""'
+---@param url string|'""' Required. The URL to use for the next `request()` call.
 ---@return nil
 function HTTP:seturl(url) end
 
 ---Sets an individual header in the request.
----@param name string
----@param value? string|nil
+---@param name string name of the header to set.
+---@param value? string|nil what to set it to. Must be a string, or `nil` to unset it.
 ---@return nil
 function HTTP:setheader(name, value) end
 
----Sets the POST data to be used for this request.
----@param data any |nil
+---Sets the POST data to be used for this request. Also sets the method to http.POST if it isn't already.
+---@param data any|nil The data to POST. Unless a custom Content-Type header has been set, this data should be in application/x-www-form-urlencoded format. Can be `nil` to unset what to post and the Content-Type header.
 ---@return nil
 function HTTP:setpostdata(data) end
 
@@ -616,124 +624,186 @@ function HTTP:ack() end
 ---@return nil
 function HTTP:close() end
 
----Make an HTTP GET request. If a callback is specifed then the function operates
----in asynchronous mode, otherwise it is synchronous.
----@param url string|'"http://"'|'"https://"'
----@param options? any |nil
----@param callback? function|nil|' function() end'
----@return nil|any
+---Make an HTTP GET request. If a callback is specifed then the function operates in asynchronous mode, otherwise it is synchronous.
+---@param url string|'"http://"'|'"https://"' #The URL to fetch
+---@param options? any|nil Same options as http.createConnection(), except that async is set for you based on whether a callback is specified or not. May be `nil` or omitted.
+--**bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
+--**cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
+--**headers** Table of headers to add to the request.
+--**max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
+--**timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
+---@param callback? function|nil|' function(code, data) end'
+---@return any|nil --In synchronous mode, returns 3 results `status_code, body, headers` once the request has completed. In asynchronous mode, returns `nil` immediately.
 function http.get(url, options, callback) end
 
----Executes a single HTTP POST request and closes the connection.
----If a callback is specifed then the function operates in asynchronous mode, otherwise it is synchronous.
----@param url string|'"http://"'|'"https://"'
----@param options any|nil
----@param body any
----@param callback? function|' function() end'
----@return nil|any
+---Executes a single HTTP POST request and closes the connection. If a callback is specifed then the function operates in asynchronous mode, otherwise it is synchronous.
+---@param url string|'"http://"'|'"https://"' #The URL to fetch
+---@param options any|nil Same options as http.createConnection(), except that async is set for you based on whether a callback is specified or not. May be `nil`.
+--**bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
+--**cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
+--**headers** Table of headers to add to the request.
+--**max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
+--**timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
+---@param body any The body to post. Required and must already be encoded in the appropriate format, but may be empty.
+---@param callback? function|' function(code, data) end' Should be `nil` or omitted to specify synchronous behaviour, otherwise a callback function to be invoked when the response has been received or an error occurred, which is called with the arguments **status_code**, **body** and **headers**. In case of an error status_code will be a negative number.
+---@return any|nil --In synchronous mode, returns 3 results `status_code, body, headers` once the request has completed. In asynchronous mode, returns `nil` immediately.
 function http.post(url, options, body, callback) end
 
 --*** I2C ***
 i2c = {}
 
----Send (SW) or queue (HWx) I²C address and read/write mode for the next transfer.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1'
----@param device_addr number
----@param direction integer|' i2c.TRANSMITTER'|' i2c.RECEIVER'
+---Send (SW) or queue (HWx) I²C address and read/write mode for the next transfer. Communication stops when the slave answers with NACK to the address byte. This can be avoided with parameter ack_check_en on false.
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
+---@param device_addr number device address
+---@param direction integer
+---|' i2c.TRANSMITTER' #for writing mode
+---|' i2c.RECEIVER' #for reading mode
 ---@param ack_check_en? boolean
----|' true'  #enable check for slave ACK
+---|>' true'  #enable check for slave ACK
 ---|' false' #disable check for slave ACK
----@return boolean
+---@return boolean --`true` if ack received (always for ids i2c.HW0 and i2c.HW1), `false` if no ack received (only possible for i2c.SW).
 function i2c.address(id, device_addr, direction, ack_check_en) end
 
 ---Read (SW) or queue (HWx) data for variable number of bytes.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1'
----@param len number
----@return string|nil
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
+---@param len number number of data bytes
+---@return string|nil --`string` of received data for interface i2c.SW
+--`nil` for ids i2c.HW0 and i2c.HW1
 function i2c.read(id, len) end
 
 ---Initialize the I²C interface for master mode.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1'
----@param pinSDA integer
----@param pinSCL integer
----@param speed integer|' i2c.SLOW'|' i2c.FAST'|' i2c.FASTPLUS'
----@return integer
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
+---@param pinSDA integer IO index
+---@param pinSCL integer IO index
+---@param speed integer #bit rate in Hz, positive integer
+---|' i2c.SLOW' #for 100000 Hz, max for i2c.SW
+---|' i2c.FAST' #for 400000 Hz
+---|' i2c.FASTPLUS' #for 1000000 Hz
+---@return integer speed the selected speed
 function i2c.setup(id, pinSDA, pinSCL, speed) end
 
 ---Send (SW) or queue (HWx) an I²C start condition.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1'
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
 ---@return nil
 function i2c.start(id) end
 
 ---Send (SW) or queue (HWx) an I²C stop condition.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1'
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
 ---@return nil
 function i2c.stop(id) end
 
 ---Starts a transfer for the specified hardware module.
----@param id integer|'i2c.HW0'|'i2c.HW1'
----@param cb_fn? function
----@param to_ms? integer
----@return any|nil
+---@param id integer|'i2c.HW0'|'i2c.HW1' #interface id, i2c.SW not allowed
+---@param cb_fn? function `cb_fn(data, ack)` function to be called when transfer finished
+---@param to_ms? integer timeout for the transfer in ms, defaults to 0=infinite
+---@return any|nil --synchronous operation:
+--`data` string of received data (`nil` if no read or NACK)
+--`ack` `true` if ACK received, `false` for NACK
+--`nil` for asynchronous operation
 function i2c.transfer(id, cb_fn, to_ms) end
 
----Write (SW) or queue (HWx) data to I²C bus.
----Data items can be multiple numbers, strings or lua tables.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1'
----@param dataN string|table|number
----@param ack_check_en boolean
----@return number
+---Write (SW) or queue (HWx) data to I²C bus. Data items can be multiple numbers, strings or lua tables. Communication stops when the slave answers with NACK to a written byte. This can be avoided with parameter ack_check_en on false.
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
+---@param dataN string|table|number data can be numbers, string or lua table.
+---@param ack_check_en? boolean
+---|>' true' #enable check for slave ACK
+---|' false' #disable check for slave ACK
+---@return number --number of bytes written
 function i2c.write(id, dataN, ack_check_en) end
 
 ---Registers or unregisters an event callback handler.
----@param id integer|'i2c.HW0'|'i2c.HW1'
----@param event integer|' receive'
----@param cb_fn? function
+---@param id integer|'i2c.HW0'|'i2c.HW1' #interface id
+---@param event integer|' "receive"' #data received from master
+---@param cb_fn? function `cb_fn(err, data)` function to be called when data was received from the master. Unregisters previous callback for event when omitted.
 ---@return nil
 function i2c.slave.on(id, event, cb_fn) end
 
 ---Initialize the I²C interface for slave mode.
----@param id integer|'i2c.HW0'|'i2c.HW1'
----@param slave_config table
+---@param id integer|'i2c.HW0'|'i2c.HW1' #interface id,
+---@param slave_config table table containing slave configuration information
+--**sda** IO index, see GPIO Overview
+--**scl** IO index, see GPIO Overview
+--**addr** slave address (7bit or 10bit)
+--**10bit** enable 10bit addressing with true, use 7bit with false (optional, defaults to false is omitted)
+--**rxbuf_len** length of receive buffer (optional, defaults to 128 if omitted)
+--**txbuf_len** length of transmit buffer (optional, defaults to 128 if omitted)
 ---@return nil
 function i2c.slave.setup(id, slave_config) end
 
----Writes send data for the master into the transmit buffer.
----@param id integer|'i2c.HW0'|'i2c.HW1'
----@param data1 any
----@return number
+---Writes send data for the master into the transmit buffer. This function returns immediately if there's enough room left in the buffer. It blocks if the buffer is doesn't provide enough space.
+---@param id integer|'i2c.HW0'|'i2c.HW1' #interface id
+---@param data1 number|string|table data can be numbers, string or lua table.
+---@vararg number|string|table
+---@return number --number of bytes written
 function i2c.slave.send(id, data1, ...) end
 
 --*** I2S ***
 i2s ={}
 
 ---Mute the I2S channel. The hardware buffer is instantly filled with silence.
----@param i2s_num integer|'0'|'1'
----@return nil
+---@param i2s_num integer|'0'|'1' #I2S peripheral
+---@return nil --An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.mute(i2s_num) end
 
 ---Read data from I2S receive buffer.
----@param i2s_num integer|'0'|'1'
----@param size number
----@param wait_ms number
----@return any
+---@param i2s_num integer|'0'|'1' #I2S peripheral
+---@param size number Bytes to read
+---@param wait_ms? number Millisecond to wait if data is not ready. Optional, defaults to 0 (not to wait) when omitted.
+---@return any --Data read from data-in pin. If data is not ready in wait_ms millisecond, less than size bytes can be returned. An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.read(i2s_num, size, wait_ms) end
 
 ---Configuration and start I2S bus.
----@param i2s_num integer|'0'|'1'
----@param cfg table
----@param cb function
+---@param i2s_num integer|'0'|'1' #I2S peripheral
+---@param cfg table table containing configuration data:
+--**mode** I2S work mode. Optional, defaults to i2s.MODE_MASTER + i2s.MODE_TX when omitted.
+--i2s.MODE_MASTER
+--i2s.MODE_SLAVE
+--i2s.MODE_TX
+--i2s.MODE_RX
+--i2s.MODE_DAC_BUILT_IN
+--i2s.MODE_ADC_BUILT_IN
+--i2s.MODE_PDM
+--**rate** audio sample rate. Optional, defauls to 44100 when omitted.
+--**bits** bits per sample. Optional, defaults to 16 when omitted.
+--**channel** channel format of I2S stream. Optional, defaults to i2s.CHANNEL_RIGHT_LEFT when omitted.
+--i2s.CHANNEL_RIGHT_LEFT
+--i2s.CHANNEL_ALL_LEFT
+--i2s.CHANNEL_ONLY_LEFT
+--i2s.CHANNEL_ALL_RIGHT
+--i2s.CHANNEL_ONLY_RIGHT
+--**format** communication format. Optional, defaults to i2s.FORMAT_I2S + i2s.FORMAT_I2S_MSB when omitted.
+--i2s.FORMAT_I2S
+--i2s.FORMAT_I2S_MSB
+--i2s.FORMAT_I2S_LSB
+--i2s.FORMAT_PCM
+--i2s.FORMAT_PCM_SHORT
+--i2s.FORMAT_PCM_LONG
+--**buffer_count** number of dma buffers. Optional, defaults to 2 when omitted.
+--**buffer_len** size of one dma buffer. Optional, defaults to rate/100 when omitted.
+--**bck_pin** clock pin, optional
+--**ws_pin** WS pin, optional
+--**data_out_pin** data output pin, optional
+--**data_in_pin** data input pin, optional
+--**dac_mode** DAC mode configuration. Optional, defaults to i2s.--**DAC_CHANNEL_DISABLE** when omitted.
+--i2s.DAC_CHANNEL_DISABLE
+--i2s.DAC_CHANNEL_RIGHT
+--i2s.DAC_CHANNEL_LEFT
+--i2s.DAC_CHANNEL_BOTH
+--**adc1_channel** ADC1 channel number 0..7. Optional, defaults to off when omitted.
+---@param cb function function called when transmit data is requested or received data is available. The function is called with parameters **i2s_num** and **dir**
+--**dir** is "tx" for TX data request. Function shall call i2s.write().
+--**dir** is "rx" for RX data available. Function shall call i2s.read().
 ---@return nil
 function i2s.start(i2s_num, cfg, cb) end
 
 ---Stop I2S bus.
----@param i2s_num integer|'0'|'1'
+---@param i2s_num integer|'0'|'1' #I2S peripheral
 ---@return nil
 function i2s.stop(i2s_num) end
 
 ---Write to I2S transmit buffer.
----@param i2s_num integer|'0'|'1'
----@param data string
+---@param i2s_num integer|'0'|'1' #I2S peripheral
+---@param data string string containing I2S stream data
 ---@return nil
 function i2s.write(i2s_num, data) end
 
