@@ -86,13 +86,13 @@ function bit.clear(value, pos1, ...) end
 ---Test if a given bit is cleared.
 ---@param value integer the value to test
 ---@param position integer bit position to test
----@return boolean --true if the bit at the given position is 0, false othewise
+---@return boolean --`true` if the bit at the given position is 0, `false` othewise
 function bit.isclear(value, position) end
 
 ---Test if a given bit is set.
 ---@param value integer the value to test
 ---@param position integer bit position to test
----@return boolean --true if the bit at the given position is 0, false othewise
+---@return boolean --`true` if the bit at the given position is 0, `false` othewise
 function bit.isset(value, position) end
 
 ---Left-shift a number, equivalent to `value << shift` in C.
@@ -119,24 +119,24 @@ bthci = {}
 
 ---Sends a raw HCI command to the BlueTooth controller.
 ---@param hcibytes any raw HCI command bytes to send to the BlueTooth controller.
----@param callback? function optional function to be invoked when the reset completes. Its first argument is the HCI error code, or *nil* on success. The second argument contains any subsequent raw result bytes, or an empty string if the result only contained the status code.
+---@param callback? function optional function to be invoked when the reset completes. Its first argument is the HCI error code, or `nil` on success. The second argument contains any subsequent raw result bytes, or an empty string if the result only contained the status code.
 ---@return nil
 function bthci.rawhci(hcibytes, callback) end
 
 ---Resets the BlueTooth controller.
----@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
 function bthci.reset(callback) end
 
 ---Enables or disables BlueTooth LE advertisements. Before enabling advertisements, both parameters and data should be set.
 ---@param onoff integer|'0'|'1' 1 or 0 to enable or disable advertisements, respectively.
----@param callback? function  optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
+---@param callback? function  optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
 function bthci.adv.enable(onoff, callback) end
 
 ---Configures the data to advertise.
 ---@param advbytes any the raw bytes to advertise (up to 31 bytes), in the correct format
----@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
 function bthci.adv.setdata(advbytes, callback) end
 
@@ -155,13 +155,13 @@ function bthci.adv.setdata(advbytes, callback) end
 --**peer_addr** TODO, not yet implemented
 --**channel_map** which channels to advertise on. The constants *bthci.adv.CHAN_37, bthci.adv.CHAN_38, bthci.adv.CHAN_39* or *bthci.adv.CHAN_ALL* may be used. Default is all channels.
 --**filter_policy** filter policy, default 0 (no filtering).
----@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
 function bthci.adv.setparams(paramtable, callback) end
 
 ---Enables or disable scanning for advertisements from other BlueTooth devices.
 ---@param onoff integer|'0'|'1' 1 or 0 to enable or disable advertisements, respectively.
----@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
 function bthci.scan.enable(onoff, callback) end
 
@@ -172,13 +172,13 @@ function bthci.scan.enable(onoff, callback) end
 --**window** length of scanning window in units of 0.625ms. Default 0x0010.
 --**own_addr_type** own address type. Default 0 (public).
 --**filter_policy** filtering policy. Default 0 (no filtering).
----@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or *nil* on success.
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
 function bthci.scan.setparams(paramstable, callback) end
 
 ---Registers the callback to be passed any received advertisements.
 ---@param event string|'"adv_report"' the string describing the event.
----@param callback? function the callback function to receive the advertising reports, or *nil* to deregister the callback. This callback receives the raw bytes of the advertisement payload.
+---@param callback? function the callback function to receive the advertising reports, or `nil` to deregister the callback. This callback receives the raw bytes of the advertisement payload.
 ---@return nil
 function bthci.scan.on(event, callback) end
 
@@ -197,7 +197,7 @@ function can.send(format, msg_id, data) end
 --**speed** kbps. One of following value: 1000, 800, 500, 250, 100.
 --**tx** Pin num for TX.
 --**rx** Pin num for RX.
---**dual_filter**` true dual filter mode, false single filter mode (default)
+--**dual_filter** `true` dual filter mode, `false` single filter mode (default)
 --**code** 4-bytes integer. Use this with mask to filter CAN frame. Default: 0. See SJA1000
 --**mask** 4-bytes integer. Default: 0xffffffff
 ---@param fun function|' function(format, msg_id, data) end'callback function to be called when CAN data received.
@@ -289,22 +289,22 @@ encoder = {}
 
 ---Provides a Base64 representation of a (binary) Lua string.
 ---@param binary string binary input string to Base64 encode
----@return string s A Base64 encoded string.
+---@return string --A Base64 encoded string.
 function encoder.toBase64(binary) end
 
 ---Decodes a Base64 representation of a (binary) Lua string back into the original string.
 ---@param b64 string Base64 encoded input string
----@return string str The decoded Lua (binary) string.
+---@return string --The decoded Lua (binary) string.
 function encoder.fromBase64(b64) end
 
 ---Provides an ASCII hex representation of a (binary) Lua string.
 ---@param binary string binary input string to get hex representation for
----@return string s An ASCII hex string.
+---@return string --An ASCII hex string.
 function encoder.toHex(binary) end
 
 ---Returns the Lua binary string decode of a ASCII hex string.
 ---@param hexstr string hexstr An ASCII hex string.
----@return string s Decoded string of hex representation.
+---@return string --Decoded string of hex representation.
 function encoder.fromHex(hexstr) end
 
 --*** ETH ***
@@ -361,14 +361,14 @@ file = {}
 ---@class file
 local fObj = {}
 
----Change current directory (and drive).
----@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"'
+---Change current directory (and drive). This will be used when no drive/directory is prepended to filenames.
+---@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"' #directory name
 ---@return boolean
 function file.chdir(dir) end
 
 ---Determines whether the specified file exists.
----@param filename string|'""'
----@return boolean
+---@param filename string|'""' file to check
+---@return boolean --`true` of the file exists (even if 0 bytes in size), and `false` if it does not exist
 function file.exists(filename) end
 
 ---Format the file system. Completely erases any existing file system and writes a new one.
@@ -380,25 +380,26 @@ function file.format() end
 ---@return number size
 function file.fscfg() end
 
----Return size information for the file system.
----The unit is Byte for SPIFFS and kByte for FatFS.
+---Return size information for the file system. The unit is Byte for SPIFFS and kByte for FatFS.
 ---@return number remaining
 ---@return number used
 ---@return number total
 function file.fsinfo() end
 
 ---Lists all files in the file system.
----@return table
+---@return table --a lua table which contains the `{file name: file size}` pairs
 function file.list(pattern) end
 
 ---Registers callback functions.
----@param event string|'"rtc"'
----@param foo function?|' function() end'
+---@param event string
+---|'"rtc"' #Trigger events are: **rtc** deliver current date & time to the file system. Function is expected to return a table containing the fields **year, mon, day, hour, min, sec** of current date and time. Not supported for internal flash.
+---@param foo function
+---|' function() end' #callback function. Unregisters the callback if function() is omitted.
 ---@return nil
 function file.on(event, foo) end
 
----Opens a file for access, potentially creating it (for write modes).
----@param filename string | '""'
+---Opens a file for access, potentially creating it (for write modes). When done with the file, it must be closed using `file.close()`.
+---@param filename string|'""' #file to be opened, directories are not supported
 ---@param mode string
 ---|>' "r"' # read mode
 ---| ' "w"' # write mode
@@ -406,17 +407,17 @@ function file.on(event, foo) end
 ---| ' "r+"' # update mode, all previous data is preserved
 ---| ' "w+"' # update mode, all previous data is erased
 ---| ' "a+"' # append update mode, previous data is preserved, writing is only allowed at the end of file
----@return file
+---@return file --file object if file opened ok. nil if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
 ---Remove a file from the file system. The file must not be currently open.
----@param filename string|'""'
+---@param filename string|'""' file to remove
 ---@return nil
 function file.remove(filename) end
 
 ---Renames a file. If a file is currently open, it will be closed first.
----@param oldname string|'""'
----@param newname string|' ""'
+---@param oldname string|'""' old file name
+---@param newname string|' ""' new file name
 ---@return boolean
 function file.rename(oldname, newname) end
 
@@ -427,64 +428,73 @@ function file.close() end
 ---@return nil
 function fObj:close() end
 
----Flushes any pending writes to the file system, ensuring no data is lost on a restart.
+---Flushes any pending writes to the file system, ensuring no data is lost on a restart. Closing the open file using file.close() / fd:close() performs an implicit flush as well.
 ---@return nil
 function file.flush() end
----Flushes any pending writes to the file system, ensuring no data is lost on a restart.
+
+---Flushes any pending writes to the file system, ensuring no data is lost on a restart. Closing the open file using file.close() / fd:close() performs an implicit flush as well.
 ---@return nil
 function fObj:flush() end
 
 ---Read content from the open file.
----@param n_or_char? integer
----@return string | nil
+---@param n_or_char? integer :
+---if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
+---if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
+---if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+---@return string|nil --File content as a string, or `nil` when EOF
 function file.read(n_or_char) end
+
 ---Read content from the open file.
----@param n_or_char? integer
----@return string | nil
+---@param n_or_char? integer :
+---if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
+---if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
+---if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+---@return string|nil --File content as a string, or `nil` when EOF
 function fObj:read(n_or_char) end
 
----Read the next line from the open file.
----Lines are defined as zero or more bytes ending with a EOL ('\n') byte.
----@return string | nil
+---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.
+---@return string|nil --File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 function file.readline() end
----Read the next line from the open file.
----Lines are defined as zero or more bytes ending with a EOL ('\n') byte.
----@return string | nil
+
+---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.
+---@return string|nil --File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 function fObj:readline() end
 
 ---@alias seekwhence32_f
 ---| '"set"' # Base is position 0 (beginning of the file)
 ---|>'"cur"' # Base is current position
 ---| '"end"' # Base is end of file
----Sets and gets the file position, measured from the beginning of the file,
----to the position given by offset plus a base specified by the string whence.
+
+---Sets and gets the file position, measured from the beginning of the file, to the position given by offset plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
 ---@param whence? seekwhence32_f
----@param offset? integer
----@return integer offset | nil
+---@param offset? integer default 0
+---@return integer --the resulting file position, or `nil` on error
 function file.seek(whence, offset) end
----Sets and gets the file position, measured from the beginning of the file,
----to the position given by offset plus a base specified by the string whence.
+
+---Sets and gets the file position, measured from the beginning of the file, to the position given by offset plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
 ---@param whence? seekwhence32_f
----@param offset? integer
----@return integer offset | nil
+---@param offset? integer default 0
+---@return integer --the resulting file position, or `nil` on error
 function fObj:seek(whence, offset) end
 
 ---Write a string to the open file.
----@param str string | '""'
----@return boolean | nil
+---@param str string|'""' #content to be write to file
+---@return boolean|nil --`true` if write ok, `nil` on error
 function file.write(str) end
+
 ---Write a string to the open file.
----@param str string | '""'
----@return boolean | nil
+---@param str string|'""' #content to be write to file
+---@return boolean|nil --`true` if write ok, `nil` on error
 function fObj:write(str) end
 
 ---Write a string to the open file and append '\n' at the end.
----@param str string | '""'
----@return boolean | nil
+---@param str string | '""' #content to be write to file
+---@return boolean|nil --`true` if write ok, `nil` on error
 function file.writeline(str) end
+
 ---Write a string to the open file and append '\n' at the end.
----@param str string | '""'
----@return boolean | nil
+---@param str string | '""'  #content to be write to file
+---@return boolean|nil --`true` if write ok, `nil` on error
 function fObj:writeline(str) end
 
 --*** GPIO ***
@@ -809,7 +819,7 @@ local MQTT32 = {}
 ---@param keepalive integer keepalive keepalive seconds
 ---@param username? string username user name
 ---@param password? string password user password
----@param cleansession? integer cleansession 0/1 for false/true. Default is 1 (true).
+---@param cleansession? integer cleansession 0/1 for `false/true`. Default is 1 (true).
 ---@return mqtt MQTT client
 function mqtt.Client(clientid, keepalive, username, password, cleansession) end
 
@@ -820,7 +830,7 @@ function MQTT32:close() end
 ---Connects to the broker specified by the given host, port, and secure options.
 ---@param host string host host, domain or IP (string)
 ---@param port? integer port broker port (number), default 1883
----@param secure? boolean|table secure either an interger with 0/1 for false/true (default 0), or a table with optional entries
+---@param secure? boolean|table secure either an interger with 0/1 for `false/true` (default 0), or a table with optional entries
 ---*ca_cert CA* certificate data in PEM format for server verify with SSL
 ---*client_cert* client certificate data in PEM format for SSL mutual authentication
 ---*client_key* client private key data in PEM format for SSL mutual authentication Note that both client_cert and client_key have to be provided for mutual authentication.
@@ -939,12 +949,12 @@ function NETSOCKET:dns(domain, fun) end
 
 ---Retrieve port and ip of remote peer.
 ---@return integer port or nil if not connected
----@return string ip or nil if not connected
+---@return string --ip or `nil` if not connected
 function NETSOCKET:getpeer() end
 
 ---Retrieve local port and ip of socket.
 ---@return integer port or nil if not connected
----@return string ip or nil if not connected
+---@return string --ip or `nil` if not connected
 function NETSOCKET:getaddr() end
 
 ---Throttle data reception by placing a request to block the TCP receive function. net.socket:hold()
@@ -999,12 +1009,12 @@ function UDPSOCKET:dns(domain, fun) end
 
 ---Retrieve local port and ip of socket.
 ---@return integer port or nil if not connected
----@return string ip or nil if not connected
+---@return string --ip or nil if not connected
 function UDPSOCKET:getaddr() end
 
 ---Gets the IP address of the DNS server used to resolve hostnames.
 ---@param dns_index integer|'0'|'1'
----@return string IP address (string) of DNS server
+---@return string --IP address (string) of DNS server
 function net.dns.getdnsserver(dns_index) end
 
 ---Resolve a hostname to an IP address.
@@ -1088,7 +1098,7 @@ function node.info() end
 function node.input(str) end
 
 ---Redirects the Lua interpreter output to a callback function. Optionally also prints it to the serial console.
----@param fun function `output_fn(str)` a function accept every output as str, and can send the output to a socket (or maybe a file). *nil* to unregister the previous function.
+---@param fun function `output_fn(str)` a function accept every output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
 ---@param serial_output integer
 ---|>' 1' #output also sent out the serial port.
 ---|' 0' #no serial output.
@@ -1096,7 +1106,7 @@ function node.input(str) end
 function node.output(fun, serial_output) end
 
 ---Redirects the debugging output from the Espressif SDK to a callback function allowing it to be captured or processed in Lua.
----@param fun function `function(str)` a function accepts debugging output as str, and can send the output to a socket (or maybe a file). *nil* to unregister the previous function.
+---@param fun function `function(str)` a function accepts debugging output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
 function node.osoutput(fun) end
 
 ---Restarts the chip.
@@ -1118,7 +1128,7 @@ function node.setcpufreq(speed) end
 ---|'2' #discard Local and Upvalue debug info
 ---|'3' #discard Local, Upvalue and line-number debug info
 ---@param fun? function `function` a compiled function to be stripped per setfenv except 0 is not permitted.
----@return integer|nil --If invoked without arguments, returns the current level settings. Otherwise, *nil* is returned.
+---@return integer|nil --If invoked without arguments, returns the current level settings. Otherwise, `nil` is returned.
 function node.stripdebug(level, fun) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
@@ -1165,12 +1175,12 @@ function otaupgrade.info() end
 function otaupgrade.commence() end
 
 ---Write a chunk of application firmware data to the correct partition and location.
----@param data string |any
+---@param data string|any
 ---@return nil
 function otaupgrade.write(data) end
 
 ---Finalises the upgrade, and optionally reboots into the new application firmware right away.
----@param reboot integer |nil
+---@param reboot integer|nil
 ---@return nil
 function otaupgrade.complete(reboot) end
 
@@ -1233,7 +1243,7 @@ function ow.reset_search(pin) end
 
 ---Looks for the next device.
 ---@param pin integer
----@return string |nil
+---@return string|nil
 function ow.search(pin) end
 
 ---Issues a 1-Wire rom select command. Make sure you do the ow.reset(pin) first.
@@ -1440,12 +1450,12 @@ local decoder = {}
 ---*opts* an optional table of options. The possible entries are:
 ---`depth` the maximum encoding depth needed to encode the table. The default is 20.
 ---`null` the string value to treat as null.
----@return sjsonenc obj A sjson.encoder object.
+---@return sjsonenc --A sjson.encoder object.
 function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
 ---@param size? integer an optional value for the number of bytes to return. The default is 1024.
----@return string|nil A `string` of up to size bytes, or `nil` if the encoding is complete and all data has been returned.
+---@return string|nil --A `string` of up to size bytes, or `nil` if the encoding is complete and all data has been returned.
 function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
@@ -1465,7 +1475,7 @@ function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
 ---@param str string the next piece of JSON encoded data
----@return any | nil The constructed Lua object or nil if the decode is not yet complete.
+---@return any | nil --The constructed Lua object or nil if the decode is not yet complete.
 function decoder:write(str) end
 
 ---This gets the decoded Lua object, or raises an error if the decode is not yet complete.
@@ -1558,19 +1568,19 @@ struct = {}
 ---@param fmt string The format string
 ---@param d1 any The first data item to be packed
 ---@param d2 any The second data item to be packed etc.
----@return string s The packed string.
+---@return string --The packed string.
 function struct.pack (fmt, d1, d2, ...) end
 
 ---Returns the values packed in string s according to the format string `fmt`.
 ---@param fmt string The format string
 ---@param s string  The string holding the data to be unpacked
 ---@param offset? integer The position to start in the string (default is 1)
----@return any d All the unpacked data.
+---@return any --All the unpacked data.
 function struct.unpack (fmt, s, offset) end
 
 ---Returns the size of a string formatted according to the format string `fmt`.
 ---@param fmt string The format string
----@return integer sz The size of the string that would be output in a pack operation with this format string.
+---@return integer --The size of the string that would be output in a pack operation with this format string.
 function struct.size (fmt) end
 
 --*** TIME ***
@@ -1585,7 +1595,7 @@ time = {}
 --- `hour`
 --- `min`
 --- `sec`
----@return integer n number of seconds since the Epoch
+---@return integer --number of seconds since the Epoch
 function time.cal2epoch(calendar) end
 
 ---Converts timestamp in Unix epoch to calendar format
@@ -1634,7 +1644,7 @@ function time.getlocal() end
 function time.initntp(ntpAddr) end
 
 ---Checks if NTP client is enabled.
----@return boolean b `true' if NTP client is enabled.
+---@return boolean --`true' if NTP client is enabled.
 function time.ntpenabled() end
 
 ---Stops NTP client.
@@ -1780,7 +1790,7 @@ function uart.on(id, method, number_end_char, fun, run_input) end
 --- `cts_inverse` boolean. Inverse CTS pin. Default: false
 --- `rts_inverse` boolean. Inverse RTS pin. Default: false
 --- `flow_control` int. Combination of uart.FLOWCTRL_NONE, uart.FLOWCTRL_CTS, uart.FLOWCTRL_RTS. Default: uart.FLOWCTRL_NONE
----@return number n configured baud rate
+---@return number --configured baud rate
 function uart.setup(id, baud, databits, parity, stopbits, echo_or_pins) end
 
 ---Returns the current configuration parameters of the UART.
@@ -1793,7 +1803,7 @@ function uart.getconfig(id) end
 
 ---Start the UART.
 ---@param id integer uart id, except console uart
----@return boolean b true if uart is started.
+---@return boolean --`true` if uart is started.
 function uart.start(id) end
 
 ---Stop the UART.
@@ -1830,7 +1840,7 @@ wifi = {}
 function wifi.getchannel() end
 
 ---Gets WiFi operation mode.
----@return integer mod The WiFi mode, as one of the wifi.STATION, wifi.SOFTAP, wifi.STATIONAP or wifi.NULLMODE constants.
+---@return integer --The WiFi mode, as one of the wifi.STATION, wifi.SOFTAP, wifi.STATIONAP or wifi.NULLMODE constants.
 function wifi.getmode() end
 
 ---Configures the WiFi mode to use.
@@ -1839,10 +1849,11 @@ function wifi.getmode() end
 ---|'wifi.SOFTAP'  #for when the device is acting only as an access point.
 ---|'wifi.STATIONAP' #is the combination of wifi.STATION and wifi.SOFTAP
 ---|'wifi.NULLMODE' #disables the WiFi interface(s).
----@param save? boolean choose whether or not to save wifi mode to flash
+---@param save? boolean
 ---|>' true' #WiFi mode configuration will be retained through power cycle.
 ---|' false' #WiFi mode configuration will not be retained through power cycle.
----@return any cm current mode after setup
+-- choose whether or not to save wifi mode to flash
+---@return any --current mode after setup
 function wifi.mode(mode, save) end
 
 ---Starts the WiFi interface(s).
@@ -1886,7 +1897,7 @@ function wifi.sta.disconnect() end
 ---Registers callbacks for WiFi station status events.
 ---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"authmode_changed"'|'"got_ip"'
 ---@param callback function|' function(event, info) end'
----callback function(event, info) to perform when event occurs, or *nil* to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
+---callback function(event, info) to perform when event occurs, or `nil` to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
 -- Event information provided for each event is as follows:
 --`start`: no additional info
 --`stop`: no additional info
@@ -2083,5 +2094,5 @@ function buffer:shift(value, mode, i, j) end
 ---This implements the extraction function like string.sub. The indexes are in leds and all the same rules apply.
 ---@param i integer This is the start of the extracted data. Negative values can be used.
 ---@param j? integer this is the end of the extracted data. Negative values can be used. The default is -1.
----@return any buff A buffer containing the extracted piece.
+---@return any --A buffer containing the extracted piece.
 function buffer:sub(i, j) end
