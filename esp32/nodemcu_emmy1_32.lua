@@ -2,22 +2,22 @@
 adc = {}
 
 ---The configuration is in effect for all channels of ADC1.
----@param adc_number integer|'adc.ADC1'
----@param bits integer|' 9'|' 10'|' 11'|' 12'
+---@param adc_number integer|'adc.ADC1' #Only adc.ADC1 now
+---@param bits integer|' 9'|' 10'|' 11'|' 12' #One of 9/10/11/12.
 ---@return nil
 function adc.setwidth(adc_number, bits) end
 
 ---Configuration ADC1 capture attenuation of channels.
----@param adc_number integer|'adc.ADC1'
+---@param adc_number integer|'adc.ADC1' #Only adc.ADC1 now
 ---@param channel integer
----|' 0' #GPIO36
----|' 1' #GPIO37
----|' 2' #GPIO38
----|' 3' #GPIO39
----|' 4' #GPIO32
----|' 5' #GPIO33
----|' 6' #GPIO34
----|' 7' #GPIO35
+---|' 0'#GPIO36
+---|' 1'#GPIO37
+---|' 2'#GPIO38
+---|' 3'#GPIO39
+---|' 4'#GPIO32
+---|' 5'#GPIO33
+---|' 6'#GPIO34
+---|' 7'#GPIO35
 ---@param atten number
 ---|' adc.ATTEN_0db' #Vinp will be reduced to about 1/1 (1.1V when VDD_A=3.3V)
 ---|' adc.ATTEN_2_5db' #Vinp will be reduced to about 1/1.34 (1.5V when VDD_A=3.3V)
@@ -27,8 +27,8 @@ function adc.setwidth(adc_number, bits) end
 function adc.setup(adc_number, channel, atten) end
 
 ---Samples the ADC. You should to call `setwidth()` before `read()`.
----@param adc_number integer|'adc.ADC1'
----@param channel integer|' 0'|' 1'|' 2'|' 3'|' 4'|' 5'|' 6'|' 7'
+---@param adc_number integer|'adc.ADC1' #Only adc.ADC1 now
+---@param channel integer|' 0'|' 1'|' 2'|' 3'|' 4'|' 5'|' 6'|' 7' #0 to 7 for adc.ADC1
 ---@return number --the sampled value
 function adc.read(adc_number, channel) end
 
@@ -141,7 +141,7 @@ function bthci.adv.enable(onoff, callback) end
 function bthci.adv.setdata(advbytes, callback) end
 
 ---Configures advertisement parameters.
----@param paramtable table #paramtable a table with zero or more of the following fields:
+---@param paramtable table a table with zero or more of the following fields:
 --**interval_min** value in units of 0.625ms. Default 0x0400 (0.64s).
 --**interval_max** value in units of 0.625ms. Default 0x0800 (1.28s).
 --**type** advertising type, one of following constants:
@@ -248,17 +248,17 @@ function crypto.new_hmac(algo, key) end
 dac = {}
 
 ---Disables DAC output on the related GPIO.
----@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2'
+---@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2' #DAC channel, one of
 ---@return nil
 function dac.disable(channel) end
 
 ---Enables DAC output on the related GPIO.
----@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2'
+---@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2' # DAC channel, one of
 ---@return nil
 function dac.enable(channel) end
 
 ---Sets the output value of the DAC.
----@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2'
+---@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2' DAC channel
 ---@param value number output value
 ---@return nil
 function dac.write(channel, value) end
@@ -267,7 +267,7 @@ function dac.write(channel, value) end
 dht = {}
 
 ---Read DHT11 humidity temperature combo sensor.
----@param pin integer
+---@param pin integer IO index
 ---@return integer status as defined in Constants
 ---@return number temp temperature
 ---@return number humi humidity
@@ -276,7 +276,7 @@ dht = {}
 function dht.read11(pin) end
 
 ---Read DHT21/22/33/43 and AM2301/2302/2303 humidity temperature combo sensors.
----@param pin integer
+---@param pin integer IO index
 ---@return integer status as defined in Constants
 ---@return number temp temperature
 ---@return number humi humidity
@@ -292,17 +292,17 @@ encoder = {}
 ---@return string --A Base64 encoded string.
 function encoder.toBase64(binary) end
 
----Decodes a Base64 representation of a (binary) Lua string back into the original string.
+---Decodes a Base64 representation of a (binary) Lua string back into the original string. An error is thrown if the string is not a valid base64 encoding.
 ---@param b64 string Base64 encoded input string
 ---@return string --The decoded Lua (binary) string.
 function encoder.fromBase64(b64) end
 
----Provides an ASCII hex representation of a (binary) Lua string.
+---Provides an ASCII hex representation of a (binary) Lua string. Each byte in the input string is represented as two hex characters in the output.
 ---@param binary string binary input string to get hex representation for
 ---@return string --An ASCII hex string.
 function encoder.toHex(binary) end
 
----Returns the Lua binary string decode of a ASCII hex string.
+---Returns the Lua binary string decode of a ASCII hex string. Each byte in the output string is represented as two hex characters in the input. An error is thrown if the string is not a valid base64 encoding.
 ---@param hexstr string hexstr An ASCII hex string.
 ---@return string --Decoded string of hex representation.
 function encoder.fromHex(hexstr) end
@@ -509,10 +509,10 @@ gpio = {}
 ---    gpio.IN_OUT
 ---**opendrain** 1 enables opendrain mode, defaults to 0 if omitted
 ---**pull** enable pull-up and -down resistors, one of
----    gpio.FLOATING --disables both pull-up and -down
----    gpio.PULL_UP --enables pull-up and disables pull-down
----    gpio.PULL_DOWN --enables pull-down and disables pull-up
----    gpio.PULL_UP_DOWN --enables both pull-up and -down
+---    gpio.FLOATING -- disables both pull-up and -down
+---    gpio.PULL_UP -- enables pull-up and disables pull-down
+---    gpio.PULL_DOWN -- enables pull-down and disables pull-up
+---    gpio.PULL_UP_DOWN -- enables both pull-up and -down
 ---@return nil
 function gpio.config(tbl) end
 
@@ -533,7 +533,7 @@ function gpio.read(pin) end
 function gpio.set_drive(pin, strength) end
 
 ---Establish or clear a callback function to run on interrupt for a GPIO.
----@param pin integer
+---@param pin integer GPIO
 ---@param type? number
 ---|' gpio.INTR_DISABLE' #or `nil` to disable interrupts on this pin (in which case `callback` is ignored and should be `nil` or omitted)
 ---|' gpio.INTR_UP' #for trigger on rising edge
@@ -541,14 +541,14 @@ function gpio.set_drive(pin, strength) end
 ---|' gpio.INTR_UP_DOWN' #for trigger on both edges
 ---|' gpio.INTR_LOW' #for trigger on low level
 ---|' gpio.INTR_HIGH' #for trigger on high level
----@param callback? function optional function to be called when trigger fires. If `nil` or omitted (and `type` is not `gpio.INTR_DISABLE`) then any previously-set callback will continue to be used. Parameters are:
+---@param callback? function optional function to be called when trigger fires. If `nil` or omitted (and type is not `gpio.INTR_DISABLE`) then any previously-set callback will continue to be used. Parameters are:
 --    pin
 --    level
 ---@return nil
 function gpio.trig(pin , type , callback) end
 
 ---Configuring wake-from-sleep-on-GPIO-level.
----@param pin integer
+---@param pin integer GPIO
 ---@param level number
 ---|' gpio.INTR_NONE'  #to disable wake-up
 ---|' gpio.INTR_LOW'   #for wake-up on low level
@@ -558,7 +558,7 @@ function gpio.wakeup(pin, level) end
 
 ---Set digital GPIO pin value.
 ---@param pin integer pin to write
----@param level integer|' 1'|' 0'
+---@param level integer|' 1'|' 0' #1 or 0
 ---@return nil
 function gpio.write(pin, level) end
 
@@ -596,7 +596,7 @@ function HTTP:on(event, callback) end
 function HTTP:request() end
 
 ---Sets the connection method.
----@param method? integer|'http.GET'|'http.POST'|'http.DELETE'|'http.HEAD'
+---@param method? integer|'http.GET'|'http.POST'|'http.DELETE'|'http.HEAD' #method one of
 ---@return nil
 function HTTP:setmethod(method) end
 
@@ -814,31 +814,42 @@ ledc = {}
 local channel = {}
 
 ---Configures a PIN to be controlled by the LEDC system.
----@param tbl table
----@return ledc obj ledc.channel
+---@param tbl table List of configuration tables:
+--**gpio** one or more (given as list) pins, see GPIO Overview
+--**bits** Channel duty depth. Defaults to ledc.TIMER_13_BIT. Otherwise one of
+--    ledc.TIMER_10_BIT  ...   ledc.TIMER_15_BIT
+--**mode** High-speed mode or low-speed mode
+--    ledc.HIGH_SPEED or ledc.LOW_SPEED
+--**timer** The timer source of channel
+--    ledc.TIMER_0  ...  ledc.TIMER_3
+--**channel** The timer source of channel
+--    ledc.CHANNEL_0  ...  ledc.CHANNEL_7
+--**frequency** Timer frequency(Hz)
+--**duty** Channel duty, the duty range is [0, (2**bit_num) - 1]. Example: if --ledc.TIMER_13_BIT is used maximum value is 4096 x 2 -1 = 8091
+---@return ledc --ledc.channel
 function ledc.newChannel(tbl) end
 
 ---Disable LEDC output, and set idle level.
----@param idleLevel integer|'ledc.IDLE_LOW'|'ledc.IDLE_HIGH'
+---@param idleLevel integer|'ledc.IDLE_LOW'|'ledc.IDLE_HIGH' #Set output idle level after LEDC stops.
 ---@return nil
 function channel:stop(idleLevel) end
 
 ---Set channel frequency (Hz)
----@param frequency number
+---@param frequency number What frequency should be set
 ---@return nil
 function channel:setfreq(frequency) end
 
 ---Get channel frequency (Hz)
----@return number
+---@return number --0 error; Others current LEDC frequency
 function channel:getfreq() end
 
 ---Set channel duty
----@param duty number
+---@param duty number What duty should be set
 ---@return nil
 function channel:setduty(duty) end
 
 ---Get channel duty
----@return number
+---@return number --(-1) parameter error; Others current LEDC duty
 function channel:getduty() end
 
 ---Resets the timer
@@ -856,7 +867,7 @@ function channel:resume() end
 ---Set LEDC fade function, with a limited time.
 ---@param targetDuty number Target duty of fading.
 ---@param maxFadeTime number The maximum time of the fading ( ms ).
----@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE'
+---@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE' #Whether to block until fading done.
 ---@return nil
 function channel:fadewithtime(targetDuty, maxFadeTime, wait) end
 
@@ -864,17 +875,17 @@ function channel:fadewithtime(targetDuty, maxFadeTime, wait) end
 ---@param targetDuty number Target duty of fading.
 ---@param scale number Controls the increase or decrease step scale.
 ---@param cycleNum integer Increase or decrease the duty every cycle_num cycles
----@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE'
+---@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE' #Whether to block until fading done.
 ---@return nil
 function channel:fadewithstep(targetDuty, scale, cycleNum, wait) end
 
 ---Set LEDC fade function.
 ---@param duty number Set the start of the gradient duty.
----@param direction integer|'ledc.FADE_DECREASE'|'ledc.FADE_INCREASE'
+---@param direction integer|'ledc.FADE_DECREASE'|'ledc.FADE_INCREASE' #Set the direction of the gradient.
 ---@param scale number Set gradient change amplitude.
 ---@param cycleNum number Set how many LEDC tick each time the gradient lasts.
 ---@param stepNum number  Set the number of the gradient.
----@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE'
+---@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE' #Whether to block until fading done.
 ---@return nil
 function channel:fade(duty, direction, scale, cycleNum, stepNum, wait) end
 
