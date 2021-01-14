@@ -501,8 +501,8 @@ local tObj = {}
 ---@return nil
 function tmr.delay(us) end
 
----Returns the system counter, which counts in microseconds.
----@return number val the current value of the system counter
+---Returns the system counter, which counts in microseconds. Limited to 31 bits, after that it wraps around back to zero.
+---@return number --the current value of the system counter
 function tmr.now() end
 
 ---Provides a simple software watchdog, which needs to be re-armed or disabled before it expires, or the system will be restarted.
@@ -510,57 +510,59 @@ function tmr.now() end
 ---@return nil
 function tmr.softwd(timeout_s) end
 
----Returns the system uptime, in seconds.
----@return number time the system uptime, in seconds, possibly wrapped around
+---Returns the system uptime, in seconds. Limited to 31 bits, after that it wraps around back to zero.
+---@return number --the system uptime, in seconds, possibly wrapped around
 function tmr.time() end
 
 ---Feed the system watchdog.
 ---@return nil
 function tmr.wdclr() end
 
----Get value of CPU CCOUNT register which contains CPU ticks.
----@return number val The current value of CCOUNT register.
+---Get value of CPU CCOUNT register which contains CPU ticks. The register is 32-bit and rolls over.
+---Converting the register's CPU ticks to us is done by dividing it to 80 or 160 (CPU80/CPU160) i.e. tmr.ccount() / node.getcpufreq().
+---Register arithmetic works without need to account for roll over, unlike tmr.now(). Because of same reason when CCOUNT is having its 32nd bit set, it appears in Lua as negative number.
+---@return number --The current value of CCOUNT register.
 function tmr.ccount() end
 
 ---Creates a dynamic timer object
----@return tmr obj timer object
+---@return tmr TimerObject timer object
 function tmr.create() end
 
 ---@alias tmr_m
----|' tmr.ALARM_AUTO' #automatically repeating alarm
----|' tmr.ALARM_SINGLE' #a one-shot alarm
+---|' tmr.ALARM_SINGLE' #a one-shot alarm (and no need to call unregister())
 ---|' tmr.ALARM_SEMI' #manually repeating alarm
----This is a convenience function combining tobj:register() and tobj:start() into a single call.
----@param interval number
----@param mode tmr_m
----@param foo function | " function(t) end"
----@return boolean b true if the timer was started, false on error
+---|' tmr.ALARM_AUTO' #automatically repeating alarm (call start() to restart)
+
+---This is a convenience function combining `tobj:register()` and `tobj:start()` into a single call.
+---@param interval number timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
+---@param mode tmr_m timer mode
+---@param foo function | " function(t) end" #callback function which is invoked with the timer object as an argument
+---@return boolean --`true` if the timer was started, `false` on error
 function tObj:alarm(interval, mode, foo) end
 
 ---Changes a registered timer's expiry interval.
----@param interval_ms integer  new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
+---@param interval_ms integer new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@return nil
 function tObj:interval(interval_ms) end
 
----Configures a timer and registers the callback function to call on expiry.
----@param interval_ms integer  new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
----@param mode tmr_m
----@param foo function |" function() end"
+---Configures a timer and registers the callback function to call on expiry. Note that registering does not start the alarm.
+---@param interval_ms integer new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
+---@param mode tmr_m timer mode
+---@param foo function |" function() end" #callback function which is invoked with the timer object as an argument
 ---@return nil
 function tObj:register(interval_ms, mode, foo) end
 
----Starts or restarts a previously configured timer.
+---Starts or restarts a previously configured timer. If the timer is running the timer is restarted only when restart parameter is `true`. Otherwise `false` is returned signaling error.
 ---@param restart? boolean optional boolean parameter forcing to restart already running timer
----@return boolean b true if the timer was (re)started, false on error
+---@return boolean --true if the timer was (re)started, false on error
 function tObj:start(restart) end
 
 ---Checks the state of a timer.
----@return boolean|integer|nil
--- If the specified timer is registered, returns whether it is currently started and its mode. If the timer is not registered, nil is returned.
+---@return boolean|integer|nil -- If the specified timer is registered, returns whether it is currently started and its mode. If the timer is not registered, `nil` is returned.
 function tObj:state() end
 
----Stops a running timer, but does *not* unregister it.
----@return boolean b true if the timer was stopped, false on error
+---Stops a running timer, but does *not* unregister it. A stopped timer can be restarted with `tobj:start()`.
+---@return boolean --`true` if the timer was stopped, `false` on error
 function tObj:stop() end
 
 ---Stops the timer (if running) and unregisters the associated callback.
@@ -624,39 +626,40 @@ uart = {}
 
 ---Change UART pin assignment.
 ---@param on integer
----`0` for standard pins
----`1` to use alternate pins GPIO13 and GPIO15
+-- `0` for standard pins
+-- `1` to use alternate pins GPIO13 and GPIO15
 ---@return nil
 function uart.alt(on) end
 
----Sets the callback function to handle UART events.
----@param method string|'"data"'
----`"data"`, data has been received on the UART. To unregister the callback, provide only the "data" parameter.
----@param number_end_char? any
----`number` if n=0, will receive every char in buffer
----`number` if n<255, the callback is called when n chars are received
----`end_char` if one char "c", the callback will be called when "c" is encountered, or max n=255 received
----@param fun? function|' function(data) end'
----@param run_input? integer|' 0'|' 1'
+---Sets the callback function to handle UART events. To unregister the callback, provide only the `"data"` parameter.
+---@param method string|'"data"' `"data"`, data has been received on the UART.
+---@param number_or_endChar? any number or end char
+--**number** if n=0, will receive every char in buffer
+--**number** if n<255, the callback is called when n chars are received
+--**end_char** if one char "c", the callback will be called when "c" is encountered, or max n=255 received
+---@param fun? function|' function(data) end' #callback function, event `"data"` has a callback like this: `function(data) end`
+---@param run_input? integer
+---|' 0' #input from UART will not go into Lua interpreter, and this can accept binary data.
+---|' 1' #input from UART is treated as a text stream with the DEL, BS, CR and LF characters processed as normal. Completed lines will be passed to the Lua interpreter for execution.
 ---@return nil
-function uart.on(method, number_end_char, fun, run_input) end
+function uart.on(method, number_or_endChar, fun, run_input) end
 
 ---(Re-)configures the communication parameters of the UART.
 ---@param id integer UART id (0 or 1).
----@param baud integer|' 300'|' 600'|' 1200'|' 2400'|' 4800'|' 9600'|' 19200'|' 31250'|' 34400'|' 57600'|' 74880'|' 115200'|' 230000'|' 256000'|' 460800'|' 921600'|' 1843200'|' 3686400'
----@param databits integer|' 8'|' 7'|' 6'|' 5'
----@param parity integer|' uart.PARITY_NONE'|' uart.PARITY_ODD'|' uart.PARITY_EVEN'
----@param stopbits integer|' uart.STOPBITS_1'|' uart.STOPBITS_1_5'|' uart.STOPBITS_2'
+---@param baud integer|' 300'|' 600'|' 1200'|' 2400'|' 4800'|' 9600'|' 19200'|' 31250'|' 34400'|' 57600'|' 74880'|' 115200'|' 230000'|' 256000'|' 460800'|' 921600'|' 1843200'|' 3686400' #300 - 3686400
+---@param databits integer|' 8'|' 7'|' 6'|' 5' #5 - 8
+---@param parity integer|' uart.PARITY_NONE'|' uart.PARITY_ODD'|' uart.PARITY_EVEN' #none, even, odd
+---@param stopbits integer|' uart.STOPBITS_1'|' uart.STOPBITS_1_5'|' uart.STOPBITS_2' #1, 1.5, 2
 ---@param echo integer 0 - disable echo, 1 - enable echo (default if omitted)
----@return number br configured baud rate
+---@return number baudrate configured baud rate
 function uart.setup(id, baud, databits, parity, stopbits, echo) end
 
 ---Returns the current configuration parameters of the UART.
 ---@param id integer UART id (0 or 1).
 ---@return number baud one of 300, ..., 3686400
 ---@return number databits one of 5, 6, 7, 8
----@return number parity uart.PARITY_NONE | uart.PARITY_ODD | or uart.PARITY_EVEN
----@return number stopbits uart.STOPBITS_1 | uart.STOPBITS_1_5 | or uart.STOPBITS_2
+---@return number parity uart.PARITY_NONE | uart.PARITY_ODD | uart.PARITY_EVEN
+---@return number stopbits uart.STOPBITS_1 | uart.STOPBITS_1_5 | uart.STOPBITS_2
 function uart.getconfig(id) end
 
 ---Write string or byte to the UART.
@@ -668,8 +671,8 @@ function uart.write(id, data1, ...) end
 
 ---Report the depth, in bytes, of TX or RX hardware queues associated with the UART.
 ---@param id integer UART id (0 or 1).
----@param dir integer|' uart.DIR_RX'|' uart.DIR_TX'
----@return integer num The number of bytes in the selected FIFO.
+---@param dir integer|' uart.DIR_RX'|' uart.DIR_TX' #direction
+---@return integer --The number of bytes in the selected FIFO.
 function uart.fifodepth(id, dir) end
 
 --*** ucg Module is in nodemcu-emmy3.lua ***
@@ -680,27 +683,30 @@ websocket = {}
 ---@class websocket
 local ws = {}
 
----Creates a new websocket client.
+---Creates a new websocket client. This client should be stored in a variable and will provide all the functions to handle a connection. When the connection becomes closed, the same client can still be reused - the callback functions are kept - and you can connect again to any server.
+---Before disposing the client, make sure to call `ws:close()`.
 ---@return websocket websocketclient
 function websocket.createClient() end
 
----Closes a websocket connection.
+---Closes a websocket connection. he client issues a close frame and attempts to gracefully close the websocket. If server doesn't reply, the connection is terminated after a small timeout. This function can be called even if the websocket isn't connected.
+--- This function must always be called before disposing the reference to the websocket client.
 ---@return nil
 function ws:close() end
 
 ---Configures websocket client instance.
----@param params table with configuration parameters.
+---@param params table with configuration parameters.Following keys are recognized:
+--**headers** table of extra request headers affecting every request
 ---@return nil
 function ws:config(params) end
 
 ---Attempts to establish a websocket connection to the given URL.
----@param url any  the URL for the websocket.
----@return nil
+---@param url string the URL for the websocket.
+---@return nil --`nil`. If it fails, an error will be delivered via `websocket:on("close", handler)`.
 function ws:connect(url) end
 
----Registers the callback function to handle websockets events
----@param eventName integer|'connection'|'receive'|'close'
----@param fun function|' funtion(ws, ...) end'
+---Registers the callback function to handle websockets events (there can be only one handler function registered per event type).
+---@param eventName integer|'connection'|'receive'|'close' #the type of websocket event to register the callback function
+---@param fun function|' funtion(ws, ...) end' #callback function. The function first parameter is always the **websocketclient**. Other arguments are required depending on the event type. If `nil`, any previously configured callback is unregistered.
 ---@return nil
 function websocket:on(eventName, fun) end
 
@@ -736,11 +742,11 @@ function wifi.getchannel() end
 
 ---Get the current country info.
 ---@return table
---- `country_info` this table contains the current country info configuration
---- `country` Country code, 2 character string.
---- `start_ch` Starting channel.
---- `end_ch` Ending channel.
---- `policy` The policy parameter determines which country info configuration to use, country info given to station by AP or local configuration.
+--**country_info** this table contains the current country info configuration
+--**country** Country code, 2 character string.
+--**start_ch** Starting channel.
+--**end_ch** Ending channel.
+--**policy** The policy parameter determines which country info configuration to use, country info given to station by AP or local configuration.
 ---    `0` Country policy is auto, NodeMCU will use the country info provided by AP that the station is connected to.
 ---    `1` Country policy is manual, NodeMCU will use locally configured country info.
 function wifi.getcountry() end
