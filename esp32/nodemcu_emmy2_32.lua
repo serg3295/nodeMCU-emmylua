@@ -2,125 +2,132 @@
 otaupgrade = {}
 
 ---The boot info and application state and version info can be queried with this function.
----@return string
----@return string
----@return table
+---@return string --the name of the partition of the running application
+---@return string --the name of the partition currently marked for boot next
+---@return table --a table whose keys are the names of OTA partitions and corresponding values are tables containing:
+--**state** one of *new, testing, valid, invalid, aborted* or possibly *undefined*
+--**name** the application name, typically "NodeMCU"
+--**date** the build date
+--**time** the build time
+--**version** the build version, as set by the *PROJECT_VER* variable during build
+--**secure_version** the secure version number, if secure boot is enabled
+--**idf_version** the IDF version
 function otaupgrade.info() end
 
 ---Wipes the spare application partition and prepares to receive the new application firmware.
----@return nil
+---@return nil --`nil`. A Lua error may be raised if the OTA upgrade cannot be commenced for some reason (such as due to incorrect partition setup).
 function otaupgrade.commence() end
 
----Write a chunk of application firmware data to the correct partition and location.
----@param data string|any
----@return nil
+---Write a chunk of application firmware data to the correct partition and location. Data must be streamed sequentially, the IDF does not support out-of-order data as would be the case from e.g. bittorrent.
+---@param data string a string of binary data
+---@return nil --`nil`. A Lua error may be raised if the data can not be written, e.g. due to the data not being a valid OTA image (the IDF performs some checks in this regard).
 function otaupgrade.write(data) end
 
 ---Finalises the upgrade, and optionally reboots into the new application firmware right away.
----@param reboot integer|nil
----@return nil
+---@param reboot integer|nil `1` to reboot into the new firmware immediately, `nil` to keep running
+---@return nil --`nil`. A Lua error may be raised if the image does not pass validation, or no data has been written to the image at all.
 function otaupgrade.complete(reboot) end
 
----When the installed boot loader is built with rollback support,
----a new application image is by default only booted once.
+---When the installed boot loader is built with rollback support, a new application image is by default only booted once. During this "test run" it can perform whatever checks is appropriate (like testing whether it can still reach the update server), and if satisfied can mark itself as valid. Without being marked valid, upon the next reboot the system would "roll back" to the previous version instead.
 ---@return nil
 function otaupgrade.accept() end
 
----A new firmware may decide that it is not performing as expected,
----and request an explicit rollback to the previous version.
+---A new firmware may decide that it is not performing as expected, and request an explicit rollback to the previous version. If the call to this function succeeds, the system will reboot without returning from the call.
+--Note that it is also possible to roll back to a previous firmware version even after the new version has called `otaupgrade.accept()`.
 function otaupgrade.rollback() end
 
 --*** 1-WIRE ***
 ow = {}
 
 ---Computes the 1-Wire CRC16 and compare it against the received CRC.
----@param buf string
----@param inverted_crc0 any
----@param inverted_crc1 any
----@param crc? any
----@return boolean
+---@param buf string string value, data to be calculated check sum in string
+---@param inverted_crc0 number LSB of received CRC
+---@param inverted_crc1 number MSB of received CRC
+---@param crc? number CRC starting value (optional)
+---@return boolean --`true` if the CRC matches, `false` otherwise
 function ow.check_crc16(buf, inverted_crc0, inverted_crc1, crc) end
 
 ---Computes a Dallas Semiconductor 16 bit CRC.
----@param buf any
----@param crc? any
----@return number
+---@param buf number string value, data to be calculated check sum in string
+---@param crc? number CRC starting value (optional)
+---@return number --the CRC16 as defined by Dallas Semiconductor
 function ow.crc16(buf, crc) end
 
 ---Computes a Dallas Semiconductor 8 bit CRC, these are used in the ROM and scratchpad registers.
----@param buf string
----@return number
+---@param buf string string value, data to be calculated check sum in string
+---@return number --CRC result as byte
 function ow.crc8(buf) end
 
----Stops forcing power onto the bus.
----@param pin integer
+---Stops forcing power onto the bus. You only need to do this if you used the 'power' flag to ow.write() or used a ow.write_bytes() and aren't about to do another read or write.
+---@param pin integer IO index
 ---@return nil
 function ow.depower(pin) end
 
 ---Reads a byte.
----@param pin integer
----@return integer
+---@param pin integer IO index
+---@return integer --byte read from slave device
 function ow.read(pin) end
 
 ---Reads multi bytes.
----@param pin integer
----@param size any
----@return string
+---@param pin integer IO index,
+---@param size number number of bytes to be read from slave device (up to 256)
+---@return string --bytes read from slave device
 function ow.read_bytes(pin, size) end
 
 ---Performs a 1-Wire reset cycle.
----@param pin integer
+---@param pin integer IO index
 ---@return integer
+---|'1' #if a device responds with a presence pulse
+---|'0' #if there is no device or the bus is shorted or otherwise held low for more than 250 µS
 function ow.reset(pin) end
 
 ---Clears the search state so that it will start from the beginning again.
----@param pin integer
+---@param pin integer IO index
 ---@return nil
 function ow.reset_search(pin) end
 
 ---Looks for the next device.
----@param pin integer
----@return string|nil
+---@param pin integer IO index
+---@return string|nil --`rom_code` string with length of 8 upon success. It contains the rom code of slave device. Returns `nil` if search was unsuccessful.
 function ow.search(pin) end
 
----Issues a 1-Wire rom select command. Make sure you do the ow.reset(pin) first.
----@param pin integer
----@param rom string
+---Issues a 1-Wire rom select command. Make sure you do the `ow.reset(pin)` first.
+---@param pin integer IO index
+---@param rom string string value, len 8, rom code of the slave device
 ---@return nil
 function ow.select(pin, rom) end
 
 ---Sets a pin in onewire mode.
----@param pin integer
+---@param pin integer IO index
 ---@return nil
 function ow.setup(pin) end
 
 ---Issues a 1-Wire rom skip command, to address all on bus.
----@param pin integer
+---@param pin integer IO index
 ---@return nil
 function ow.skip(pin) end
 
----Sets up the search to find the device type family_code.
----The search itself has to be initiated with a subsequent call to ow.search().
----@param pin integer
----@param family_code integer
+---Sets up the search to find the device type family_code. The search itself has to be initiated with a subsequent call to `ow.search()`.
+---@param pin integer IO index
+---@param family_code integer byte for family code
 ---@return nil
 function ow.target_search(pin, family_code) end
 
----Writes a byte. If power is 1 then the wire is held high at the end for parasitically powered devices.
----@param pin integer
----@param v integer
----@param power integer
+---Writes a byte. If power is 1 then the wire is held high at the end for parasitically powered devices. You are responsible for eventually depowering it by calling ow.depower() or doing another read or write.
+---@param pin integer IO index
+---@param v integer byte to be written to slave device
+---@param power integer 1 for wire being held high for parasitically powered devices
 ---@return nil
 function ow.write(pin, v, power) end
 
----Writes multi bytes. If power is 1 then the wire is held high at the end for parasitically powered devices.
----@param pin integer
----@param buf string
----@param power integer
+---Writes multi bytes. If power is 1 then the wire is held high at the end for parasitically powered devices. You are responsible for eventually depowering it by calling ow.depower() or doing another read or write.
+---@param pin integer IO index
+---@param buf string string to be written to slave device
+---@param power integer 1 for wire being held high for parasitically powered devices
 ---@return nil
 function ow.write_bytes(pin, buf, power) end
 
---* PULCECNT **--
+--*** PULSECNT ***
 pulsecnt = {}
 
 ---@class pulsecnt
@@ -128,50 +135,58 @@ local pulsecntObj = {}
 
 ---Create the pulse counter object.
 ---@param unit integer ESP32 has 0 thru 7 units to count pulses on.
----@param callbackOnEvents? function Your Lua method to call on event.
----@return pulsecnt
+---@param callbackOnEvents? function Your Lua method to call on `event.myfunction(unit, isThr0, isThr1, isLLim, isHLim, isZero)` will be called.
+--Event will be
+--    PCNT_EVT_THRES_0 (Threshold 0 hit),
+--    PCNT_EVT_THRES_1 (Threshold 1 hit),
+--    PCNT_EVT_L_LIM (Minimum counter value),
+--    PCNT_EVT_H_LIM (Maximum counter value),
+--    PCNT_EVT_ZERO (counter value zero event)
+---@return pulsecnt --pulsecnt object
 function pulsecnt.create(unit, callbackOnEvents) end
 
 ---@alias pulse_mode1
----|' pulsecnt.PCNT_COUNT_DIS' #= 0 Counter mode: Inhibit counter
+---|' pulsecnt.PCNT_COUNT_DIS' #= 0 Counter mode: Inhibit counter  (counter value will not change in this condition).
 ---|' pulsecnt.PCNT_COUNT_INC' #= 1 Counter mode: Increase counter value.
 ---|' pulsecnt.PCNT_COUNT_DEC' #= 2 Counter mode: Decrease counter value.
+
 ---@alias pulse_mode2
 ---|' pulsecnt.PCNT_MODE_KEEP' #= 0 Control mode: will not change counter mode.
----|' pulsecnt.PCNT_MODE_REVERSE' #= 1 Control mode: invert counter mode
----|' pulsecnt.PCNT_MODE_DISABLE' #= 2 Control mode: Inhibit counter
+---|' pulsecnt.PCNT_MODE_REVERSE' #= 1 Control mode: invert counter mode (increase -> decrease, decrease -> increase).
+---|' pulsecnt.PCNT_MODE_DISABLE' #= 2 Control mode: Inhibit counter (counter value will not change in this condition).
+
 ---Configure channel 0 of the pulse counter object you created from the create() method.
 ---@param pulse_gpio_num integer Any GPIO pin can be used.
 ---@param ctrl_gpio_num integer Required (although you can specify pulsecnt.PIN_NOT_USED to ignore)
----@param pos_mode pulse_mode1 Positive rising edge count mode
----@param neg_mode pulse_mode1 Negative falling edge count mode
----@param lctrl_mode pulse_mode2
----@param hctrl_mode pulse_mode2
----@param counter_l_lim integer Range -32768 to 32767. The lower limit counter.
----@param counter_h_lim integer Range -32768 to 32767. The high limit counter.
+---@param pos_mode pulse_mode1 Positive rising edge count mode, i.e. count the pulse when the rising edge occurs.
+---@param neg_mode pulse_mode1 Negative falling edge count mode, i.e. count the pulse when the falling edge occurs.
+---@param lctrl_mode pulse_mode2 Required. When ctrl_gpio_num is low how should the counter be influenced.
+---@param hctrl_mode pulse_mode2 Required. When ctrl_gpio_num is high how should the counter be influenced.
+---@param counter_l_lim integer Range -32768 to 32767. The lower limit counter. You get a callback at this count and the counter is reset to zero after this lower limit is hit.
+---@param counter_h_lim integer Range -32768 to 32767. The high limit counter.You get a callback at this count and the counter is reset to zero after this high limit is hit.
 ---@return nil
 function pulsecntObj:chan0Config(pulse_gpio_num, ctrl_gpio_num, pos_mode, neg_mode, lctrl_mode, hctrl_mode, counter_l_lim, counter_h_lim) end
 
----Configure channel 1 of the pulse counter object you created from the create() method.
+---Configure channel 1 of the pulse counter object you created from the `create()` method.
 ---@param pulse_gpio_num integer Any GPIO pin can be used.
 ---@param ctrl_gpio_num integer Required (although you can specify pulsecnt.PIN_NOT_USED to ignore)
----@param pos_mode pulse_mode1 Positive rising edge count mode
----@param neg_mode pulse_mode1 Negative falling edge count mode
----@param lctrl_mode pulse_mode2
----@param hctrl_mode pulse_mode2
----@param counter_l_lim integer Range -32768 to 32767. The lower limit counter.
----@param counter_h_lim integer Range -32768 to 32767. The high limit counter.
+---@param pos_mode pulse_mode1 Positive rising edge count mode, i.e. count the pulse when the rising edge occurs.
+---@param neg_mode pulse_mode1 Negative falling edge count mode, i.e. count the pulse when the falling edge occurs.
+---@param lctrl_mode pulse_mode2  Required. When ctrl_gpio_num is low how should the counter be influenced.
+---@param hctrl_mode pulse_mode2 Required. When ctrl_gpio_num is high how should the counter be influenced.
+---@param counter_l_lim integer Range -32768 to 32767. The lower limit counter. You get a callback at this count and the counter is reset to zero after this lower limit is hit.
+---@param counter_h_lim integer Range -32768 to 32767. The high limit counter. You get a callback at this count and the counter is reset to zero after this high limit is hit.
 ---@return nil
 function pulsecntObj:chan1Config(pulse_gpio_num, ctrl_gpio_num, pos_mode, neg_mode, lctrl_mode, hctrl_mode, counter_l_lim, counter_h_lim) end
 
 ---Set the threshold values to establish watchpoints for getting callbacks on.
----@param thr0 integer Threshold 0 value. Range -32768 to 32767.
----@param thr1 integer Threshold 1 value. Range -32768 to 32767.
+---@param thr0 integer Threshold 0 value. Range -32768 to 32767. This is a watchpoint value to get a callback with isThr0 set to true on this count being reached.
+---@param thr1 integer Threshold 1 value. Range -32768 to 32767. This is a watchpoint value to get a callback with isThr1 set to true on this count being reached.
 ---@return nil
 function pulsecntObj:setThres(thr0, thr1) end
 
----Set a filter to ignore pulses on the pulse_gpio_num pin and the ctrl_gpio_num to avoid short glitches.
----@param clkCycleCnt integer 0 to 1023 allowd.
+---Set a filter to ignore pulses on the pulse_gpio_num pin and the ctrl_gpio_num to avoid short glitches. Any pulses lasting shorter than this will be ignored.
+---@param clkCycleCnt integer 0 to 1023 allowed. Any pulses lasting shorter than this will be ignored. A pulse needs to be high or low for longer than this filter clock cycle. Clock is 80Mhz APB clock, so one cycle is 1000/80,000,000 = 0.0000125 ms. The longest value of 1023 cycles = 0.0127875 ms.
 ---@return nil
 function pulsecntObj:setFilter(clkCycleCnt) end
 
@@ -183,7 +198,7 @@ function pulsecntObj:clear() end
 ---@return integer
 function pulsecntObj:getCnt() end
 
--- QRCODEGEN **--
+--*** QRCODEGEN ***
 qrcodegen = {}
 
 ---Generates a QR Code from a text string.
@@ -247,7 +262,7 @@ function card:umount() end
 ---@return nil
 function card:write(start_sec, data) end
 
---******* SIGMA DELTA *--
+--*** SIGMA DELTA ***
 sigma_delta = {}
 
 ---Reenables GPIO functionality at the related pin.
@@ -327,7 +342,7 @@ function decoder:result() end
 ---`metatable` a table to use as the metatable for all the new tables in the returned object.
 function sjson.decode(str, opts) end
 
---** SODIUM ***
+--*** SODIUM ***
 sodium = {}
 
 ---Returns a random integer between `0` and `0xFFFFFFFF` inclusive.
@@ -846,7 +861,7 @@ function wifi.ap.setip(cfg) end
 ---@return boolean
 function wifi.ap.sethostname(hostname) end
 
---** WS2812 ***
+--*** WS2812 ***
 ws2812 = {}
 
 ---@class ws2812
