@@ -203,19 +203,28 @@ qrcodegen = {}
 
 ---Generates a QR Code from a text string.
 ---@param text any The text or URL to encode. Should be UTF-8 or ASCII.
----@param options? table
----@return string|nil
+---@param options? table An optional table, containing any of:
+--**minver** the minimum version according to the QR Code Model 2 standard. If not specified, defaults to 1.
+--**maxver** the maximum version according to the QR Code Model 2 standard. If not specified, defaults to 40. Specifying a lower maximum version reduces the amount of temporary memory the function requires, so it can be worthwhile to specify a smaller value if you know the text will fit in a lower-version QR Code.
+--**ecl** the error correction level in a QR Code symbol. Higher error correction produces a larger QR Code. One of:
+--    qrcodegen.LOW (default if not specified)
+--    qrcodegen.MEDIUM
+--    qrcodegen.QUARTILE
+--    qrcodegen.HIGH
+--**mask** the mask pattern used in a QR Code symbol. An integer 0-7, or qrcodegen.AUTO (the default).
+--**boostecl** defaults to false.
+---@return string|nil --The QR Code, encoded as a string. Use `qrcodegen.getSize()` and `qrcodegen.getPixel()` to extract data from the result. If the text cannot be represented within the given version range (for example it is too long) then `nil` is returned.
 function qrcodegen.encodeText(text, options) end
 
----@param qrcode string
----@return integer
+---@param qrcode string a QR Code string, as returned by `qrcodegen.encodeText()`.
+---@return integer --Returns the side length in pixels of the given QR Code. The result is in the range [21, 177].
 function qrcodegen.getSize(qrcode) end
 
----Get the color of the pixel at the given coordinates of the QR Code.
----@param qrcode string
----@param x any
----@param y any
----@return boolean
+---Get the color of the pixel at the given coordinates of the QR Code. `x` and `y` must be between 0 and the value returned by `qrcodegen.getSize()`.
+---@param qrcode string a QR Code string, as returned by `qrcodegen.encodeText()`.
+---@param x number coordinate
+---@param y number coordinate
+---@return boolean --`true` if the given pixel is black, `false` if it is white.
 function qrcodegen.getPixel(qrcode, x, y) end
 
 --*** SDMMC ***
@@ -224,24 +233,60 @@ sdmmc = {}
 ---@class sdmmc
 local card = {}
 
----Initialize the SDMMC and probe the attached SD card. SDMMC Mode.
----@param slot integer|'sdmmc.HS1'|'sdmmc.HS2'
+---SDMMC Mode. Initialize the SDMMC and probe the attached SD card.
+---@param slot integer SDMMC slot, one of `sdmmc.HS1` | `sdmmc.HS2`
 ---@param cfg? table
----@return sdmmc card Card object.
+--`cfg` optional table containing slot configuration:
+--**cd_pin** card detect pin, none if omitted
+--**wp_pin** write-protcet pin, none if omitted
+--**fmax** maximum communication frequency, defaults to 20  if omitted
+--**width** bis width, defaults to sdmmc.W1BIT if omitted, one of:
+--        sdmmc.W1BIT
+--        sdmmc.W4BIT
+--        sdmmc.W8BIT, not supported yet
+---@return sdmmc cardObj Card object. Error is thrown for invalid parameters or if SDMMC hardware or card cannot be initialized.
 function sdmmc.init(slot, cfg) end
 
----Initialize the SDMMC and probe the attached SD card. SD SPI Mode.
----@param slot integer|'sdmmc.HSPI'|'sdmmc.VSPI'
+---SD SPI Mode. Initialize the SDMMC and probe the attached SD card.
+---@param slot integer SD SPI slot, one of `sdmmc.HSPI` | `sdmmc.VSPI`
 ---@param cfg table
----@return sdmmc card Card object.
+--`cfg` mandatory table containing slot configuration:
+--**sck_pin** SPI SCK pin, mandatory
+--**mosi_pin**, SPI MOSI pin, mandatory
+--**miso_pin**, SPI MISO pin, mandatory
+--**cs_pin**, SPI CS pin, mandatory
+--**cd_pin** card detect pin, none if omitted
+--**wp_pin** write-protcet pin, none if omitted
+--**fmax** maximum communication frequency, defaults to 20  if omitted
+---@return sdmmc cardObj Card object. Error is thrown for invalid parameters or if SDMMC hardware or card cannot be initialized.
 function sdmmc.init(slot, cfg) end
 
 ---Retrieve information from the SD card.
----@return table
+---@return table --Table containing the card's OCR, CID, CSD, SCR, and RCA with elements:
+--**ocr** Operation Conditions Register
+--**cid** Card IDentification:
+--*date* - manufacturing date
+--*mfg_id* - manufacturer ID
+--*name* - product name
+--*oem_id* - OEM/product ID
+--*revision* - product revision
+--*serial* - product serial number
+--**csd** Card-Specific Data:
+--*capacity* - total number of sectors
+--*card_command_class* - card command class for SD
+--*csd_ver* - CSD structure format
+--*mmc_ver* - MMC version (for CID format)
+--*read_block_len* - block length for reads
+--*sector_size* - sector size in bytes
+--*tr_speed* - maximum transfer speed
+--**scr**:
+--*sd_spec*-  SD physical layer specification version, reported by card
+--*bus_width* - bus widths supported by card
+--**rca** Relative Card Address
 function card:get_info() end
 
 ---Mount filesystem on SD card.
----@param ldrv string|'"/SD0"'|'"/SD1"'
+---@param ldrv string|'"/SD0"'|'"/SD1"' name of logical drive
 ---@param slot? integer|'sdmmc.HS2'|'sdmmc.HS1'
 ---@return boolean
 function card:mount(ldrv, slot) end
@@ -249,17 +294,17 @@ function card:mount(ldrv, slot) end
 ---Read one or more sectors.
 ---@param start_sec integer first sector to read from
 ---@param num_sec integer number of sectors to read (>= 1)
----@return string
+---@return string --String containing the sector data. Error is thrown for invalid parameters or if sector(s) cannot be read.
 function card:read(start_sec, num_sec) end
 
 ---Unmount filesystem.
----@return nil
+---@return nil --`nil`. Error is thrown if filesystem is not mounted or if it cannot be unmounted.
 function card:umount() end
 
 ---Write one or more sectors.
 ---@param start_sec integer first sector to write to
 ---@param data any string of data to write, must be multiple of sector size (512 bytes)
----@return nil
+---@return nil --`nil`. Error is thrown for invalid parameters or if sector(s) cannot be written.
 function card:write(start_sec, data) end
 
 --*** SIGMA DELTA ***
@@ -282,9 +327,9 @@ function sigma_delta.setprescale(channel, value) end
 ---@return nil
 function sigma_delta.setduty(channel, value) end
 
----Routes the sigma-delta channel to the specified pin.
+---Routes the sigma-delta channel to the specified pin. Target prescale and duty values should be applied prior to enabling the output with this command.
 ---@param channel integer  0~7, sigma-delta channel index
----@param pin integer
+---@param pin integer IO index
 ---@return nil
 function sigma_delta.setup(channel, pin) end
 
@@ -298,10 +343,9 @@ local decoder = {}
 
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
 ---@param tbl table data to encode
----@param opts? table
----*opts* an optional table of options. The possible entries are:
----`depth` the maximum encoding depth needed to encode the table. The default is 20.
----`null` the string value to treat as null.
+---@param opts? table an optional table of options. The possible entries are:
+--**depth** the maximum encoding depth needed to encode the table. The default is 20.
+--**null** the string value to treat as null.
 ---@return sjsonenc --A sjson.encoder object.
 function sjson.encoder(tbl, opts) end
 
@@ -311,70 +355,71 @@ function sjson.encoder(tbl, opts) end
 function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
----@param tbl table
----@param opts? table
----@return string
+---@param tbl table data to encode
+---@param opts? table an optional table of options. The possible entries are:
+--**depth** the maximum encoding depth needed to encode the table. The default is 20 which should be enough for nearly all situations.
+--**null** the string value to treat as null.
+---@return string --JSON string
 function sjson.encode(tbl, opts) end
 
----This makes a decoder object that can parse a JSON encoded string into a Lua object.
----@param opts? table
----*opts* an optional table of options. The possible entries are:
----`depth` the maximum encoding depth needed to encode the table. The default is 20.
----`null` the string value to treat as null.
----`metatable` a table to use as the metatable for all the new tables in the returned object.
----@return sjsondec
+---This makes a decoder object that can parse a JSON encoded string into a Lua object. A metatable can be specified for all the newly created Lua tables. This allows you to handle each value as it is inserted into each table (by implementing the __newindex method).
+---@param opts? table an optional table of options. The possible entries are:
+--**depth** the maximum encoding depth needed to encode the table. The default is 20.
+--**null** the string value to treat as null.
+--**metatable** a table to use as the metatable for all the new tables in the returned object.
+---@return sjsondec --A `sjson.decoder` object
 function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
 ---@param str string the next piece of JSON encoded data
----@return any | nil --The constructed Lua object or nil if the decode is not yet complete.
+---@return any|nil --The constructed Lua object or `nil` if the decode is not yet complete. If a parse error occurrs during this decode, then an error is thrown and the parse is aborted. The object cannot be used again.
 function decoder:write(str) end
 
----This gets the decoded Lua object, or raises an error if the decode is not yet complete.
+---This gets the decoded Lua object, or raises an error if the decode is not yet complete. This can be called multiple times and will return the same object each time. If the decode is not complete, then an error is thrown.
 function decoder:result() end
 
 ---Decode a JSON string to a Lua table.
 ---@param str string JSON string to decode
----@param opts? table
----*opts* an optional table of options. The possible entries are:
----`depth` the maximum encoding depth needed to encode the table. The default is 20.
----`null` the string value to treat as null.
----`metatable` a table to use as the metatable for all the new tables in the returned object.
+---@param opts? table an optional table of options. The possible entries are:
+--**depth** the maximum encoding depth needed to encode the table. The default is 20.
+--**null** the string value to treat as null.
+--**metatable** a table to use as the metatable for all the new tables in the returned object.
+---@return table --Lua table representation of the JSON data. If the string is not valid JSON, then an error is thrown.
 function sjson.decode(str, opts) end
 
 --*** SODIUM ***
 sodium = {}
 
 ---Returns a random integer between `0` and `0xFFFFFFFF` inclusive.
----@return integer
+---@return integer --A uniformly-distributed random integer between 0 and 0xFFFFFFFF inclusive.
 function sodium.random.random() end
 
 ---Returns a random integer 0 <= result < upper_bound
----@param upper_bound integer
----@return integer
+---@param upper_bound integer must be an integer *<= 0xFFFFFFFF*.
+---@return integer --An integer *>= 0* and *< upper_bound*
 function sodium.random.uniform(upper_bound) end
 
----Generates n bytes of random data.
----@param n number
----@return string
+---Generates *n* bytes of random data. Wifi must be started, by calling `wifi.start()`, before calling this function.
+---@param n number number of bytes to return.
+---@return string --A string of *n* random bytes.
 function sodium.random.buf(n) end
 
----Generates a new keypair.
+---Generates a new keypair. Wifi must be started, by calling `wifi.start()`, before calling this function.
 ---@return string public_key
 ---@return string secret_key
 function sodium.crypto_box.keypair() end
 
 ---Encrypts a message using a public key.
----@param message string
----@param public_key any
----@return string|any
+---@param message string the string to encrypt.
+---@param public_key string the public key to encrypt with.
+---@return string|any --The encrypted message, as a string. Errors if public_key is not a valid public key as returned by sodium.crypto_box.keypair() or if the message could not be encrypted.
 function sodium.crypto_box.seal(message, public_key) end
 
----Decrypts a message encrypted with crypto_box.seal().
----@param ciphertext any
----@param public_key any
----@param secret_key any
----@return any|nil
+---Decrypts a message encrypted with `crypto_box.seal()`.
+---@param ciphertext any the encrypted message.
+---@param public_key string the public key the message was encrypted with.
+---@param secret_key string the secret key corresponding to the specified public key.
+---@return any|nil --The decrypted plain text of the message. Returns `nil` if the *ciphertext* could not be decrypted.
 function sodium.crypto_box.seal_open(ciphertext, public_key, secret_key) end
 
 --*** SPI ***
@@ -386,10 +431,10 @@ local busmaster = {}
 local device = {}
 
 ---Initializes a bus in master mode and returns a bus master object.
----@param host integer|'spi.VSPI'|'spi.HSPI'|'spi.SPI1'
----@param config? table
----@param dma? integer|'1'|'2'|'0'
----@return spi
+---@param host integer|'spi.VSPI'|'spi.HSPI'|'spi.SPI1' id
+---@param config? table table listing the assigned GPIOs. All signal assignment are optional. **sclk, mosi, miso, quadwp, quadhd**
+---@param dma? integer|'1'|'2'|'0' set DMA channel (1 or 2) or disable DMA (0), defaults to 1 if omitted.
+---@return spi --SPI bus master object
 function spi.master(host, config, dma) end
 
 ---Close the bus host. This fails if there are still devices registered on this bus.
@@ -397,8 +442,23 @@ function spi.master(host, config, dma) end
 function busmaster:close() end
 
 ---Adds a device on the given master bus. Up to three devices per bus are supported.
----@param config table
----@return spidev
+---@param config table table describing the device parameters:
+--**cs** GPIO connected to device's chip-select pin, optional
+--**mode** SPI mode used for this device (0-3), mandatory
+--**freq** clock frequency used for this device [Hz], mandatory
+--**command_bits** amount of bits in command phase (0-16), defaults to 0 if omitted
+--**address_bits** amount of bits in address phase (0-64), defaults to 0 if omitted
+--**dummy_bits** amount of dummy bits to insert address and data phase, defaults to 0 if omitted
+--**cs_ena_pretrans**, optional
+--**cs_ena_posttrans**, optional
+--**duty_cycle_pos**, optional
+--**tx_lsb_first** transmit command/address/data LSB first if true, MSB first otherwise (or if omitted)
+--**rx_lsb_first** receive data LSB first if true, MSB first otherwise (or if omitted)
+--**wire3** use spiq for both transmit and receive if true, use mosi and miso otherwise (or if omitted)
+--**positive_cs** chip-select is active high during a transaction if true, cs is active low otherwise (or if omitted)
+--**halfduplex** transmit data before receiving data if true, transmit and receive simultaneously otherwise (or if omitted)
+--**clk_as_cs** output clock on cs line when cs is active if true, defaults to false if omitted
+---@return spidev --SPI device object
 function busmaster:device(config) end
 
 ---Removes a device from the related bus master.
@@ -406,8 +466,19 @@ function busmaster:device(config) end
 function device:remove() end
 
 ---Initiate an SPI transaction.
----@param trans table
----@return string
+--*txdata* string of data to be sent to the device
+---@overload fun(txdata:string):string
+---@param trans table table containing the elements of the transaction:
+--**command** data for command phase, amount of bits was defined during device creation, optional
+--**address** data for address phase, amount of bits was defined during device creation, optional
+--**txdata** string of data to be sent to the device, optional
+--**rxlen** number of bytes to be received, optional
+--**mode** optional, one of
+--    sio transmit in SIO mode, default if omitted
+--    dio transmit in DIO mode
+--    qio transmit in QIO mode
+--**addr_mode** transmit address also in selected mode if true, transmit address in SIO otherwise.
+---@return string --String of rxlen length, or #txdata length if rxlen is omitted.
 function device:transfer(trans) end
 
 ---Initializes a bus in slave mode and returns a slave object. `Not yet supported.`
