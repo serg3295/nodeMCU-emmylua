@@ -317,34 +317,35 @@ function mcp23008.writeGPPU(dataByte) end
 ---@return number byte The GPPU byte i.e. state of all internal pull-up resistors
 function mcp23008.readGPPU() end
 
---*** MCP23017 ***
----@class mcp23017
-local mcp17 = require('mcp23017')
+  --*** MCP23017 ***
+  ---@class mcp23017
+  local mcp17 = {}
 
 ---Configures the address of the module and tests the connection to the i2c bus.
 ---@param address number address for MCP23017, default: 0x20 (should be between 0x20 and 0x27)
----@param i2c_id number  id for the i2c bus connection (remember to call i2c.setup before)
----@return boolean found true if device found, otherwise false.
-function mcp17:setup(address, i2c_id) end
+---@param i2c_id number id for the i2c bus connection (remember to call i2c.setup before)
+---@return boolean #`true` if device found, otherwise `false`.
+---@return mcp23017 #instance for mcp23017
+function mcp23017(address, i2c_id) end
 
 ---Set the mode of a single channel. This can be OUTPUT or INPUT.
 ---@param register number the side of channels (GPA or GPB)
 ---@param pin number the number to be set for the channel (0-15)
 ---@param mode number the mode for the channel. This can be mcp23017.INPUT or mcp23017.OUTPUT
----@return boolean r true, in case of error nil.
+---@return boolean #`true`, in case of error `nil`.
 function mcp17:setMode(register, pin, mode) end
 
 ---Set the state of a single channel. This can be HIGH or LOW.
 ---@param register number the side of channels (GPA or GPB)
 ---@param pin number the number to be set for the channel (0-15)
 ---@param state number the state for the channel. This can be mcp23017.HIGH or mcp23017.LOW
----@return boolean r true, in case of error nil.
+---@return boolean #`true`, in case of error `nil`.
 function mcp17:setPin(register, pin, state) end
 
 ---Set the state of a single channel. This can be HIGH or LOW.
 ---@param register number the side of channels (GPA or GPB)
 ---@param pin number the number to be set for the channel (0-15)
----@return boolean b true for HIGH, false for LOW, in case of error nil.
+---@return boolean #`true` for HIGH, `false` for LOW, in case of error `nil`.
 function mcp17:getPinState(register, pin) end
 
 ---By calling this function, a safe state is established. All channels are set to input.
@@ -441,18 +442,17 @@ function yeelink.update(datapoint) end
 adc = {}
 
 ---Checks and if necessary reconfigures the ADC `mode` setting in the ESP init data block.
----@param mode_value integer|'adc.INIT_ADC'|'adc.INIT_VDD33'
----@return boolean b True if the function had to change the mode, false if the mode was already configured.
+---@param mode_value integer|'adc.INIT_ADC'|'adc.INIT_VDD33' mode
+---@return boolean #`true` if the function had to change the mode, `false` if the mode was already configured.
 function adc.force_init_mode(mode_value) end
 
 ---Samples the ADC.
----@param channel integer
----|'0' #always 0 on the ESP8266
----@return number
+---@param channel integer|'0' always 0 on the ESP8266
+---@return number #the sampled value
 function adc.read(channel) end
 
 ---Reads the system voltage.
----@return number v system voltage in millivolts
+---@return number #system voltage in millivolts
 function adc.readvdd33() end
 
 --*** ADS1115 ***
@@ -609,74 +609,79 @@ function apa102.write(data_pin, clock_pin, str) end
 --*** BIT ***
 bit = {}
 
----Arithmetic right shift a number equivalent to `value` >> `shift` in C.
+---Arithmetic right shift a number equivalent to `value >> shift` in C.
 ---@param value integer the value to shift
 ---@param shift integer positions to shift
----@return integer n the number shifted right (arithmetically)
+---@return integer #the number shifted right (arithmetically)
 function bit.arshift(value, shift) end
 
----Bitwise *AND*, equivalent to `val1` & `val2` & ... & `valn` in C.
----@param val1 integer first AND argument
----@param val2 integer second AND argument
----@return integer n the bitwise AND of all the arguments
+---Bitwise *AND*, equivalent to `val1 & val2 & ... & valn` in C.
+---@param val1 integer first *AND* argument
+---@param val2 integer second *AND* argument
+---@vararg integer
+---@return integer #the bitwise *AND* of all the arguments
 function bit.band(val1, val2, ...) end
 
----Generate a number with a 1 bit (used for mask generation). Equivalent to 1 << position in C.
+---Generate a number with a 1 bit (used for mask generation). Equivalent to `1 << position` in C.
 ---@param position number position of the bit that will be set to 1
----@return number n a number with only one 1 bit at position (the rest are set to 0)
+---@return number #a number with only one 1 bit at position (the rest are set to 0)
 function bit.bit(position) end
 
----Bitwise negation, equivalent to ~value in C.
+---Bitwise negation, equivalent to `~value` in C.
 ---@param value number the number to negate
----@return number the bitwise negated value of the number
+---@return number #the bitwise negated value of the number
 function bit.bnot(value) end
 
----Bitwise *OR*, equivalent to `val1` | `val2` | ... | `valn` in C.
----@param val1 integer first OR argument.
----@param val2 integer second OR argument.
----@return integer n the bitwise OR of all the arguments
+---Bitwise *OR*, equivalent to `val1 | val2 | ... | valn` in C.
+---@param val1 integer first *OR* argument.
+---@param val2 integer second *OR* argument.
+---@vararg integer
+---@return integer #the bitwise *OR* of all the arguments
 function bit.bor(val1, val2, ...) end
 
----Bitwise *XOR*, equivalent to `val1` ^ `val2` ^ ... ^ `valn` in C.
----@param val1 integer first XOR argument
----@param val2 integer second XOR argument
----@return integer n the bitwise XOR of all the arguments
+---Bitwise *XOR*, equivalent to `val1 ^ val2 ^ ... ^ valn` in C.
+---@param val1 integer first *XOR* argument
+---@param val2 integer second *XOR* argument
+---@vararg integer
+---@return integer #the bitwise *XOR* of all the arguments
 function bit.xor(val1, val2, ...) end
 
 ---Clear bits in a number.
 ---@param value integer the base number
 ---@param pos1 integer position of the first bit to clear
----@return integer n the number with the bit(s) cleared in the given position(s)
+---@vararg integer
+---@return integer #the number with the bit(s) cleared in the given position(s)
 function bit.clear(value, pos1, ...) end
 
 ---Test if a given bit is cleared.
 ---@param value integer the value to test
 ---@param position integer bit position to test
----@return boolean b true if the bit at the given position is 0, false otherwise
+---@return boolean #true if the bit at the given position is 0, false otherwise
 function bit.isclear(value, position) end
 
 ---Test if a given bit is set.
 ---@param value number the value to test
 ---@param position integer bit position to test
----@return boolean b true if the bit at the given position is 1, false otherwise
+---@return boolean #true if the bit at the given position is 1, false otherwise
 function bit.isset(value, position) end
 
----Left-shift a number, equivalent to `value` << `shift` in C.
+---Left-shift a number, equivalent to `value << shift` in C.
 ---@param value integer the value to shift
 ---@param shift integer positions to shift
----@return integer n the number shifted left
+---@return integer #the number shifted left
 function bit.lshift(value, shift) end
 
----Logical right shift a number, equivalent to ( unsigned )`value` >> `shift` in C.
+---Logical right shift a number, equivalent to `( unsigned )value >> shift` in C.
 ---@param value integer the value to shift.
 ---@param shift integer positions to shift.
----@return integer n the number shifted right (logically)
+---@return integer #the number shifted right (logically)
 function bit.rshift(value, shift) end
 
 ---Set bits in a number.
 ---@param value integer the base number.
 ---@param pos1 integer position of the first bit to set.
----@return integer b the number with the bit(s) set in the given position(s)
+---@vararg integer
+---@return integer #the number with the bit(s) set in the given position(s)
 function bit.set(value, pos1, ...) end
 
 --*** BLOOM ***
