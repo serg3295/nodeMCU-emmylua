@@ -2,9 +2,9 @@
 otaupgrade = {}
 
 ---The boot info and application state and version info can be queried with this function.
----@return string --the name of the partition of the running application
----@return string --the name of the partition currently marked for boot next
----@return table --a table whose keys are the names of OTA partitions and corresponding values are tables containing:
+---@return string #the name of the partition of the running application
+---@return string #the name of the partition currently marked for boot next
+---@return table #a table whose keys are the names of OTA partitions and corresponding values are tables containing:
 --**state** one of *new, testing, valid, invalid, aborted* or possibly *undefined*
 --**name** the application name, typically "NodeMCU"
 --**date** the build date
@@ -15,17 +15,17 @@ otaupgrade = {}
 function otaupgrade.info() end
 
 ---Wipes the spare application partition and prepares to receive the new application firmware.
----@return nil --`nil`. A Lua error may be raised if the OTA upgrade cannot be commenced for some reason (such as due to incorrect partition setup).
+---@return nil #`nil`. A Lua error may be raised if the OTA upgrade cannot be commenced for some reason (such as due to incorrect partition setup).
 function otaupgrade.commence() end
 
 ---Write a chunk of application firmware data to the correct partition and location. Data must be streamed sequentially, the IDF does not support out-of-order data as would be the case from e.g. bittorrent.
 ---@param data string a string of binary data
----@return nil --`nil`. A Lua error may be raised if the data can not be written, e.g. due to the data not being a valid OTA image (the IDF performs some checks in this regard).
+---@return nil #`nil`. A Lua error may be raised if the data can not be written, e.g. due to the data not being a valid OTA image (the IDF performs some checks in this regard).
 function otaupgrade.write(data) end
 
 ---Finalises the upgrade, and optionally reboots into the new application firmware right away.
 ---@param reboot integer|nil `1` to reboot into the new firmware immediately, `nil` to keep running
----@return nil --`nil`. A Lua error may be raised if the image does not pass validation, or no data has been written to the image at all.
+---@return nil #`nil`. A Lua error may be raised if the image does not pass validation, or no data has been written to the image at all.
 function otaupgrade.complete(reboot) end
 
 ---When the installed boot loader is built with rollback support, a new application image is by default only booted once. During this "test run" it can perform whatever checks is appropriate (like testing whether it can still reach the update server), and if satisfied can mark itself as valid. Without being marked valid, upon the next reboot the system would "roll back" to the previous version instead.
@@ -44,18 +44,18 @@ ow = {}
 ---@param inverted_crc0 number LSB of received CRC
 ---@param inverted_crc1 number MSB of received CRC
 ---@param crc? number CRC starting value (optional)
----@return boolean --`true` if the CRC matches, `false` otherwise
+---@return boolean #`true` if the CRC matches, `false` otherwise
 function ow.check_crc16(buf, inverted_crc0, inverted_crc1, crc) end
 
 ---Computes a Dallas Semiconductor 16 bit CRC.
 ---@param buf number string value, data to be calculated check sum in string
 ---@param crc? number CRC starting value (optional)
----@return number --the CRC16 as defined by Dallas Semiconductor
+---@return number #the CRC16 as defined by Dallas Semiconductor
 function ow.crc16(buf, crc) end
 
 ---Computes a Dallas Semiconductor 8 bit CRC, these are used in the ROM and scratchpad registers.
 ---@param buf string string value, data to be calculated check sum in string
----@return number --CRC result as byte
+---@return number #CRC result as byte
 function ow.crc8(buf) end
 
 ---Stops forcing power onto the bus. You only need to do this if you used the 'power' flag to ow.write() or used a ow.write_bytes() and aren't about to do another read or write.
@@ -65,13 +65,13 @@ function ow.depower(pin) end
 
 ---Reads a byte.
 ---@param pin integer IO index
----@return integer --byte read from slave device
+---@return integer #byte read from slave device
 function ow.read(pin) end
 
 ---Reads multi bytes.
 ---@param pin integer IO index,
 ---@param size number number of bytes to be read from slave device (up to 256)
----@return string --bytes read from slave device
+---@return string #bytes read from slave device
 function ow.read_bytes(pin, size) end
 
 ---Performs a 1-Wire reset cycle.
@@ -88,7 +88,7 @@ function ow.reset_search(pin) end
 
 ---Looks for the next device.
 ---@param pin integer IO index
----@return string|nil --`rom_code` string with length of 8 upon success. It contains the rom code of slave device. Returns `nil` if search was unsuccessful.
+---@return string|nil #`rom_code` string with length of 8 upon success. It contains the rom code of slave device. Returns `nil` if search was unsuccessful.
 function ow.search(pin) end
 
 ---Issues a 1-Wire rom select command. Make sure you do the `ow.reset(pin)` first.
@@ -142,7 +142,7 @@ local pulsecntObj = {}
 --    PCNT_EVT_L_LIM (Minimum counter value),
 --    PCNT_EVT_H_LIM (Maximum counter value),
 --    PCNT_EVT_ZERO (counter value zero event)
----@return pulsecnt --pulsecnt object
+---@return pulsecnt #pulsecnt object
 function pulsecnt.create(unit, callbackOnEvents) end
 
 ---@alias pulse_mode1
@@ -213,18 +213,18 @@ qrcodegen = {}
 --    qrcodegen.HIGH
 --**mask** the mask pattern used in a QR Code symbol. An integer 0-7, or qrcodegen.AUTO (the default).
 --**boostecl** defaults to false.
----@return string|nil --The QR Code, encoded as a string. Use `qrcodegen.getSize()` and `qrcodegen.getPixel()` to extract data from the result. If the text cannot be represented within the given version range (for example it is too long) then `nil` is returned.
+---@return string|nil #The QR Code, encoded as a string. Use `qrcodegen.getSize()` and `qrcodegen.getPixel()` to extract data from the result. If the text cannot be represented within the given version range (for example it is too long) then `nil` is returned.
 function qrcodegen.encodeText(text, options) end
 
 ---@param qrcode string a QR Code string, as returned by `qrcodegen.encodeText()`.
----@return integer --Returns the side length in pixels of the given QR Code. The result is in the range [21, 177].
+---@return integer #Returns the side length in pixels of the given QR Code. The result is in the range [21, 177].
 function qrcodegen.getSize(qrcode) end
 
 ---Get the color of the pixel at the given coordinates of the QR Code. `x` and `y` must be between 0 and the value returned by `qrcodegen.getSize()`.
 ---@param qrcode string a QR Code string, as returned by `qrcodegen.encodeText()`.
 ---@param x number coordinate
 ---@param y number coordinate
----@return boolean --`true` if the given pixel is black, `false` if it is white.
+---@return boolean #`true` if the given pixel is black, `false` if it is white.
 function qrcodegen.getPixel(qrcode, x, y) end
 
 --*** SDMMC ***
@@ -235,8 +235,7 @@ local card = {}
 
 ---SDMMC Mode. Initialize the SDMMC and probe the attached SD card.
 ---@param slot integer SDMMC slot, one of `sdmmc.HS1` | `sdmmc.HS2`
----@param cfg? table
---`cfg` optional table containing slot configuration:
+---@param cfg? table `cfg` optional table containing slot configuration:
 --**cd_pin** card detect pin, none if omitted
 --**wp_pin** write-protcet pin, none if omitted
 --**fmax** maximum communication frequency, defaults to 20  if omitted
@@ -249,8 +248,7 @@ function sdmmc.init(slot, cfg) end
 
 ---SD SPI Mode. Initialize the SDMMC and probe the attached SD card.
 ---@param slot integer SD SPI slot, one of `sdmmc.HSPI` | `sdmmc.VSPI`
----@param cfg table
---`cfg` mandatory table containing slot configuration:
+---@param cfg table `cfg` mandatory table containing slot configuration:
 --**sck_pin** SPI SCK pin, mandatory
 --**mosi_pin**, SPI MOSI pin, mandatory
 --**miso_pin**, SPI MISO pin, mandatory
@@ -262,7 +260,7 @@ function sdmmc.init(slot, cfg) end
 function sdmmc.init(slot, cfg) end
 
 ---Retrieve information from the SD card.
----@return table --Table containing the card's OCR, CID, CSD, SCR, and RCA with elements:
+---@return table Table containing the card's OCR, CID, CSD, SCR, and RCA with elements:
 --**ocr** Operation Conditions Register
 --**cid** Card IDentification:
 --*date* - manufacturing date
@@ -294,17 +292,17 @@ function card:mount(ldrv, slot) end
 ---Read one or more sectors.
 ---@param start_sec integer first sector to read from
 ---@param num_sec integer number of sectors to read (>= 1)
----@return string --String containing the sector data. Error is thrown for invalid parameters or if sector(s) cannot be read.
+---@return string #String containing the sector data. Error is thrown for invalid parameters or if sector(s) cannot be read.
 function card:read(start_sec, num_sec) end
 
 ---Unmount filesystem.
----@return nil --`nil`. Error is thrown if filesystem is not mounted or if it cannot be unmounted.
+---@return nil #`nil`. Error is thrown if filesystem is not mounted or if it cannot be unmounted.
 function card:umount() end
 
 ---Write one or more sectors.
 ---@param start_sec integer first sector to write to
 ---@param data any string of data to write, must be multiple of sector size (512 bytes)
----@return nil --`nil`. Error is thrown for invalid parameters or if sector(s) cannot be written.
+---@return nil #`nil`. Error is thrown for invalid parameters or if sector(s) cannot be written.
 function card:write(start_sec, data) end
 
 --*** SIGMA DELTA ***
@@ -346,12 +344,12 @@ local decoder = {}
 ---@param opts? table an optional table of options. The possible entries are:
 --**depth** the maximum encoding depth needed to encode the table. The default is 20.
 --**null** the string value to treat as null.
----@return sjsonenc --A sjson.encoder object.
+---@return sjsonenc #A sjson.encoder object.
 function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
 ---@param size? integer an optional value for the number of bytes to return. The default is 1024.
----@return string|nil --A `string` of up to size bytes, or `nil` if the encoding is complete and all data has been returned.
+---@return string|nil #A `string` of up to size bytes, or `nil` if the encoding is complete and all data has been returned.
 function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
@@ -359,7 +357,7 @@ function encoder:read(size) end
 ---@param opts? table an optional table of options. The possible entries are:
 --**depth** the maximum encoding depth needed to encode the table. The default is 20 which should be enough for nearly all situations.
 --**null** the string value to treat as null.
----@return string --JSON string
+---@return string #JSON string
 function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object. A metatable can be specified for all the newly created Lua tables. This allows you to handle each value as it is inserted into each table (by implementing the __newindex method).
@@ -367,12 +365,12 @@ function sjson.encode(tbl, opts) end
 --**depth** the maximum encoding depth needed to encode the table. The default is 20.
 --**null** the string value to treat as null.
 --**metatable** a table to use as the metatable for all the new tables in the returned object.
----@return sjsondec --A `sjson.decoder` object
+---@return sjsondec #A `sjson.decoder` object
 function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
 ---@param str string the next piece of JSON encoded data
----@return any|nil --The constructed Lua object or `nil` if the decode is not yet complete. If a parse error occurrs during this decode, then an error is thrown and the parse is aborted. The object cannot be used again.
+---@return any|nil #The constructed Lua object or `nil` if the decode is not yet complete. If a parse error occurrs during this decode, then an error is thrown and the parse is aborted. The object cannot be used again.
 function decoder:write(str) end
 
 ---This gets the decoded Lua object, or raises an error if the decode is not yet complete. This can be called multiple times and will return the same object each time. If the decode is not complete, then an error is thrown.
@@ -384,24 +382,24 @@ function decoder:result() end
 --**depth** the maximum encoding depth needed to encode the table. The default is 20.
 --**null** the string value to treat as null.
 --**metatable** a table to use as the metatable for all the new tables in the returned object.
----@return table --Lua table representation of the JSON data. If the string is not valid JSON, then an error is thrown.
+---@return table #Lua table representation of the JSON data. If the string is not valid JSON, then an error is thrown.
 function sjson.decode(str, opts) end
 
 --*** SODIUM ***
 sodium = {}
 
 ---Returns a random integer between `0` and `0xFFFFFFFF` inclusive.
----@return integer --A uniformly-distributed random integer between 0 and 0xFFFFFFFF inclusive.
+---@return integer #A uniformly-distributed random integer between 0 and 0xFFFFFFFF inclusive.
 function sodium.random.random() end
 
 ---Returns a random integer 0 <= result < upper_bound
 ---@param upper_bound integer must be an integer *<= 0xFFFFFFFF*.
----@return integer --An integer *>= 0* and *< upper_bound*
+---@return integer #An integer *>= 0* and *< upper_bound*
 function sodium.random.uniform(upper_bound) end
 
 ---Generates *n* bytes of random data. Wifi must be started, by calling `wifi.start()`, before calling this function.
 ---@param n number number of bytes to return.
----@return string --A string of *n* random bytes.
+---@return string #A string of *n* random bytes.
 function sodium.random.buf(n) end
 
 ---Generates a new keypair. Wifi must be started, by calling `wifi.start()`, before calling this function.
@@ -412,14 +410,14 @@ function sodium.crypto_box.keypair() end
 ---Encrypts a message using a public key.
 ---@param message string the string to encrypt.
 ---@param public_key string the public key to encrypt with.
----@return string|any --The encrypted message, as a string. Errors if public_key is not a valid public key as returned by sodium.crypto_box.keypair() or if the message could not be encrypted.
+---@return string|any #The encrypted message, as a string. Errors if public_key is not a valid public key as returned by sodium.crypto_box.keypair() or if the message could not be encrypted.
 function sodium.crypto_box.seal(message, public_key) end
 
 ---Decrypts a message encrypted with `crypto_box.seal()`.
 ---@param ciphertext any the encrypted message.
 ---@param public_key string the public key the message was encrypted with.
 ---@param secret_key string the secret key corresponding to the specified public key.
----@return any|nil --The decrypted plain text of the message. Returns `nil` if the *ciphertext* could not be decrypted.
+---@return any|nil #The decrypted plain text of the message. Returns `nil` if the *ciphertext* could not be decrypted.
 function sodium.crypto_box.seal_open(ciphertext, public_key, secret_key) end
 
 --*** SPI ***
@@ -434,7 +432,7 @@ local device = {}
 ---@param host integer|'spi.VSPI'|'spi.HSPI'|'spi.SPI1' id
 ---@param config? table table listing the assigned GPIOs. All signal assignment are optional. **sclk, mosi, miso, quadwp, quadhd**
 ---@param dma? integer|'1'|'2'|'0' set DMA channel (1 or 2) or disable DMA (0), defaults to 1 if omitted.
----@return spi --SPI bus master object
+---@return spi #SPI bus master object
 function spi.master(host, config, dma) end
 
 ---Close the bus host. This fails if there are still devices registered on this bus.
@@ -458,7 +456,7 @@ function busmaster:close() end
 --**positive_cs** chip-select is active high during a transaction if true, cs is active low otherwise (or if omitted)
 --**halfduplex** transmit data before receiving data if true, transmit and receive simultaneously otherwise (or if omitted)
 --**clk_as_cs** output clock on cs line when cs is active if true, defaults to false if omitted
----@return spidev --SPI device object
+---@return spidev #SPI device object
 function busmaster:device(config) end
 
 ---Removes a device from the related bus master.
@@ -478,7 +476,7 @@ function device:remove() end
 --    dio transmit in DIO mode
 --    qio transmit in QIO mode
 --**addr_mode** transmit address also in selected mode if true, transmit address in SIO otherwise.
----@return string --String of rxlen length, or #txdata length if rxlen is omitted.
+---@return string #String of rxlen length, or #txdata length if rxlen is omitted.
 function device:transfer(trans) end
 
 ---Initializes a bus in slave mode and returns a slave object. `Not yet supported.`
@@ -487,56 +485,54 @@ function spi.slave() end
 --*** STRUCT ***
 struct = {}
 
----Returns a string containing the values d1, d2, etc. packed according to the format string fmt.
+---Returns a string containing the values `d1, d2`, etc. packed according to the format string `fmt`.
 ---@param fmt string The format string
 ---@param d1 any The first data item to be packed
 ---@param d2 any The second data item to be packed etc.
----@return string --The packed string.
+---@return string #The packed string.
 function struct.pack (fmt, d1, d2, ...) end
 
----Returns the values packed in string s according to the format string `fmt`.
+---Returns the values packed in string s according to the format string `fmt`. An optional i marks where in s to start reading (default is 1). After the read values, this function also returns the index in `s` where it stopped reading, which is also where you should start to read the rest of the string.
 ---@param fmt string The format string
 ---@param s string  The string holding the data to be unpacked
 ---@param offset? integer The position to start in the string (default is 1)
----@return any --All the unpacked data.
+---@return any #All the unpacked data.
 function struct.unpack (fmt, s, offset) end
 
----Returns the size of a string formatted according to the format string `fmt`.
+---Returns the size of a string formatted according to the format string `fmt`. The format string should contain neither the option `s` nor the option `c0`.
 ---@param fmt string The format string
----@return integer --The size of the string that would be output in a pack operation with this format string.
+---@return integer #The size of the string that would be output in a pack operation with this format string.
 function struct.size (fmt) end
 
 --*** TIME ***
 time = {}
 
 ---Converts calendar table to a timestamp in Unix epoch
----@param calendar table
--- `calendar` Table containing calendar info.
---- `year` 1970 ~ 2038
---- `mon` month 1 ~ 12 in current year
---- `day` day 1 ~ 31 in current month
---- `hour`
---- `min`
---- `sec`
----@return integer --number of seconds since the Epoch
+---@param calendar table `calendar` Table containing calendar info.
+--**year** 1970 ~ 2038
+--**mon** month 1 ~ 12 in current year
+--**day** day 1 ~ 31 in current month
+--**hour**
+--**min**
+--**sec**
+---@return integer #number of seconds since the Epoch
 function time.cal2epoch(calendar) end
 
 ---Converts timestamp in Unix epoch to calendar format
 ---@param time integer number of seconds since the Epoch
----@return table
--- A *table* containing the fields:
---- `year` 1970 ~ 2038
---- `mon` month 1 ~ 12 in current year
---- `day` day 1 ~ 31 in current month
---- `hour`
---- `min`
---- `sec`
---- `yday` day 1 ~ 366 in current year
---- `wday` day 1 ~ 7 in current weak (Sunday is 1)
---- `dst` day time adjustment:
---- 1 (DST in effect, i.e. daylight time)
---- 0 (DST not in effect, i.e. standard time)
---- -1 (Unknown DST status)
+---@return table #A table containing the fields:
+--**year** 1970 ~ 2038
+--**mon** month 1 ~ 12 in current year
+--**day** day 1 ~ 31 in current month
+--**hour**
+--**min**
+--**sec**
+--**yday** day 1 ~ 366 in current year
+--**wday** day 1 ~ 7 in current weak (Sunday is 1)
+--**dst** day time adjustment:
+-- *1* (DST in effect, i.e. daylight time)
+-- *0* (DST not in effect, i.e. standard time)
+-- *-1* (Unknown DST status)
 function time.epoch2cal(time) end
 
 ---Returns current system time in the Unix epoch (seconds from midnight 1970/01/01).
@@ -545,20 +541,19 @@ function time.epoch2cal(time) end
 function time.get() end
 
 ---Returns current system time adjusted for the locale in calendar format.
----@return table
--- A *table* containing the fields:
---- `year` 1970 ~ 2038
---- `mon` month 1 ~ 12 in current year
---- `day` day 1 ~ 31 in current month
---- `hour`
---- `min`
---- `sec`
---- `yday` day 1 ~ 366 in current year
---- `wday` day 1 ~ 7 in current weak (Sunday is 1)
---- `dst` day time adjustment:
--- 1 (DST in effect, i.e. daylight time)
--- 0 (DST not in effect, i.e. standard time)
--- -1 (Unknown DST status)
+---@return table #A table containing the fields:
+--**year** 1970 ~ 2038
+--**mon** month 1 ~ 12 in current year
+--**day** day 1 ~ 31 in current month
+--**hour**
+--**min**
+--**sec**
+--**yday** day 1 ~ 366 in current year
+--**wday** day 1 ~ 7 in current weak (Sunday is 1)
+--**dst** day time adjustment:
+-- *1* (DST in effect, i.e. daylight time)
+-- *0* (DST not in effect, i.e. standard time)
+-- *-1* (Unknown DST status)
 function time.getlocal() end
 
 ---Initializes and starts NTP client
@@ -567,7 +562,7 @@ function time.getlocal() end
 function time.initntp(ntpAddr) end
 
 ---Checks if NTP client is enabled.
----@return boolean --`true' if NTP client is enabled.
+---@return boolean #`true' if NTP client is enabled.
 function time.ntpenabled() end
 
 ---Stops NTP client.
@@ -591,29 +586,30 @@ tmr = {}
 local tObj = {}
 
 ---Creates a dynamic timer object.
----@return tmr
+---@return tmr #timer object
 function tmr.create() end
 
 ---@alias t32
 ---|' tmr.ALARM_AUTO' #automatically repeating alarm
 ---|' tmr.ALARM_SINGLE' #a one-shot alarm (and no need to call tmr.unregister())
 ---|' tmr.ALARM_SEMI' #manually repeating alarm (call tmr.start() to restart)
+
 ---This is a convenience function combining tmr.obj:register() and tmr.obj:start() into a single call.
----@param interval integer
----@param mode t32
----@param foo function|" function(t) end"
+---@param interval integer timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
+---@param mode t32 timer mode:
+---@param foo function|" function(t) end" callback function which is invoked with the timer object as an argument
 ---@return boolean
 function tObj:alarm(interval, mode, foo) end
 
 ---Changes a registered timer's expiry interval.
----@param interval integer
+---@param interval integer new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@return nil
 function tObj:interval(interval) end
 
 ---Configures a timer and registers the callback function to call on expiry.
----@param interval integer
----@param mode t32
----@param foo function|" function() end"
+---@param interval integer timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
+---@param mode t32 timer mode:
+---@param foo function|" function() end" callback function which is invoked with the timer object as an argument
 ---@return nil
 function tObj:register(interval, mode, foo) end
 
@@ -622,14 +618,15 @@ function tObj:register(interval, mode, foo) end
 function tObj:start() end
 
 ---Checks the state of a timer.
----@return boolean | integer | nil
+---@return boolean|nil #If the specified timer is registered, returns whether it is currently started
+---@return integer|nil #and its mode. If the timer is not registered, `nil` is returned.
 function tObj:state() end
 
----Stops a running timer, but does not unregister it. A stopped timer can be restarted with tmr.obj:start().
+---Stops a running timer, but does not unregister it. A stopped timer can be restarted with `tmr.obj:start()`.
 ---@return boolean
 function tObj:stop() end
 
----Stops the timer (if running) and unregisters the associated callback.
+---Stops the timer (if running) and unregisters the associated callback. This isn't necessary for one-shot timers (*tmr.ALARM_SINGLE*), as those automatically unregister themselves when fired.
 ---@return nil
 function tObj:unregister() end
 
@@ -641,7 +638,7 @@ local tp = {}
 
 ---Create the touch sensor object.
 ---@param tbl table
----@return touch
+---@return touch #touch object
 function touch.create(tbl) end
 
 ---Read the touch sensor counter values for all pads configured in touch.create() method.
@@ -650,7 +647,7 @@ function touch.create(tbl) end
 function tp:read() end
 
 ---Set touch sensor interrupt threshold per pad.
----@param padNum number One pad number can be specified here.
+---@param padNum number One pad number can be specified here. If you did multiple pads you must call this per pad.
 ---@param thresVal number The threshold value to set for the pad interrupt trigger.
 ---@return nil
 function tp:setThres(padNum, thresVal) end
@@ -674,62 +671,58 @@ u8g2 = {}
 --*** UART ***
 uart = {}
 
----Sets the callback function to handle UART events.
+---Sets the callback function to handle UART events. To unregister the callback, provide only the "data" parameter.
 ---@param id? integer uart id, default value is uart num of the console.
 ---@param method string
 ---|' "data"' #"data", data has been received on the UART.
 ---|' "error"' #error occurred on the UART.
----@param number_end_char? number
---- `number/end_char` Only for event data.
---- if pass in a number n<255, the callback will called when n chars are received.
---- if n=0, will receive every char in buffer.
---- if pass in a one char string "c", the callback will called when "c" is encounterd, or max n=255 received.
+---@param number_end_char? number Only for event data.
+-- if pass in a number *n* < 255, the callback will called when *n* chars are received.
+-- if *n* = 0, will receive every char in buffer.
+-- if pass in a one char string "c", the callback will called when "c" is encounterd, or max *n* = 255 received.
 ---@param fun? function
 ---|' function(data) end' #for event "data"
 ---|' function(err) end' #for event "error" `err` could be one of "out_of_memory", "break", "rx_error".
 ---@param run_input? integer
----|'0' # input from UART will not go into Lua interpreter, can accept binary data.
----|'1' # input from UART will go into Lua interpreter, and run.
---- `run_input` Only for "data" event on console uart.
--- To unregister the callback, provide only the "data" parameter.
+---|'0' #input from UART will not go into Lua interpreter, can accept binary data.
+---|'1' #input from UART will go into Lua interpreter, and run.
+-- `run_input` Only for "data" event on console uart.
 ---@return nil
 function uart.on(id, method, number_end_char, fun, run_input) end
 
 ---(Re-)configures the communication parameters of the UART.
 ---@param id integer uart id
----@param baud integer|' 300'|' 600'|' 1200'|' 2400'|' 4800'|' 9600'|' 19200'|' 31250'|' 34400'|' 57600'|' 74880'|' 115200'|' 230000'|' 256000'|' 460800'|' 921600'|' 1843200'|' 3686400'
----@param databits integer|' 8'|' 7'|' 6'|' 5'
----@param parity integer|' uart.PARITY_NONE'|' uart.PARITY_ODD'|' uart.PARITY_EVEN'
----@param stopbits integer|' uart.STOPBITS_1'|' uart.STOPBITS_1_5'|' uart.STOPBITS_2'
----@param echo_or_pins integer|table
---- `echo_or_pins` for console uart, this should be a int. if 0, disable echo, otherwise enable echo
----for others, this is a table:
---- `tx` int. TX pin. Required
---- `rx` int. RX pin. Required
---- `cts` in. CTS pin. Optional
---- `rts` in. RTS pin. Optional
---- `tx_inverse` boolean. Inverse TX pin. Default: false
---- `rx_inverse` boolean. Inverse RX pin. Default: false
---- `cts_inverse` boolean. Inverse CTS pin. Default: false
---- `rts_inverse` boolean. Inverse RTS pin. Default: false
---- `flow_control` int. Combination of uart.FLOWCTRL_NONE, uart.FLOWCTRL_CTS, uart.FLOWCTRL_RTS. Default: uart.FLOWCTRL_NONE
----@return number --configured baud rate
+---@param baud integer|' 300'|' 600'|' 1200'|' 2400'|' 4800'|' 9600'|' 19200'|' 31250'|' 34400'|' 57600'|' 74880'|' 115200'|' 230000'|' 256000'|' 460800'|' 921600'|' 1843200'|' 3686400' 300 - 3686400
+---@param databits integer|' 8'|' 7'|' 6'|' 5' one of 5, 6, 7, 8
+---@param parity integer|' uart.PARITY_NONE'|' uart.PARITY_ODD'|' uart.PARITY_EVEN' none | odd | even
+---@param stopbits integer|' uart.STOPBITS_1'|' uart.STOPBITS_1_5'|' uart.STOPBITS_2' 1 | 1.5 | 2
+---@param echo_or_pins integer|table for console uart, this should be a int. if 0, disable echo, otherwise enable echo; for others, this is a table:
+--**tx** int. TX pin. Required
+--**rx** int. RX pin. Required
+--**cts** in. CTS pin. Optional
+--**rts** in. RTS pin. Optional
+--**tx_inverse** boolean. Inverse TX pin. Default: false
+--**rx_inverse** boolean. Inverse RX pin. Default: false
+--**cts_inverse** boolean. Inverse CTS pin. Default: false
+--**rts_inverse** boolean. Inverse RTS pin. Default: false
+--**flow_control** int. Combination of uart.FLOWCTRL_NONE, uart.FLOWCTRL_CTS, uart.FLOWCTRL_RTS. Default: uart.FLOWCTRL_NONE
+---@return number #configured baud rate
 function uart.setup(id, baud, databits, parity, stopbits, echo_or_pins) end
 
 ---Returns the current configuration parameters of the UART.
----@param id integer|'0'|'1'
+---@param id integer UART id
 ---@return integer baud
 ---@return integer databits
 ---@return integer parity
 ---@return integer stopbits
 function uart.getconfig(id) end
 
----Start the UART.
+---Start the UART. You do not need to call `start()` on the console uart.
 ---@param id integer uart id, except console uart
----@return boolean --`true` if uart is started.
+---@return boolean #`true` if uart is started.
 function uart.start(id) end
 
----Stop the UART.
+---Stop the UART. You should not call `stop()` on the console uart.
 ---@param id integer uart id, except console uart
 ---@return nil
 function uart.stop(id) end
@@ -745,9 +738,16 @@ function uart.stop(id) end
 ---@return nil
 function uart.setmode(id, mode) end
 
+---Configure the light sleep wakeup threshold. This is the number of positive edges that must be seen on the UART RX pin before a light sleep wakeup will be triggered.
+---@param id integer uart id
+---@param val any the new value
+---@return nil
+function uart.wakeup(id, val) end
+
 ---Write string or byte to the UART.
 ---@param id integer uart id
 ---@param data1 any ... string or byte to send via UART
+---@vararg any ... string or byte to send via UART
 ---@return nil
 function uart.write(id, data1, ...) end
 
@@ -763,20 +763,20 @@ wifi = {}
 function wifi.getchannel() end
 
 ---Gets WiFi operation mode.
----@return integer --The WiFi mode, as one of the wifi.STATION, wifi.SOFTAP, wifi.STATIONAP or wifi.NULLMODE constants.
+---@return integer #The WiFi mode, as one of the wifi.STATION, wifi.SOFTAP, wifi.STATIONAP or wifi.NULLMODE constants.
 function wifi.getmode() end
 
 ---Configures the WiFi mode to use.
 ---@param mode integer
 ---|'wifi.STATION' #for when the device is connected to a WiFi router.
----|'wifi.SOFTAP'  #for when the device is acting only as an access point.
+---|'wifi.SOFTAP' #for when the device is acting only as an access point.
 ---|'wifi.STATIONAP' #is the combination of wifi.STATION and wifi.SOFTAP
 ---|'wifi.NULLMODE' #disables the WiFi interface(s).
 ---@param save? boolean
 ---|>' true' #WiFi mode configuration will be retained through power cycle.
 ---|' false' #WiFi mode configuration will not be retained through power cycle.
 -- choose whether or not to save wifi mode to flash
----@return any --current mode after setup
+---@return any #current mode after setup
 function wifi.mode(mode, save) end
 
 ---Starts the WiFi interface(s).
@@ -819,8 +819,7 @@ function wifi.sta.disconnect() end
 
 ---Registers callbacks for WiFi station status events.
 ---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"authmode_changed"'|'"got_ip"'
----@param callback function|' function(event, info) end'
----callback function(event, info) to perform when event occurs, or `nil` to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
+---@param callback function|' function(event, info) end' callback function(event, info) to perform when event occurs, or `nil` to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
 -- Event information provided for each event is as follows:
 --`start`: no additional info
 --`stop`: no additional info
@@ -849,29 +848,27 @@ function wifi.sta.getmac() end
 
 ---Scan for available networks.
 ---@param cfg table cfg table that contains scan configuration:
----`ssid` SSID == nil, don't filter SSID
----`bssid` BSSID == nil, don't filter BSSID
----`channel` channel == 0, scan all channels, otherwise scan set channel (default is 0)
----`hidden` hidden == 1, get info for router with hidden SSID (default is 0)
----@param callback function
----|' function(ap_list) end'
---- callback(ap_list) a callback function to receive the list of APs when the scan is done. Each entry in the returned array follows the format used for wifi.sta.config(), with some additional fields.
+---**ssid** SSID == `nil`, don't filter SSID
+---**bssid** BSSID == `nil`, don't filter BSSID
+---**channel** channel == 0, scan all channels, otherwise scan set channel (default is 0)
+---**hidden** hidden == 1, get info for router with hidden SSID (default is 0)
+---@param callback function |' function(ap_list) end' `callback(ap_list)` a callback function to receive the list of APs when the scan is done. Each entry in the returned array follows the format used for wifi.sta.config(), with some additional fields.
 -- The following fields are provided for each scanned AP:
---`ssid`: the network SSID
---`bssid`: the BSSID of the AP
---`channel`: primary WiFi channel of the AP
---`rssi`: Received Signal Strength Indicator value
---`auth` authentication method, one of wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK (default), wifi.WPA_WPA2_PSK
---`bandwidth`: one of the following constants: **wifi.HT20**, **wifi.HT40_ABOVE**, **wifi.HT40_BELOW**
+--**ssid**: the network SSID
+--**bssid**: the BSSID of the AP
+--**channel**: primary WiFi channel of the AP
+--**rssi**: Received Signal Strength Indicator value
+--**auth** authentication method, one of *wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK* (default), *wifi.WPA_WPA2_PSK*
+--**bandwidth**: one of the following constants: *wifi.HT20, wifi.HT40_ABOVE, wifi.HT40_BELOW*
 ---@return nil
 function wifi.sta.scan(cfg, callback) end
 
 ---Sets IP address, netmask, gateway, dns address in station mode.
 ---@param cfg table cfg table to hold configuration:
----`ip` device ip address.
----`netmask` network netmask.
----`gateway` gateway address.
----`dns name` server address.
+--**ip** device ip address.
+--**netmask** network netmask.
+--**gateway** gateway address.
+--**dns name** server address.
 ---@return nil
 function wifi.sta.setip(cfg) end
 
@@ -881,14 +878,14 @@ function wifi.sta.setip(cfg) end
 function wifi.sta.sethostname(hostname) end
 
 ---Configures the AP. The WiFi mode must be set to wifi.SOFTAP or wifi.STATIONAP before this function can be used.
----@param cfg table cfg table to hold configuration:
----`ssid` SSID chars 1-32
----`pwd` password chars 8-64
----`auth` authentication method, one of wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK (default), wifi.AUTH_WPA_WPA2_PSK
----`channel` channel number 1-14 default = 11
----`hidden` false = not hidden, true = hidden, default = false
----`max` maximum number of connections 1-4 default=4
----`beacon` beacon interval time in range 100-60000, default = 100
+---@param cfg table table to hold configuration:
+--**ssid** SSID chars 1-32
+--**pwd** password chars 8-64
+--**auth** authentication method, one of *wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK* (default), *wifi.AUTH_WPA_WPA2_PSK*
+--**channel** channel number 1-14 default = 11
+--**hidden** false = not hidden, true = hidden, default = false
+--**max** maximum number of connections 1-4 default=4
+--**beacon** beacon interval time in range 100-60000, default = 100
 ---@param save boolean
 ---|>' true' #configuration will be retained through power cycle.
 ---|' false' #configuration will not be retained through power cycle.
@@ -898,8 +895,7 @@ function wifi.ap.config(cfg, save) end
 
 ---Registers callbacks for WiFi AP events.
 ---@param event string|'"start"'|'"stop"'|'"sta_connected"'|'"sta_disconnected"'|'"probe_req"'
----@param callback function|' function(event, info) end'
---callback function(event, info) to perform when event occurs, or nil to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
+---@param callback function|' function(event, info) end' callback function(event, info) to perform when event occurs, or nil to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
 -- Event information provided for each event is as follows:
 --`start`: no additional info
 --`stop`: no additional info
@@ -939,20 +935,18 @@ ws2812 = {}
 local buffer =  {}
 
 ---Send data to up to 8 led strip using its native format which is generally Green,Red,Blue for RGB strips and Green,Red,Blue,White for RGBW strips.
----@param tbl table
---Variable number of tables, each describing a single strip. Required elements are:
+---@param tbl table Variable number of tables, each describing a single strip. Required elements are:
 --**pin** IO index, see GPIO Overview
---**data** payload to be sent to one or more WS2812 like leds through GPIO2
---Payload type could be:
---**string** representing bytes to send
---**ws2812.buffer** see Buffer module
+--**data** payload to be sent to one or more WS2812 like leds through GPIO2. Payload type could be:
+--*string* representing bytes to send
+--*ws2812.buffer* see Buffer module
 ---@return nil
 function ws2812.write(tbl, ...) end
 
 ---Allocate a new memory buffer to store led values.
 ---@param numberOfLeds integer length of the led strip
 ---@param bytesPerLed integer 3 for RGB strips and 4 for RGBW strips
----@return ws2812
+---@return ws2812 #ws2812.buffer
 function ws2812.newBuffer(numberOfLeds, bytesPerLed) end
 
 ---Return the value at the given position
@@ -979,7 +973,7 @@ function buffer:size() end
 function buffer:fill(color) end
 
 ---Returns the contents of the buffer (the pixel values) as a string. This can then be saved to a file or sent over a network.
----@return string str A string containing the pixel values.
+---@return string #A string containing the pixel values.
 function buffer:dump() end
 
 ---Inserts a string (or a buffer) into another buffer with an offset.  The buffer must have the same number of colors per led or an error will be thrown.
@@ -995,12 +989,12 @@ function buffer:replace(source, offset) end
 function buffer:mix(factor1, buffer1, ...) end
 
 ---Computes the total energy requirement for the buffer.
----@return integer sum An integer which is the sum of all the pixel values.
+---@return integer #An integer which is the sum of all the pixel values.
 function buffer:power() end
 
 ---Fade in or out. Defaults to out. Multiply or divide each byte of each led with/by the given value. Useful for a fading effect.
 ---@param value number value by which to divide or multiply each byte
----@param direction? integer|' ws2812.FADE_IN'|' ws2812.FADE_OUT'
+---@param direction? integer|' ws2812.FADE_IN'|' ws2812.FADE_OUT' direction
 ---@return nil
 function buffer:fade(value, direction) end
 
@@ -1017,5 +1011,5 @@ function buffer:shift(value, mode, i, j) end
 ---This implements the extraction function like string.sub. The indexes are in leds and all the same rules apply.
 ---@param i integer This is the start of the extracted data. Negative values can be used.
 ---@param j? integer this is the end of the extracted data. Negative values can be used. The default is -1.
----@return any --A buffer containing the extracted piece.
+---@return any #A buffer containing the extracted piece.
 function buffer:sub(i, j) end
