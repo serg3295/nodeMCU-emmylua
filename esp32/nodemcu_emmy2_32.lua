@@ -58,7 +58,7 @@ function ow.crc16(buf, crc) end
 ---@return number #CRC result as byte
 function ow.crc8(buf) end
 
----Stops forcing power onto the bus. You only need to do this if you used the 'power' flag to ow.write() or used a ow.write_bytes() and aren't about to do another read or write.
+---Stops forcing power onto the bus. You only need to do this if you used the **power** flag to `ow.write()` or used a `ow.write_bytes()` and aren't about to do another read or write.
 ---@param pin integer IO index
 ---@return nil
 function ow.depower(pin) end
@@ -88,7 +88,7 @@ function ow.reset_search(pin) end
 
 ---Looks for the next device.
 ---@param pin integer IO index
----@return string|nil #`rom_code` string with length of 8 upon success. It contains the rom code of slave device. Returns `nil` if search was unsuccessful.
+---@return string|nil #**rom_code** string with length of 8 upon success. It contains the rom code of slave device. Returns `nil` if search was unsuccessful.
 function ow.search(pin) end
 
 ---Issues a 1-Wire rom select command. Make sure you do the `ow.reset(pin)` first.
@@ -113,7 +113,7 @@ function ow.skip(pin) end
 ---@return nil
 function ow.target_search(pin, family_code) end
 
----Writes a byte. If power is 1 then the wire is held high at the end for parasitically powered devices. You are responsible for eventually depowering it by calling ow.depower() or doing another read or write.
+---Writes a byte. If power is 1 then the wire is held high at the end for parasitically powered devices. You are responsible for eventually depowering it by calling `ow.depower()` or doing another read or write.
 ---@param pin integer IO index
 ---@param v integer byte to be written to slave device
 ---@param power integer 1 for wire being held high for parasitically powered devices
@@ -146,7 +146,7 @@ local pulsecntObj = {}
 function pulsecnt.create(unit, callbackOnEvents) end
 
 ---@alias pulse_mode1
----|' pulsecnt.PCNT_COUNT_DIS' #= 0 Counter mode: Inhibit counter  (counter value will not change in this condition).
+---|' pulsecnt.PCNT_COUNT_DIS' #= 0 Counter mode: Inhibit counter (counter value will not change in this condition).
 ---|' pulsecnt.PCNT_COUNT_INC' #= 1 Counter mode: Increase counter value.
 ---|' pulsecnt.PCNT_COUNT_DEC' #= 2 Counter mode: Decrease counter value.
 
@@ -285,7 +285,7 @@ function card:get_info() end
 
 ---Mount filesystem on SD card.
 ---@param ldrv string|'"/SD0"'|'"/SD1"' name of logical drive
----@param slot? integer|'sdmmc.HS2'|'sdmmc.HS1'
+---@param slot? integer|'sdmmc.HS2'|'sdmmc.HS1' defaults to sdmmc.HS2 if omitted
 ---@return boolean
 function card:mount(ldrv, slot) end
 
@@ -314,7 +314,7 @@ sigma_delta = {}
 function sigma_delta.close(channel) end
 
 ---Sets the prescale value.
----@param channel integer  0~7, sigma-delta channel index
+---@param channel integer 0~7, sigma-delta channel index
 ---@param value integer prescale 1 to 255
 ---@return nil
 function sigma_delta.setprescale(channel, value) end
@@ -326,7 +326,7 @@ function sigma_delta.setprescale(channel, value) end
 function sigma_delta.setduty(channel, value) end
 
 ---Routes the sigma-delta channel to the specified pin. Target prescale and duty values should be applied prior to enabling the output with this command.
----@param channel integer  0~7, sigma-delta channel index
+---@param channel integer 0~7, sigma-delta channel index
 ---@param pin integer IO index
 ---@return nil
 function sigma_delta.setup(channel, pin) end
@@ -494,7 +494,7 @@ function struct.pack (fmt, d1, d2, ...) end
 
 ---Returns the values packed in string s according to the format string `fmt`. An optional i marks where in s to start reading (default is 1). After the read values, this function also returns the index in `s` where it stopped reading, which is also where you should start to read the rest of the string.
 ---@param fmt string The format string
----@param s string  The string holding the data to be unpacked
+---@param s string The string holding the data to be unpacked
 ---@param offset? integer The position to start in the string (default is 1)
 ---@return any #All the unpacked data.
 function struct.unpack (fmt, s, offset) end
@@ -594,9 +594,9 @@ function tmr.create() end
 ---|' tmr.ALARM_SINGLE' #a one-shot alarm (and no need to call tmr.unregister())
 ---|' tmr.ALARM_SEMI' #manually repeating alarm (call tmr.start() to restart)
 
----This is a convenience function combining tmr.obj:register() and tmr.obj:start() into a single call.
+---This is a convenience function combining `tmr.obj:register()` and `tmr.obj:start()` into a single call.
 ---@param interval integer timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
----@param mode t32 timer mode:
+---@param mode t32 timer mode
 ---@param foo function|" function(t) end" callback function which is invoked with the timer object as an argument
 ---@return boolean
 function tObj:alarm(interval, mode, foo) end
@@ -608,7 +608,7 @@ function tObj:interval(interval) end
 
 ---Configures a timer and registers the callback function to call on expiry.
 ---@param interval integer timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
----@param mode t32 timer mode:
+---@param mode t32 timer mode
 ---@param foo function|" function() end" callback function which is invoked with the timer object as an argument
 ---@return nil
 function tObj:register(interval, mode, foo) end
@@ -758,8 +758,8 @@ ucg = {}
 wifi = {}
 
 ---Gets the current WiFi channel.
----@return integer pch current WiFi channel (primary channel)
----@return integer sch HT20/HT40 information (secondary channel). One of the constants: wifi.HT20, wifi.HT40_ABOVE, wifi.HT40_BELOW
+---@return integer #current WiFi channel (primary channel)
+---@return integer #HT20/HT40 information (secondary channel). One of the constants: wifi.HT20, wifi.HT40_ABOVE, wifi.HT40_BELOW
 function wifi.getchannel() end
 
 ---Gets WiFi operation mode.
@@ -787,15 +787,14 @@ function wifi.start() end
 ---@return nil
 function wifi.stop() end
 
----Sets the WiFi station configuration. The WiFi mode must be set to wifi.STATION or wifi.STATIONAP before this function can be used.
+---Sets the WiFi station configuration. The WiFi mode must be set to *wifi.STATION* or *wifi.STATIONAP* before this function can be used.
 ---@param station_config table table containing configuration data for station
----`ssid` string which is less than 32 bytes.
----`pwd` string which is 8-64 or 0 bytes. Empty string indicates an open WiFi access point.
----`auto` defaults to true
----**true** to enable auto connect and connect to access point, hence with auto=true there's no need to call wifi.sta.connect()
----**false** to disable auto connect and remain disconnected from access point
----`bssid` string that contains the MAC address of the access point (optional)
--- You can set BSSID if you have multiple access points with the same SSID.
+--**ssid** string which is less than 32 bytes.
+--**pwd** string which is 8-64 or 0 bytes. Empty string indicates an open WiFi access point.
+--**auto** defaults to true
+--`true` to enable auto connect and connect to access point, hence with auto=true there's no need to call `wifi.sta.connect()`
+--`false` to disable auto connect and remain disconnected from access point
+--**bssid** string that contains the MAC address of the access point (optional). You can set BSSID if you have multiple access points with the same SSID.
 -- Note: if you set BSSID for a specific SSID and would like to configure station to connect to the same SSID only without the BSSID requirement, you MUST first configure to station to a different SSID first, then connect to the desired SSID
 -- The following formats are valid:
 -- "DE:C1:A5:51:F1:ED"
@@ -818,24 +817,24 @@ function wifi.sta.connect() end
 function wifi.sta.disconnect() end
 
 ---Registers callbacks for WiFi station status events.
----@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"authmode_changed"'|'"got_ip"'
----@param callback function|' function(event, info) end' callback function(event, info) to perform when event occurs, or `nil` to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
+---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"authmode_changed"'|'"got_ip"' WiFi station event you would like to set a callback for:
+---@param callback function|' function(event, info) end' callback `function(event, info)` to perform when event occurs, or `nil` to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
 -- Event information provided for each event is as follows:
---`start`: no additional info
---`stop`: no additional info
---`connected`: information about network/AP that was connected to:
+--`"start"`: no additional info
+--`"stop"`: no additional info
+--`"connected"`: information about network/AP that was connected to:
 --**ssid**: the SSID of the network
 --**bssid**: the BSSID of the AP
 --**channel**: the primary channel of the network
 --**auth** authentication method, one of wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK (default), wifi.WPA_WPA2_PSK
---`disconnected`: information about the network/AP that was disconnected from:
+--`"disconnected"`: information about the network/AP that was disconnected from:
 --**ssid**: the SSID of the network
 --**bssid**: the BSSID of the AP
 --**reason**: an integer code for the reason (see table below for mapping)
---`authmode_changed`: authentication mode information:
+--`"authmode_changed"`: authentication mode information:
 --**old_mode**: the previous auth mode used
 --**new_mode**: the new auth mode used
---`got_ip`: IP network information:
+--`"got_ip"`: IP network information:
 --**ip**: the IP address assigned
 --**netmask**: the IP netmask
 --**gw**: the gateway ("0.0.0.0" if no gateway)
@@ -847,13 +846,12 @@ function wifi.sta.on(event, callback) end
 function wifi.sta.getmac() end
 
 ---Scan for available networks.
----@param cfg table cfg table that contains scan configuration:
+---@param cfg table table that contains scan configuration:
 ---**ssid** SSID == `nil`, don't filter SSID
 ---**bssid** BSSID == `nil`, don't filter BSSID
 ---**channel** channel == 0, scan all channels, otherwise scan set channel (default is 0)
 ---**hidden** hidden == 1, get info for router with hidden SSID (default is 0)
----@param callback function |' function(ap_list) end' `callback(ap_list)` a callback function to receive the list of APs when the scan is done. Each entry in the returned array follows the format used for wifi.sta.config(), with some additional fields.
--- The following fields are provided for each scanned AP:
+---@param callback function |' function(ap_list) end' `callback(ap_list)` a callback function to receive the list of APs when the scan is done. Each entry in the returned array follows the format used for `wifi.sta.config()`, with some additional fields. The following fields are provided for each scanned AP:
 --**ssid**: the network SSID
 --**bssid**: the BSSID of the AP
 --**channel**: primary WiFi channel of the AP
@@ -868,7 +866,7 @@ function wifi.sta.scan(cfg, callback) end
 --**ip** device ip address.
 --**netmask** network netmask.
 --**gateway** gateway address.
---**dns name** server address.
+--**dns** name server address.
 ---@return nil
 function wifi.sta.setip(cfg) end
 
@@ -894,18 +892,18 @@ function wifi.sta.sethostname(hostname) end
 function wifi.ap.config(cfg, save) end
 
 ---Registers callbacks for WiFi AP events.
----@param event string|'"start"'|'"stop"'|'"sta_connected"'|'"sta_disconnected"'|'"probe_req"'
+---@param event string|'"start"'|'"stop"'|'"sta_connected"'|'"sta_disconnected"'|'"probe_req"' WiFi AP event you would like to set a callback for:
 ---@param callback function|' function(event, info) end' callback function(event, info) to perform when event occurs, or nil to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
 -- Event information provided for each event is as follows:
---`start`: no additional info
---`stop`: no additional info
---`sta_connected`: information about the client that connected:
+--`"start"`: no additional info
+--`"stop"`: no additional info
+--`"sta_connected"`: information about the client that connected:
 --**mac**: the MAC address
 --**id**: assigned station id (AID)
---`disconnected`: information about disconnecting client
+--`"disconnected"`: information about disconnecting client
 --**mac**: the MAC address
 --**id**: assigned station id (AID)
---`probe_req`: information about the probing client
+--`"probe_req"`: information about the probing client
 --**from**: MAC address of the probing client
 --**rssi**: Received Signal Strength Indicator value
 function wifi.ap.on(event, callback) end
@@ -916,10 +914,10 @@ function wifi.ap.getmac() end
 
 ---Sets IP address, netmask, gateway, dns address in AccessPoint mode.
 ---@param cfg table table to hold configuration:
----`ip` device ip address.
----`netmask` network netmask.
----`gateway` gateway address.
----`dns` name server address, which will be provided to clients over DHCP. (Optional)
+--**ip** device ip address.
+--**netmask** network netmask.
+--**gateway** gateway address.
+--**dns** name server address, which will be provided to clients over DHCP. (Optional)
 ---@return nil
 function wifi.ap.setip(cfg) end
 
