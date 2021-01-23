@@ -6,7 +6,7 @@ rtcmem = {}
 ---Reads one or more 32bit values from RTC user memory.
 ---@param idx integer zero-based index to start reading from
 ---@param num? number number of slots to read (default 1)
----@return any v The value(s) read from RTC user memory.
+---@return any #The value(s) read from RTC user memory.
 function rtcmem.read32(idx , num) end
 
 ---Writes one or more values to RTC user memory, starting at index idx.
@@ -33,14 +33,14 @@ function rtctime.dsleep_aligned(aligned_us, minsleep_us , option) end
 ---Converts a Unix timestamp to calendar format.
 ---@param timestamp integer
 ---@return table rtctbl containing the fields:
----year 1970 ~ 2038
----mon month 1 ~ 12 in current year
----day day 1 ~ 31 in current month
----hour
----min
----sec
----yday day 1 ~ 366 in current year
----wday day 1 ~ 7 in current weak (Sunday is 1)
+--**year** 1970 ~ 2038
+--**mon** month 1 ~ 12 in current year
+--**day** day 1 ~ 31 in current month
+--**hour**
+--**min**
+--**sec**
+--**yday** day 1 ~ 366 in current year
+--**wday** day 1 ~ 7 in current weak (Sunday is 1)
 function rtctime.epoch2cal(timestamp) end
 
 ---Returns the current time.
@@ -65,9 +65,10 @@ function rtctime.adjust_delta(microseconds) end
 si7021 = {}
 
 ---Read the internal firmware revision of the Si7021 sensor.
----@return number fwrev Firmware version * 0xFF Firmware version 1.0 * 0x20 Firmware version 2.0
+---@return number #*0xFF* Firmware version 1.0; *0x20* Firmware version 2.0
 function si7021.firmware() end
 
+---`si7021.read()`
 ---@return number hum humidity
 ---@return number temp temperature
 ---@return number hum_dec humidity decimal
@@ -75,8 +76,8 @@ function si7021.firmware() end
 function si7021.read() end
 
 ---Read the individualized 64-bit electronic serial number of the Si7021 sensor.
----@return number sna 32-bit serial number part a
----@return number snb 32-bit serial number part b, upper byte contains the device identification
+---@return number #32-bit serial number part a
+---@return number #32-bit serial number part b, upper byte contains the device identification
 function si7021.serial() end
 
 ---@alias si7021_a1 number
@@ -88,8 +89,8 @@ function si7021.serial() end
 ---|'si7021.HEATER_ENABLE' #On-chip Heater Enable
 ---|>'si7021.HEATER_DISABLE' #On-chip Heater Disable
 ---Settings for the sensors configuration register.
----@param RESOLUTION si7021_a1
----@param HEATER? si7021_a2
+---@param RESOLUTION si7021_a1 resolution
+---@param HEATER? si7021_a2 optional
 ---@param HEATER_SETTING? number 0x00 - 0x0F 3.09 mA - 94.20 mA
 ---@return number resolution 0 - 4
 ---@return integer vdds 0 VDD OK (1.9V - 3.6V) | 1 VDD LOW (1.8V - 1.9V)
@@ -138,40 +139,37 @@ local encoder = {}
 local decoder = {}
 
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
----@param tbl table  data to encode
----@param opts? table
----*opts* an optional table of options. The possible entries are:
----`depth` the maximum encoding depth needed to encode the table. The default is 20.
----`null` the string value to treat as null.
----@return sjsonenc obj A sjson.encoder object.
+---@param tbl table data to encode
+---@param opts? table an optional table of options. The possible entries are:
+--**depth** the maximum encoding depth needed to encode the table. The default is 20.
+--**null** the string value to treat as null.
+---@return sjsonenc obj A `sjson.encoder` object.
 function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
 ---@param size? integer an optional value for the number of bytes to return. The default is 1024.
----@return string | nil s A string of up to size bytes, or nil if the encoding is complete and all data has been returned.
+---@return string|nil #A string of up to size bytes, or `nil` if the encoding is complete and all data has been returned.
 function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
 ---@param tbl table data to encode
----@param opts? table
----*opts* an optional table of options. The possible entries are:
----`depth` the maximum encoding depth needed to encode the table. The default is 20.
----`null` the string value to treat as null.
----@return string s JSON string
+---@param opts? table an optional table of options. The possible entries are:
+--**depth** the maximum encoding depth needed to encode the table. The default is 20.
+--**null** the string value to treat as null.
+---@return string #JSON string
 function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object.
----@param opts? table
----*opts* an optional table of options. The possible entries are:
----`depth` the maximum encoding depth needed to encode the table. The default is 20.
----`null` the string value to treat as null.
----`metatable` a table to use as the metatable for all the new tables in the returned object.
----@return sjsondec obj A sjson.decoder object
+---@param opts? table an optional table of options. The possible entries are:
+--**depth** the maximum encoding depth needed to encode the table. The default is 20.
+--**null** the string value to treat as null.
+--**metatable** a table to use as the metatable for all the new tables in the returned object.
+---@return sjsondec obj A `sjson.decoder` object
 function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
 ---@param str string the next piece of JSON encoded data
----@return any|nil obj The constructed Lua object or nil if the decode is not yet complete.
+---@return any|nil obj The constructed Lua object or `nil` if the decode is not yet complete.
 function decoder:write(str) end
 
 ---This gets the decoded Lua object, or raises an error if the decode is not yet complete.
@@ -179,23 +177,20 @@ function decoder:result() end
 
 ---Decode a JSON string to a Lua table.
 ---@param str string JSON string to decode
----@param opts? table
----*opts* an optional table of options. The possible entries are:
----`depth` the maximum encoding depth needed to encode the table. The default is 20.
----`null` the string value to treat as null.
----`metatable` a table to use as the metatable for all the new tables in the returned object.
----@return table t Lua table representation of the JSON data
+---@param opts? table an optional table of options. The possible entries are:
+--**depth** the maximum encoding depth needed to encode the table. The default is 20.
+--**null** the string value to treat as null.
+--**metatable** a table to use as the metatable for all the new tables in the returned object.
+---@return table #Lua table representation of the JSON data
 function sjson.decode(str, opts) end
 
 --*** SNTP ***
 sntp = {}
 
 ---Attempts to obtain time synchronization.
----@param server_ip? string|table
----@param callback? function
----|' function (sec, usec, server, info) end' # if provided it will be invoked on a successful synchronization, with four parameters: seconds, microseconds, server and info.
----@param errcallback? function
----|' function()' #`errcallback` failure callback with two parameters: type of error &  string containing supplementary information.
+---@param server_ip? string|table IP
+---@param callback? function|' function (sec, usec, server, info) end' if provided it will be invoked on a successful synchronization, with four parameters: seconds, microseconds, server and info.
+---@param errcallback? function|' function()' `errcallback` failure callback with two parameters: type of error &  string containing supplementary information.
 ---@param autorepeat? boolean if this is non-nil, then the synchronization will happen every 1000 seconds and try and condition the clock if possible.
 ---@return nil
 function sntp.sync(server_ip, callback, errcallback, autorepeat) end
@@ -206,7 +201,7 @@ function sntp.sync(server_ip, callback, errcallback, autorepeat) end
 function sntp.setoffset(offset) end
 
 ---Gets the offset between the rtc clock and the NTP time.
----@return number ofs The current offset.
+---@return number offset The current offset.
 function sntp.getoffset() end
 
 --*** SOFTUART ***
@@ -216,10 +211,10 @@ softuart = {}
 local s_uart = {}
 
 ---Creates new SoftUART instance.
----@param baudrate number :SoftUART baudrate. Maximum supported is 230400.
----@param txPin number :SoftUART tx pin. If set to nil write method will not be supported.
----@param rxPin number :SoftUART rx pin. If set to nil on("data") method will not be supported.
----@return softuart swp softuart instance.
+---@param baudrate number SoftUART baudrate. Maximum supported is 230400.
+---@param txPin number SoftUART tx pin. If set to nil write method will not be supported.
+---@param rxPin number SoftUART rx pin. If set to nil on("data") method will not be supported.
+---@return softuart #softuart instance.
 function softuart.setup(baudrate, txPin, rxPin) end
 
 ---Sets up the callback function to receive data.
@@ -253,7 +248,7 @@ spi = {}
 ---Receive data from SPI.
 ---@param id integer SPI ID number: 0 for SPI, 1 for HSPI
 ---@param size number number of data items to be read
----@param default_data? any  default data being sent on MOSI (all-1 if omitted)
+---@param default_data? any default data being sent on MOSI (all-1 if omitted)
 ---@return string String containing the bytes read from SPI.
 function spi.recv(id, size, default_data) end
 
@@ -322,19 +317,19 @@ struct = {}
 ---@param fmt string The format string
 ---@param d1 any The first data item to be packed
 ---@param d2 any The second data item to be packed etc.
----@return string s The packed string.
+---@return string #The packed string.
 function struct.pack (fmt, d1, d2, ...) end
 
 ---Returns the values packed in string s according to the format string `fmt`.
 ---@param fmt string The format string
----@param s string  The string holding the data to be unpacked
+---@param s string The string holding the data to be unpacked
 ---@param offset? integer The position to start in the string (default is 1)
----@return any d All the unpacked data.
+---@return any #All the unpacked data.
 function struct.unpack (fmt, s, offset) end
 
 ---Returns the size of a string formatted according to the format string `fmt`.
 ---@param fmt string The format string
----@return integer sz The size of the string that would be output in a pack operation with this format string.
+---@return integer #The size of the string that would be output in a pack operation with this format string.
 function struct.size (fmt) end
 
 --*** SWITEC ***
@@ -377,7 +372,7 @@ function switec.close(channel) end
 tcs34725 ={}
 
 ---Initialization via this call is mandatory before values can be read.
----@return integer i 0 if setup has failed (no sensor connected?), 1 if sensor is TCS34725
+---@return integer #0 if setup has failed (no sensor connected?), 1 if sensor is TCS34725
 function tcs34725.setup() end
 
 ---Enables the sensor. Can be used to wake up after a disable.
@@ -502,7 +497,7 @@ local tObj = {}
 function tmr.delay(us) end
 
 ---Returns the system counter, which counts in microseconds. Limited to 31 bits, after that it wraps around back to zero.
----@return number --the current value of the system counter
+---@return number #the current value of the system counter
 function tmr.now() end
 
 ---Provides a simple software watchdog, which needs to be re-armed or disabled before it expires, or the system will be restarted.
@@ -511,7 +506,7 @@ function tmr.now() end
 function tmr.softwd(timeout_s) end
 
 ---Returns the system uptime, in seconds. Limited to 31 bits, after that it wraps around back to zero.
----@return number --the system uptime, in seconds, possibly wrapped around
+---@return number #the system uptime, in seconds, possibly wrapped around
 function tmr.time() end
 
 ---Feed the system watchdog.
@@ -521,7 +516,7 @@ function tmr.wdclr() end
 ---Get value of CPU CCOUNT register which contains CPU ticks. The register is 32-bit and rolls over.
 ---Converting the register's CPU ticks to us is done by dividing it to 80 or 160 (CPU80/CPU160) i.e. tmr.ccount() / node.getcpufreq().
 ---Register arithmetic works without need to account for roll over, unlike tmr.now(). Because of same reason when CCOUNT is having its 32nd bit set, it appears in Lua as negative number.
----@return number --The current value of CCOUNT register.
+---@return number #The current value of CCOUNT register.
 function tmr.ccount() end
 
 ---Creates a dynamic timer object
@@ -537,7 +532,7 @@ function tmr.create() end
 ---@param interval number timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m timer mode
 ---@param foo function | " function(t) end" #callback function which is invoked with the timer object as an argument
----@return boolean --`true` if the timer was started, `false` on error
+---@return boolean #`true` if the timer was started, `false` on error
 function tObj:alarm(interval, mode, foo) end
 
 ---Changes a registered timer's expiry interval.
@@ -554,15 +549,15 @@ function tObj:register(interval_ms, mode, foo) end
 
 ---Starts or restarts a previously configured timer. If the timer is running the timer is restarted only when restart parameter is `true`. Otherwise `false` is returned signaling error.
 ---@param restart? boolean optional boolean parameter forcing to restart already running timer
----@return boolean --true if the timer was (re)started, false on error
+---@return boolean #true if the timer was (re)started, false on error
 function tObj:start(restart) end
 
 ---Checks the state of a timer.
----@return boolean|integer|nil -- If the specified timer is registered, returns whether it is currently started and its mode. If the timer is not registered, `nil` is returned.
+---@return boolean|integer|nil #If the specified timer is registered, returns whether it is currently started and its mode. If the timer is not registered, `nil` is returned.
 function tObj:state() end
 
 ---Stops a running timer, but does *not* unregister it. A stopped timer can be restarted with `tobj:start()`.
----@return boolean --`true` if the timer was stopped, `false` on error
+---@return boolean #`true` if the timer was stopped, `false` on error
 function tObj:stop() end
 
 ---Stops the timer (if running) and unregisters the associated callback.
@@ -672,7 +667,7 @@ function uart.write(id, data1, ...) end
 ---Report the depth, in bytes, of TX or RX hardware queues associated with the UART.
 ---@param id integer UART id (0 or 1).
 ---@param dir integer|' uart.DIR_RX'|' uart.DIR_TX' #direction
----@return integer --The number of bytes in the selected FIFO.
+---@return integer #The number of bytes in the selected FIFO.
 function uart.fifodepth(id, dir) end
 
 --*** ucg Module is in nodemcu-emmy3.lua ***
@@ -701,7 +696,7 @@ function ws:config(params) end
 
 ---Attempts to establish a websocket connection to the given URL.
 ---@param url string the URL for the websocket.
----@return nil --`nil`. If it fails, an error will be delivered via `websocket:on("close", handler)`.
+---@return nil #`nil`. If it fails, an error will be delivered via `websocket:on("close", handler)`.
 function ws:connect(url) end
 
 ---Registers the callback function to handle websockets events (there can be only one handler function registered per event type).
@@ -741,8 +736,7 @@ wifi = {}
 function wifi.getchannel() end
 
 ---Get the current country info.
----@return table
---**country_info** this table contains the current country info configuration
+---@return table #`country_info` this table contains the current country info configuration
 --**country** Country code, 2 character string.
 --**start_ch** Starting channel.
 --**end_ch** Ending channel.
@@ -773,21 +767,19 @@ function wifi.getphymode() end
 function wifi.nullmodesleep(enable) end
 
 ---Wake up WiFi from suspended state or cancel pending wifi suspension.
----@param resume_cb function
----|'function() end' #Callback to execute when WiFi wakes from suspension.
+---@param resume_cb function|'function() end' Callback to execute when WiFi wakes from suspension.
 ---@return nil
 function wifi.resume(resume_cb) end
 
 ---Set the current country info.
----@param country_info table
----`country_info` This table contains the country info configuration. (If a blank table is passed to this function, default values will be configured.)
---- `country` Country code, 2 character string containing the country code (a list of country codes can be found here). (Default:"CN")
---- `start_ch` Starting channel (range:1-14). (Default:1)
---- `end_ch` Ending channel, must not be less than starting channel (range:1-14). (Default:13)
---- `policy` The policy parameter determines which country info configuration to use, country info given to station by AP or local configuration. (default:wifi.COUNTRY_AUTO)
+---@param country_info table This table contains the country info configuration. (If a blank table is passed to this function, default values will be configured.)
+--**country** Country code, 2 character string containing the country code (a list of country codes can be found here). (Default:"CN")
+--**start_ch** Starting channel (range:1-14). (Default:1)
+--**end_ch** Ending channel, must not be less than starting channel (range:1-14). (Default:13)
+--**policy** The policy parameter determines which country info configuration to use, country info given to station by AP or local configuration. (default:wifi.COUNTRY_AUTO)
 ---    `wifi.COUNTRY_AUTO` Country policy is auto, NodeMCU will use the country info provided by AP that the station is connected to. while in stationAP mode, beacon/probe respose will reflect the country info of the AP that the station is connected to.
 ---    `wifi.COUNTRY_MANUAL` Country policy is manual, NodeMCU will use locally configured country info.
----@return boolean bool *true* If configuration was sucessful.
+---@return boolean #*true* If configuration was sucessful.
 function wifi.setcountry(country_info) end
 
 ---Configures the WiFi mode to use. NodeMCU can run in one of four WiFi modes.
@@ -819,8 +811,7 @@ function wifi.setmaxtxpower(max_tpw) end
 ---@param type integer
 ---|'0' #for ESP_TOUCH
 ---|'1' #for AIR_KISS
----@param callback function
----|' function() end' #a callback function of the form function(ssid, password) end which gets called after configuration.
+---@param callback function|' function() end' a callback function of the form function(ssid, password) end which gets called after configuration.
 ---@return nil
 function wifi.startsmart(type, callback) end
 
@@ -858,8 +849,7 @@ function wifi.sta.changeap(ap_index) end
 function wifi.sta.clearconfig() end
 
 ---Sets the WiFi station configuration.
----@param station_config table
----`station_config` table containing configuration data for station
+---@param station_config table table containing configuration data for station
 ---`ssid` string which is less than 32 bytes.
 ---`pwd` string which is 0-64. Empty string indicates an open WiFi access point.
 ---`auto`
@@ -916,16 +906,15 @@ function wifi.sta.connect(connected_cb) end
 function wifi.sta.disconnect(disconnected_cb) end
 
 ---Scans AP list as a Lua table into callback function.
----@param cfg? table that contains scan configuration
----`CFG TABLE` contains scan configuration:
----`ssid` SSID == nil, don't filter SSID
----`bssid` BSSID == nil, don't filter BSSID
----`channel` channel == 0, scan all channels, otherwise scan set channel (default is 0)
----`show_hidden` show_hidden == 1, get info for router with hidden SSID (default is 0)
+---@param cfg? table `CFG TABLE` contains scan configuration:
+--**ssid** SSID == nil, don't filter SSID
+--**bssid** BSSID == nil, don't filter BSSID
+--**channel** channel == 0, scan all channels, otherwise scan set channel (default is 0)
+--**show_hidden** show_hidden == 1, get info for router with hidden SSID (default is 0)
 ---@param format? integer
 ---|' 0' #old format (SSID : Authmode, RSSI, BSSID, Channel), any duplicate SSIDs will be discarded
 ---|' 1' #new format (BSSID : SSID, RSSI, auth mode, Channel)
----@param callback function  a callback function to receive the AP table when the scan is done.
+---@param callback function a callback function to receive the AP table when the scan is done.
 ---@return nil
 function wifi.sta.getap(cfg, format, callback) end
 
@@ -934,18 +923,16 @@ function wifi.sta.getap(cfg, format, callback) end
 function wifi.sta.getapindex() end
 
 ---Get information of APs cached by ESP8266 station.
----@return table
----returns table `ap_info`:
----`qty` quantity of APs returned
----`1-5` index of AP. (the index corresponds to index used by wifi.sta.changeap() and wifi.sta.getapindex())
----`ssid` ssid of Access Point
----`pwd` password for Access Point, nil if no password was configured
----`bssid` MAC address of Access Point
----`nil` will be returned if no MAC address was configured during station configuration.
+---@return table #table `ap_info`:
+--**qty** quantity of APs returned
+--**1-5** index of AP. (the index corresponds to index used by `wifi.sta.changeap()` and `wifi.sta.getapindex()`)
+--**ssid** ssid of Access Point
+--**pwd** password for Access Point, nil if no password was configured
+--**bssid** MAC address of Access Point. `nil` will be returned if no MAC address was configured during station configuration.
 function wifi.sta.getapinfo() end
 
 ---Gets the broadcast address in station mode.
----@return string |nil s broadcast address as string, for example "192.168.0.255", returns nil if IP address = "0.0.0.0".
+---@return string |nil #broadcast address as string, for example "192.168.0.255", returns nil if IP address = "0.0.0.0".
 function wifi.sta.getbroadcast() end
 
 ---Gets the WiFi station configuration.
@@ -977,7 +964,7 @@ function wifi.sta.getconfig(return_table) end
 function wifi.sta.getdefaultconfig(return_table) end
 
 ---Gets current station hostname.
----@return string host currently configured hostname
+---@return string hostname currently configured hostname
 function wifi.sta.gethostname() end
 
 ---Gets IP address, netmask, and gateway address in station mode.
@@ -1008,7 +995,7 @@ function wifi.sta.setaplimit(qty) end
 function wifi.sta.sethostname(hostname) end
 
 ---Sets IP address, netmask, gateway address in station mode.
----@param cfg table cfg table contain IP address, netmask, and gateway
+---@param cfg table table contain IP address, netmask, and gateway
 -- { ip = "192.168.0.111",
 --  netmask = "255.255.255.0",
 --  gateway = "192.168.0.1" }
@@ -1039,8 +1026,7 @@ function wifi.sta.sleeptype(type_wanted) end
 function wifi.sta.status() end
 
 ---Sets SSID and password in AP mode.
----@param cfg table
----cfg table to hold configuration
+---@param cfg table table to hold configuration
 ---`ssid` SSID chars 1-32
 ---`pwd` password chars 8-64
 ---`auth` authentication method, one of wifi.OPEN (default), wifi.WPA_PSK, wifi.WPA2_PSK, wifi.WPA_WPA2_PSK
@@ -1077,7 +1063,7 @@ function wifi.ap.deauth(MAC) end
 function wifi.ap.getbroadcast() end
 
 ---Gets table of clients connected to device in AP mode.
----@return table table of connected clients
+---@return table #table of connected clients
 function wifi.ap.getclient() end
 
 ---Gets the current SoftAP configuration.
@@ -1117,7 +1103,7 @@ function wifi.ap.getdefaultconfig(return_table) end
 function wifi.ap.getip() end
 
 ---Gets MAC address in AP mode.
----@return string str MAC address as string, for example "1A-33-44-FE-55-BB"
+---@return string #MAC address as string, for example "1A-33-44-FE-55-BB"
 function wifi.ap.getmac() end
 
 ---Sets IP address, netmask and gateway address in AP mode.
@@ -1135,15 +1121,15 @@ function wifi.ap.setmac(mac) end
 
 ---Configure the dhcp service. Currently only supports setting the start address of the dhcp address pool.
 ---@param dhcp_config table table containing the start-IP of the DHCP address pool, eg. "192.168.1.100"
----@return any ip pool_startip, pool_endip
+---@return any #pool_startip, pool_endip
 function wifi.ap.dhcp.config(dhcp_config) end
 
 ---Starts the DHCP service.
----@return boolean b boolean indicating success
+---@return boolean #boolean indicating success
 function wifi.ap.dhcp.start() end
 
 ---Stops the DHCP service.
----@return boolean b boolean indicating success
+---@return boolean #boolean indicating success
 function wifi.ap.dhcp.stop() end
 
 ---Register callbacks for WiFi event monitor
@@ -1206,43 +1192,43 @@ local packet = {}
 
 ---This is like the string.byte method, except that it gives access to the bytes of the radio header.
 ---@param n number the byte number (1 based) to get from the radio header portion of the packet
----@return integer num 0-255 as the value of the byte nothing if the offset is not within the radio header.
+---@return integer #0-255 as the value of the byte nothing if the offset is not within the radio header.
 function packet:radio_byte(n) end
 
 ---This is like the string.byte method, except that it gives access to the bytes of the received frame.
 ---comment
 ---@param n number the byte number (1 based) to get from the received frame.
----@return integer num 0-255 as the value of the byte nothing if the offset is not within the received frame.
+---@return integer #0-255 as the value of the byte nothing if the offset is not within the received frame.
 function packet:frame_byte(n) end
 
 ---This is like the string.sub method, except that it gives access to the bytes of the radio header.
 ---@param start any Same rules as for string.sub except that it operates on the radio header.
 ---@param end_sub any
----@return string str A string according to the string.sub rules.
+---@return string #A string according to the `string.sub` rules.
 function packet:radio_sub(start, end_sub) end
 
 ---This is like the string.sub method, except that it gives access to the bytes of the received frame.
 ---@param start any Same rules as for string.sub except that it operates on the received frame.
 ---@param end_sub any
----@return string str A string according to the string.sub rules.
+---@return string #A string according to the `string.sub` rules.
 function packet:frame_sub(start, end_sub) end
 
 ---This is like the string.sub method, except that it gives access to the bytes of the radio header. It also converts them into hex efficiently.
 ---@param start any Same rules as for string.sub except that it operates on the radio header
 ---@param end_sub any
 ---@param seperator? string is an optional sting which is placed between the individual hex pairs returned.
----@return string str A string according to the string.sub rules, converted into hex with possible inserted spacers.
+---@return string #A string according to the `string.sub` rules, converted into hex with possible inserted spacers.
 function packet:radio_subhex(start, end_sub, seperator) end
 
 ---This is like the string.sub method, except that it gives access to the bytes of the received frame.
 ---@param start any Same rules as for string.sub except that it operates on the received frame.
 ---@param end_sub any
 ---@param seperator? string is an optional sting which is placed between the individual hex pairs returned.
----@return string str A string according to the string.sub rules, converted into hex with possible inserted spacers.
+---@return string #A string according to the `string.sub` rules, converted into hex with possible inserted spacers.
 function packet:frame_subhex(start, end_sub, seperator) end
 
 ---This returns a table of the information elements from the management frame. The table keys values are the information element numbers (0 - 255).
----@return table tbl A table with all the information elements in it.
+---@return table #A table with all the information elements in it.
 function packet:ie_table() end
 
 --*** WPS ***
