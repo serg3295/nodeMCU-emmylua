@@ -137,11 +137,11 @@ local pulsecntObj = {}
 ---@param unit integer ESP32 has 0 thru 7 units to count pulses on.
 ---@param callbackOnEvents? function Your Lua method to call on `event.myfunction(unit, isThr0, isThr1, isLLim, isHLim, isZero)` will be called.
 --Event will be
---    PCNT_EVT_THRES_0 (Threshold 0 hit),
---    PCNT_EVT_THRES_1 (Threshold 1 hit),
---    PCNT_EVT_L_LIM (Minimum counter value),
---    PCNT_EVT_H_LIM (Maximum counter value),
---    PCNT_EVT_ZERO (counter value zero event)
+-- - PCNT_EVT_THRES_0 (Threshold 0 hit),
+-- - PCNT_EVT_THRES_1 (Threshold 1 hit),
+-- - PCNT_EVT_L_LIM (Minimum counter value),
+-- - PCNT_EVT_H_LIM (Maximum counter value),
+-- - PCNT_EVT_ZERO (counter value zero event)
 ---@return pulsecnt #pulsecnt object
 function pulsecnt.create(unit, callbackOnEvents) end
 
@@ -207,10 +207,10 @@ qrcodegen = {}
 --**minver** the minimum version according to the QR Code Model 2 standard. If not specified, defaults to 1.
 --**maxver** the maximum version according to the QR Code Model 2 standard. If not specified, defaults to 40. Specifying a lower maximum version reduces the amount of temporary memory the function requires, so it can be worthwhile to specify a smaller value if you know the text will fit in a lower-version QR Code.
 --**ecl** the error correction level in a QR Code symbol. Higher error correction produces a larger QR Code. One of:
---    qrcodegen.LOW (default if not specified)
---    qrcodegen.MEDIUM
---    qrcodegen.QUARTILE
---    qrcodegen.HIGH
+-- - qrcodegen.LOW (default if not specified)
+-- - qrcodegen.MEDIUM
+-- - qrcodegen.QUARTILE
+-- - qrcodegen.HIGH
 --**mask** the mask pattern used in a QR Code symbol. An integer 0-7, or qrcodegen.AUTO (the default).
 --**boostecl** defaults to false.
 ---@return string|nil #The QR Code, encoded as a string. Use `qrcodegen.getSize()` and `qrcodegen.getPixel()` to extract data from the result. If the text cannot be represented within the given version range (for example it is too long) then `nil` is returned.
@@ -240,9 +240,9 @@ local card = {}
 --**wp_pin** write-protcet pin, none if omitted
 --**fmax** maximum communication frequency, defaults to 20  if omitted
 --**width** bis width, defaults to sdmmc.W1BIT if omitted, one of:
---        sdmmc.W1BIT
---        sdmmc.W4BIT
---        sdmmc.W8BIT, not supported yet
+-- - sdmmc.W1BIT
+-- - sdmmc.W4BIT
+-- - sdmmc.W8BIT, not supported yet
 ---@return sdmmc cardObj Card object. Error is thrown for invalid parameters or if SDMMC hardware or card cannot be initialized.
 function sdmmc.init(slot, cfg) end
 
@@ -263,23 +263,23 @@ function sdmmc.init(slot, cfg) end
 ---@return table Table containing the card's OCR, CID, CSD, SCR, and RCA with elements:
 --**ocr** Operation Conditions Register
 --**cid** Card IDentification:
---*date* - manufacturing date
---*mfg_id* - manufacturer ID
---*name* - product name
---*oem_id* - OEM/product ID
---*revision* - product revision
---*serial* - product serial number
+-- - date - manufacturing date
+-- - mfg_id - manufacturer ID
+-- - name - product name
+-- - oem_id - OEM/product ID
+-- - revision - product revision
+-- - serial - product serial number
 --**csd** Card-Specific Data:
---*capacity* - total number of sectors
---*card_command_class* - card command class for SD
---*csd_ver* - CSD structure format
---*mmc_ver* - MMC version (for CID format)
---*read_block_len* - block length for reads
---*sector_size* - sector size in bytes
---*tr_speed* - maximum transfer speed
+-- - capacity - total number of sectors
+-- - card_command_class - card command class for SD
+-- - csd_ver - CSD structure format
+-- - mmc_ver - MMC version (for CID format)
+-- - read_block_len - block length for reads
+-- - sector_size - sector size in bytes
+-- - tr_speed - maximum transfer speed
 --**scr**:
---*sd_spec*-  SD physical layer specification version, reported by card
---*bus_width* - bus widths supported by card
+-- - sd_spec-  SD physical layer specification version, reported by card
+-- - bus_width - bus widths supported by card
 --**rca** Relative Card Address
 function card:get_info() end
 
@@ -471,10 +471,10 @@ function device:remove() end
 --**address** data for address phase, amount of bits was defined during device creation, optional
 --**txdata** string of data to be sent to the device, optional
 --**rxlen** number of bytes to be received, optional
---**mode** optional, one of
---    sio transmit in SIO mode, default if omitted
---    dio transmit in DIO mode
---    qio transmit in QIO mode
+--**mode** optional, one of:
+-- - sio transmit in SIO mode, default if omitted
+-- - dio transmit in DIO mode
+-- - qio transmit in QIO mode
 --**addr_mode** transmit address also in selected mode if true, transmit address in SIO otherwise.
 ---@return string #String of rxlen length, or #txdata length if rxlen is omitted.
 function device:transfer(trans) end
@@ -530,9 +530,9 @@ function time.cal2epoch(calendar) end
 --**yday** day 1 ~ 366 in current year
 --**wday** day 1 ~ 7 in current weak (Sunday is 1)
 --**dst** day time adjustment:
--- *1* (DST in effect, i.e. daylight time)
--- *0* (DST not in effect, i.e. standard time)
--- *-1* (Unknown DST status)
+-- - 1, (DST in effect, i.e. daylight time)
+-- - 0, (DST not in effect, i.e. standard time)
+-- - -1, (Unknown DST status)
 function time.epoch2cal(time) end
 
 ---Returns current system time in the Unix epoch (seconds from midnight 1970/01/01).
@@ -551,9 +551,9 @@ function time.get() end
 --**yday** day 1 ~ 366 in current year
 --**wday** day 1 ~ 7 in current weak (Sunday is 1)
 --**dst** day time adjustment:
--- *1* (DST in effect, i.e. daylight time)
--- *0* (DST not in effect, i.e. standard time)
--- *-1* (Unknown DST status)
+-- - 1, (DST in effect, i.e. daylight time)
+-- - 0, (DST not in effect, i.e. standard time)
+-- - -1, (Unknown DST status)
 function time.getlocal() end
 
 ---Initializes and starts NTP client
@@ -677,9 +677,9 @@ uart = {}
 ---|' "data"' #"data", data has been received on the UART.
 ---|' "error"' #error occurred on the UART.
 ---@param number_end_char? number Only for event data.
--- if pass in a number *n* < 255, the callback will called when *n* chars are received.
--- if *n* = 0, will receive every char in buffer.
--- if pass in a one char string "c", the callback will called when "c" is encounterd, or max *n* = 255 received.
+-- - if pass in a number *n* < 255, the callback will called when *n* chars are received.
+-- - if *n* = 0, will receive every char in buffer.
+-- - if pass in a one char string "c", the callback will called when "c" is encounterd, or max *n* = 255 received.
 ---@param fun? function
 ---|' function(data) end' #for event "data"
 ---|' function(err) end' #for event "error" `err` could be one of "out_of_memory", "break", "rx_error".
@@ -792,8 +792,8 @@ function wifi.stop() end
 --**ssid** string which is less than 32 bytes.
 --**pwd** string which is 8-64 or 0 bytes. Empty string indicates an open WiFi access point.
 --**auto** defaults to true
---`true` to enable auto connect and connect to access point, hence with auto=true there's no need to call `wifi.sta.connect()`
---`false` to disable auto connect and remain disconnected from access point
+-- - `true` to enable auto connect and connect to access point, hence with auto=true there's no need to call `wifi.sta.connect()`
+-- - `false` to disable auto connect and remain disconnected from access point
 --**bssid** string that contains the MAC address of the access point (optional). You can set BSSID if you have multiple access points with the same SSID.
 -- Note: if you set BSSID for a specific SSID and would like to configure station to connect to the same SSID only without the BSSID requirement, you MUST first configure to station to a different SSID first, then connect to the desired SSID
 -- The following formats are valid:
