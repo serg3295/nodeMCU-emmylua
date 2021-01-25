@@ -29,11 +29,11 @@ function adc.setup(adc_number, channel, atten) end
 ---Samples the ADC. You should to call `setwidth()` before `read()`.
 ---@param adc_number integer|'adc.ADC1' #Only adc.ADC1 now
 ---@param channel integer|' 0'|' 1'|' 2'|' 3'|' 4'|' 5'|' 6'|' 7' #0 to 7 for adc.ADC1
----@return number --the sampled value
+---@return number #the sampled value
 function adc.read(adc_number, channel) end
 
 ---Read Hall sensor (GPIO36, GPIO39). We recommend using 12-bits width on ADC1.
----@return number --the sampled value
+---@return number #the sampled value
 function adc.read_hall_sensor() end
 
 --*** BIT ***
@@ -42,76 +42,76 @@ bit = {}
 ---Arithmetic right shift a number equivalent to `value >> shift` in C.
 ---@param value integer the value to shift
 ---@param shift integer positions to shift
----@return integer --the number shifted right (arithmetically)
+---@return integer #the number shifted right (arithmetically)
 function bit.arshift(value, shift) end
 
 ---Bitwise *AND*, equivalent to `val1 & val2 & ... & valn` in C.
 ---@param val1 integer first *AND* argument
 ---@param val2 integer second *AND* argument
 ---@vararg integer
----@return integer --the bitwise *AND* of all the arguments
+---@return integer #the bitwise *AND* of all the arguments
 function bit.band(val1, val2, ...) end
 
 ---Generate a number with a 1 bit (used for mask generation). Equivalent to `1 << position` in C
 ---@param position integer position of the bit that will be set to 1
----@return integer --a number with only one 1 bit at position (the rest are set to 0)
+---@return integer #a number with only one 1 bit at position (the rest are set to 0)
 function bit.bit(position) end
 
 ---Bitwise negation, equivalent to `~value in C.
 ---@param value integer the number to negate
----@return integer --the bitwise negated value of the number
+---@return integer #the bitwise negated value of the number
 function bit.bnot(value) end
 
 ---Bitwise *OR*, equivalent to `val1 | val2 | ... | valn` in C.
 ---@param val1 integer first *OR* argument.
 ---@param val2 integer second *OR* argument.
 ---@vararg integer
----@return integer --the bitwise *OR* of all the arguments
+---@return integer #the bitwise *OR* of all the arguments
 function bit.bor(val1, val2, ...) end
 
 ---Bitwise *XOR*, equivalent to `val1 ^ val2 ^ ... ^ valn` in C.
 ---@param val1 integer first *XOR* argument
 ---@param val2 integer second *XOR* argument
 ---@vararg integer
----@return integer --the bitwise *XOR* of all the arguments
+---@return integer #the bitwise *XOR* of all the arguments
 function bit.xor(val1, val2, ...) end
 
 ---Clear bits in a number.
 ---@param value integer the base number
 ---@param pos1 integer position of the first bit to clear
 ---@vararg integer
----@return integer --the number with the bit(s) cleared in the given position(s)
+---@return integer #the number with the bit(s) cleared in the given position(s)
 function bit.clear(value, pos1, ...) end
 
 ---Test if a given bit is cleared.
 ---@param value integer the value to test
 ---@param position integer bit position to test
----@return boolean --`true` if the bit at the given position is 0, `false` othewise
+---@return boolean #`true` if the bit at the given position is 0, `false` othewise
 function bit.isclear(value, position) end
 
 ---Test if a given bit is set.
 ---@param value integer the value to test
 ---@param position integer bit position to test
----@return boolean --`true` if the bit at the given position is 0, `false` othewise
+---@return boolean #`true` if the bit at the given position is 0, `false` othewise
 function bit.isset(value, position) end
 
 ---Left-shift a number, equivalent to `value << shift` in C.
 ---@param value integer the value to shift
 ---@param shift integer positions to shift
----@return integer --the number shifted left
+---@return integer #the number shifted left
 function bit.lshift(value, shift) end
 
 ---Logical right shift a number, equivalent to `( unsigned )value >> shift` in C.
 ---@param value integer the value to shift.
 ---@param shift integer positions to shift.
----@return integer --the number shifted right (logically)
+---@return integer #the number shifted right (logically)
 function bit.rshift(value, shift) end
 
 ---Set bits in a number.
 ---@param value integer the base number.
 ---@param pos1 integer position of the first bit to set.
 ---@vararg integer
----@return integer --the number with the bit(s) set in the given position(s)
+---@return integer #the number with the bit(s) set in the given position(s)
 function bit.set(value, pos1, ...) end
 
 --*** BTHCI ***
@@ -145,11 +145,11 @@ function bthci.adv.setdata(advbytes, callback) end
 --**interval_min** value in units of 0.625ms. Default 0x0400 (0.64s).
 --**interval_max** value in units of 0.625ms. Default 0x0800 (1.28s).
 --**type** advertising type, one of following constants:
---*bthci.adv.CONN_UNDIR*, the default (ADV_IND in BT spec)
---*bthci.adv.CONN_DIR_HI* (ADV_DIRECT_IND, high duty cycle in the BT spec)
---*bthci.adv.SCAN_UNDIR* (ADV_SCAN_IND in the BT spec)
---*bthci.adv.NONCONN_UNDIR* (ADV_NONCONN_IND in the BT spec)
---*bthci.adv.CONN_DIR_LO* (ADV_DIRECT_IND, low duty cycle in the BT spec)
+-- - bthci.adv.CONN_UNDIR, the default (ADV_IND in BT spec)
+-- - bthci.adv.CONN_DIR_HI (ADV_DIRECT_IND, high duty cycle in the BT spec)
+-- - bthci.adv.SCAN_UNDIR (ADV_SCAN_IND in the BT spec)
+-- - bthci.adv.NONCONN_UNDIR (ADV_NONCONN_IND in the BT spec)
+-- - bthci.adv.CONN_DIR_LO (ADV_DIRECT_IND, low duty cycle in the BT spec)
 --**own_addr_type** own address type. Default 0 (public address).
 --**peer_addr_type** peer address type. Default 0 (public address).
 --**peer_addr** TODO, not yet implemented
@@ -235,25 +235,25 @@ function hashobj:finalize() end
 ---|'"SHA512"'
 ---Create a digest/hash object that can have any number of strings added to it.
 ---@param algo crypto_algo the hash algorithm to use, case insensitive string
----@return hashobj --Hasher object with update and finalize functions available.
+---@return hashobj #Hasher object with update and finalize functions available.
 function crypto.new_hash(algo) end
 
 ---Create an object for calculating a HMAC (Hashed Message Authentication Code, aka "signature").
 ---@param algo crypto_algo the hash algorithm to use, case insensitive string
 ---@param key any the signing key (may be a binary string)
----@return hashobj --Hasher object with update and finalize functions available.
+---@return hashobj #Hasher object with update and finalize functions available.
 function crypto.new_hmac(algo, key) end
 
 --*** DAC ***
 dac = {}
 
 ---Disables DAC output on the related GPIO.
----@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2' #DAC channel, one of
+---@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2' DAC channel, one of
 ---@return nil
 function dac.disable(channel) end
 
 ---Enables DAC output on the related GPIO.
----@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2' # DAC channel, one of
+---@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2' DAC channel, one of
 ---@return nil
 function dac.enable(channel) end
 
@@ -289,49 +289,49 @@ encoder = {}
 
 ---Provides a Base64 representation of a (binary) Lua string.
 ---@param binary string binary input string to Base64 encode
----@return string --A Base64 encoded string.
+---@return string #A Base64 encoded string.
 function encoder.toBase64(binary) end
 
 ---Decodes a Base64 representation of a (binary) Lua string back into the original string. An error is thrown if the string is not a valid base64 encoding.
 ---@param b64 string Base64 encoded input string
----@return string --The decoded Lua (binary) string.
+---@return string #The decoded Lua (binary) string.
 function encoder.fromBase64(b64) end
 
 ---Provides an ASCII hex representation of a (binary) Lua string. Each byte in the input string is represented as two hex characters in the output.
 ---@param binary string binary input string to get hex representation for
----@return string --An ASCII hex string.
+---@return string #An ASCII hex string.
 function encoder.toHex(binary) end
 
 ---Returns the Lua binary string decode of a ASCII hex string. Each byte in the output string is represented as two hex characters in the input. An error is thrown if the string is not a valid base64 encoding.
 ---@param hexstr string hexstr An ASCII hex string.
----@return string --Decoded string of hex representation.
+---@return string #Decoded string of hex representation.
 function encoder.fromHex(hexstr) end
 
 --*** ETH ***
 eth = {}
 
 ---Get MAC address.
----@return string --MAC address as string "aa:bb:cc:dd:ee:dd".
+---@return string #MAC address as string "aa:bb:cc:dd:ee:dd".
 function eth.get_mac() end
 
 ---Get Ethernet connection speed.
----@return any --Connection speed in Mbit/s, or error if not connected. - 10 - 100
+---@return any #Connection speed in Mbit/s, or error if not connected. - 10 - 100
 function eth.get_speed() end
 
 ---Initialize the PHY chip and set up its tcpip adapter.
 ---@param cfg table table containing configuration data. All entries are mandatory:
 --**addr** PHY address, 0 to 31
 --**clock_mode** external/internal clock mode selection, one of
---    eth.CLOCK_GPIO0_IN
---    eth.CLOCK_GPIO0_OUT
---    eth.CLOCK_GPIO16_OUT
---    eth.CLOCK_GPIO17_OUT
+-- - eth.CLOCK_GPIO0_IN
+-- - eth.CLOCK_GPIO0_OUT
+-- - eth.CLOCK_GPIO16_OUT
+-- - eth.CLOCK_GPIO17_OUT
 --**mdc** MDC pin number
 --**mdio** MDIO pin number
 --**phy** PHY chip model, one of
---    eth.PHY_IP101
---    eth.PHY_LAN8720
---    eth.PHY_TLK110
+-- - eth.PHY_IP101
+-- - eth.PHY_LAN8720
+-- - eth.PHY_TLK110
 --**power** power enable pin, optional
 ---@return nil
 function eth.init(cfg) end
@@ -368,7 +368,7 @@ function file.chdir(dir) end
 
 ---Determines whether the specified file exists.
 ---@param filename string|'""' file to check
----@return boolean --`true` of the file exists (even if 0 bytes in size), and `false` if it does not exist
+---@return boolean #`true` of the file exists (even if 0 bytes in size), and `false` if it does not exist
 function file.exists(filename) end
 
 ---Format the file system. Completely erases any existing file system and writes a new one.
@@ -387,7 +387,7 @@ function file.fscfg() end
 function file.fsinfo() end
 
 ---Lists all files in the file system.
----@return table --a lua table which contains the `{file name: file size}` pairs
+---@return table #a lua table which contains the `{file name: file size}` pairs
 function file.list(pattern) end
 
 ---Registers callback functions.
@@ -407,7 +407,7 @@ function file.on(event, foo) end
 ---| ' "r+"' # update mode, all previous data is preserved
 ---| ' "w+"' # update mode, all previous data is erased
 ---| ' "a+"' # append update mode, previous data is preserved, writing is only allowed at the end of file
----@return file --file object if file opened ok. nil if file not opened, or not exists (read modes).
+---@return file #file object if file opened ok. nil if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
 ---Remove a file from the file system. The file must not be currently open.
@@ -441,7 +441,7 @@ function fObj:flush() end
 ---if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
 ---if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
 ---if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
----@return string|nil --File content as a string, or `nil` when EOF
+---@return string|nil #File content as a string, or `nil` when EOF
 function file.read(n_or_char) end
 
 ---Read content from the open file.
@@ -449,15 +449,15 @@ function file.read(n_or_char) end
 ---if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
 ---if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
 ---if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
----@return string|nil --File content as a string, or `nil` when EOF
+---@return string|nil #File content as a string, or `nil` when EOF
 function fObj:read(n_or_char) end
 
 ---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.
----@return string|nil --File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
+---@return string|nil #File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 function file.readline() end
 
 ---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.
----@return string|nil --File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
+---@return string|nil #File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 function fObj:readline() end
 
 ---@alias seekwhence32_f
@@ -468,33 +468,33 @@ function fObj:readline() end
 ---Sets and gets the file position, measured from the beginning of the file, to the position given by offset plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
 ---@param whence? seekwhence32_f
 ---@param offset? integer default 0
----@return integer --the resulting file position, or `nil` on error
+---@return integer #the resulting file position, or `nil` on error
 function file.seek(whence, offset) end
 
 ---Sets and gets the file position, measured from the beginning of the file, to the position given by offset plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
 ---@param whence? seekwhence32_f
 ---@param offset? integer default 0
----@return integer --the resulting file position, or `nil` on error
+---@return integer #the resulting file position, or `nil` on error
 function fObj:seek(whence, offset) end
 
 ---Write a string to the open file.
 ---@param str string|'""' #content to be write to file
----@return boolean|nil --`true` if write ok, `nil` on error
+---@return boolean|nil #`true` if write ok, `nil` on error
 function file.write(str) end
 
 ---Write a string to the open file.
 ---@param str string|'""' #content to be write to file
----@return boolean|nil --`true` if write ok, `nil` on error
+---@return boolean|nil #`true` if write ok, `nil` on error
 function fObj:write(str) end
 
 ---Write a string to the open file and append '\n' at the end.
 ---@param str string | '""' #content to be write to file
----@return boolean|nil --`true` if write ok, `nil` on error
+---@return boolean|nil #`true` if write ok, `nil` on error
 function file.writeline(str) end
 
 ---Write a string to the open file and append '\n' at the end.
 ---@param str string | '""'  #content to be write to file
----@return boolean|nil --`true` if write ok, `nil` on error
+---@return boolean|nil #`true` if write ok, `nil` on error
 function fObj:writeline(str) end
 
 --*** GPIO ***
@@ -504,21 +504,21 @@ gpio = {}
 ---@param tbl table List of configuration tables:
 ---**gpio** one or more (given as list) pins,
 ---**dir** direction, one of
----    gpio.IN
----    gpio.OUT
----    gpio.IN_OUT
+-- - gpio.IN
+-- - gpio.OUT
+-- - gpio.IN_OUT
 ---**opendrain** 1 enables opendrain mode, defaults to 0 if omitted
 ---**pull** enable pull-up and -down resistors, one of
----    gpio.FLOATING -- disables both pull-up and -down
----    gpio.PULL_UP -- enables pull-up and disables pull-down
----    gpio.PULL_DOWN -- enables pull-down and disables pull-up
----    gpio.PULL_UP_DOWN -- enables both pull-up and -down
+-- - gpio.FLOATING -- disables both pull-up and -down
+-- - gpio.PULL_UP -- enables pull-up and disables pull-down
+-- - gpio.PULL_DOWN -- enables pull-down and disables pull-up
+-- - gpio.PULL_UP_DOWN -- enables both pull-up and -down
 ---@return nil
 function gpio.config(tbl) end
 
 ---Read digital GPIO pin value.
 ---@param pin integer pin to read,
----@return integer --0 = low, 1 = high
+---@return integer #0 = low, 1 = high
 function gpio.read(pin) end
 
 ---Set the drive strength of a given GPIO pin. The higher the drive strength, the more current can be sourced/sunk from the pin. The exact maximum depends on the power domain of the pin and how much current other pins in that domain are consuming.
@@ -542,8 +542,8 @@ function gpio.set_drive(pin, strength) end
 ---|' gpio.INTR_LOW' #for trigger on low level
 ---|' gpio.INTR_HIGH' #for trigger on high level
 ---@param callback? function optional function to be called when trigger fires. If `nil` or omitted (and type is not `gpio.INTR_DISABLE`) then any previously-set callback will continue to be used. Parameters are:
---    pin
---    level
+-- - pin
+-- - level
 ---@return nil
 function gpio.trig(pin , type , callback) end
 
@@ -578,7 +578,7 @@ local HTTP = {}
 --**headers** Table of headers to add to the request.
 --**max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
 --**timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
----@return http --The connection object.
+---@return http #The connection object.
 function http.createConnection(url, method, options) end
 
 ---Set a callback to be called when a certain event occurs.
@@ -592,7 +592,7 @@ function http.createConnection(url, method, options) end
 function HTTP:on(event, callback) end
 
 ---Opens the connection to the server and issues the request.
----@return any|nil --In asynchronous mode, always returns `nil`. In synchronous mode, it returns 2 results, `status_code`, `connected` where connected is `true` if the connection is still open.
+---@return any|nil #In asynchronous mode, always returns `nil`. In synchronous mode, it returns 2 results, `status_code`, `connected` where connected is `true` if the connection is still open.
 function HTTP:request() end
 
 ---Sets the connection method.
@@ -633,7 +633,7 @@ function HTTP:close() end
 --**max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
 --**timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
 ---@param callback? function|nil|' function(code, data) end'
----@return any|nil --In synchronous mode, returns 3 results `status_code, body, headers` once the request has completed. In asynchronous mode, returns `nil` immediately.
+---@return any|nil #In synchronous mode, returns 3 results `status_code, body, headers` once the request has completed. In asynchronous mode, returns `nil` immediately.
 function http.get(url, options, callback) end
 
 ---Executes a single HTTP POST request and closes the connection. If a callback is specifed then the function operates in asynchronous mode, otherwise it is synchronous.
@@ -646,7 +646,7 @@ function http.get(url, options, callback) end
 --**timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
 ---@param body any The body to post. Required and must already be encoded in the appropriate format, but may be empty.
 ---@param callback? function|' function(code, data) end' Should be `nil` or omitted to specify synchronous behaviour, otherwise a callback function to be invoked when the response has been received or an error occurred, which is called with the arguments **status_code**, **body** and **headers**. In case of an error status_code will be a negative number.
----@return any|nil --In synchronous mode, returns 3 results `status_code, body, headers` once the request has completed. In asynchronous mode, returns `nil` immediately.
+---@return any|nil #In synchronous mode, returns 3 results `status_code, body, headers` once the request has completed. In asynchronous mode, returns `nil` immediately.
 function http.post(url, options, body, callback) end
 
 --*** I2C ***
@@ -661,14 +661,13 @@ i2c = {}
 ---@param ack_check_en? boolean
 ---|>' true'  #enable check for slave ACK
 ---|' false' #disable check for slave ACK
----@return boolean --`true` if ack received (always for ids i2c.HW0 and i2c.HW1), `false` if no ack received (only possible for i2c.SW).
+---@return boolean #`true` if ack received (always for ids i2c.HW0 and i2c.HW1), `false` if no ack received (only possible for i2c.SW).
 function i2c.address(id, device_addr, direction, ack_check_en) end
 
 ---Read (SW) or queue (HWx) data for variable number of bytes.
 ---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
 ---@param len number number of data bytes
----@return string|nil --`string` of received data for interface i2c.SW
---`nil` for ids i2c.HW0 and i2c.HW1
+---@return string|nil #`string` of received data for interface i2c.SW; `nil` for ids i2c.HW0 and i2c.HW1
 function i2c.read(id, len) end
 
 ---Initialize the I²C interface for master mode.
@@ -696,7 +695,7 @@ function i2c.stop(id) end
 ---@param id integer|'i2c.HW0'|'i2c.HW1' #interface id, i2c.SW not allowed
 ---@param cb_fn? function `cb_fn(data, ack)` function to be called when transfer finished
 ---@param to_ms? integer timeout for the transfer in ms, defaults to 0=infinite
----@return any|nil --synchronous operation:
+---@return any|nil #synchronous operation:
 --`data` string of received data (`nil` if no read or NACK)
 --`ack` `true` if ACK received, `false` for NACK
 --`nil` for asynchronous operation
@@ -708,7 +707,7 @@ function i2c.transfer(id, cb_fn, to_ms) end
 ---@param ack_check_en? boolean
 ---|>' true' #enable check for slave ACK
 ---|' false' #disable check for slave ACK
----@return number --number of bytes written
+---@return number #number of bytes written
 function i2c.write(id, dataN, ack_check_en) end
 
 ---Registers or unregisters an event callback handler.
@@ -721,8 +720,8 @@ function i2c.slave.on(id, event, cb_fn) end
 ---Initialize the I²C interface for slave mode.
 ---@param id integer|'i2c.HW0'|'i2c.HW1' #interface id,
 ---@param slave_config table table containing slave configuration information
---**sda** IO index, see GPIO Overview
---**scl** IO index, see GPIO Overview
+--**sda** IO index
+--**scl** IO index
 --**addr** slave address (7bit or 10bit)
 --**10bit** enable 10bit addressing with true, use 7bit with false (optional, defaults to false is omitted)
 --**rxbuf_len** length of receive buffer (optional, defaults to 128 if omitted)
@@ -734,7 +733,7 @@ function i2c.slave.setup(id, slave_config) end
 ---@param id integer|'i2c.HW0'|'i2c.HW1' #interface id
 ---@param data1 number|string|table data can be numbers, string or lua table.
 ---@vararg number|string|table
----@return number --number of bytes written
+---@return number #number of bytes written
 function i2c.slave.send(id, data1, ...) end
 
 --*** I2S ***
@@ -742,57 +741,58 @@ i2s ={}
 
 ---Mute the I2S channel. The hardware buffer is instantly filled with silence.
 ---@param i2s_num integer|'0'|'1' #I2S peripheral
----@return nil --An error is thrown in case of invalid parameters or if the i2s driver failed.
+---@return nil #An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.mute(i2s_num) end
 
 ---Read data from I2S receive buffer.
 ---@param i2s_num integer|'0'|'1' #I2S peripheral
 ---@param size number Bytes to read
 ---@param wait_ms? number Millisecond to wait if data is not ready. Optional, defaults to 0 (not to wait) when omitted.
----@return any --Data read from data-in pin. If data is not ready in wait_ms millisecond, less than size bytes can be returned. An error is thrown in case of invalid parameters or if the i2s driver failed.
+---@return any #Data read from data-in pin. If data is not ready in wait_ms millisecond, less than size bytes can be returned. An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.read(i2s_num, size, wait_ms) end
 
 ---Configuration and start I2S bus.
 ---@param i2s_num integer|'0'|'1' #I2S peripheral
 ---@param cfg table table containing configuration data:
 --**mode** I2S work mode. Optional, defaults to i2s.MODE_MASTER + i2s.MODE_TX when omitted.
---i2s.MODE_MASTER
---i2s.MODE_SLAVE
---i2s.MODE_TX
---i2s.MODE_RX
---i2s.MODE_DAC_BUILT_IN
---i2s.MODE_ADC_BUILT_IN
---i2s.MODE_PDM
+-- - i2s.MODE_MASTER
+-- - i2s.MODE_SLAVE
+-- - i2s.MODE_TX
+-- - i2s.MODE_RX
+-- - i2s.MODE_DAC_BUILT_IN
+-- - i2s.MODE_ADC_BUILT_IN
+-- - i2s.MODE_PDM
 --**rate** audio sample rate. Optional, defauls to 44100 when omitted.
 --**bits** bits per sample. Optional, defaults to 16 when omitted.
 --**channel** channel format of I2S stream. Optional, defaults to i2s.CHANNEL_RIGHT_LEFT when omitted.
---i2s.CHANNEL_RIGHT_LEFT
---i2s.CHANNEL_ALL_LEFT
---i2s.CHANNEL_ONLY_LEFT
---i2s.CHANNEL_ALL_RIGHT
---i2s.CHANNEL_ONLY_RIGHT
+-- - i2s.CHANNEL_RIGHT_LEFT
+-- - i2s.CHANNEL_ALL_LEFT
+-- - i2s.CHANNEL_ONLY_LEFT
+-- - i2s.CHANNEL_ALL_RIGHT
+-- - i2s.CHANNEL_ONLY_RIGHT
 --**format** communication format. Optional, defaults to i2s.FORMAT_I2S + i2s.FORMAT_I2S_MSB when omitted.
---i2s.FORMAT_I2S
---i2s.FORMAT_I2S_MSB
---i2s.FORMAT_I2S_LSB
---i2s.FORMAT_PCM
---i2s.FORMAT_PCM_SHORT
---i2s.FORMAT_PCM_LONG
+-- - i2s.FORMAT_I2S
+-- - i2s.FORMAT_I2S_MSB
+-- - i2s.FORMAT_I2S_LSB
+-- - i2s.FORMAT_PCM
+-- - i2s.FORMAT_PCM_SHORT
+-- - i2s.FORMAT_PCM_LONG
 --**buffer_count** number of dma buffers. Optional, defaults to 2 when omitted.
 --**buffer_len** size of one dma buffer. Optional, defaults to rate/100 when omitted.
 --**bck_pin** clock pin, optional
 --**ws_pin** WS pin, optional
 --**data_out_pin** data output pin, optional
 --**data_in_pin** data input pin, optional
---**dac_mode** DAC mode configuration. Optional, defaults to i2s.--**DAC_CHANNEL_DISABLE** when omitted.
---i2s.DAC_CHANNEL_DISABLE
---i2s.DAC_CHANNEL_RIGHT
---i2s.DAC_CHANNEL_LEFT
---i2s.DAC_CHANNEL_BOTH
+--**dac_mode** DAC mode configuration. Optional, defaults to i2s.
+-- - i2s.DAC_CHANNEL_DISABLE (DAC_CHANNEL_DISABLE) when omitted.
+-- - i2s.DAC_CHANNEL_RIGHT
+-- - i2s.DAC_CHANNEL_LEFT
+-- - i2s.DAC_CHANNEL_BOTH
 --**adc1_channel** ADC1 channel number 0..7. Optional, defaults to off when omitted.
----@param cb function function called when transmit data is requested or received data is available. The function is called with parameters **i2s_num** and **dir**
---**dir** is "tx" for TX data request. Function shall call i2s.write().
---**dir** is "rx" for RX data available. Function shall call i2s.read().
+---@param cb function function called when transmit data is requested or received data is available. The function is called with parameters **i2s_num** and
+--**dir**
+-- - "tx", for TX data request. Function shall call i2s.write().
+-- - "rx", for RX data available. Function shall call i2s.read().
 ---@return nil
 function i2s.start(i2s_num, cfg, cb) end
 
@@ -817,16 +817,16 @@ local channel = {}
 ---@param tbl table List of configuration tables:
 --**gpio** one or more (given as list) pins, see GPIO Overview
 --**bits** Channel duty depth. Defaults to ledc.TIMER_13_BIT. Otherwise one of
---    ledc.TIMER_10_BIT  ...   ledc.TIMER_15_BIT
+-- - ledc.TIMER_10_BIT  ...   ledc.TIMER_15_BIT
 --**mode** High-speed mode or low-speed mode
---    ledc.HIGH_SPEED or ledc.LOW_SPEED
+-- - ledc.HIGH_SPEED or ledc.LOW_SPEED
 --**timer** The timer source of channel
---    ledc.TIMER_0  ...  ledc.TIMER_3
+-- - ledc.TIMER_0  ...  ledc.TIMER_3
 --**channel** The timer source of channel
---    ledc.CHANNEL_0  ...  ledc.CHANNEL_7
+-- - ledc.CHANNEL_0  ...  ledc.CHANNEL_7
 --**frequency** Timer frequency(Hz)
---**duty** Channel duty, the duty range is [0, (2**bit_num) - 1]. Example: if --ledc.TIMER_13_BIT is used maximum value is 4096 x 2 -1 = 8091
----@return ledc --ledc.channel
+--**duty** Channel duty, the duty range is [0, (2**bit_num) - 1]. Example: if `ledc.TIMER_13_BIT` is used maximum value is 4096 x 2 -1 = 8091
+---@return ledc #ledc.channel
 function ledc.newChannel(tbl) end
 
 ---Disable LEDC output, and set idle level.
@@ -840,7 +840,7 @@ function channel:stop(idleLevel) end
 function channel:setfreq(frequency) end
 
 ---Get channel frequency (Hz)
----@return number --0 error; Others current LEDC frequency
+---@return number #0 error; Others current LEDC frequency
 function channel:getfreq() end
 
 ---Set channel duty
@@ -849,7 +849,7 @@ function channel:getfreq() end
 function channel:setduty(duty) end
 
 ---Get channel duty
----@return number --(-1) parameter error; Others current LEDC duty
+---@return number #(-1) parameter error; Others current LEDC duty
 function channel:getduty() end
 
 ---Resets the timer
@@ -884,7 +884,7 @@ function channel:fadewithstep(targetDuty, scale, cycleNum, wait) end
 ---@param direction integer|'ledc.FADE_DECREASE'|'ledc.FADE_INCREASE' #Set the direction of the gradient.
 ---@param scale number Set gradient change amplitude.
 ---@param cycleNum number Set how many LEDC tick each time the gradient lasts.
----@param stepNum number  Set the number of the gradient.
+---@param stepNum number Set the number of the gradient.
 ---@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE' #Whether to block until fading done.
 ---@return nil
 function channel:fade(duty, direction, scale, cycleNum, stepNum, wait) end
@@ -1007,8 +1007,8 @@ function NETSRV.close() end
 function NETSRV.listen(port, ip, fun) end
 
 ---Returns server local address/port.
----@return integer port or nil if not listening
----@return string ip or nil if not listening
+---@return integer #port or `nil` if not listening
+---@return string #ip or `nil` if not listening
 function NETSRV.getaddr() end
 
 ---Closes socket.
@@ -1029,13 +1029,13 @@ function NETSOCKET:connect(port, ip_or_domain) end
 function NETSOCKET:dns(domain, fun) end
 
 ---Retrieve port and ip of remote peer.
----@return integer port or nil if not connected
----@return string --ip or `nil` if not connected
+---@return integer #port or `nil` if not connected
+---@return string #ip or `nil` if not connected
 function NETSOCKET:getpeer() end
 
 ---Retrieve local port and ip of socket.
----@return integer port or nil if not connected
----@return string --ip or `nil` if not connected
+---@return integer #port or `nil` if not connected
+---@return string #ip or `nil` if not connected
 function NETSOCKET:getaddr() end
 
 ---Throttle data reception by placing a request to block the TCP receive function. net.socket:hold()
@@ -1043,9 +1043,8 @@ function NETSOCKET:getaddr() end
 function NETSOCKET:hold() end
 
 ---Register callback functions for specific events.
----@param event string|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"'
----@param fun nil|function|' function(net.socket, string?) end)'
--- callback function. Can be nil to remove callback.
+---@param event string|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' event
+---@param fun nil|function|' function(net.socket, string?) end)' callback function. Can be nil to remove callback.
 ---@return nil
 function NETSOCKET:on(event, fun) end
 
@@ -1090,12 +1089,12 @@ function UDPSOCKET:dns(domain, fun) end
 
 ---Retrieve local port and ip of socket.
 ---@return integer port or nil if not connected
----@return string --ip or nil if not connected
+---@return string #ip or nil if not connected
 function UDPSOCKET:getaddr() end
 
 ---Gets the IP address of the DNS server used to resolve hostnames.
 ---@param dns_index integer|'0'|'1'
----@return string --IP address (string) of DNS server
+---@return string #IP address (string) of DNS server
 function net.dns.getdnsserver(dns_index) end
 
 ---Resolve a hostname to an IP address.
@@ -1132,7 +1131,7 @@ node = {}
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
----@return string --chip ID
+---@return string #chip ID
 function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as .lc file.
@@ -1155,11 +1154,11 @@ function node.compile(filename) end
 function node.dsleep(options) end
 
 ---Returns the flash chip ID.
----@return number --flash ID
+---@return number #flash ID
 function node.flashid() end
 
 ---Returns the current available heap size in bytes.
----@return number --system heap size left in bytes
+---@return number #system heap size left in bytes
 function node.heap() end
 
 ---Returns NodeMCU version, chipid, flashid, flash size, flash mode, flash speed.
@@ -1200,7 +1199,7 @@ function node.restore() end
 
 ---Change the working CPU Frequency.
 ---@param speed integer|'node.CPU80MHZ'|'node.CPU160MHZ'
----@return number --target CPU frequency
+---@return number #target CPU frequency
 function node.setcpufreq(speed) end
 
 ---Controls the amount of debug information kept during node.compile(), and allows removal of debug information from already compiled Lua code.
@@ -1209,7 +1208,7 @@ function node.setcpufreq(speed) end
 ---|'2' #discard Local and Upvalue debug info
 ---|'3' #discard Local, Upvalue and line-number debug info
 ---@param fun? function `function` a compiled function to be stripped per setfenv except 0 is not permitted.
----@return integer|nil --If invoked without arguments, returns the current level settings. Otherwise, `nil` is returned.
+---@return integer|nil #If invoked without arguments, returns the current level settings. Otherwise, `nil` is returned.
 function node.stripdebug(level, fun) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
@@ -1229,7 +1228,7 @@ function node.uptime() end
 ---|'node.egc.ON_ALLOC_FAILURE' #Try to allocate a new block of memory, and run the garbage collector if the allocation fails.
 ---|'node.egc.ON_MEM_LIMIT' #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit.
 ---|'node.egc.ALWAYS' #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error.
----@param level number in the case of node.egc.ON_MEM_LIMIT, this specifies the memory limit.
+---@param level number in the case of `node.egc.ON_MEM_LIMIT`, this specifies the memory limit.
 ---@return nil
 function node.egc.setmode(mode, level) end
 
@@ -1238,6 +1237,6 @@ function node.egc.setmode(mode, level) end
 ---|'node.task.LOW_PRIORITY' #= 0
 ---|>'node.task.MEDIUM_PRIORITY' #= 1
 ---|'node.task.HIGH_PRIORITY''0' #= 2
----@param fun function|' function() end' `fun` a callback function to be executed when the task is run.
+---@param fun function|' function() end' a callback function to be executed when the task is run.
 ---@return nil
 function node.task.post(task_priority, fun) end
