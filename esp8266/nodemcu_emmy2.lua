@@ -58,14 +58,14 @@ function rtctime.set(seconds , microseconds, rate) end
 
 ---This takes a time interval in 'system clock microseconds' based on the timestamps returned by tmr.
 ---@param microseconds number a time interval measured in system clock microseconds.
----@return number i The same interval but measured in wall clock microseconds
+---@return number #The same interval but measured in wall clock microseconds
 function rtctime.adjust_delta(microseconds) end
 
 --*** SI7021 ***
 si7021 = {}
 
 ---Read the internal firmware revision of the Si7021 sensor.
----@return number #*0xFF* Firmware version 1.0; *0x20* Firmware version 2.0
+---@return number #*0xFF*: Firmware version 1.0; *0x20*: Firmware version 2.0
 function si7021.firmware() end
 
 ---`si7021.read()`
@@ -85,9 +85,11 @@ function si7021.serial() end
 ---|'si7021.RH08_TEMP12' #Relative Humidity 8 bit - Temperature 12 bit
 ---|'si7021.RH10_TEMP13' #Relative Humidity 10 bit - Temperature 13 bit
 ---|'si7021.RH11_TEMP11' #Relative Humidity 11 bit - Temperature 11 bit
+
 ---@alias si7021_a2 integer
 ---|'si7021.HEATER_ENABLE' #On-chip Heater Enable
 ---|>'si7021.HEATER_DISABLE' #On-chip Heater Disable
+
 ---Settings for the sensors configuration register.
 ---@param RESOLUTION si7021_a1 resolution
 ---@param HEATER? si7021_a2 optional
@@ -255,8 +257,8 @@ function spi.recv(id, size, default_data) end
 ---Send data via SPI in half-duplex mode. Send & receive data in full-duplex mode.
 ---@param id integer SPI ID number: 0 for SPI, 1 for HSPI
 ---@param data1 string|table|integer
----@return number wrote number of written bytes
----@return any rdata received data when configured with spi.FULLDUPLEX
+---@return number #number of written bytes
+---@return any #received data when configured with spi.FULLDUPLEX
 function spi.send(id, data1, ...) end
 
 ---Set up the SPI configuration.
@@ -273,7 +275,7 @@ function spi.setup(id, mode, cpol, cpha, databits, clock_div, duplex_mode) end
 ---Set the SPI clock divider.
 ---@param id integer SPI ID number: 0 for SPI, 1 for HSPI
 ---@param clock_div number SPI clock divider
----@return number num Old clock divider
+---@return number #Old clock divider
 function spi.set_clock_div(id, clock_div) end
 
 ---Extract data items from MISO buffer after spi.transaction().
@@ -417,13 +419,13 @@ function TLS:close() end
 
 ---Connect to a remote server.
 ---@param port number port number
----@param ip_domain any IP address or domain name string
+---@param ip_domain string IP address or domain name string
 ---@return nil
 function TLS:connect(port, ip_domain) end
 
 ---Retrieve port and ip of peer.
----@return number ip
----@return number peer
+---@return number #ip of peer
+---@return number #port of peer
 function TLS:getpeer() end
 
 ---Throttle data reception by placing a request to block the TCP receive function.
@@ -431,8 +433,11 @@ function TLS:getpeer() end
 function TLS:hold() end
 
 ---Register callback functions for specific events.
----@param event string|'"dns"'|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"'
----@param fun function|'function(tls.socket, string?) end'
+---@param event string|'"dns"'|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' event
+---@param fun function|'function(tls.socket, string?) end' callback function. The first parameter is the socket.
+-- - If event is "receive", the second parameter is the received data as string.
+-- - If event is "reconnection", the second parameter is the reason of connection error (string).
+-- - If event is "dns", the second parameter will be either `nil` or a string rendering of the resolved address.
 ---@return nil
 function TLS:on(event, fun) end
 
@@ -441,39 +446,39 @@ function TLS:on(event, fun) end
 ---@return nil
 function TLS:send(string) end
 
----Unblock TCP receiving data by revocation of a preceding hold().
+---Unblock TCP receiving data by revocation of a preceding `hold()`.
 ---@return nil
 function TLS:unhold() end
 
 ---Controls the certificate verification process when the NodeMCU makes a secure connection.
----@param enable boolean
----@return boolean|any
+---@param enable boolean A boolean which indicates whether verification should be enabled or not. The default at boot is false.
+---@return boolean|any #`true` if it worked. Can throw a number of errors if invalid data is supplied.
 function tls.cert.verify(enable) end
 
 ---Controls the certificate verification process when the NodeMCU makes a secure connection.
----@param pemdata string
+---@param pemdata string A string containing the CA certificate to use for verification. There can be several of these.
 ---@param pemdata1? string
 ---@return boolean|any
 function tls.cert.verify(pemdata, pemdata1) end
 
 ---Controls the certificate verification process when the NodeMCU makes a secure connection.
----@param callback function
+---@param callback function A Lua function which returns TLS keys and certificates for use with connections.
 ---@return boolean|any
 function tls.cert.verify(callback) end
 
 ---Controls the client key and certificate used when the ESP creates a TLS connection
----@param enable boolean
+---@param enable boolean A boolean, specifying whether subsequent TLS connections will present a client certificate. The default at boot is false.
 ---@return boolean|any
 function tls.cert.auth(enable) end
 
 ---Controls the client key and certificate used when the ESP creates a TLS connection
----@param pemdata string
+---@param pemdata string Two strings, the first containing the PEM-encoded client's certificate and the second containing the PEM-encoded client's private key.
 ---@param pemdata1? string
 ---@return boolean|any
 function tls.cert.auth(pemdata, pemdata1) end
 
 ---Controls the client key and certificate used when the ESP creates a TLS connection
----@param callback function
+---@param callback function A Lua function which returns TLS keys and certificates for use with connections.
 ---@return boolean|any
 function tls.cert.auth(callback) end
 
@@ -481,7 +486,7 @@ function tls.cert.auth(callback) end
 tm1829 = {}
 
 ---Send data to a led strip using native chip format.
----@param str string
+---@param str string payload to be sent to one or more TM1829 leds.
 ---@return nil
 function tm1829.write(str) end
 
@@ -531,7 +536,7 @@ function tmr.create() end
 ---This is a convenience function combining `tobj:register()` and `tobj:start()` into a single call.
 ---@param interval number timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m timer mode
----@param foo function | " function(t) end" #callback function which is invoked with the timer object as an argument
+---@param foo functio|" function(t) end" callback function which is invoked with the timer object as an argument
 ---@return boolean #`true` if the timer was started, `false` on error
 function tObj:alarm(interval, mode, foo) end
 
@@ -543,7 +548,7 @@ function tObj:interval(interval_ms) end
 ---Configures a timer and registers the callback function to call on expiry. Note that registering does not start the alarm.
 ---@param interval_ms integer new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m timer mode
----@param foo function |" function() end" #callback function which is invoked with the timer object as an argument
+---@param foo function |" function() end" callback function which is invoked with the timer object as an argument
 ---@return nil
 function tObj:register(interval_ms, mode, foo) end
 
@@ -570,22 +575,22 @@ tsl2561 = {}
 ---Reads sensor values from the device and returns calculated lux value.
 ---@return number lux the calculated illuminance in lux (lx)
 ---@return number status value indicating success or failure as explained below:
----tsl2561.TSL2561_OK
----tsl2561.TSL2561_ERROR_I2CINIT can't initialize I²C bus
----tsl2561.TSL2561_ERROR_I2CBUSY I²C bus busy
----tsl2561.TSL2561_ERROR_NOINIT initialize I²C bus before calling function
----tsl2561.TSL2561_ERROR_LAST
+-- - tsl2561.TSL2561_OK
+-- - tsl2561.TSL2561_ERROR_I2CINIT - can't initialize I²C bus
+-- - tsl2561.TSL2561_ERROR_I2CBUSY - I²C bus busy
+-- - tsl2561.TSL2561_ERROR_NOINIT - initialize I²C bus before calling function
+-- - tsl2561.TSL2561_ERROR_LAST
 function tsl2561.getlux() end
 
 ---Reads the device's 2 sensors and returns their values.
 ---@return number ch0 value of the broad spectrum sensor
 ---@return number ch1 value of the IR sensor
 ---@return number status value indicating success or failure as explained below:
----tsl2561.TSL2561_OK
----tsl2561.TSL2561_ERROR_I2CINIT can't initialize I²C bus
----tsl2561.TSL2561_ERROR_I2CBUSY I²C bus busy
----tsl2561.TSL2561_ERROR_NOINIT initialize I²C bus before calling function
----tsl2561.TSL2561_ERROR_LAST
+-- - tsl2561.TSL2561_OK
+-- - tsl2561.TSL2561_ERROR_I2CINIT - can't initialize I²C bus
+-- - tsl2561.TSL2561_ERROR_I2CBUSY - I²C bus busy
+-- - tsl2561.TSL2561_ERROR_NOINIT - initialize I²C bus before calling function
+-- - tsl2561.TSL2561_ERROR_LAST
 function tsl2561.getrawchannels() end
 
 ---@alias tsl2561_a1 number
@@ -604,14 +609,14 @@ function tsl2561.getrawchannels() end
 function tsl2561.init(sdapin, sclpin, address, pckg) end
 
 ---Sets the integration time and gain settings of the device.
----@param integration number|'tsl2561.INTEGRATIONTIME_13MS'|'tsl2561.INTEGRATIONTIME_101MS'|'tsl2561.INTEGRATIONTIME_402MS'
----@param gain number|' tsl2561.GAIN_1X'|' tsl2561.GAIN_16X'
+---@param integration number|'tsl2561.INTEGRATIONTIME_13MS'|'tsl2561.INTEGRATIONTIME_101MS'|'tsl2561.INTEGRATIONTIME_402MS' integration
+---@param gain number|' tsl2561.GAIN_1X'|' tsl2561.GAIN_16X' gain
 ---@return number status value indicating success or failure as explained below:
----tsl2561.TSL2561_OK
----tsl2561.TSL2561_ERROR_I2CINIT can't initialize I²C bus
----tsl2561.TSL2561_ERROR_I2CBUSY I²C bus busy
----tsl2561.TSL2561_ERROR_NOINIT initialize I²C bus before calling function
----tsl2561.TSL2561_ERROR_LAST
+-- - tsl2561.TSL2561_OK
+-- - tsl2561.TSL2561_ERROR_I2CINIT - can't initialize I²C bus
+-- - tsl2561.TSL2561_ERROR_I2CBUSY - I²C bus busy
+-- - tsl2561.TSL2561_ERROR_NOINIT - initialize I²C bus before calling function
+-- - tsl2561.TSL2561_ERROR_LAST
 function tsl2561.settiming(integration, gain) end
 
 --*** u8g2 Module is in nodemcu-emmy3.lua ***
@@ -620,9 +625,9 @@ function tsl2561.settiming(integration, gain) end
 uart = {}
 
 ---Change UART pin assignment.
----@param on integer
--- `0` for standard pins
--- `1` to use alternate pins GPIO13 and GPIO15
+---@param on integer 0 or 1
+--`0` for standard pins
+--`1` to use alternate pins GPIO13 and GPIO15
 ---@return nil
 function uart.alt(on) end
 
@@ -632,20 +637,20 @@ function uart.alt(on) end
 --**number** if n=0, will receive every char in buffer
 --**number** if n<255, the callback is called when n chars are received
 --**end_char** if one char "c", the callback will be called when "c" is encountered, or max n=255 received
----@param fun? function|' function(data) end' #callback function, event `"data"` has a callback like this: `function(data) end`
----@param run_input? integer
----|' 0' #input from UART will not go into Lua interpreter, and this can accept binary data.
----|' 1' #input from UART is treated as a text stream with the DEL, BS, CR and LF characters processed as normal. Completed lines will be passed to the Lua interpreter for execution.
+---@param foo? function|' function(data) end' callback function, event `"data"` has a callback like this: `function(data) end`
+---@param run_input? integer 0 or 1.
+--`0` input from UART will not go into Lua interpreter, and this can accept binary data.
+--`1` input from UART is treated as a text stream with the DEL, BS, CR and LF characters processed as normal. Completed lines will be passed to the Lua interpreter for execution.
 ---@return nil
-function uart.on(method, number_or_endChar, fun, run_input) end
+function uart.on(method, number_or_endChar, foo, run_input) end
 
 ---(Re-)configures the communication parameters of the UART.
 ---@param id integer UART id (0 or 1).
----@param baud integer|' 300'|' 600'|' 1200'|' 2400'|' 4800'|' 9600'|' 19200'|' 31250'|' 34400'|' 57600'|' 74880'|' 115200'|' 230000'|' 256000'|' 460800'|' 921600'|' 1843200'|' 3686400' #300 - 3686400
----@param databits integer|' 8'|' 7'|' 6'|' 5' #5 - 8
----@param parity integer|' uart.PARITY_NONE'|' uart.PARITY_ODD'|' uart.PARITY_EVEN' #none, even, odd
----@param stopbits integer|' uart.STOPBITS_1'|' uart.STOPBITS_1_5'|' uart.STOPBITS_2' #1, 1.5, 2
----@param echo integer 0 - disable echo, 1 - enable echo (default if omitted)
+---@param baud integer|' 300'|' 600'|' 1200'|' 2400'|' 4800'|' 9600'|' 19200'|' 31250'|' 34400'|' 57600'|' 74880'|' 115200'|' 230000'|' 256000'|' 460800'|' 921600'|' 1843200'|' 3686400' 300 - 3686400
+---@param databits integer|' 8'|' 7'|' 6'|' 5' 5 - 8
+---@param parity integer|' uart.PARITY_NONE'|' uart.PARITY_ODD'|' uart.PARITY_EVEN' none |  even | odd
+---@param stopbits integer|' uart.STOPBITS_1'|' uart.STOPBITS_1_5'|' uart.STOPBITS_2' 1 | 1.5 | 2
+---@param echo? integer 0 - disable echo, 1 - enable echo (default if omitted)
 ---@return number baudrate configured baud rate
 function uart.setup(id, baud, databits, parity, stopbits, echo) end
 
@@ -666,7 +671,7 @@ function uart.write(id, data1, ...) end
 
 ---Report the depth, in bytes, of TX or RX hardware queues associated with the UART.
 ---@param id integer UART id (0 or 1).
----@param dir integer|' uart.DIR_RX'|' uart.DIR_TX' #direction
+---@param dir integer|' uart.DIR_RX'|' uart.DIR_TX' direction
 ---@return integer #The number of bytes in the selected FIFO.
 function uart.fifodepth(id, dir) end
 
@@ -721,18 +726,18 @@ local wiegandobj = {}
 ---@param pinD0 number This is a GPIO number (excluding 0) and connects to the D0 data line
 ---@param pinD1 number This is a GPIO number (excluding 0) and connects to the D1 data line
 ---@param callback function This is a function that will invoked when a full card or keypress is read.
----@return wiegand wiegand object. If the arguments are in error, or the operation cannot be completed, then an error is thrown.
+---@return wiegand wiegandObject If the arguments are in error, or the operation cannot be completed, then an error is thrown.
 function wiegand.create(pinD0, pinD1, callback) end
 
 ---Releases the resources associated with the card reader.
 ---@return nil
 function wiegandobj:close() end
 
---*** WIFI TODO ***
+--*** WIFI ***
 wifi = {}
 
 ---Gets the current WiFi channel.
----@return integer ch current WiFi channel
+---@return integer #current WiFi channel
 function wifi.getchannel() end
 
 ---Get the current country info.
@@ -741,45 +746,45 @@ function wifi.getchannel() end
 --**start_ch** Starting channel.
 --**end_ch** Ending channel.
 --**policy** The policy parameter determines which country info configuration to use, country info given to station by AP or local configuration.
----    `0` Country policy is auto, NodeMCU will use the country info provided by AP that the station is connected to.
----    `1` Country policy is manual, NodeMCU will use locally configured country info.
+-- - 0 - Country policy is auto, NodeMCU will use the country info provided by AP that the station is connected to.
+-- - 1 - Country policy is manual, NodeMCU will use locally configured country info.
 function wifi.getcountry() end
 
 ---Gets default WiFi operation mode.
----@return integer #wifi.STATION, wifi.SOFTAP, wifi.STATIONAP or wifi.NULLMODE constants.
+---@return integer #**wifi.STATION, wifi.SOFTAP, wifi.STATIONAP** or **wifi.NULLMODE** constants.
 function wifi.getdefaultmode() end
 
 ---Gets WiFi operation mode.
----@return integer #wifi.STATION, wifi.SOFTAP, wifi.STATIONAP or wifi.NULLMODE constants.
+---@return integer #**wifi.STATION, wifi.SOFTAP, wifi.STATIONAP** or **wifi.NULLMODE** constants.
 function wifi.getmode() end
 
 ---Gets WiFi physical mode.
----@return integer #wifi.PHYMODE_B, wifi.PHYMODE_G or wifi.PHYMODE_N.
+---@return integer #**wifi.PHYMODE_B, wifi.PHYMODE_G** or **wifi.PHYMODE_N**.
 function wifi.getphymode() end
 
----Configures whether or not WiFi automatically goes to sleep in NULL_MODE. Enabled by default.
+---Configures whether or not WiFi automatically goes to sleep in *NULL_MODE*. Enabled by default.
 ---@param enable? boolean
 ---|>'true' #Enable WiFi auto sleep in NULL_MODE.
 ---|'false' #Disable WiFi auto sleep in NULL_MODE.
----@return any se sleep_enabled Current/New NULL_MODE sleep setting.
--- If *wifi.nullmodesleep()* is called with no arguments, current setting is returned.
--- If *wifi.nullmodesleep()* is called with enable argument, confirmation of new setting is returned.
+---@return any #sleep_enabled Current/New *NULL_MODE* sleep setting.
+-- - If `wifi.nullmodesleep()` is called with no arguments, current setting is returned.
+-- - If `wifi.nullmodesleep()` is called with enable argument, confirmation of new setting is returned.
 function wifi.nullmodesleep(enable) end
 
 ---Wake up WiFi from suspended state or cancel pending wifi suspension.
----@param resume_cb function|'function() end' Callback to execute when WiFi wakes from suspension.
+---@param resume_cb? function|'function() end' Callback to execute when WiFi wakes from suspension. Any previously provided callbacks will be replaced!
 ---@return nil
 function wifi.resume(resume_cb) end
 
 ---Set the current country info.
 ---@param country_info table This table contains the country info configuration. (If a blank table is passed to this function, default values will be configured.)
---**country** Country code, 2 character string containing the country code (a list of country codes can be found here). (Default:"CN")
+--**country** Country code, 2 character string containing the country code. (Default:"CN")
 --**start_ch** Starting channel (range:1-14). (Default:1)
 --**end_ch** Ending channel, must not be less than starting channel (range:1-14). (Default:13)
---**policy** The policy parameter determines which country info configuration to use, country info given to station by AP or local configuration. (default:wifi.COUNTRY_AUTO)
----    `wifi.COUNTRY_AUTO` Country policy is auto, NodeMCU will use the country info provided by AP that the station is connected to. while in stationAP mode, beacon/probe respose will reflect the country info of the AP that the station is connected to.
----    `wifi.COUNTRY_MANUAL` Country policy is manual, NodeMCU will use locally configured country info.
----@return boolean #*true* If configuration was sucessful.
+--**policy** The policy parameter determines which country info configuration to use, country info given to station by AP or local configuration. (default: *wifi.COUNTRY_AUTO*)
+-- - wifi.COUNTRY_AUTO - Country policy is auto, NodeMCU will use the country info provided by AP that the station is connected to. While in stationAP mode, beacon/probe respose will reflect the country info of the AP that the station is connected to.
+-- - wifi.COUNTRY_MANUAL - Country policy is manual, NodeMCU will use locally configured country info.
+---@return boolean #`true` if configuration was sucessful.
 function wifi.setcountry(country_info) end
 
 ---Configures the WiFi mode to use. NodeMCU can run in one of four WiFi modes.
@@ -788,10 +793,10 @@ function wifi.setcountry(country_info) end
 ---|'wifi.SOFTAP'  #for when the device is acting only as an access point.
 ---|'wifi.STATIONAP' #is the combination of wifi.STATION and wifi.SOFTAP
 ---|'wifi.NULLMODE' #changing WiFi mode to NULL_MODE will put wifi into a low power state similar to MODEM_SLEEP, provided *wifi.nullmodesleep(false)* has not been called.
----@param save? boolean choose whether or not to save wifi mode to flash
+---@param save? boolean #choose whether or not to save wifi mode to flash
 ---|>' true' #WiFi mode configuration will be retained through power cycle.
 ---|' false' #WiFi mode configuration will not be retained through power cycle.
----@return any mod current mode after setup
+---@return integer #current mode after setup
 function wifi.setmode(mode, save) end
 
 ---Sets WiFi physical mode.
@@ -799,19 +804,17 @@ function wifi.setmode(mode, save) end
 ---|'wifi.PHYMODE_B' #802.11b, more range, low Transfer rate, more current draw
 ---|'wifi.PHYMODE_G' #802.11g, medium range, medium transfer rate, medium current draw
 ---|'wifi.PHYMODE_N' #802.11n, least range, fast transfer rate, least current draw (STATION ONLY)
----@return any mod physical mode after setup
+---@return integer #physical mode after setup
 function wifi.setphymode(mode) end
 
----Sets WiFi maximum TX power.
+---Sets WiFi maximum TX power. The default value, 82, corresponds to maximum TX power.
 ---@param max_tpw number maximum value of RF Tx Power, unit: 0.25 dBm, range [0, 82].
 ---@return nil
 function wifi.setmaxtxpower(max_tpw) end
 
----Starts to auto configuration, if success set up SSID and password automatically.
----@param type integer
----|'0' #for ESP_TOUCH
----|'1' #for AIR_KISS
----@param callback function|' function() end' a callback function of the form function(ssid, password) end which gets called after configuration.
+---Starts to auto configuration, if success set up SSID and password automatically. Only usable in *wifi.STATION* mode.
+---@param type integer **0** for ESP_TOUCH, **1** for AIR_KISS
+---@param callback function|' function() end' a callback function of the form `function(ssid, password)` end which gets called after configuration.
 ---@return nil
 function wifi.startsmart(type, callback) end
 
@@ -820,27 +823,27 @@ function wifi.startsmart(type, callback) end
 function wifi.stopsmart() end
 
 ---Suspend Wifi to reduce current consumption.
----@param tbl table
----`duration` number Suspend duration in microseconds(μs).
----`suspend_cb?` function Callback to execute when WiFi is suspended.
----`resume_cb?` function Callback to execute when WiFi wakes from suspension.
----`preserve_mode?` boolean preserve current WiFi mode through node sleep.
---     If true, Station and StationAP modes will automatically reconnect to previously configured Access Point when NodeMCU resumes.
----    If false, discard WiFi mode and leave NodeMCU in wifi.NULL_MODE. WiFi mode will be restored to original mode on restart.
+---@param tbl table table
+--**duration** number Suspend duration in microseconds(μs).
+--**suspend_cb?** function Callback to execute when WiFi is suspended.
+--**resume_cb?** function Callback to execute when WiFi wakes from suspension.
+--**preserve_mode?** boolean preserve current WiFi mode through node sleep.
+-- - If `true`, Station and StationAP modes will automatically reconnect to previously configured Access Point when NodeMCU resumes.
+-- - If `false`, discard WiFi mode and leave NodeMCU in *wifi.NULL_MODE*. WiFi mode will be restored to original mode on restart.
 ---@return integer suspend_state
----`suspend_state` if no parameters are provided, current WiFi suspension state will be returned. States:
---- 0 WiFi is awake.
---- 1 WiFi suspension is pending. (Waiting for idle task)
---- 2 WiFi is suspended.
+---**suspend_state** if no parameters are provided, current WiFi suspension state will be returned. States:
+-- - 0 - WiFi is awake.
+-- - 1 - WiFi suspension is pending. (Waiting for idle task)
+-- - 2 - WiFi is suspended.
 function wifi.suspend(tbl) end
 
 ---Auto connects to AP in station mode.
----@param auto integer 0 to disable auto connecting, 1 to enable auto connecting
+---@param auto integer **0** to disable auto connecting, **1** to enable auto connecting
 ---@return nil
 function wifi.sta.autoconnect(auto) end
 
----Select Access Point from list returned by wifi.sta.getapinfo()
----@param ap_index integer Index of Access Point you would like to change to. (Range:1-5) - Corresponds to index used by wifi.sta.getapinfo() and wifi.sta.getapindex()
+---Select Access Point from list returned by `wifi.sta.getapinfo()`
+---@param ap_index integer Index of Access Point you would like to change to. (Range:1-5) - Corresponds to index used by `wifi.sta.getapinfo()` and `wifi.sta.getapindex()`
 ---@return boolean
 function wifi.sta.changeap(ap_index) end
 
@@ -850,71 +853,65 @@ function wifi.sta.clearconfig() end
 
 ---Sets the WiFi station configuration.
 ---@param station_config table table containing configuration data for station
----`ssid` string which is less than 32 bytes.
----`pwd` string which is 0-64. Empty string indicates an open WiFi access point.
----`auto`
----    `true` (default) to enable auto connect and connect to access point, hence with auto=true there's no need to call wifi.sta.connect()
----    `false` to disable auto connect and remain disconnected from access point
----`bssid` string that contains the MAC address of the access point (optional)
---    The following formats are valid:
---        "DE:C1:A5:51:F1:ED"
---        "AC-1D-1C-B1-0B-22"
---        "DE AD BE EF 7A C0"
----`save` Save station configuration to flash.
----    true configuration will be retained through power cycle. (Default).
----    false configuration will not be retained through power cycle.
----`connected_cb`: Callback to execute when station is connected to an access point. (Optional)
---      Items returned in table :
---      SSID: SSID of access point. (format: string)
---      BSSID: BSSID of access point. (format: string)
---      channel: The channel the access point is on. (format: number)
---`disconnected_cb`: Callback to execute when station is disconnected from an access point. (Optional)
---      Items returned in table :
---      SSID: SSID of access point. (format: string)
---      BSSID: BSSID of access point. (format: string)
---      reason: See wifi.eventmon.reason below. (format: number)
----`authmode_change_cb`: Callback to execute when the access point has changed authorization mode. (Optional)
---      Items returned in table :
---      old_auth_mode: Old wifi authorization mode. (format: number)
---      new_auth_mode: New wifi authorization mode. (format: number)
----`got_ip_cb`: Callback to execute when the station received an IP address from the access point. (Optional)
---      Items returned in table :
---      IP: The IP address assigned to the station. (format: string)
---      netmask: Subnet mask. (format: string)
---      gateway: The IP address of the access point the station is connected to. (format: string)
----`dhcp_timeout_cb`: Station DHCP request has timed out. (Optional)
---      Blank table is returned.
+--**ssid** string which is less than 32 bytes.
+--**pwd** string which is 0-64. Empty string indicates an open WiFi access point.
+--**auto**
+-- - `true` (default) to enable auto connect and connect to access point, hence with auto=true there's no need to call `wifi.sta.connect()`
+-- - `false` to disable auto connect and remain disconnected from access point
+--**bssid** string that contains the MAC address of the access point (optional). The following formats are valid:
+-- - "DE:C1:A5:51:F1:ED"
+-- - "AC-1D-1C-B1-0B-22"
+-- - "DE AD BE EF 7A C0"
+--**save** Save station configuration to flash.
+-- - `true` configuration will be retained through power cycle. (Default).
+-- - `false` configuration will not be retained through power cycle.
+--**Event callbacks** will only be available if WIFI_SDK_EVENT_MONITOR_ENABLE is uncommented in user_config.h:
+--*connected_cb*: Callback to execute when station is connected to an access point. (Optional). Items returned in table:
+-- - SSID: SSID of access point. (format: string)
+-- - BSSID: BSSID of access point. (format: string)
+-- - channel: The channel the access point is on. (format: number)
+--*disconnected_cb*: Callback to execute when station is disconnected from an access point. (Optional) Items returned in table:
+-- - SSID: SSID of access point. (format: string)
+-- - BSSID: BSSID of access point. (format: string)
+-- - reason: See wifi.eventmon.reason below. (format: number)
+--*authmode_change_cb*: Callback to execute when the access point has changed authorization mode. (Optional) Items returned in tabl:
+-- - old_auth_mode: Old wifi authorization mode. (format: number)
+-- - new_auth_mode: New wifi authorization mode. (format: number)
+--*got_ip_cb*: Callback to execute when the station received an IP address from the access point. (Optional) Items returned in table:
+-- - IP: The IP address assigned to the station. (format: string)
+-- - netmask: Subnet mask. (format: string)
+-- - gateway: The IP address of the access point the station is connected to. (format: string)
+--*dhcp_timeout_cb*: Station DHCP request has timed out. (Optional)
+-- - Blank table is returned.
 ---@return boolean
 function wifi.sta.config(station_config) end
 
----Connects to the configured AP in station mode.
----@param connected_cb? function Callback to execute when station is connected to an access point.
----`connected_cb` function. Items returned in table :
----`SSID`: SSID of access point. (format: string)
----`BSSID`: BSSID of access point. (format: string)
----`channel`: The channel the access point is on. (format: number)
+---Connects to the configured AP in station mode. You only ever need to call this if auto-connect was disabled in `wifi.sta.config()`.
+---@param connected_cb? function Callback to execute when station is connected to an access point. Items returned in table:
+--**SSID**: SSID of access point. (format: string)
+--**BSSID**: BSSID of access point. (format: string)
+--**channel**: The channel the access point is on. (format: number)
 ---@return nil
 function wifi.sta.connect(connected_cb) end
 
 ---Disconnects from AP in station mode.
----@param disconnected_cb? function Callback to execute when station is disconnected from an access point.
----`disconnected_cb` function. Items returned in table :
----`SSID`: SSID of access point. (format: string)
----`BSSID`: BSSID of access point. (format: string)
----`reason`: See wifi.eventmon.reason below. (format: number)
+---@param disconnected_cb? function Callback to execute when station is disconnected from an access point. Items returned in table:
+--**SSID**: SSID of access point. (format: string)
+--**BSSID**: BSSID of access point. (format: string)
+--**reason**: See wifi.eventmon.reason. (format: number)
 ---@return nil
 function wifi.sta.disconnect(disconnected_cb) end
 
 ---Scans AP list as a Lua table into callback function.
----@param cfg? table `CFG TABLE` contains scan configuration:
+---@param cfg? table table that contains scan configuration:
 --**ssid** SSID == nil, don't filter SSID
 --**bssid** BSSID == nil, don't filter BSSID
 --**channel** channel == 0, scan all channels, otherwise scan set channel (default is 0)
 --**show_hidden** show_hidden == 1, get info for router with hidden SSID (default is 0)
----@param format? integer
----|' 0' #old format (SSID : Authmode, RSSI, BSSID, Channel), any duplicate SSIDs will be discarded
----|' 1' #new format (BSSID : SSID, RSSI, auth mode, Channel)
----@param callback function a callback function to receive the AP table when the scan is done.
+---@param format? integer #select output table format, defaults to 0
+-- - **0** - old format (SSID : Authmode, RSSI, BSSID, Channel), any duplicate SSIDs will be discarded
+-- - **1** - new format (BSSID : SSID, RSSI, auth mode, Channel)
+---@param callback function a callback function to receive the AP table when the scan is done. This function receives a table, the key is the BSSID, the value is other info in format: **SSID, RSSID, auth mode, channel**.
 ---@return nil
 function wifi.sta.getap(cfg, format, callback) end
 
@@ -932,35 +929,31 @@ function wifi.sta.getapindex() end
 function wifi.sta.getapinfo() end
 
 ---Gets the broadcast address in station mode.
----@return string |nil #broadcast address as string, for example "192.168.0.255", returns nil if IP address = "0.0.0.0".
+---@return string|nil #broadcast address as string, for example "192.168.0.255", returns `nil` if IP address = "0.0.0.0".
 function wifi.sta.getbroadcast() end
 
 ---Gets the WiFi station configuration.
----@param return_table boolean
----`true` returns data in a table
----`false` returns data in the old format (default)
----@return table|string
----if *return_table* is true -> config_table:
----`ssid` ssid of Access Point.
----`pwd` password to Access Point, nil if no password was configured
----`bssid_set` will return true if the station was configured specifically to connect to the AP with the matching bssid.
----`bssid` If a connection has been made to the configured AP this field will contain the AP's MAC address. Otherwise "ff:ff:ff:ff:ff:ff" will be returned.
----If *return_table* is false:
----ssid, password, bssid_set, bssid, if bssid_set is equal to 0 then bssid is irrelevant
+---@param return_table boolean `true`: returns data in a table; `false`: returns data in the old format (default)
+---@return table|string #Returns:
+-- - If `return_table` is true -> *config_table*:
+--**ssid** ssid of Access Point.
+--**pwd** password to Access Point, nil if no password was configured
+--**bssid_set** will return true if the station was configured specifically to connect to the AP with the matching bssid.
+--**bssid** If a connection has been made to the configured AP this field will contain the AP's MAC address. Otherwise "ff:ff:ff:ff:ff:ff" will be returned.
+-- - If `return_table` is false:
+--**ssid, password, bssid_set, bssid**, if bssid_set is equal to 0 then bssid is irrelevant
 function wifi.sta.getconfig(return_table) end
 
 ---Gets the default WiFi station configuration stored in flash.
----@param return_table boolean
----`true` returns data in a table
----`false` returns data in the old format (default)
----@return table
----if *return_table* is true -> config_table:
----`ssid` ssid of Access Point.
----`pwd` password to Access Point, nil if no password was configured
----`bssid_set` will return true if the station was configured specifically to connect to the AP with the matching bssid.
----`bssid` If a connection has been made to the configured AP this field will contain the AP's MAC address. Otherwise "ff:ff:ff:ff:ff:ff" will be returned.
----If *return_table* is false:
----ssid, password, bssid_set, bssid, if bssid_set is equal to 0 then bssid is irrelevant
+---@param return_table boolean `true` returns data in a table; `false` returns data in the old format (default)
+---@return table|string #Returns:
+-- - If `return_table` is true -> *config_table*:
+--**ssid** - ssid of Access Point.
+--**pwd** - password to Access Point, nil if no password was configured
+--**bssid_set** - will return true if the station was configured specifically to connect to the AP with the matching bssid.
+--**bssid** - If a connection has been made to the configured AP this field will contain the AP's MAC address. Otherwise "ff:ff:ff:ff:ff:ff" will be returned.
+-- - If `return_table` is false:
+--**ssid, password, bssid_set, bssid**, if bssid_set is equal to 0 then bssid is irrelevant
 function wifi.sta.getdefaultconfig(return_table) end
 
 ---Gets current station hostname.
@@ -971,39 +964,39 @@ function wifi.sta.gethostname() end
 ---@return string IP_address as string, for example "192.168.0.111". Returns nil if IP = "0.0.0.0".
 ---@return string netmask
 ---@return string gateway_address
---- Returns nil if IP = "0.0.0.0".
+--Returns nil if IP = "0.0.0.0".
 function wifi.sta.getip() end
 
 ---Gets MAC address in station mode.
 ---@return string MAC address as string e.g. "18:fe:34:a2:d7:34"
 function wifi.sta.getmac() end
 
----Get RSSI(Received Signal Strength Indicator) of the Access Point which ESP8266 station connected to.
+---Get RSSI (Received Signal Strength Indicator) of the Access Point which ESP8266 station connected to.
 ---@return number|nil
---- If station is connected to an access point, rssi is returned.
---- If station is not connected to an access point, nil is returned.
+-- - If station is connected to an access point, `rssi` is returned.
+-- - If station is not connected to an access point, `nil` is returned.
 function wifi.sta.getrssi() end
 
----Set Maximum number of Access Points to store in flash. - This value is written to flash
+---Set Maximum number of Access Points to store in flash. This value is written to flash
 ---@param qty integer Quantity of Access Points to store in flash. Range: 1-5 (Default: 1)
 ---@return boolean
 function wifi.sta.setaplimit(qty) end
 
 ---Sets station hostname.
----@param hostname string|'""'
+---@param hostname string must only contain letters, numbers and hyphens('-') and be 32 characters or less with first and last character being alphanumeric.
 ---@return boolean
 function wifi.sta.sethostname(hostname) end
 
 ---Sets IP address, netmask, gateway address in station mode.
 ---@param cfg table table contain IP address, netmask, and gateway
--- { ip = "192.168.0.111",
---  netmask = "255.255.255.0",
---  gateway = "192.168.0.1" }
+--{ ip = "192.168.0.111",
+--netmask = "255.255.255.0",
+--gateway = "192.168.0.1" }
 ---@return boolean
 function wifi.sta.setip(cfg) end
 
 ---Sets MAC address in station mode.
----@param mac string MAC address in string e.g. "DE:AD:BE:EF:7A:C0"
+---@param mac string address in string e.g. "DE:AD:BE:EF:7A:C0"
 ---@return boolean
 function wifi.sta.setmac(mac) end
 
@@ -1012,54 +1005,51 @@ function wifi.sta.setmac(mac) end
 ---|'wifi.NONE_SLEEP' #to keep the modem on at all times
 ---|'wifi.LIGHT_SLEEP' #to allow the CPU to power down under some circumstances
 ---|'wifi.MODEM_SLEEP' #to power down the modem as much as possible
----@return number mode The actual sleep mode set, as one of wifi.NONE_SLEEP, wifi.LIGHT_SLEEP or wifi.MODEM_SLEEP.
+---@return number #The actual sleep mode set, as one of *wifi.NONE_SLEEP, wifi.LIGHT_SLEEP* or *wifi.MODEM_SLEEP*.
 function wifi.sta.sleeptype(type_wanted) end
 
 ---Gets the current status in station mode.
 ---@return integer state The current state which can be one of the following:
--- wifi.STA_IDLE
--- wifi.STA_CONNECTING
--- wifi.STA_WRONGPWD
--- wifi.STA_APNOTFOUND
--- wifi.STA_FAIL
--- wifi.STA_GOTIP
+-- - wifi.STA_IDLE
+-- - wifi.STA_CONNECTING
+-- - wifi.STA_WRONGPWD
+-- - wifi.STA_APNOTFOUND
+-- - wifi.STA_FAIL
+-- - wifi.STA_GOTIP
 function wifi.sta.status() end
 
 ---Sets SSID and password in AP mode.
 ---@param cfg table table to hold configuration
----`ssid` SSID chars 1-32
----`pwd` password chars 8-64
----`auth` authentication method, one of wifi.OPEN (default), wifi.WPA_PSK, wifi.WPA2_PSK, wifi.WPA_WPA2_PSK
----`channel` channel number 1-14 default = 6
----`hidden` false = not hidden, true = hidden, default = false
----`max` maximum number of connections 1-4 default=4
----`beacon` beacon interval time in range 100-60000, default = 100
----`save` save configuration to flash.
----      true configuration will be retained through power cycle. (Default)
----      false configuration will not be retained through power cycle.
+--**ssid** - SSID chars 1-32
+--**pwd** - password chars 8-64
+--**auth** - authentication method, one of *wifi.OPEN* (default), *wifi.WPA_PSK, wifi.WPA2_PSK, wifi.WPA_WPA2_PSK*
+--**channel** - channel number 1-14 default = 6
+--**hidden** - false = not hidden, true = hidden, default = false
+--**max** - maximum number of connections 1-4 default=4
+--**beacon** - beacon interval time in range 100-60000, default = 100
+--**save** - save configuration to flash.
+-- - `true` - configuration will be retained through power cycle. (Default)
+-- - `false` - configuration will not be retained through power cycle.
 ---Event callbacks will only be available if WIFI_SDK_EVENT_MONITOR_ENABLE is uncommented in user_config.h
----`staconnected_cb`: Callback executed when a new client has connected to the access point. (Optional)
----    Items returned in table :
----        MAC: MAC address of client that has connected.
----        AID: SDK provides no details concerning this return value.
----`stadisconnected_cb`: Callback executed when a client has disconnected from the access point. (Optional)
----    Items returned in table :
----        MAC: MAC address of client that has disconnected.
----        AID: SDK provides no details concerning this return value.
----`probereq_cb`: Callback executed when a probe request was received. (Optional)
----    Items returned in table :
----        MAC: MAC address of the client that is probing the access point.
----        RSSI: Received Signal Strength Indicator of client.
+--*staconnected_cb*: Callback executed when a new client has connected to the access point. (Optional). Items returned in table :
+-- - MAC: MAC address of client that has connected.
+-- - AID: SDK provides no details concerning this return value.
+--*stadisconnected_cb*: Callback executed when a client has disconnected from the access point. (Optional). Items returned in table :
+-- - MAC: MAC address of client that has disconnected.
+-- - AID: SDK provides no details concerning this return value.
+--*probereq_cb*: Callback executed when a probe request was received. (Optional). Items returned in table :
+-- - MAC: MAC address of the client that is probing the access point.
+-- - RSSI: Received Signal Strength Indicator of client.
 ---@return boolean
 function wifi.ap.config(cfg) end
 
 ---Deauths (forcibly removes) a client from the ESP access point.
 ---@param MAC? string MAC address of station to be deauthed.
----@return boolean Returns true unless called while the ESP is in the STATION opmode
+---@return boolean #Returns `true` unless called while the ESP is in the STATION opmode
 function wifi.ap.deauth(MAC) end
 
 ---Gets broadcast address in AP mode.
----@return string broadcast address in string, for example "192.168.0.255", returns nil if IP address = "0.0.0.0".
+---@return string|nil #broadcast address in string, for example "192.168.0.255", returns `nil` if IP address = "0.0.0.0".
 function wifi.ap.getbroadcast() end
 
 ---Gets table of clients connected to device in AP mode.
@@ -1067,39 +1057,36 @@ function wifi.ap.getbroadcast() end
 function wifi.ap.getclient() end
 
 ---Gets the current SoftAP configuration.
----@param return_table boolean
----|'true' #returns data in a table
----|'false' #returns data in the old format (default)
----@return table|any
----If return_table is true: `config_table`
----`ssid` Network name
----`pwd` Password, nil if no password was configured - auth Authentication Method (wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK or wifi.WPA_WPA2_PSK)
----`channel` Channel number
----`hidden` false = not hidden, true = hidden
----`max` Maximum number of client connections
----`beacon` Beacon interval
----If return_table is false:
----ssid, password, if bssid_set is equal to 0 then bssid is irrelevant
+---@param return_table boolean `true`: returns data in a table; `false`: returns data in the old format (default)
+---@return table|string #Returns:
+-- - If `return_table` is `true` -> *config_table*
+---**ssid** - Network name
+---**pwd** - Password, nil if no password was configured
+---**auth** - Authentication Method (wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK or wifi.WPA_WPA2_PSK)
+---**channel** - Channel number
+---**hidden** - `false` = not hidden, `true` = hidden
+---**max** - Maximum number of client connections
+---**beacon** - Beacon interval
+-- - If `return_table` is `false`:
+--**ssid, password**, if bssid_set is equal to 0 then bssid is irrelevant
 function wifi.ap.getconfig(return_table) end
 
 ---Gets the default SoftAP configuration stored in flash.
----@param return_table boolean
----|'true' #returns data in a table
----|'false' #returns data in the old format (default)
----@return table | any
----If return_table is true: `config_table`
----`ssid` Network name
----`pwd` Password, nil if no password was configured - auth Authentication Method (wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK or wifi.WPA_WPA2_PSK)
----`channel` Channel number
----`hidden` false = not hidden, true = hidden
----`max` Maximum number of client connections
----`beacon` Beacon interval
----If return_table is false:
----ssid, password, if bssid_set is equal to 0 then bssid is irrelevant
+---@param return_table boolean `true`: returns data in a table; `false`: returns data in the old format (default)
+---@return table|string #Returns:
+-- - If `return_table` is `true` -> *config_table*
+--**ssid** - Network name
+--**pwd** - Password, `nil` if no password was configured - auth Authentication Method (wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK or wifi.WPA_WPA2_PSK)
+--**channel** - Channel number
+--**hidden** - `false` = not hidden, `true` = hidden
+--**max** - Maximum number of client connections
+--**beacon** - Beacon interval
+-- - If return_table is false:
+--**ssid, password**, if bssid_set is equal to 0 then bssid is irrelevant
 function wifi.ap.getdefaultconfig(return_table) end
 
 ---Gets IP address, netmask and gateway in AP mode.
----@return string str IP address, netmask, gateway address as string, for example "192.168.0.111", returns nil if IP address = "0.0.0.0".
+---@return string #IP address, netmask, gateway address as string, for example "192.168.0.111", returns `nil` if IP address = "0.0.0.0".
 function wifi.ap.getip() end
 
 ---Gets MAC address in AP mode.
@@ -1121,7 +1108,7 @@ function wifi.ap.setmac(mac) end
 
 ---Configure the dhcp service. Currently only supports setting the start address of the dhcp address pool.
 ---@param dhcp_config table table containing the start-IP of the DHCP address pool, eg. "192.168.1.100"
----@return any #pool_startip, pool_endip
+---@return string #pool_startip, pool_endip
 function wifi.ap.dhcp.config(dhcp_config) end
 
 ---Starts the DHCP service.
@@ -1132,44 +1119,44 @@ function wifi.ap.dhcp.start() end
 ---@return boolean #boolean indicating success
 function wifi.ap.dhcp.stop() end
 
----Register callbacks for WiFi event monitor
----@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'
+---Register callbacks for WiFi event monitor.
+---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED' Event: WiFi event you would like to set a callback for.
 ---@param fun? function function(T)
 ---@return nil
 --Callback: T: Table returned by event.
---wifi.eventmon.STA_CONNECTED Station is connected to access point.
---    SSID: SSID of access point.
---    BSSID: BSSID of access point.
---    channel: The channel the access point is on.
---wifi.eventmon.STA_DISCONNECTED: Station was disconnected from access point.
---    SSID: SSID of access point.
---    BSSID: BSSID of access point.
---    reason: See wifi.eventmon.reason below.
---wifi.eventmon.STA_AUTHMODE_CHANGE: Access point has changed authorization mode.
---    old_auth_mode: Old wifi authorization mode.
---    new_auth_mode: New wifi authorization mode.
---wifi.eventmon.STA_GOT_IP: Station got an IP address.
---    IP: The IP address assigned to the station.
---    netmask: Subnet mask.
---    gateway: The IP address of the access point the station is connected to.
---wifi.eventmon.STA_DHCP_TIMEOUT: Station DHCP request has timed out.
---    Blank table is returned.
---wifi.eventmon.AP_STACONNECTED: A new client has connected to the access point.
---    MAC: MAC address of client that has connected.
---    AID: SDK provides no details concerning this return value.
---wifi.eventmon.AP_STADISCONNECTED: A client has disconnected from the access point.
---    MAC: MAC address of client that has disconnected.
---    AID: SDK provides no details concerning this return value.
---wifi.eventmon.AP_PROBEREQRECVED: A probe request was received.
---    MAC: MAC address of the client that is probing the access point.
---    RSSI: Received Signal Strength Indicator of client.
---wifi.eventmon.WIFI_MODE_CHANGE: WiFi mode has changed.
---    old_auth_mode: Old WiFi mode.
---    new_auth_mode: New WiFi mode.
+-- - *wifi.eventmon.STA_CONNECTED* Station is connected to access point.
+--**SSID**: SSID of access point.
+--**BSSID**: BSSID of access point.
+--**channel**: The channel the access point is on.
+-- - *wifi.eventmon.STA_DISCONNECTED*: Station was disconnected from access point.
+--**SSID**: SSID of access point.
+--**BSSID**: BSSID of access point.
+--**reason**: See wifi.eventmon.reason below.
+-- - *wifi.eventmon.STA_AUTHMODE_CHANGE*: Access point has changed authorization mode.
+--**old_auth_mode**: Old wifi authorization mode.
+--**new_auth_mode**: New wifi authorization mode.
+-- - *wifi.eventmon.STA_GOT_IP*: Station got an IP address.
+--**IP**: The IP address assigned to the station.
+--**netmask**: Subnet mask.
+--**gateway**: The IP address of the access point the station is connected to.
+-- - *wifi.eventmon.STA_DHCP_TIMEOUT*: Station DHCP request has timed out.
+--Blank table is returned.
+-- - *wifi.eventmon.AP_STACONNECTED*: A new client has connected to the access point.
+--**MAC**: MAC address of client that has connected.
+--**AID**: SDK provides no details concerning this return value.
+-- - *wifi.eventmon.AP_STADISCONNECTED*: A client has disconnected from the access point.
+--**MAC**: MAC address of client that has disconnected.
+--**AID**: SDK provides no details concerning this return value.
+-- - *wifi.eventmon.AP_PROBEREQRECVED*: A probe request was received.
+--**MAC**: MAC address of the client that is probing the access point.
+--**RSSI**: Received Signal Strength Indicator of client.
+-- - *wifi.eventmon.WIFI_MODE_CHANGE*: WiFi mode has changed.
+--**old_auth_mode**: Old WiFi mode.
+--**new_auth_mode**: New WiFi mode.
 function wifi.eventmon.register(Event, fun) end
 
 ---Unregister callbacks for WiFi event monitor
----@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'|'wifi.eventmon.WIFI_MODE_CHANGED'
+---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'|'wifi.eventmon.WIFI_MODE_CHANGED' WiFi event you would like to set a callback for.
 ---@return nil
 function wifi.eventmon.unregister(Event) end
 
@@ -1331,7 +1318,7 @@ function buffer:power() end
 
 ---Fade in or out. Defaults to out
 ---@param value number value by which to divide or multiply each byte
----@param direction? integer|'ws2812.FADE_IN'|' ws2812.FADE_OUT'
+---@param direction? integer|'ws2812.FADE_IN'|' ws2812.FADE_OUT' direction
 ---@return nil
 function buffer:fade(value, direction) end
 
@@ -1376,7 +1363,7 @@ function ws2812_effects.set_brightness(brightness) end
 ---@param g integer is the green value between 0 and 255
 ---@param r integer is the red value between 0 and 255
 ---@param b integer is the blue value between 0 and 255
----@param w? integer is the white value between 0 and 255
+---@param w? integer (optional) is the white value between 0 and 255
 ---@return nil
 function ws2812_effects.set_color(g, r, b, w) end
 
@@ -1399,8 +1386,8 @@ function ws2812_effects.set_delay(delay) end
 function ws2812_effects.get_delay() end
 
 ---Set the active effect mode.
----@param mode string|'"static"'|'"blink"'|'"gradient"'|'"gradient_rgb"'|'"random_color"'|'"rainbow"'|'"rainbow_cycle"'|'"flicker"'|'"fire"'|'"fire_soft"'|'"fire_intense"'|'"halloween"'|'"circus_combustus"'|'"larson_scanner"'|'"color_wipe"'|'"random_dot"'|'"cycle"'
----@param effect_param? integer|string
+---@param mode string|'"static"'|'"blink"'|'"gradient"'|'"gradient_rgb"'|'"random_color"'|'"rainbow"'|'"rainbow_cycle"'|'"flicker"'|'"fire"'|'"fire_soft"'|'"fire_intense"'|'"halloween"'|'"circus_combustus"'|'"larson_scanner"'|'"color_wipe"'|'"random_dot"'|'"cycle"' mode
+---@param effect_param? integer|string is an optional effect parameter.
 ---@return nil
 function ws2812_effects.set_mode(mode, effect_param) end
 
