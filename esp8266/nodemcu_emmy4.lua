@@ -32,11 +32,11 @@ function gpio.serout(pin, start_level, delay_times , cycle_num, callback) end
 ---Establish or clear a callback function to run on interrupt for a pin.
 ---@param pin integer 1-12, pin to trigger on, IO index.
 ---@param type? string
----|' "up"'     #rising edge
----|' "down"'   #falling edge
----|' "both"'   #both edges
----|' "low"'    #low level
----|' "high"'   #high level
+---|' "up"'   #rising edge
+---|' "down"' #falling edge
+---|' "both"' #both edges
+---|' "low"'  #low level
+---|' "high"' #high level
 ---@param callback_function? function|'callback_function(level, when, eventcount)' callback function when trigger occurs. The parameters are:
 -- - level - The level of the specified pin at the interrupt
 -- - when -  timestamp of the event
@@ -137,7 +137,7 @@ http = {}
 ---@alias bodyHTTP string
 ---|' ""' #The body to post; must already be encoded in the appropriate format, but may be empty
 ---@alias callbackHTTP
----|' function(code, data) end' # The callback function to be invoked when the response has been received or an error occurred; it is invoked with the arguments status_code, body and headers. In case of an error status_code is set to -1.
+---|' function(code, data) end' #The callback function to be invoked when the response has been received or an error occurred; it is invoked with the arguments status_code, body and headers. In case of an error status_code is set to -1.
 
 ---Executes a HTTP DELETE request. Note that concurrent requests are not supported.
 ---@param url urlHTTP
@@ -189,9 +189,9 @@ hx711 = {}
 function hx711.init(clk, data) end
 
 ---@alias hx711_a1 integer
----|'0' channel A, gain 128
----|'1' channel B, gain 32
----|'2' channel A, gain 64
+---|'0' #channel A, gain 128
+---|'1' #channel B, gain 32
+---|'2' #channel A, gain 64
 
 ---Read digital loadcell ADC value.
 ---@param mode hx711_a1 ADC mode. This parameter specifies which input and the gain to apply to that input.
@@ -564,8 +564,8 @@ function net.dns.setdnsserver(dns_ip_addr, dns_index) end
 ---Pings a server. A callback function is called when response is or is not received.
 ---@param domain string destination domain or IP address
 ---@param count? number number of ping packets to be sent (default value is 4)
----@param callback_received function function(bytes, ipaddr, seqno, rtt) callback function which is invoked when response is received
----@param callback_sent? function function(ipaddr, total_count, timeout_count, total_bytes, total_time) callback function which is invoked when response is received
+---@param callback_received function *function(bytes, ipaddr, seqno, rtt)* callback function which is invoked when response is received
+---@param callback_sent? function *function(ipaddr, total_count, timeout_count, total_bytes, total_time)* callback function which is invoked when response is received
 -- - **ipaddrstr** destination server IP address
 -- - **total_count** total number of packets sent
 -- - **timeout_count** total number of packets lost (not received)
@@ -599,12 +599,12 @@ function node.bootreason() end
 function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as.
----@param filename string|'".lua"' #name of Lua text file
+---@param filename string|'".lua"' name of Lua text file
 ---@return nil
 function node.compile(filename) end
 
 ---Enters deep sleep mode, wakes up when timed out.
----@param us integer number (integer) or nil, sleep time in micro second. If us == 0, it will sleep forever. If us == nil, will not set sleep time.
+---@param us integer number (integer) or `nil`, sleep time in micro second. If *us* == 0, it will sleep forever. If *us* == nil, will not set sleep time.
 ---@param option integer number (integer) or `nil`. If `nil`, it will use last alive setting as default option.
 -- - 0 , init data byte 108 is valuable
 -- - \>0, init data byte 108 is valueless
@@ -668,31 +668,29 @@ function node.heap() end
 -- - **number_type** (string) integer or float
 function node.info(group) end
 
----Submits a string to the Lua interpreter. Similar to pcall(loadstring(str)), but without the single-line limitation.
+---Submits a string to the Lua interpreter. Similar to `pcall(loadstring(str))`, but without the single-line limitation.
 ---@param str any Lua chunk
 ---@return nil
 function node.input(str) end
 
 ---Returns the function reference for a function in LFS.
----@param modulename string|'""' #The name of the module to be loaded.
----@return string|nil #If the LFS is loaded and the modulename is a string that is the name of a valid module in the LFS, then the function is returned in the same way the load() and the other Lua load functions do. Otherwise `nil` is returned.
+---@param modulename string|'""' The name of the module to be loaded.
+---@return function|nil #If the LFS is loaded and the modulename is a string that is the name of a valid module in the LFS, then the function is returned in the same way the `load()` and the other Lua load functions do. Otherwise `nil` is returned.
 function node.LFS.get(modulename) end
 
 ---List the modules in LFS.
----@return any|nil #If no LFS image IS LOADED then `nil` is returned. Otherwise an sorted array of the name of modules in LFS is returned.
+---@return table|nil #If no LFS image IS LOADED then `nil` is returned. Otherwise an sorted array of the name of modules in LFS is returned.
 function node.LFS.list() end
 
 ---Reload LFS with the flash image provided.
----@param imageName string|'""' #The name of a image file in the filesystem to be loaded into the LFS.
----@return any|nil #In the case when the imagename is a valid LFS image, this is expanded and loaded into flash, and the ESP is then immediately rebooted, so control is not returned to the calling Lua application in the case of a successful reload.
+---@param imageName string|'""' The name of a image file in the filesystem to be loaded into the LFS.
+---@return any|nil #In the case when the imagename is a valid LFS image, this is expanded and loaded into flash, and the ESP is then immediately rebooted, *so control is not returned to the calling Lua application* in the case of a successful reload.
 --The reload process internally makes multiple passes through the LFS image file. The first pass validates the file and header formats and detects many errors. If any is detected then an error string is returned.
 function node.LFS.reload(imageName) end
 
 ---Redirects the Lua interpreter to a stdout pipe when a CB function is specified (See pipe module) and resets output to normal otherwise. Optionally also prints to the serial console.
----@param fun function|'function(pipe) end' #`output_fn(pipe)` a function accept every output as str, and can send the output to a socket (or maybe a file). Note that this function must conform to the fules for a pipe reader callback.
----@param serial_debug integer
----|'1' #output also show in serial.
----|'0' #no serial output.
+---@param fun function|'function(pipe) end' `output_fn(pipe)` a function accept every output as str, and can send the output to a socket (or maybe a file). Note that this function must conform to the fules for a pipe reader callback.
+---@param serial_debug integer **1** - output also show in serial. **0** - no serial output.
 ---@return nil
 function node.output(fun, serial_debug) end
 
@@ -727,7 +725,7 @@ function node.setpartitiontable(partition_info) end
 ---Put NodeMCU in light sleep mode to reduce current consumption.
 ---@param wake_pin integer 1-12, pin to attach wake interrupt to. Note that pin 0(GPIO 16) does not support interrupts.
 ---@param int_type? node_a1 type of interrupt that you would like to wake on.
----@param resume_cb? function|' function() end' #Callback to execute when WiFi wakes from suspension.
+---@param resume_cb? function|' function() end' Callback to execute when WiFi wakes from suspension.
 ---@param preserve_mode? boolean #preserve current WiFi mode through node sleep.
 ---|'true' #Station and StationAP modes will automatically reconnect to previously configured Access Point when NodeMCU resumes.
 ---|'false' #discard WiFi mode and leave NodeMCU in wifi.NULL_MODE. WiFi mode will be restored to original mode on restart.
@@ -736,11 +734,11 @@ function node.sleep(wake_pin, int_type, resume_cb, preserve_mode) end
 
 ---Query the performance of system startup.
 ---@param marker? any If present, this will add another entry into the startup counts
----@return table array An array of tables which indicate how many CPU cycles had been consumed at each step of platform boot.
+---@return table #An array of tables which indicate how many CPU cycles had been consumed at each step of platform boot.
 function node.startupcounts(marker) end
 
 ---Get/set options that control the startup process. This interface will grow over time.
----@param tbl? table #If the argument is omitted, then no change is made to the current set of startup options. If the argument is the empty table {} then all options are reset to their default values. `table` one or more options:
+---@param tbl? table If the argument is omitted, then no change is made to the current set of startup options. If the argument is the empty table {} then all options are reset to their default values. `table` one or more options:
 --**banner** - set to true or false to indicate whether the startup banner should be displayed or not. (default: true)
 --**frequency** - set to node.CPU80MHZ or node.CPU160MHZ to indicate the initial CPU speed. (default: node.CPU80MHZ)
 --**delay_mount** - set to true or false to indicate whether the SPIFFS filesystem mount is delayed until it is first needed or not. (default: false)
@@ -754,7 +752,7 @@ function node.startup(tbl) end
 ---|'3' #discard Local, Upvalue and line-number debug info
 
 ---Controls the amount of debug information kept during `node.compile()`,and allows removal of debug information from already compiled Lua code.
----@param level? level_n
+---@param level? level_n level
 ---@param fun? function a compiled function to be stripped per setfenv except 0 is not permitted.
 ---@return integer|nil #If invoked without arguments, returns the current level settings. Otherwise, `nil` is returned.
 function node.stripdebug(level, fun) end
@@ -781,15 +779,15 @@ function node.random() end
 ---Sets the Emergency Garbage Collector mode.
 ---@param mode integer
 ---|'node.egc.NOT_ACTIVE' #EGC inactive, no collection cycle will be forced in low memory situations
----|'node.egc.ON_ALLOC_FAILURE' #ry to allocate a new block of memory, and run the garbage collector if the allocation fails. If the allocation fails even after running the garbage collector, the allocator will return with error.
+---|'node.egc.ON_ALLOC_FAILURE' #Try to allocate a new block of memory, and run the garbage collector if the allocation fails. If the allocation fails even after running the garbage collector, the allocator will return with error.
 ---|'node.egc.ON_MEM_LIMIT' #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit. If the upper limit can't be satisfied even after running the garbage collector, the allocator will return with error. If the given limit is negative, it is interpreted as the desired amount of heap which should be left available. Whenever the free heap (as reported by node.heap() falls below the requested limit, the garbage collector will be run.
 ---|'node.egc.ALWAYS' #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error. This mode is very efficient with regards to memory savings, but it's also the slowest.
----@param level number in the case of node.egc.ON_MEM_LIMIT, this specifies the memory limit.
+---@param level? number in the case of *node.egc.ON_MEM_LIMIT*, this specifies the memory limit.
 ---@return nil
 function node.egc.setmode(mode, level) end
 
 ---Returns memory usage information for the Lua runtime.
----@return number total_allocated The total number of bytes allocated by the Lua runtime. This is the number which is relevant when using the node.egc.ON_MEM_LIMIT option with positive limit values.
+---@return number total_allocated The total number of bytes allocated by the Lua runtime. This is the number which is relevant when using the *node.egc.ON_MEM_LIMIT* option with positive limit values.
 ---@return number estimated_used This value shows the estimated usage of the allocated memory.
 function node.egc.meminfo() end
 
@@ -798,7 +796,7 @@ function node.egc.meminfo() end
 ---| 'node.task.LOW_PRIORITY' #=0
 ---|>'node.task.MEDIUM_PRIORITY' #=1
 ---| 'node.task.HIGH_PRIORITY' #=2
----@param fun function|' function() end' #a callback function to be executed when the task is run.
+---@param fun function|' function() end' a callback function to be executed when the task is run.
 ---@return nil
 function node.task.post(task_priority, fun) end
 
