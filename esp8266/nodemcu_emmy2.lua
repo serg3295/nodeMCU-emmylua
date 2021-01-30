@@ -145,7 +145,7 @@ local decoder = {}
 ---@param opts? table an optional table of options. The possible entries are:
 --**depth** the maximum encoding depth needed to encode the table. The default is 20.
 --**null** the string value to treat as null.
----@return sjsonenc obj A `sjson.encoder` object.
+---@return sjsonenc #A `sjson.encoder` object.
 function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
@@ -166,7 +166,7 @@ function sjson.encode(tbl, opts) end
 --**depth** the maximum encoding depth needed to encode the table. The default is 20.
 --**null** the string value to treat as null.
 --**metatable** a table to use as the metatable for all the new tables in the returned object.
----@return sjsondec obj A `sjson.decoder` object
+---@return sjsondec #A `sjson.decoder` object
 function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
@@ -192,7 +192,7 @@ sntp = {}
 ---Attempts to obtain time synchronization.
 ---@param server_ip? string|table IP
 ---@param callback? function|' function (sec, usec, server, info) end' if provided it will be invoked on a successful synchronization, with four parameters: seconds, microseconds, server and info.
----@param errcallback? function|' function()' `errcallback` failure callback with two parameters: type of error &  string containing supplementary information.
+---@param errcallback? function|' function()' failure callback with two parameters: type of error &  string containing supplementary information.
 ---@param autorepeat? boolean if this is non-nil, then the synchronization will happen every 1000 seconds and try and condition the clock if possible.
 ---@return nil
 function sntp.sync(server_ip, callback, errcallback, autorepeat) end
@@ -212,22 +212,26 @@ softuart = {}
 ---@class softuart
 local s_uart = {}
 
----Creates new SoftUART instance.
+---Creates new SoftUART instance. Note that rx pin cannot be shared between instances but tx pin can.
 ---@param baudrate number SoftUART baudrate. Maximum supported is 230400.
----@param txPin number SoftUART tx pin. If set to nil write method will not be supported.
----@param rxPin number SoftUART rx pin. If set to nil on("data") method will not be supported.
+---@param txPin number SoftUART tx pin. If set to `nil` write method will not be supported.
+---@param rxPin number SoftUART rx pin. If set to `nil` `on("data")` method will not be supported.
 ---@return softuart #softuart instance.
 function softuart.setup(baudrate, txPin, rxPin) end
 
 ---Sets up the callback function to receive data.
----@param event string|"data"
+---@param event string|"data" Event name. Currently only data is supported.
 ---@param trigger number Can be a character or a number.
----@param fun function
+-- - If **character** is set, the callback function will only be run when that character gets received.
+-- - When a **number** is set, the callback function will only be run when buffer will have as many characters as number.
+---@param foo function Callback function. the data parameter is software UART receiving buffer.
 ---@return nil
-function s_uart:on(event, trigger, fun) end
+function s_uart:on(event, trigger, foo) end
 
 ---Transmits a byte or sequence of them.
----@param data number|string
+---@param data number|string Can be a number or string.
+-- - When a **number** is passed, only one byte will be sent.
+-- - When a **string** is passed, whole sequence will be transmitted.
 ---@return nil
 function s_uart:write(data) end
 
@@ -237,7 +241,7 @@ somfy = {}
 ---Builds an frame defined by Somfy protocol and sends it to the RF transmitter.
 ---@param pin integer GPIO pin the RF transmitter is connected to.
 ---@param remote_address number address of the remote control.
----@param command integer|' somfy.SOMFY_UP'|' somfy.SOMFY_DOWN'|' somfy.SOMFY_PROG'|' somfy.SOMFY_STOP'
+---@param command integer|' somfy.SOMFY_UP'|' somfy.SOMFY_DOWN'|' somfy.SOMFY_PROG'|' somfy.SOMFY_STOP' somfy command
 ---@param rolling_code number The rolling code is increased every time a button is pressed.
 ---@param repeat_count integer how many times the command is repeated
 ---@param call_back function to be called after the command is transmitted.
@@ -251,12 +255,12 @@ spi = {}
 ---@param id integer SPI ID number: 0 for SPI, 1 for HSPI
 ---@param size number number of data items to be read
 ---@param default_data? any default data being sent on MOSI (all-1 if omitted)
----@return string String containing the bytes read from SPI.
+---@return string #String containing the bytes read from SPI.
 function spi.recv(id, size, default_data) end
 
 ---Send data via SPI in half-duplex mode. Send & receive data in full-duplex mode.
 ---@param id integer SPI ID number: 0 for SPI, 1 for HSPI
----@param data1 string|table|integer
+---@param data1 string|table|integer data
 ---@return number #number of written bytes
 ---@return any #received data when configured with spi.FULLDUPLEX
 function spi.send(id, data1, ...) end
@@ -378,9 +382,9 @@ tcs34725 ={}
 function tcs34725.setup() end
 
 ---Enables the sensor. Can be used to wake up after a disable.
----@param fun function called when the sensor has finished initialising.
+---@param foo function called when the sensor has finished initialising.
 ---@return nil
-function tcs34725.enable(fun) end
+function tcs34725.enable(foo) end
 
 ---Disables the sensor. Enables a low-power sleep mode.
 ---@return nil
@@ -434,12 +438,12 @@ function TLS:hold() end
 
 ---Register callback functions for specific events.
 ---@param event string|'"dns"'|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' event
----@param fun function|'function(tls.socket, string?) end' callback function. The first parameter is the socket.
--- - If event is "receive", the second parameter is the received data as string.
--- - If event is "reconnection", the second parameter is the reason of connection error (string).
--- - If event is "dns", the second parameter will be either `nil` or a string rendering of the resolved address.
+---@param foo function|'function(tls.socket, string?) end' callback function. The first parameter is the socket.
+-- - If event is *"receive"*, the second parameter is the received data as string.
+-- - If event is *"reconnection"*, the second parameter is the reason of connection error (string).
+-- - If event is *"dns"*, the second parameter will be either `nil` or a string rendering of the resolved address.
 ---@return nil
-function TLS:on(event, fun) end
+function TLS:on(event, foo) end
 
 ---Sends data to remote peer.
 ---@param string string data in string which will be sent to server
@@ -518,9 +522,8 @@ function tmr.time() end
 ---@return nil
 function tmr.wdclr() end
 
----Get value of CPU CCOUNT register which contains CPU ticks. The register is 32-bit and rolls over.
----Converting the register's CPU ticks to us is done by dividing it to 80 or 160 (CPU80/CPU160) i.e. tmr.ccount() / node.getcpufreq().
----Register arithmetic works without need to account for roll over, unlike tmr.now(). Because of same reason when CCOUNT is having its 32nd bit set, it appears in Lua as negative number.
+---Get value of CPU CCOUNT register which contains CPU ticks. The register is 32-bit and rolls over. Converting the register's CPU ticks to us is done by dividing it to 80 or 160 (CPU80/CPU160) i.e. `tmr.ccount() / node.getcpufreq()`.
+-- Register arithmetic works without need to account for roll over, unlike `tmr.now()`. Because of same reason when CCOUNT is having its 32nd bit set, it appears in Lua as negative number.
 ---@return number #The current value of CCOUNT register.
 function tmr.ccount() end
 
@@ -536,7 +539,7 @@ function tmr.create() end
 ---This is a convenience function combining `tobj:register()` and `tobj:start()` into a single call.
 ---@param interval number timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m timer mode
----@param foo functio|" function(t) end" callback function which is invoked with the timer object as an argument
+---@param foo function|" function(t) end" callback function which is invoked with the timer object as an argument
 ---@return boolean #`true` if the timer was started, `false` on error
 function tObj:alarm(interval, mode, foo) end
 
@@ -548,7 +551,7 @@ function tObj:interval(interval_ms) end
 ---Configures a timer and registers the callback function to call on expiry. Note that registering does not start the alarm.
 ---@param interval_ms integer new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m timer mode
----@param foo function |" function() end" callback function which is invoked with the timer object as an argument
+---@param foo function|" function() end" callback function which is invoked with the timer object as an argument
 ---@return nil
 function tObj:register(interval_ms, mode, foo) end
 
@@ -597,9 +600,11 @@ function tsl2561.getrawchannels() end
 ---|' tsl2561.ADDRESS_GND'
 ---|>' tsl2561.ADDRESS_FLOAT'
 ---|' tsl2561.ADDRESS_VDD'
+
 ---@alias tsl2561_a2 number
 ---|' tsl2561.PACKAGE_CS'
 ---|>' tsl2561.PACKAGE_T_FN_CL'
+
 ---Initializes the device on pins sdapin & sclpin.
 ---@param sdapin number pin number of the device's I²C sda connection
 ---@param sclpin number pin number of the device's I²C scl connection
@@ -683,13 +688,15 @@ websocket = {}
 ---@class websocket
 local ws = {}
 
----Creates a new websocket client. This client should be stored in a variable and will provide all the functions to handle a connection. When the connection becomes closed, the same client can still be reused - the callback functions are kept - and you can connect again to any server.
+---Creates a new websocket client. This client should be stored in a variable and will provide all the functions to handle a connection.
+--When the connection becomes closed, the same client can still be reused - the callback functions are kept - and you can connect again to any server.
 ---Before disposing the client, make sure to call `ws:close()`.
 ---@return websocket websocketclient
 function websocket.createClient() end
 
----Closes a websocket connection. he client issues a close frame and attempts to gracefully close the websocket. If server doesn't reply, the connection is terminated after a small timeout. This function can be called even if the websocket isn't connected.
---- This function must always be called before disposing the reference to the websocket client.
+---Closes a websocket connection. he client issues a close frame and attempts to gracefully close the websocket. If server doesn't reply, the connection is terminated after a small timeout.
+--This function can be called even if the websocket isn't connected.
+---This function must *always* be called before disposing the reference to the websocket client.
 ---@return nil
 function ws:close() end
 
@@ -705,15 +712,15 @@ function ws:config(params) end
 function ws:connect(url) end
 
 ---Registers the callback function to handle websockets events (there can be only one handler function registered per event type).
----@param eventName integer|'connection'|'receive'|'close' #the type of websocket event to register the callback function
----@param fun function|' funtion(ws, ...) end' #callback function. The function first parameter is always the **websocketclient**. Other arguments are required depending on the event type. If `nil`, any previously configured callback is unregistered.
+---@param eventName integer|'connection'|'receive'|'close' the type of websocket event to register the callback function
+---@param foo function|' funtion(ws, ...) end' callback function. The function first parameter is always the **websocketclient**. Other arguments are required depending on the event type. If `nil`, any previously configured callback is unregistered.
 ---@return nil
-function websocket:on(eventName, fun) end
+function websocket:on(eventName, foo) end
 
 ---Sends a message through the websocket connection.
 ---@param message any the data to send.
 ---@param opcode integer optionally set the opcode (default: 1, text message)
----@return nil
+---@return nil #'nil', or an error if socket is not connected
 function websocket:send(message, opcode) end
 
 --*** WIEGANG ***
@@ -934,7 +941,7 @@ function wifi.sta.getbroadcast() end
 
 ---Gets the WiFi station configuration.
 ---@param return_table boolean `true`: returns data in a table; `false`: returns data in the old format (default)
----@return table|string #Returns:
+---@return table|string #>
 -- - If `return_table` is true -> *config_table*:
 --**ssid** ssid of Access Point.
 --**pwd** password to Access Point, nil if no password was configured
@@ -946,7 +953,7 @@ function wifi.sta.getconfig(return_table) end
 
 ---Gets the default WiFi station configuration stored in flash.
 ---@param return_table boolean `true` returns data in a table; `false` returns data in the old format (default)
----@return table|string #Returns:
+---@return table|string #>
 -- - If `return_table` is true -> *config_table*:
 --**ssid** - ssid of Access Point.
 --**pwd** - password to Access Point, nil if no password was configured
@@ -972,7 +979,7 @@ function wifi.sta.getip() end
 function wifi.sta.getmac() end
 
 ---Get RSSI (Received Signal Strength Indicator) of the Access Point which ESP8266 station connected to.
----@return number|nil
+---@return number|nil #>
 -- - If station is connected to an access point, `rssi` is returned.
 -- - If station is not connected to an access point, `nil` is returned.
 function wifi.sta.getrssi() end
@@ -1058,7 +1065,7 @@ function wifi.ap.getclient() end
 
 ---Gets the current SoftAP configuration.
 ---@param return_table boolean `true`: returns data in a table; `false`: returns data in the old format (default)
----@return table|string #Returns:
+---@return table|string #>
 -- - If `return_table` is `true` -> *config_table*
 ---**ssid** - Network name
 ---**pwd** - Password, nil if no password was configured
@@ -1073,7 +1080,7 @@ function wifi.ap.getconfig(return_table) end
 
 ---Gets the default SoftAP configuration stored in flash.
 ---@param return_table boolean `true`: returns data in a table; `false`: returns data in the old format (default)
----@return table|string #Returns:
+---@return table|string #>
 -- - If `return_table` is `true` -> *config_table*
 --**ssid** - Network name
 --**pwd** - Password, `nil` if no password was configured - auth Authentication Method (wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK or wifi.WPA_WPA2_PSK)
@@ -1120,40 +1127,40 @@ function wifi.ap.dhcp.start() end
 function wifi.ap.dhcp.stop() end
 
 ---Register callbacks for WiFi event monitor.
----@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED' Event: WiFi event you would like to set a callback for.
----@param fun? function function(T)
+---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED' WiFi event you would like to set a callback for.
+---@param foo? function function(T)
 ---@return nil
 --Callback: T: Table returned by event.
 -- - *wifi.eventmon.STA_CONNECTED* Station is connected to access point.
---**SSID**: SSID of access point.
---**BSSID**: BSSID of access point.
---**channel**: The channel the access point is on.
+-->**SSID**: SSID of access point.
+-->**BSSID**: BSSID of access point.
+-->**channel**: The channel the access point is on.
 -- - *wifi.eventmon.STA_DISCONNECTED*: Station was disconnected from access point.
---**SSID**: SSID of access point.
---**BSSID**: BSSID of access point.
---**reason**: See wifi.eventmon.reason below.
+-->**SSID**: SSID of access point.
+-->**BSSID**: BSSID of access point.
+-->**reason**: See wifi.eventmon.reason below.
 -- - *wifi.eventmon.STA_AUTHMODE_CHANGE*: Access point has changed authorization mode.
---**old_auth_mode**: Old wifi authorization mode.
---**new_auth_mode**: New wifi authorization mode.
+-->**old_auth_mode**: Old wifi authorization mode.
+-->**new_auth_mode**: New wifi authorization mode.
 -- - *wifi.eventmon.STA_GOT_IP*: Station got an IP address.
---**IP**: The IP address assigned to the station.
---**netmask**: Subnet mask.
---**gateway**: The IP address of the access point the station is connected to.
+-->**IP**: The IP address assigned to the station.
+-->**netmask**: Subnet mask.
+-->**gateway**: The IP address of the access point the station is connected to.
 -- - *wifi.eventmon.STA_DHCP_TIMEOUT*: Station DHCP request has timed out.
 --Blank table is returned.
 -- - *wifi.eventmon.AP_STACONNECTED*: A new client has connected to the access point.
---**MAC**: MAC address of client that has connected.
---**AID**: SDK provides no details concerning this return value.
+-->**MAC**: MAC address of client that has connected.
+-->**AID**: SDK provides no details concerning this return value.
 -- - *wifi.eventmon.AP_STADISCONNECTED*: A client has disconnected from the access point.
---**MAC**: MAC address of client that has disconnected.
---**AID**: SDK provides no details concerning this return value.
+-->**MAC**: MAC address of client that has disconnected.
+-->**AID**: SDK provides no details concerning this return value.
 -- - *wifi.eventmon.AP_PROBEREQRECVED*: A probe request was received.
---**MAC**: MAC address of the client that is probing the access point.
---**RSSI**: Received Signal Strength Indicator of client.
+-->**MAC**: MAC address of the client that is probing the access point.
+-->**RSSI**: Received Signal Strength Indicator of client.
 -- - *wifi.eventmon.WIFI_MODE_CHANGE*: WiFi mode has changed.
---**old_auth_mode**: Old WiFi mode.
---**new_auth_mode**: New WiFi mode.
-function wifi.eventmon.register(Event, fun) end
+-->**old_auth_mode**: Old WiFi mode.
+-->**new_auth_mode**: New WiFi mode.
+function wifi.eventmon.register(Event, foo) end
 
 ---Unregister callbacks for WiFi event monitor
 ---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'|'wifi.eventmon.WIFI_MODE_CHANGED' WiFi event you would like to set a callback for.
@@ -1411,7 +1418,7 @@ function xpt2046.init(cs_pin, irq_pin, height, width) end
 function xpt2046.setCalibration(x1, y1, x2, y2) end
 
 ---Checks if the touch panel is touched.
----@return boolean touch true if the display is touched, else false
+---@return boolean touch `true` if the display is touched, else `false`
 function xpt2046.isTouched() end
 
 ---Returns the position the display is touched using the calibration values and given width and height.
