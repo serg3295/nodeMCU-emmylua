@@ -12,7 +12,7 @@ function bh1750.init(sda, scl) end
 function bh1750.read() end
 
 ---Function used to return last read lux value.
----@return number val Last known lux value.
+---@return number #Last known lux value.
 function bh1750.getlux() end
 
 --*** cohelper Module is in nodemcu_emmy3.lua ***
@@ -39,25 +39,25 @@ function ds18:read_temp(callback, pin, unit, force_search, save_search) end
 ds3231 = {}
 
 ---Sets the current date and time.
----@param second number : 00-59
----@param minute number : 00-59
----@param hour number : 00-23
----@param day number : 1-7 (Sunday = 1, Saturday = 7)
----@param date number : 01-31
----@param month number : 01-12
----@param year number : 00-99
----@param disableOscillator? integer : (optional) 0-1, defaults to 0 if omitted
+---@param second number 00-59
+---@param minute number 00-59
+---@param hour number 00-23
+---@param day number 1-7 (Sunday = 1, Saturday = 7)
+---@param date number 01-31
+---@param month number 01-12
+---@param year number 00-99
+---@param disableOscillator? integer (optional) 0-1, defaults to 0 if omitted
 ---@return nil
 function ds3231.setTime(second, minute, hour, day, date, month, year, disableOscillator) end
 
 ---Get the current date and time.
----@return integer second: 00-59
----@return integer minute: 00-59
----@return integer hour: 00-23
----@return integer day: 1-7 (Sunday = 1, Saturday = 7)
----@return integer date: 01-31
----@return integer month: 01-12
----@return integer year: 00-99
+---@return integer second 00-59
+---@return integer minute 00-59
+---@return integer hour 00-23
+---@return integer day 1-7 (Sunday = 1, Saturday = 7)
+---@return integer date 01-31
+---@return integer month 01-12
+---@return integer year 00-99
 function ds3231.getTime() end
 
 ---@alias ds3231_a1 integer
@@ -69,12 +69,12 @@ function ds3231.getTime() end
 ---|' ds3231.DAY' triggers when time match given seconds, minutes, and hours on week day date/day parameters;
 ---|' ds3231.DATE' triggers when time match given seconds, minutes, and hours on date (day of the month) date/day parameters;
 ---Set an alarm to be triggered on SQW pin
----@param alarmId integer :1-2
----@param alarmType ds3231_a1 :1-7
----@param seconds integer :00-59
----@param minutes integer :00-59
----@param hours integer :00-23
----@param date_or_day integer :01-31 or 1-7 (Sunday = 1, Saturday = 7)
+---@param alarmId integer 1-2
+---@param alarmType ds3231_a1 1-7
+---@param seconds integer 00-59
+---@param minutes integer 00-59
+---@param hours integer 00-23
+---@param date_or_day integer 01-31 or 1-7 (Sunday = 1, Saturday = 7)
 ---@return nil
 function ds3231.setAlarm(alarmId, alarmType, seconds, minutes, hours, date_or_day) end
 
@@ -83,18 +83,18 @@ function ds3231.setAlarm(alarmId, alarmType, seconds, minutes, hours, date_or_da
 function ds3231.reloadAlarms() end
 
 ---Enable an already setted alarm with the previous matching conditions.
----@param alarmId integer :1-2
+---@param alarmId integer 1-2
 ---@return nil
 function ds3231.enableAlarm(alarmId) end
 
 ---Disable an already set alarm with the previous matching conditions.
----@param alarmId integer :0-2
+---@param alarmId integer 0-2
 ---@return nil
 function ds3231.disableAlarm(alarmId) end
 
 ---Get bytes of control, for debug purpose, and status of DS3231.
 ---@return integer control 0-255
----@return integer status  0-143 (bit 6-5-4 unused)
+---@return integer status 0-143 (bit 6-5-4 unused)
 function ds3231.getBytes() end
 
 ---@return nil
@@ -109,7 +109,7 @@ local FTP = require('ftpserver')
 ---Create the FTP server on the standard ports 20 and 21. The global variable FTP is set to the server object.
 ---@param user string Username for access to the server
 ---@param pass string Password for access to the server
----@param dbgFlag? boolean optional flag. If set true then internal debug output is printed
+---@param dbgFlag? boolean optional flag. If set `true` then internal debug output is printed
 ---@return nil
 function FTP:createServer(user, pass, dbgFlag) end
 
@@ -118,7 +118,7 @@ function FTP:createServer(user, pass, dbgFlag) end
 ---@param pass string Password for access to the server
 ---@param ssid string SSID for WiFi service
 ---@param wifipwd string password for WiFi service
----@param dbgFlag? boolean optional flag. If set true then internal debug output is printed
+---@param dbgFlag? boolean optional flag. If set `true` then internal debug output is printed
 ---@return nil
 function FTP:open(user, pass, ssid, wifipwd, dbgFlag) end
 
@@ -153,7 +153,7 @@ function HDC1000.getTemp() end
 function HDC1000.getHumi() end
 
 ---Function that checks if voltage of sensor power supply is bellow or above 2.8V.
----@return boolean bool true if battery voltage is bellow 2.8V, false otherwise.
+---@return boolean #`true` if battery voltage is bellow 2.8V, `false` otherwise.
 function HDC1000.batteryDead() end
 
 --*** HTTP server ***
@@ -162,14 +162,14 @@ httpserver = {}
 ---Function to start HTTP server.
 ---@param port integer  Port number for HTTP server. Most HTTP servers listen at port 80.
 ---@param handler function cb for when HTTP request was made. handler(req, res)
----@return any h net.server sub module.
+---@return any #net.server sub module.
 function httpserver.createServer(port, handler) end
 
 --*** IMAP ***
 imap = {}
 
 ---Function used to check if IMAP command was processed.
----@return boolean proc The response process status of the last IMAP command sent.
+---@return boolean #The response process status of the last IMAP command sent.
 function imap.response_processed() end
 
 ---Initiates the IMAP settings.
@@ -186,7 +186,7 @@ function imap.config(username, password, tag, dbug) end
 function imap.login(socket) end
 
 ---Function to check the most recent email number. Should only be called after examine function.
----@return number n The most recent email number.
+---@return number #The most recent email number.
 function imap.get_most_recent_num() end
 
 ---IMAP examines the given mailbox/folder. Sends the IMAP EXAMINE command.
@@ -196,7 +196,7 @@ function imap.get_most_recent_num() end
 function imap.examine(socket, mailbox) end
 
 ---Function that gets the last fetched header field.
----@return string field The last fetched header field.
+---@return string #The last fetched header field.
 function imap.get_header() end
 
 ---Fetches an e-mails header field e.g. SUBJECT, FROM, DATE.
@@ -207,17 +207,17 @@ function imap.get_header() end
 function imap.fetch_header(socket, msg_number, field) end
 
 ---Function to get the last email read's body.
----@return any body The last email read's body.
+---@return any #The last email read's body.
 function imap.get_body() end
 
 ---Sends the IMAP command to fetch a plain text version of the email's body.
----@param socket any IMAP TCP socket object created using net.createConnection
----@param msg_number number The email number to obtain e.g. 1 will obtain the latest email.
+---@param socket any IMAP TCP socket object created using `net.createConnection`
+---@param msg_number number The email number to obtain e.g. **1** will obtain the latest email.
 ---@return nil
 function imap.fetch_body_plain_text(socket, msg_number) end
 
 ---Sends the IMAP command to logout of the email session.
----@param socket any IMAP TCP socket object created using net.createConnection
+---@param socket any IMAP TCP socket object created using `net.createConnection`
 ---@return nil
 function imap.logout(socket) end
 
@@ -244,39 +244,39 @@ function lm92.shutdown() end
 function lm92.wakeup() end
 
 ---Set hysteresis Temperature.
----@param htemp number : Hysteresis temperature from 130 to -55 in ºC
+---@param htemp number Hysteresis temperature from 130 to -55 in ºC
 ---@return nil
 function lm92.setThyst(htemp) end
 
 ---Set Critical Temperature.
----@param ctemp number : Critical temperature from 130 to -55 in ºC
+---@param ctemp number Critical temperature from 130 to -55 in ºC
 ---@return nil
 function lm92.setTcrit(ctemp) end
 
 ---Set Low Window Temperature.
----@param lwtemp number : Low window temperature from 130 to -55 in ºC
+---@param lwtemp number Low window temperature from 130 to -55 in ºC
 ---@return nil
 function lm92.setTlow(lwtemp) end
 
 ---Set High Window Temperature.
----@param hwtemp number : High window temperature from 130 to -55 in ºC
+---@param hwtemp number High window temperature from 130 to -55 in ºC
 ---@return nil
 function lm92.setThigh(hwtemp) end
 
 ---Get hysteresis Temperature.
----@return number Hysteresis Temperature in degree Celsius.
+---@return number #Hysteresis Temperature in degree Celsius.
 function lm92.getThyst() end
 
 ---Get Critical Temperature.
----@return number Critical Temperature in degree Celsius.
+---@return number #Critical Temperature in degree Celsius.
 function lm92.getTcrit() end
 
 ---Get Low Window Temperature.
----@return number Low Window Temperature in degree Celsius.
+---@return number #Low Window Temperature in degree Celsius.
 function lm92.getTlow() end
 
 ---Get High Window Temperature.
----@return number High Window Temperature in degree Celsius.
+---@return number #High Window Temperature in degree Celsius.
 function lm92.getThigh() end
 
 --*** MCP23008 ***
@@ -296,7 +296,7 @@ function mcp23008.begin(address, pinSDA, pinSCL, speed) end
 function mcp23008.writeGPIO(dataByte) end
 
 ---Reads a byte of data from the GPIO register
----@return number byte One byte of data
+---@return number #One byte of data
 function mcp23008.readGPIO() end
 
 ---Writes one byte of data to the IODIR register.
@@ -305,7 +305,7 @@ function mcp23008.readGPIO() end
 function mcp23008.writeIODIR(dataByte) end
 
 ---Writes one byte of data to the IODIR register.
----@return number byte The byte of data in IODIR
+---@return number #The byte of data in IODIR
 function mcp23008.readIODIR() end
 
 ---Writes a byte of data to the GPPU (Pull-UP resistors register)
@@ -314,7 +314,7 @@ function mcp23008.readIODIR() end
 function mcp23008.writeGPPU(dataByte) end
 
 ---Reads the GPPU (Pull-UP resistors register) byte
----@return number byte The GPPU byte i.e. state of all internal pull-up resistors
+---@return number #The GPPU byte i.e. state of all internal pull-up resistors
 function mcp23008.readGPPU() end
 
   --*** MCP23017 ***
@@ -368,7 +368,7 @@ function mcp17:writeGPIO(register, byte) end
 
 ---Read the input states of the channels with a whole byte.
 ---@param register number the side of channels (GPA or GPB)
----@return number byte with states
+---@return number #byte with states
 function mcp17:readGPIO(register) end
 
 --*** REDIS ***
@@ -426,11 +426,11 @@ yeelink = {}
 ---@param device number
 ---@param sensor number
 ---@param apikey string
----@return any IP address of api.yeelink.net, if not obtained then false
+---@return string #IP address of api.yeelink.net, if not obtained then false
 function yeelink.init(device, sensor, apikey) end
 
 ---Function to check DNS resolution of api.yeelink.net status.
----@return any IP address of api.yeelink.net or nil when name resolution failed.
+---@return string #IP address of api.yeelink.net or `nil` when name resolution failed.
 function yeelink.getDNS() end
 
 ---Send data to Yeelink Sever.
@@ -581,8 +581,8 @@ function adxl345.setup() end
 am2320 = {}
 
 ---Samples the sensor and returns the relative humidity in % and temperature in celsius, as an integer multiplied with 10.
----@return integer rh relative humidity percentage multiplied with 10
----@return integer t temperature in celcius multiplied with 10
+---@return integer RH relative humidity percentage multiplied with 10
+---@return integer T temperature in celcius multiplied with 10
 function am2320.read() end
 
 ---Initializes the module.
@@ -598,10 +598,10 @@ apa102 = {}
 ---@param data_pin integer any GPIO pin 0, 1, 2, ...
 ---@param clock_pin integer any GPIO pin 0, 1, 2, ...
 ---@param str string payload to be sent to one or more APA102 LEDs. It should be composed from a ABGR quadruplet per element.
----A1 the first pixel's Intensity channel (0-31)
----B1 the first pixel's Blue channel (0-255)
----G1 the first pixel's Green channel (0-255)
----R1 the first pixel's Red channel (0-255) ... You can connect a lot of APA102 ...
+-- - A1 - the first pixel's Intensity channel (0-31)
+-- - B1 - the first pixel's Blue channel (0-255)
+-- - G1 - the first pixel's Green channel (0-255)
+-- - R1 - the first pixel's Red channel (0-255) ... You can connect a lot of APA102 ...
 ---A2, B2, G2, R2 are the next APA102s Intensity, Blue, Green and Red channel parameters
 ---@return nil
 function apa102.write(data_pin, clock_pin, str) end
@@ -656,13 +656,13 @@ function bit.clear(value, pos1, ...) end
 ---Test if a given bit is cleared.
 ---@param value integer the value to test
 ---@param position integer bit position to test
----@return boolean #true if the bit at the given position is 0, false otherwise
+---@return boolean #`true` if the bit at the given position is 0, `false` otherwise
 function bit.isclear(value, position) end
 
 ---Test if a given bit is set.
 ---@param value number the value to test
 ---@param position integer bit position to test
----@return boolean #true if the bit at the given position is 1, false otherwise
+---@return boolean #`true` if the bit at the given position is 1, `false` otherwise
 function bit.isset(value, position) end
 
 ---Left-shift a number, equivalent to `value << shift` in C.
@@ -698,22 +698,22 @@ function bloom.create(elements, errorrate) end
 
 ---Adds a string to the set and returns an indication of whether the string was already present.
 ---@param str string string The string to be added to the filter set.
----@return boolean b true if the string was already present in the filter. false otherwise.
+---@return boolean #`true` if the string was already present in the filter. `false` otherwise.
 function filter:add(str) end
 
 ---Checks to see if a string is present in the filter set.
 ---@param str string string The string to be checked for membership in the set.
----@return boolean b true if the string was already present in the filter. false otherwise.
+---@return boolean #`true` if the string was already present in the filter. `false` otherwise.
 function filter:check(str) end
 
 ---Empties the filter.
 function filter:reset() end
 
 ---Get some status information on the filter.
----@return number bits The number of bits in the filter.
----@return number fns The number of hash functions in use.
----@return number occupancy The number of bits set in the filter.
----@return number fprate The approximate chance that the next check will return true when it should return false
+---@return number #The number of bits in the filter.
+---@return number #The number of hash functions in use.
+---@return number #The number of bits set in the filter.
+---@return number #The approximate chance that the next check will return true when it should return false
 function filter:info() end
 
 --*** BME280 Lua module ***
@@ -736,7 +736,7 @@ local sobj = require('bme280')
 function bme280.setup(id, address, temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter) end
 
 ---Re-initializes the sensor.
----@param id number - I2C bus number
+---@param id number I2C bus number
 ---@param address? number (optional) address - BME280 sensor address. 1 for BME280_I2C_ADDRESS1 = 0x76, 2 for BME280_I2C_ADDRESS2 = 0x77. Default sensor address is BME280_I2C_ADDRESS1.
 ---@param temp_oss? number (optional) temp_oss - Controls oversampling of temperature data.
 ---@param press_oss? number (optional) press_oss - Controls oversampling of pressure data
@@ -751,13 +751,13 @@ function sobj:setup(id, address, temp_oss, press_oss, humi_oss, power_mode, inac
 ---For given air pressure (called QFE in aviation - see wiki QNH article) and sea level air pressure returns the altitude in meters, i.e. altimeter function.
 ---@param P number measured pressure
 ---@param QNH number current sea level pressure
----@return number alt altitude in meters of measurement point
+---@return number altitude altitude in meters of measurement point
 function sobj:altitude(P, QNH) end
 
 ---For given temperature and relative humidity returns the dew point in celsius.
 ---@param H number relative humidity in percent (100 means 100%)
 ---@param T number temperate in celsius
----@return number dwp dew point in celsisus
+---@return number dewpoint dew point in celsisus
 function sobj:dewpoint(H, T) end
 
 ---For given altitude converts the air pressure to sea level air pressure (QNH).
@@ -772,7 +772,7 @@ function sobj:qfe2qnh(P, altitude) end
 ---@return number P air pressure in hectopascals
 ---@return number H relative humidity in percent
 ---@return number QNH (optional) QNH air pressure in hectopascals (when altitude is specified)
--- Returns nil if the readout is not successful.
+-- Returns `nil` if the readout is not successful.
 function sobj:read(altitude) end
 
 ---Starts readout (turns the sensor into forced mode).
@@ -784,7 +784,7 @@ function sobj:startreadout(delay, callback, altitude) end
 
 --*** BME280 C module***
 
--- Warning, deprecated API! bme280. It will be removed soon. Use bme280math and bme280 Lua module instead. See documentation for details.
+---@deprecated Warning, deprecated API! bme280. It will be removed soon. Use bme280math and bme280 Lua module instead.
 ---Initializes module. Initialization is mandatory before read values.
 ---@param temp_oss? number Controls oversampling of temperature data.
 ---@param press_oss? number Controls oversampling of pressure data.
@@ -792,14 +792,14 @@ function sobj:startreadout(delay, callback, altitude) end
 ---@param power_mode? number Controls the sensor mode of the device.
 ---@param inactive_duration? number Controls inactive duration in normal mode.
 ---@param IIR_filter? number Controls the time constant of the IIR filter.
----@return nil|integer rslt nil if initialization has failed (no sensor connected?), 2 if sensor is BME280, 1 if sensor is BMP280
+---@return integer|nil #`nil` if initialization has failed (no sensor connected?), **2** if sensor is BME280, **1** if sensor is BMP280
 function bme280.setup(temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter) end
 
 ---For given air pressure and sea level air pressure returns the altitude in meters
 ---as an integer multiplied with 100, i.e. altimeter function.
 ---@param P number measured pressure
 ---@param QNH number current sea level pressure
----@return number alt altitude in meters of measurement point
+---@return number altitude altitude in meters of measurement point
 function bme280.altitude(P, QNH) end
 
 ---Reads the sensor and returns the air pressure in hectopascals as an integer multiplied with 1000 or nil when readout is not successful.
@@ -811,7 +811,7 @@ function bme280.baro() end
 ---as an integer multiplied with 100.
 ---@param H number relative humidity in percent multiplied by 1000.
 ---@param T number temperate in celsius multiplied by 100.
----@return number dewp dew point in celsisus
+---@return number dewpoint dew point in celsisus
 function bme280.dewpoint(H, T) end
 
 ---Reads the sensor and returns the air relative humidity
@@ -851,43 +851,47 @@ bme280_math = {}
 ---@param self? userdata|table (optional) self userdata or table structure so that the function can be directly called as object method, parameter is ignored in the calculation
 ---@param P number measured pressure
 ---@param QNH number current sea level pressure
----@return number alt altitude in meters of measurement point
+---@return number altitude in meters of measurement point
 function bme280_math.altitude(self, P, QNH) end
 
 ---For given temperature and relative humidity returns the dew point in celsius.
 ---@param self? userdata|table (optional) self userdata or table structure so that the function can be directly called as object method, parameter is ignored in the calculation
 ---@param  H number relative humidity in percent (100 means 100%)
 ---@param  T number temperate in celsius
----@return number dewp dew point in celsisus
+---@return number dewpoint dew point in celsisus
 function bme280_math.dewpoint(self, H, T) end
 
 ---For given altitude converts the air pressure to sea level air pressure (QNH).
 ---@param self? userdata|table (optional) self userdata or table structure so that the function can be directly called as object method, parameter is ignored in the calculation
 ---@param P number measured pressure
----@param altitude number altitude in meters of measurement point
----@return number p sea level pressure
+---@param altitude number in meters of measurement point
+---@return number P sea level pressure
 function bme280_math.qfe2qnh(self, P, altitude) end
 
----Reads the sensor
----@param bme280sensor userdata BME280 sensor user data returned by bme280_math.setup()
+---Reads the sensor and returns the temperature, the air pressure, the air relative humidity and see level air pressure when **altitude** is specified.
+---@param bme280sensor userdata BME280 sensor user data returned by `bme280_math.setup()`
 ---@param registers string string of 8 bytes (chars) registers read from BME280_REGISTER_PRESS
----@param altitude? number altitude in meters of measurement point.
+---@param altitude? number in meters of measurement point. If provided also the air pressure converted to sea level air pressure is returned. (optional)
 ---@return number T temperature in celsius
 ---@return number P air pressure in hectopascals
 ---@return number H relative humidity in percent
 ---@return number QNH (optional) air pressure in hectopascals
+--Returns `nil` if the conversion is not successful.
 function bme280_math.read(bme280sensor, registers, altitude) end
 
 ---Initializes module. Initialization is mandatory before read values.
----@param registers string String of configuration registers read from the BME280 sensor.
----@param temp_oss? number  Controls oversampling of temperature data.
----@param press_oss? number Controls oversampling of pressure data.
----@param humi_oss? number Controls oversampling of humidity data.
----@param power_mode? number Controls the sensor mode of the device.
----@param inactive_duration? number Controls inactive duration in normal mode.
----@param IIR_filter? number Controls the time constant of the IIR filter.
----@return userdata|nil ud bme280sensor user data (nil if initialization has failed)
----@return table tbl config 3 (2 for BME280) field table with configuration parameters to be written to registers *BME280_REGISTER_CONFIG*, *BME280_REGISTER_CONTROL_HUM*, *BME280_REGISTER_CONTROL* consecutively
+---@param registers string String of configuration registers read from the BME280 sensor. It consists of 6 bytes (chars) of BME280_REGISTER_DIG_T, 18 bytes (chars) BME280_REGISTER_DIG_P and optional (not present for BMP280 sensor) 8 bytes (chars) of BME280_REGISTER_DIG_H1 (1 byte) and BME280_REGISTER_DIG_H2 (7 bytes)
+---@param temp_oss? number  Controls oversampling of temperature data. Default oversampling is 16x.
+---@param press_oss? number Controls oversampling of pressure data. Default oversampling is 16x.
+---@param humi_oss? number Controls oversampling of humidity data. Default oversampling is 16x.
+---@param power_mode? number Controls the sensor mode of the device. Default sensor more is normal.
+---@param inactive_duration? number Controls inactive duration in normal mode. Default inactive duration is 20ms.
+---@param IIR_filter? number Controls the time constant of the IIR filter. Default filter coefficient is 16.
+---@return userdata|nil #bme280sensor user data (`nil` if initialization has failed)
+---@return table #config 3 (2 for BME280) field table with configuration parameters to be written to registers
+-- - BME280_REGISTER_CONFIG,
+-- - BME280_REGISTER_CONTROL_HUM,
+-- - BME280_REGISTER_CONTROL consecutively
 function bme280_math.setup(registers, temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter) end
 
 --*** BME680 ***
@@ -897,19 +901,19 @@ bme680 = {}
 ---the altitude in meters as an integer multiplied with 100.
 ---@param P number measured pressure
 ---@param QNH number current sea level pressure
----@return number alt altitude in meters of measurement point
+---@return number altitude in meters of measurement point
 function bme680.altitude(P, QNH) end
 
 ---For given temperature and relative humidity returns the dew point in Celsius as an integer multiplied with 100.
 ---@param H number relative humidity in percent multiplied by 1000.
 ---@param T number temperate in Celsius multiplied by 100.
----@return number dew point in Celsius
+---@return number dewpoint dew point in Celsius
 function bme680.dewpoint(H, T) end
 
 ---For given altitude converts the air pressure to sea level air pressure.
 ---@param P number measured pressure
 ---@param altitude number altitude in meters of measurement point
----@return number p sea level pressure
+---@return number P sea level pressure
 function bme680.qfe2qnh(P, altitude) end
 
 ---Reads the sensor and returns the temperature, the air pressure, the air relative humidity
@@ -919,23 +923,24 @@ function bme680.qfe2qnh(P, altitude) end
 ---@return number H relative humidity in percent multiplied by 1000
 ---@return number G gas resistance
 ---@return number QNH air pressure in hectopascals multiplied by 100 converted to sea level
+--Any of these variables is `nil` if the readout of given measure was not successful.
 function bme680.read(altitude) end
 
 ---Starts readout (turns the sensor into forced mode).
 ---@param delay number sets sensor to forced mode and calls the callback (if provided) after given number of milliseconds.
----@param callback function
+---@param callback function if provided it will be invoked after given delay. The sensor reading should be finalized by then so.
 ---@return nil
 function bme680.startreadout(delay, callback) end
 
 ---Initializes module. Initialization is mandatory before read values.
----@param temp_oss? number Controls oversampling of temperature data.
----@param press_oss? number Controls oversampling of pressure data.
----@param humi_oss? number Controls oversampling of humidity data.
----@param heater_temp? number
----@param heater_duration? number
----@param IIR_filter? number Controls the time constant of the IIR filter.
+---@param temp_oss? number Controls oversampling of temperature data. Default oversampling is 2x.
+---@param press_oss? number Controls oversampling of pressure data. Default oversampling is 16x.
+---@param humi_oss? number Controls oversampling of humidity data. Default oversampling is 1x.
+---@param heater_temp? number heater temp
+---@param heater_duration? number heater duration
+---@param IIR_filter? number Controls the time constant of the IIR filter. Default filter coefficient is 31.
 ---@param cold_start? number If 0 then the bme680 chip is not initialised.
----@return nil
+---@return nil #`nil` if initialization has failed (no sensor connected?)
 function bme680.setup(temp_oss, press_oss, humi_oss, heater_temp, heater_duration, IIR_filter, cold_start) end
 
 --*** BMP085 ***
@@ -946,17 +951,17 @@ bmp085 = {}
 function bmp085.setup() end
 
 ---Samples the sensor and returns the temperature in celsius as an integer multiplied with 10.
----@return integer t temperature multiplied with 10 (integer)
+---@return integer T temperature multiplied with 10 (integer)
 function bmp085.temperature() end
 
 ---Samples the sensor and returns the pressure in pascal as an integer.
 ---@param oversampling_setting integer that can be 0, 1, 2 or 3
----@return integer p pressure in pascals
+---@return integer P pressure in pascals
 function bmp085.pressure(oversampling_setting) end
 
 ---Samples the sensor and returns the raw pressure in internal units.
 ---@param oversampling_setting integer that can be 0, 1, 2 or 3
----@return integer p raw pressure sampling value (integer)
+---@return integer P raw pressure sampling value (integer)
 function bmp085.pressure_raw(oversampling_setting) end
 
 --*** CoAP ***
@@ -976,32 +981,28 @@ function coap.Client() end
 function coap.Server() end
 
 ---Issues a GET request to the server.
----@param type number|'coap.CON'|'coap.NON'
----`type` defaults to CON. If the type is CON and request fails, the library retries four more times before giving up.
+---@param type number|'coap.CON'|'coap.NON' defaults to CON. If the type is CON and request fails, the library retries four more times before giving up.
 ---@param uri string the URI such as "coap://192.168.18.103:5683/v1/v/myvar", only IP addresses are supported i.e. no hostname resoltion.
 ---@param payload? any optional, the payload will be put in the payload section of the request.
 ---@return nil
 function coap_client:get(type, uri, payload) end
 
 ---Issues a PUT request to the server.
----@param type number|'coap.CON'|'coap.NON'
----`type` defaults to CON. If the type is CON and request fails, the library retries four more times before giving up.
+---@param type number|'coap.CON'|'coap.NON' defaults to CON. If the type is CON and request fails, the library retries four more times before giving up.
 ---@param uri string the URI such as "coap://192.168.18.103:5683/v1/v/myvar", only IP addresses are supported i.e. no hostname resoltion.
 ---@param payload? any optional, the payload will be put in the payload section of the request.
 ---@return nil
 function coap_client:put(type, uri, payload) end
 
 ---Issues a POST request to the server.
----@param type number|'coap.CON'|'coap.NON'
----`type` defaults to CON. when type is CON, and request failed, the request will retry another 4 times before giving up.
+---@param type number|'coap.CON'|'coap.NON' defaults to CON. when type is CON, and request failed, the request will retry another 4 times before giving up.
 ---@param uri string the uri such as coap://192.168.18.103:5683/v1/v/myvar, only IP is supported.
 ---@param payload? any optional, the payload will be put in the payload section of the request.
 ---@return nil
 function coap_client:post(type, uri, payload) end
 
 ---Issues a DELETE request to the server.
----@param type number|'coap.CON'|'coap.NON'
----`type` defaults to CON. If the type is CON and request fails, the library retries four more times before giving up.
+---@param type number|'coap.CON'|'coap.NON' defaults to CON. If the type is CON and request fails, the library retries four more times before giving up.
 ---@param uri string the URI such as "coap://192.168.18.103:5683/v1/v/myvar", only IP addresses are supported i.e. no hostname resoltion.
 ---@param payload? any optional, the payload will be put in the payload section of the request.
 ---@return nil
@@ -1074,8 +1075,8 @@ cron = {}
 local CRON = {}
 
 ---Creates a new schedule entry.
----@param mask string | '"* * * * *"'
----@param callback function | ' function(e) end'
+---@param mask string|'"* * * * *"' crontab-like string mask for schedule
+---@param callback function|' function(e) end' `function(entry)` that is executed at the scheduled time
 ---@return cron cron.entry sub module
 function cron.schedule(mask, callback) end
 
@@ -1084,15 +1085,15 @@ function cron.schedule(mask, callback) end
 function cron.reset() end
 
 ---Sets a new handler for entry.
----@param callback function | ' function(e) end'
+---@param callback function|'function(e) end' `function(entry)` that is executed at the scheduled time
 ---@return nil
 function CRON:handler(callback) end
 
 ---Sets a new schedule mask.
----@param mask string | '"* * * * *"'
+---@param mask string|'"* * * * *"' crontab-like string mask for schedule
 function CRON:schedule(mask) end
 
----Disables schedule.
+---Disables schedule. Disabled schedules may be enabled again by calling `:schedule(mask)`.
 ---@return nil
 function CRON:unschedule() end
 
@@ -1104,81 +1105,80 @@ crypto = {}
 ---@param key string the encryption key as a string; for AES encryption this MUST be 16 bytes long
 ---@param plain string the string to encrypt; it will be automatically zero-padded to a 16-byte boundary if necessary
 ---@param iv? any the initilization vector, if using AES-CBC; defaults to all-zero if not given
----@return any The encrypted data as a binary string. For AES this is always a multiple of 16 bytes in length.
+---@return any #The encrypted data as a binary string. For AES this is always a multiple of 16 bytes in length.
 function crypto.encrypt(algo, key, plain , iv) end
 
 ---Decrypts previously encrypted data.
 ---@param algo string the name of a supported encryption algorithm to use
 ---@param key string the encryption key as a string; for AES encryption this MUST be 16 bytes long
----@param cipher any the cipher text to decrypt (as obtained from crypto.encrypt())
+---@param cipher any the cipher text to decrypt (as obtained from `crypto.encrypt()`)
 ---@param iv? any the initilization vector, if using AES-CBC; defaults to all-zero if not given
----@return any str The decrypted string.
+---@return any #The decrypted string.
 function crypto.decrypt(algo, key, cipher , iv) end
 
 ---Compute a cryptographic hash of a a file.
----@param algo any the hash algorithm to use, case insensitive string
+---@param algo string the hash algorithm to use, case insensitive string
 ---@param filename string the path to the file to hash
----@return any s A binary string containing the message digest. To obtain the textual version (ASCII hex characters), please use encoder.toHex().
+---@return any #A binary string containing the message digest. To obtain the textual version (ASCII hex characters), please use `encoder.toHex()`.
 function crypto.fhash(algo, filename)	end
 
 ---Compute a cryptographic hash of a Lua string.
----@param algo any the hash algorithm to use, case insensitive string
+---@param algo string the hash algorithm to use, case insensitive string
 ---@param str string to hash contents of
----@return any A binary string containing the message digest. To obtain the textual version (ASCII hex characters), please use encoder.toHex().
+---@return any #A binary string containing the message digest. To obtain the textual version (ASCII hex characters), please use `encoder.toHex()`.
 function crypto.hash(algo, str) end
 
 ---Create a digest/hash object that can have any number of strings. Object has update and finalize functions.added to it.
----@param algo any the hash algorithm to use, case insensitive string
----@return any uObj Userdata object with update and finalize functions available.
+---@param algo string the hash algorithm to use, case insensitive string
+---@return any #Userdata object with update and finalize functions available.
 function crypto.new_hash(algo) end
 
 ---	Compute a HMAC (Hashed Message Authentication Code) signature for a Lua string.
 ---@param algo string hash algorithm to use, case insensitive string
 ---@param str string data to calculate the hash for
 ---@param key any key to use for signing, may be a binary string
----@return any bStr A binary string containing the HMAC signature. Use encoder.toHex() to obtain the textual version.
+---@return any #A binary string containing the HMAC signature. Use `encoder.toHex()` to obtain the textual version.
 function crypto.hmac(algo, str, key) end
 
 ---Create a hmac object that can have any number of strings added to it. Object has update and finalize functions.
 ---@param algo string he hash algorithm to use, case insensitive string
----@param key any  the key to use (may be a binary string)
----@return any uObj Userdata object with update and finalize functions available.
+---@param key any the key to use (may be a binary string)
+---@return any #Userdata object with `update` and `finalize` functions available.
 function crypto.new_hmac(algo, key) end
 
 ---Applies an XOR mask to a Lua string.
 ---@param message any message to mask
 ---@param mask any the mask to apply, repeated if shorter than the message
----@return any msg The masked message, as a binary string. Use encoder.toHex() to get a textual representation of it.
+---@return any #The masked message, as a binary string. Use `encoder.toHex()` to get a textual representation of it.
 function crypto.mask(message, mask) end
 
 --*** DCC ***
 dcc = {}
 
 ---Initializes the dcc module and links callback functions.
----@param DCC_command function  DCC_command(cmd, params) calllback function that is called when a DCC command is decoded. cmd parameters is one of the following values.
----`params` contains a collection of parameters specific to given command.
----    dcc.DCC_RESET no additional parameters, params is nil.
----    dcc.DCC_IDLE no additional parameters, params is nil.
----    dcc.DCC_SPEED parameters collection members are Addr, AddrType, Speed,Dir, SpeedSteps.
----    dcc.DCC_SPEED_RAW parameters collection members are Addr, AddrType, Raw.
----    dcc.DCC_FUNC parameters collection members are Addr, AddrType, FuncGrp,FuncState.
----    dcc.DCC_TURNOUT parameters collection members are BoardAddr, OutputPair, Direction,OutputPower or Addr, Direction,OutputPower.
----    dcc.DCC_ACCESSORY parameters collection has one member BoardAddr or Addr or State.
----    dcc.DCC_RAW parameters collection member are Size, PreambleBits, Data1 to Data6.
----    dcc.DCC_SERVICEMODE parameters collection has one member InServiceMode.
+---@param DCC_command function *DCC_command*(**cmd**, **params**) calllback function that is called when a DCC command is decoded. **cmd** parameters is one of the following values. **params** contains a collection of parameters specific to given command.
+-- - dcc.DCC_RESET no additional parameters, params is `nil`.
+-- - dcc.DCC_IDLE no additional parameters, params is `nil`.
+-- - dcc.DCC_SPEED parameters collection members are *Addr, AddrType, Speed,Dir, SpeedSteps*.
+-- - dcc.DCC_SPEED_RAW parameters collection members are *Addr, AddrType, Raw*.
+-- - dcc.DCC_FUNC parameters collection members are *Addr, AddrType, FuncGrp, FuncState*.
+-- - dcc.DCC_TURNOUT parameters collection members are *BoardAddr, OutputPair, Direction,OutputPower or Addr, Direction, OutputPower*.
+-- - dcc.DCC_ACCESSORY parameters collection has one member *BoardAddr* or *Addr* or *State*.
+-- - dcc.DCC_RAW parameters collection member are *Size*, *PreambleBits, Data1* to *Data6*.
+-- - dcc.DCC_SERVICEMODE parameters collection has one member *InServiceMode*.
 ---@param ManufacturerId number Manufacturer ID returned in CV 8. Commonly dcc.MAN_ID_DIY.
 ---@param VersionId any Version ID returned in CV 7.
 ---@param Flags any one of or combination (OR operator) of
----    dcc.FLAGS_MY_ADDRESS_ONLYOnly process packets with My Address.
----    dcc.FLAGS_DCC_ACCESSORY_DECODER Decoder is an accessory decode.
----    dcc.FLAGS_OUTPUT_ADDRESS_MODE This flag applies to accessory decoders only. Accessory decoders normally have 4 paired outputs and a single address refers to all 4 outputs. Setting this flag causes each address to refer to a single output.
----    dcc.FLAGS_AUTO_FACTORY_DEFAULT Call DCC command callback with dcc.CV_RESET command if CV 7 & 8 == 255.
+-- - dcc.FLAGS_MY_ADDRESS_ONLYOnly process packets with My Address.
+-- - dcc.FLAGS_DCC_ACCESSORY_DECODER Decoder is an accessory decode.
+-- - dcc.FLAGS_OUTPUT_ADDRESS_MODE This flag applies to accessory decoders only. Accessory decoders normally have 4 paired outputs and a single address refers to all 4 outputs. Setting this flag causes each address to refer to a single output.
+-- - dcc.FLAGS_AUTO_FACTORY_DEFAULT Call DCC command callback with `dcc.CV_RESET` command if CV 7 & 8 == 255.
 ---@param OpsModeAddressBaseCV any Ops Mode base address. Set it to 0?
 ---@param CV_callback function CV_callback(operation, param) callback function that is called when any manipulation with CV (Configuarion Variable) is requested.
----    dcc.CV_VALIDto determine if a given CV is valid. This callback must determine if a CV is valid and return the appropriate value. param collection has members CV and Value.
----    dcc.CV_READ to read a CV. This callback must return the value of the CV. param collection has one member CV determing the CV number to be read.
----    dcc.CV_WRITE to write a value to a CV. This callback must write the Value to the CV and return the value of the CV. param collection has members CV and Value.
----    dcc.CV_RESET Called when CVs must be reset to their factory defaults.
+-- - dcc.CV_VALIDto determine if a given CV is valid. This callback must determine if a CV is valid and return the appropriate value. param collection has members CV and Value.
+-- - dcc.CV_READ to read a CV. This callback must return the value of the CV. param collection has one member CV determing the CV number to be read.
+-- - dcc.CV_WRITE to write a value to a CV. This callback must write the Value to the CV and return the value of the CV. param collection has members CV and Value.
+-- - dcc.CV_RESET Called when CVs must be reset to their factory defaults.
 ---@return nil
 function dcc.setup(DCC_command, ManufacturerId, VersionId, Flags, OpsModeAddressBaseCV, CV_callback) end
 
@@ -1221,22 +1221,22 @@ encoder = {}
 
 ---Provides a Base64 representation of a (binary) Lua string.
 ---@param binary string input string to Base64 encode
----@return string str A Base64 encoded string.
+---@return string #A Base64 encoded string.
 function encoder.toBase64(binary) end
 
 ---Decodes a Base64 representation of a (binary) Lua string back into the original string. An error is thrown if the string is not a valid base64 encoding.
 ---@param b64 string Base64 encoded input string
----@return string str The decoded Lua (binary) string.
+---@return string #The decoded Lua (binary) string.
 function encoder.fromBase64(b64) end
 
 ---Provides an ASCII hex representation of a (binary) Lua string. Each byte in the input string is represented as two hex characters in the output.
 ---@param binary string input string to get hex representation for
----@return string str An ASCII hex string.
+---@return string #An ASCII hex string.
 function encoder.toHex(binary) end
 
 ---Returns the Lua binary string decode of a ASCII hex string. Each byte in the output string is represented as two hex characters in the input. An error is thrown if the string is not a valid base64 encoding.
 ---@param hexstr string An ASCII hex string.
----@return string str Decoded string of hex representation.
+---@return string #Decoded string of hex representation.
 function encoder.fromHex(hexstr) end
 
 --*** WiFi Manager ***
@@ -1244,13 +1244,13 @@ enduser_setup = {}
 
 ---Controls whether manual AP configuration is used.
 ---@param on_off? boolean value indicating whether to use manual mode; if not given, the function only returns the current setting.
----@return boolean b The current setting, true if manual mode is enabled, false if it is not.
+---@return boolean #The current setting, `true` if manual mode is enabled, `false` if it is not.
 function enduser_setup.manual(on_off) end
 
 ---Starts the captive portal.
----@param AP_SSID? any the SSID to use for the AP. This defaults to NodeMCU_<device id>.
+---@param AP_SSID? string the SSID to use for the AP. This defaults to NodeMCU_<device id>.
 ---@param onConnected? function callback will be fired when an IP-address has been obtained, just before the enduser_setup module will terminate itself
----@param onError? function callback will be fired if an error is encountered. err_num is a number describing the error, and string contains a description of the error.
+---@param onError? function callback will be fired if an error is encountered. *err_num* is a number describing the error, and string contains a description of the error.
 ---@param onDebug? function callback is disabled by default (controlled by #define ENDUSER_SETUP_DEBUG_ENABLE in enduser_setup.c).
 ---@return nil
 function enduser_setup.start(AP_SSID, onConnected, onError, onDebug) end
@@ -1266,13 +1266,13 @@ file = {}
 local fObj = {}
 
 ---Change current directory (and drive). This will be used when no drive/directory is prepended to filenames.
----@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"' #directory name
+---@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"' directory name
 ---@return boolean
 function file.chdir(dir) end
 
 ---Determines whether the specified file exists.
----@param filename string|'""' #file to check
----@return boolean --`true` of the file exists (even if 0 bytes in size), and `false` if it does not exist
+---@param filename string|'""' file to check
+---@return boolean #`true` of the file exists (even if 0 bytes in size), and `false` if it does not exist
 function file.exists(filename) end
 
 ---Format the file system. Completely erases any existing file system and writes a new one. Function is not supported for SD cards.
@@ -1291,12 +1291,12 @@ function file.fscfg() end
 function file.fsinfo() end
 
 ---Open and read the contents of a file.
----@param filename string|'""' #file to be opened and read
----@return any|nil --file contents if the file exists. *nil* if the file does not exist.
+---@param filename string|'""' file to be opened and read
+---@return any|nil #file contents if the file exists. *nil* if the file does not exist.
 function file.getcontents(filename) end
 
 ---Lists all files in the file system.
----@return table tbl a Lua table which contains all *{file name: file size}* pairs, if no pattern given. If a pattern is given, only those file names matching the pattern (interpreted as a traditional Lua pattern, not, say, a UNIX shell glob) will be included in the resulting table. file.list will throw any errors encountered during pattern matching.
+---@return table #a Lua table which contains all *{file name: file size}* pairs, if no pattern given. If a pattern is given, only those file names matching the pattern (interpreted as a traditional Lua pattern, not, say, a UNIX shell glob) will be included in the resulting table. file.list will throw any errors encountered during pattern matching.
 function file.list(pattern) end
 
 ---Mounts a FatFs volume on SD card. Function is only available when FatFS support is compiled into the firmware and it is not supported for internal flash.
@@ -1306,10 +1306,8 @@ function file.list(pattern) end
 function file.mount(ldrv, pin) end
 
 ---Registers callback functions.
----@param event string
----|'"rtc"' #Trigger events are: `rtc` deliver current date & time to the file system. Function is expected to return a table containing the fields year, mon, day, hour, min, sec of current date and time. Not supported for internal flash.
----@param foo? function
----|' function() end' #callback function. Unregisters the callback if function() is omitted or nil.
+---@param event string|'"rtc"' Trigger events are: `rtc` deliver current *date & time* to the file system. Function is expected to return a table containing the fields **year, mon, day, hour, min, sec** of current date and time. Not supported for internal flash.
+---@param foo? function|' function() end' callback function. Unregisters the callback if function() is omitted or `nil`.
 ---@return nil
 function file.on(event, foo) end
 
@@ -1322,31 +1320,31 @@ function file.on(event, foo) end
 ---| ' "a+"' # append update mode, previous data is preserved, writing is only allowed at the end of file
 
 ---Opens a file for access, potentially creating it (for write modes).
----@param filename string|'""' #`filename` file to be opened
+---@param filename string|'""' file to be opened
 ---@param mode mode_f
 ---@return file fileobject if file opened ok. nil if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
 ---Remove a file from the file system. The file must not be currently open.
----@param filename string|'""' #file to remove
+---@param filename string|'""' file to remove
 ---@return nil
 function file.remove(filename) end
 
 ---Open and write the contents of a file.
----@param filename string|'""' #file to be created
+---@param filename string|'""' file to be created
 ---@param contents any contents to be written to the file
----@return boolean|nil --`true` if the write is ok, `nil` on error
+---@return boolean|nil #`true` if the write is ok, `nil` on error
 function file.putcontents(filename, contents) end
 
 ---Renames a file.
----@param oldname string|'""' #old file name
----@param newname string|' ""' #new file name
+---@param oldname string|'""' old file name
+---@param newname string|' ""' new file name
 ---@return boolean
 function file.rename(oldname, newname) end
 
 ---Get attribtues of a file or directory in a table.
 ---@param filename string|'""'
----@return table --table containing file attributes. Elements of the table are:
+---@return table #table containing file attributes. Elements of the table are:
 --**size** file size in bytes
 --**name** file name
 --**time** table with time stamp information. Default is 1970-01-01 00:00:00 in case time stamps are not supported (on SPIFFS).
@@ -1366,11 +1364,11 @@ function file.close() end
 ---@return nil
 function fObj:close() end
 
----Flushes any pending writes to the file system, ensuring no data is lost on a restart.Closing the open file using file.close() / fd:close() performs an implicit flush as well.
+---Flushes any pending writes to the file system, ensuring no data is lost on a restart.Closing the open file using `file.close() / fd:close()` performs an implicit flush as well.
 ---@return nil
 function file.flush() end
 
----Flushes any pending writes to the file system, ensuring no data is lost on a restart.Closing the open file using file.close() / fd:close() performs an implicit flush as well.
+---Flushes any pending writes to the file system, ensuring no data is lost on a restart.Closing the open file using `file.close() / fd:close()` performs an implicit flush as well.
 ---@return nil
 function fObj:flush() end
 
@@ -1387,21 +1385,21 @@ function file.read(n_or_char) end
 --if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
 --  if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
 --  if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
----@return string|nil content File content as a string, or nil when EOF
+---@return string|nil content File content as a string, or `nil` when EOF
 function fObj:read(n_or_char) end
 
 ---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte. If the next line is longer than 1024, this function only returns the first 1024 bytes.
----@return string|nil content File content in string, line by line, including EOL('\n'). Return *nil* when EOF.
+---@return string|nil content File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 function file.readline() end
 
 ---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte. If the next line is longer than 1024, this function only returns the first 1024 bytes.
----@return string|nil content File content in string, line by line, including EOL('\n'). Return *nil* when EOF.
+---@return string|nil content File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 function fObj:readline() end
 
 ---@alias seekwhence_f
----| '"set"' # Base is position 0 (beginning of the file)
----|>'"cur"' # Base is current position
----| '"end"' # Base is end of file
+---| '"set"' #Base is position 0 (beginning of the file)
+---|>'"cur"' #Base is current position
+---| '"end"' #Base is end of file
 
 ---Sets and gets the file position, measured from the beginning of the file, to the position given by `offset` plus a base specified by the string whence.
 ---@param whence? seekwhence_f
@@ -1412,26 +1410,26 @@ function file.seek(whence , offset) end
 ---Sets and gets the file position, measured from the beginning of the file, to the position given by `offset` plus a base specified by the string whence.
 ---@param whence? seekwhence_f
 ---@param offset? integer default 0
----@return integer|nil offset the resulting file position, or nil on error
+---@return integer|nil offset the resulting file position, or `nil` on error
 function fObj:seek(whence , offset) end
 
 ---Write a string to the open file.
----@param str string|'""' #content to be write to file
+---@param str string|'""' content to be write to file
 ---@return boolean|nil
 function file.write(str) end
 
 ---Write a string to the open file.
----@param str string|'""' #content to be write to file
+---@param str string|'""' content to be write to file
 ---@return boolean|nil
 function fObj:write(str) end
 
 ---Write a string to the open file and append '\n' at the end.
----@param str string|'""' #content to be write to file
+---@param str string|'""' content to be write to file
 ---@return boolean|nil
 function file.writeline(str) end
 
 ---Write a string to the open file and append '\n' at the end.
----@param str string|'""' #content to be write to file
+---@param str string|'""' content to be write to file
 ---@return boolean|nil
 function fObj:writeline(str) end
 
