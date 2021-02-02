@@ -2,22 +2,22 @@
 adc = {}
 
 ---The configuration is in effect for all channels of ADC1.
----@param adc_number integer|'adc.ADC1' #Only adc.ADC1 now
----@param bits integer|' 9'|' 10'|' 11'|' 12' #One of 9/10/11/12.
+---@param adc_number integer|'adc.ADC1' Only adc.ADC1 now
+---@param bits integer|' 9'|' 10'|' 11'|' 12' One of 9/10/11/12.
 ---@return nil
 function adc.setwidth(adc_number, bits) end
 
 ---Configuration ADC1 capture attenuation of channels.
----@param adc_number integer|'adc.ADC1' #Only adc.ADC1 now
+---@param adc_number integer|'adc.ADC1' Only adc.ADC1 now
 ---@param channel integer
----|' 0'#GPIO36
----|' 1'#GPIO37
----|' 2'#GPIO38
----|' 3'#GPIO39
----|' 4'#GPIO32
----|' 5'#GPIO33
----|' 6'#GPIO34
----|' 7'#GPIO35
+---|' 0' #GPIO36
+---|' 1' #GPIO37
+---|' 2' #GPIO38
+---|' 3' #GPIO39
+---|' 4' #GPIO32
+---|' 5' #GPIO33
+---|' 6' #GPIO34
+---|' 7' #GPIO35
 ---@param atten number
 ---|' adc.ATTEN_0db' #Vinp will be reduced to about 1/1 (1.1V when VDD_A=3.3V)
 ---|' adc.ATTEN_2_5db' #Vinp will be reduced to about 1/1.34 (1.5V when VDD_A=3.3V)
@@ -27,8 +27,8 @@ function adc.setwidth(adc_number, bits) end
 function adc.setup(adc_number, channel, atten) end
 
 ---Samples the ADC. You should to call `setwidth()` before `read()`.
----@param adc_number integer|'adc.ADC1' #Only adc.ADC1 now
----@param channel integer|' 0'|' 1'|' 2'|' 3'|' 4'|' 5'|' 6'|' 7' #0 to 7 for adc.ADC1
+---@param adc_number integer|'adc.ADC1' Only adc.ADC1 now
+---@param channel integer|' 0'|' 1'|' 2'|' 3'|' 4'|' 5'|' 6'|' 7' 0 to 7 for adc.ADC1
 ---@return number #the sampled value
 function adc.read(adc_number, channel) end
 
@@ -129,8 +129,8 @@ function bthci.rawhci(hcibytes, callback) end
 function bthci.reset(callback) end
 
 ---Enables or disables BlueTooth LE advertisements. Before enabling advertisements, both parameters and data should be set.
----@param onoff integer|'0'|'1' 1 or 0 to enable or disable advertisements, respectively.
----@param callback? function  optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
+---@param onoff integer|'0'|'1' **1** or **0** to enable or disable advertisements, respectively.
+---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
 function bthci.adv.enable(onoff, callback) end
 
@@ -160,13 +160,13 @@ function bthci.adv.setdata(advbytes, callback) end
 function bthci.adv.setparams(paramtable, callback) end
 
 ---Enables or disable scanning for advertisements from other BlueTooth devices.
----@param onoff integer|'0'|'1' 1 or 0 to enable or disable advertisements, respectively.
+---@param onoff integer|'0'|'1' **1** or **0** to enable or disable advertisements, respectively.
 ---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
 function bthci.scan.enable(onoff, callback) end
 
 ---Configures scan parameters.
----@param paramstable table #a table with zero or more of the following fields:
+---@param paramstable table a table with zero or more of the following fields:
 --**mode** scanning mode, 0 for passive, 1 for active. Default 0.
 --**interval** scanning interval in units of 0.625ms. Default 0x0010.
 --**window** length of scanning window in units of 0.625ms. Default 0x0010.
@@ -200,12 +200,12 @@ function can.send(format, msg_id, data) end
 --**dual_filter** `true` dual filter mode, `false` single filter mode (default)
 --**code** 4-bytes integer. Use this with mask to filter CAN frame. Default: 0. See SJA1000
 --**mask** 4-bytes integer. Default: 0xffffffff
----@param fun function|' function(format, msg_id, data) end' callback function to be called when CAN data received.
+---@param foo function|' function(format, msg_id, data) end' callback function to be called when CAN data received.
 --**format** Frame format. can.STANDARD_FRAME or can.EXTENDED_FRAME
 --**msg_id** CAN Messge ID
 --**data** CAN data, up to 8 bytes
 ---@return nil
-function can.setup(tbl, fun) end
+function can.setup(tbl, foo) end
 
 ---Start CAN controller.
 ---@return nil
@@ -233,6 +233,7 @@ function hashobj:finalize() end
 ---|'"SHA256"'
 ---|'"SHA384"'
 ---|'"SHA512"'
+
 ---Create a digest/hash object that can have any number of strings added to it.
 ---@param algo crypto_algo the hash algorithm to use, case insensitive string
 ---@return hashobj #Hasher object with update and finalize functions available.
@@ -337,7 +338,7 @@ function eth.get_speed() end
 function eth.init(cfg) end
 
 ---Register or unregister callback functions for Ethernet events.
----@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"got_ip"'
+---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"got_ip"' event
 ---@param callback function|' function(event, info) end' callback function(event, info) to perform when event occurs, or nil to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
 --Event information provided for each event is as follows:
 --**start**: no additional info
@@ -362,7 +363,7 @@ file = {}
 local fObj = {}
 
 ---Change current directory (and drive). This will be used when no drive/directory is prepended to filenames.
----@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"' #directory name
+---@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"' directory name
 ---@return boolean
 function file.chdir(dir) end
 
@@ -391,10 +392,8 @@ function file.fsinfo() end
 function file.list(pattern) end
 
 ---Registers callback functions.
----@param event string
----|'"rtc"' #Trigger events are: **rtc** deliver current date & time to the file system. Function is expected to return a table containing the fields **year, mon, day, hour, min, sec** of current date and time. Not supported for internal flash.
----@param foo function
----|' function() end' #callback function. Unregisters the callback if function() is omitted.
+---@param event string|'"rtc"' Trigger events are: **rtc** deliver current date & time to the file system. Function is expected to return a table containing the fields **year, mon, day, hour, min, sec** of current date and time. Not supported for internal flash.
+---@param foo function|' function() end' callback function. Unregisters the callback if function() is omitted.
 ---@return nil
 function file.on(event, foo) end
 
@@ -447,8 +446,8 @@ function file.read(n_or_char) end
 ---Read content from the open file.
 ---@param n_or_char? integer :
 ---if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
----if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
----if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+---if passed a number `n`, then read up to *n* bytes or the entire file (whichever is smaller).
+---if passed a string containing the single character `char`, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil #File content as a string, or `nil` when EOF
 function fObj:read(n_or_char) end
 
@@ -461,9 +460,9 @@ function file.readline() end
 function fObj:readline() end
 
 ---@alias seekwhence32_f
----| '"set"' # Base is position 0 (beginning of the file)
----|>'"cur"' # Base is current position
----| '"end"' # Base is end of file
+---| '"set"' #Base is position 0 (beginning of the file)
+---|>'"cur"' #Base is current position
+---| '"end"' #Base is end of file
 
 ---Sets and gets the file position, measured from the beginning of the file, to the position given by offset plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
 ---@param whence? seekwhence32_f
@@ -478,22 +477,22 @@ function file.seek(whence, offset) end
 function fObj:seek(whence, offset) end
 
 ---Write a string to the open file.
----@param str string|'""' #content to be write to file
+---@param str string|'""' content to be write to file
 ---@return boolean|nil #`true` if write ok, `nil` on error
 function file.write(str) end
 
 ---Write a string to the open file.
----@param str string|'""' #content to be write to file
+---@param str string|'""' content to be write to file
 ---@return boolean|nil #`true` if write ok, `nil` on error
 function fObj:write(str) end
 
 ---Write a string to the open file and append '\n' at the end.
----@param str string | '""' #content to be write to file
+---@param str string|'""' content to be write to file
 ---@return boolean|nil #`true` if write ok, `nil` on error
 function file.writeline(str) end
 
 ---Write a string to the open file and append '\n' at the end.
----@param str string | '""'  #content to be write to file
+---@param str string|'""' content to be write to file
 ---@return boolean|nil #`true` if write ok, `nil` on error
 function fObj:writeline(str) end
 
@@ -550,15 +549,15 @@ function gpio.trig(pin , type , callback) end
 ---Configuring wake-from-sleep-on-GPIO-level.
 ---@param pin integer GPIO
 ---@param level number
----|' gpio.INTR_NONE'  #to disable wake-up
----|' gpio.INTR_LOW'   #for wake-up on low level
----|' gpio.INTR_HIGH'  #for wake-up on high level
+---|' gpio.INTR_NONE' #to disable wake-up
+---|' gpio.INTR_LOW'  #for wake-up on low level
+---|' gpio.INTR_HIGH' #for wake-up on high level
 ---@return nil
 function gpio.wakeup(pin, level) end
 
 ---Set digital GPIO pin value.
 ---@param pin integer pin to write
----@param level integer|' 1'|' 0' #1 or 0
+---@param level integer|' 1'|' 0' **1** or **0**
 ---@return nil
 function gpio.write(pin, level) end
 
@@ -570,8 +569,8 @@ local HTTP = {}
 
 ---Creates a connection object which can be configured and then executed.
 ---@param url string|'"http://"'|'"https://"' The URL to fetch, including the http:// or https:// prefix. Required.
----@param method? integer|' http.GET'|' http.POST'|' http.DELETE'|' http.HEAD' #The HTTP method to use. Optional and may be omitted, the default is http.GET.
----@param options? table #An optional table containing any or all of:
+---@param method? integer|' http.GET'|' http.POST'|' http.DELETE'|' http.HEAD' The HTTP method to use. Optional and may be omitted, the default is http.GET.
+---@param options? table An optional table containing any or all of:
 --**async** If true, the request is processed asynchronously, meaning `request()` returns immediately rather than blocking until the connection is complete and all callbacks have been made. Some other connection APIs behave differently in asynchronous mode, see their documentation for details. If not specified, the default is false, meaning requests are processed synchronously.
 --**bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
 --**cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
@@ -596,7 +595,7 @@ function HTTP:on(event, callback) end
 function HTTP:request() end
 
 ---Sets the connection method.
----@param method? integer|'http.GET'|'http.POST'|'http.DELETE'|'http.HEAD' #method one of
+---@param method? integer|'http.GET'|'http.POST'|'http.DELETE'|'http.HEAD' method one of
 ---@return nil
 function HTTP:setmethod(method) end
 
@@ -625,7 +624,7 @@ function HTTP:ack() end
 function HTTP:close() end
 
 ---Make an HTTP GET request. If a callback is specifed then the function operates in asynchronous mode, otherwise it is synchronous.
----@param url string|'"http://"'|'"https://"' #The URL to fetch
+---@param url string|'"http://"'|'"https://"' The URL to fetch
 ---@param options? any|nil Same options as http.createConnection(), except that async is set for you based on whether a callback is specified or not. May be `nil` or omitted.
 --**bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
 --**cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
@@ -637,7 +636,7 @@ function HTTP:close() end
 function http.get(url, options, callback) end
 
 ---Executes a single HTTP POST request and closes the connection. If a callback is specifed then the function operates in asynchronous mode, otherwise it is synchronous.
----@param url string|'"http://"'|'"https://"' #The URL to fetch
+---@param url string|'"http://"'|'"https://"' The URL to fetch
 ---@param options any|nil Same options as http.createConnection(), except that async is set for you based on whether a callback is specified or not. May be `nil`.
 --**bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
 --**cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
@@ -653,25 +652,25 @@ function http.post(url, options, body, callback) end
 i2c = {}
 
 ---Send (SW) or queue (HWx) I²C address and read/write mode for the next transfer. Communication stops when the slave answers with NACK to the address byte. This can be avoided with parameter ack_check_en on false.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
 ---@param device_addr number device address
 ---@param direction integer
 ---|' i2c.TRANSMITTER' #for writing mode
 ---|' i2c.RECEIVER' #for reading mode
 ---@param ack_check_en? boolean
----|>' true'  #enable check for slave ACK
+---|>' true' #enable check for slave ACK
 ---|' false' #disable check for slave ACK
 ---@return boolean #`true` if ack received (always for ids i2c.HW0 and i2c.HW1), `false` if no ack received (only possible for i2c.SW).
 function i2c.address(id, device_addr, direction, ack_check_en) end
 
 ---Read (SW) or queue (HWx) data for variable number of bytes.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
 ---@param len number number of data bytes
 ---@return string|nil #`string` of received data for interface i2c.SW; `nil` for ids i2c.HW0 and i2c.HW1
 function i2c.read(id, len) end
 
 ---Initialize the I²C interface for master mode.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
 ---@param pinSDA integer IO index
 ---@param pinSCL integer IO index
 ---@param speed integer #bit rate in Hz, positive integer
@@ -682,27 +681,27 @@ function i2c.read(id, len) end
 function i2c.setup(id, pinSDA, pinSCL, speed) end
 
 ---Send (SW) or queue (HWx) an I²C start condition.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
 ---@return nil
 function i2c.start(id) end
 
 ---Send (SW) or queue (HWx) an I²C stop condition.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
 ---@return nil
 function i2c.stop(id) end
 
 ---Starts a transfer for the specified hardware module.
----@param id integer|'i2c.HW0'|'i2c.HW1' #interface id, i2c.SW not allowed
+---@param id integer|'i2c.HW0'|'i2c.HW1' interface id, i2c.SW not allowed
 ---@param cb_fn? function `cb_fn(data, ack)` function to be called when transfer finished
 ---@param to_ms? integer timeout for the transfer in ms, defaults to 0=infinite
 ---@return any|nil #synchronous operation:
---`data` string of received data (`nil` if no read or NACK)
---`ack` `true` if ACK received, `false` for NACK
---`nil` for asynchronous operation
+--**data** - string of received data (`nil` if no read or NACK)
+--**ack** - `true` if ACK received, `false` for NACK
+--**nil** - for asynchronous operation
 function i2c.transfer(id, cb_fn, to_ms) end
 
 ---Write (SW) or queue (HWx) data to I²C bus. Data items can be multiple numbers, strings or lua tables. Communication stops when the slave answers with NACK to a written byte. This can be avoided with parameter ack_check_en on false.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' #interface id
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
 ---@param dataN string|table|number data can be numbers, string or lua table.
 ---@param ack_check_en? boolean
 ---|>' true' #enable check for slave ACK
@@ -711,14 +710,14 @@ function i2c.transfer(id, cb_fn, to_ms) end
 function i2c.write(id, dataN, ack_check_en) end
 
 ---Registers or unregisters an event callback handler.
----@param id integer|'i2c.HW0'|'i2c.HW1' #interface id
----@param event integer|' "receive"' #data received from master
+---@param id integer|'i2c.HW0'|'i2c.HW1' interface id
+---@param event integer|' "receive"' data received from master
 ---@param cb_fn? function `cb_fn(err, data)` function to be called when data was received from the master. Unregisters previous callback for event when omitted.
 ---@return nil
 function i2c.slave.on(id, event, cb_fn) end
 
 ---Initialize the I²C interface for slave mode.
----@param id integer|'i2c.HW0'|'i2c.HW1' #interface id,
+---@param id integer|'i2c.HW0'|'i2c.HW1' interface id,
 ---@param slave_config table table containing slave configuration information
 --**sda** IO index
 --**scl** IO index
@@ -730,7 +729,7 @@ function i2c.slave.on(id, event, cb_fn) end
 function i2c.slave.setup(id, slave_config) end
 
 ---Writes send data for the master into the transmit buffer. This function returns immediately if there's enough room left in the buffer. It blocks if the buffer is doesn't provide enough space.
----@param id integer|'i2c.HW0'|'i2c.HW1' #interface id
+---@param id integer|'i2c.HW0'|'i2c.HW1' interface id
 ---@param data1 number|string|table data can be numbers, string or lua table.
 ---@vararg number|string|table
 ---@return number #number of bytes written
@@ -740,19 +739,19 @@ function i2c.slave.send(id, data1, ...) end
 i2s ={}
 
 ---Mute the I2S channel. The hardware buffer is instantly filled with silence.
----@param i2s_num integer|'0'|'1' #I2S peripheral
+---@param i2s_num integer|'0'|'1' I2S peripheral
 ---@return nil #An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.mute(i2s_num) end
 
 ---Read data from I2S receive buffer.
----@param i2s_num integer|'0'|'1' #I2S peripheral
+---@param i2s_num integer|'0'|'1' I2S peripheral
 ---@param size number Bytes to read
 ---@param wait_ms? number Millisecond to wait if data is not ready. Optional, defaults to 0 (not to wait) when omitted.
 ---@return any #Data read from data-in pin. If data is not ready in wait_ms millisecond, less than size bytes can be returned. An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.read(i2s_num, size, wait_ms) end
 
 ---Configuration and start I2S bus.
----@param i2s_num integer|'0'|'1' #I2S peripheral
+---@param i2s_num integer|'0'|'1' I2S peripheral
 ---@param cfg table table containing configuration data:
 --**mode** I2S work mode. Optional, defaults to i2s.MODE_MASTER + i2s.MODE_TX when omitted.
 -- - i2s.MODE_MASTER
@@ -797,12 +796,12 @@ function i2s.read(i2s_num, size, wait_ms) end
 function i2s.start(i2s_num, cfg, cb) end
 
 ---Stop I2S bus.
----@param i2s_num integer|'0'|'1' #I2S peripheral
+---@param i2s_num integer|'0'|'1' I2S peripheral
 ---@return nil
 function i2s.stop(i2s_num) end
 
 ---Write to I2S transmit buffer.
----@param i2s_num integer|'0'|'1' #I2S peripheral
+---@param i2s_num integer|'0'|'1' I2S peripheral
 ---@param data string string containing I2S stream data
 ---@return nil
 function i2s.write(i2s_num, data) end
@@ -830,7 +829,7 @@ local channel = {}
 function ledc.newChannel(tbl) end
 
 ---Disable LEDC output, and set idle level.
----@param idleLevel integer|'ledc.IDLE_LOW'|'ledc.IDLE_HIGH' #Set output idle level after LEDC stops.
+---@param idleLevel integer|'ledc.IDLE_LOW'|'ledc.IDLE_HIGH' Set output idle level after LEDC stops.
 ---@return nil
 function channel:stop(idleLevel) end
 
@@ -867,7 +866,7 @@ function channel:resume() end
 ---Set LEDC fade function, with a limited time.
 ---@param targetDuty number Target duty of fading.
 ---@param maxFadeTime number The maximum time of the fading ( ms ).
----@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE' #Whether to block until fading done.
+---@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE' Whether to block until fading done.
 ---@return nil
 function channel:fadewithtime(targetDuty, maxFadeTime, wait) end
 
@@ -875,17 +874,17 @@ function channel:fadewithtime(targetDuty, maxFadeTime, wait) end
 ---@param targetDuty number Target duty of fading.
 ---@param scale number Controls the increase or decrease step scale.
 ---@param cycleNum integer Increase or decrease the duty every cycle_num cycles
----@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE' #Whether to block until fading done.
+---@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE' Whether to block until fading done.
 ---@return nil
 function channel:fadewithstep(targetDuty, scale, cycleNum, wait) end
 
 ---Set LEDC fade function.
 ---@param duty number Set the start of the gradient duty.
----@param direction integer|'ledc.FADE_DECREASE'|'ledc.FADE_INCREASE' #Set the direction of the gradient.
+---@param direction integer|'ledc.FADE_DECREASE'|'ledc.FADE_INCREASE' Set the direction of the gradient.
 ---@param scale number Set gradient change amplitude.
 ---@param cycleNum number Set how many LEDC tick each time the gradient lasts.
 ---@param stepNum number Set the number of the gradient.
----@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE' #Whether to block until fading done.
+---@param wait? integer|' ledc.FADE_NO_WAIT'|' ledc.FADE_WAIT_DONE' Whether to block until fading done.
 ---@return nil
 function channel:fade(duty, direction, scale, cycleNum, stepNum, wait) end
 
@@ -896,11 +895,11 @@ mqtt = {}
 local MQTT32 = {}
 
 ---Creates a MQTT client.
----@param clientid string clientid client ID
----@param keepalive integer keepalive keepalive seconds
----@param username? string username user name
----@param password? string password user password
----@param cleansession? integer cleansession 0/1 for `false/true`. Default is 1 (true).
+---@param clientid string client ID
+---@param keepalive integer keepalive seconds
+---@param username? string user name
+---@param password? string user password
+---@param cleansession? integer **0/1** for `false/true`. Default is 1 (`true`).
 ---@return mqtt MQTT client
 function mqtt.Client(clientid, keepalive, username, password, cleansession) end
 
@@ -909,52 +908,52 @@ function mqtt.Client(clientid, keepalive, username, password, cleansession) end
 function MQTT32:close() end
 
 ---Connects to the broker specified by the given host, port, and secure options.
----@param host string host host, domain or IP (string)
----@param port? integer port broker port (number), default 1883
----@param secure? boolean|table secure either an interger with 0/1 for `false/true` (default 0), or a table with optional entries
----*ca_cert CA* certificate data in PEM format for server verify with SSL
----*client_cert* client certificate data in PEM format for SSL mutual authentication
----*client_key* client private key data in PEM format for SSL mutual authentication Note that both client_cert and client_key have to be provided for mutual authentication.
----@param conn_est? function|' function(client: any)'
----@param conn_notest? function|' function(client: any, reason: any)'
+---@param host string host, domain or IP (string)
+---@param port? integer broker port (number), default 1883
+---@param secure? boolean|table either an interger with **0/1** for `false/true` (default 0), or a table with optional entries
+--**ca_cert CA** - certificate data in PEM format for server verify with SSL
+--**client_cert** - client certificate data in PEM format for SSL mutual authentication
+--**client_key** - client private key data in PEM format for SSL mutual authentication. Note that both client_cert and client_key have to be provided for mutual authentication.
+---@param conn_est? function|' function(client) end' `function(client: any)` callback function for when the connection was established
+---@param conn_notest? function|' function(client, reason) end' `function(client: any, reason: number` callback function for when the connection could not be established. No further callbacks should be called.
 ---@return boolean
 function MQTT32:connect(host, port, secure, conn_est, conn_notest) end
 
----Setup Last Will and Testament.
----@param topic string topic the topic to publish to (string)
----@param message string message the message to publish, (buffer or string)
----@param qos? integer|' 0'|' 1'|' 2'
----@param retain? integer|' 0'|' 1'
+---Setup Last Will and Testament. A broker will publish a message with qos = 0, retain = 0, data = "offline" to topic "/lwt" if client does not send keepalive packet.
+---@param topic string the topic to publish to (string)
+---@param message string the message to publish, (buffer or string)
+---@param qos? integer|' 0'|' 1'|' 2' QoS level, default **0**
+---@param retain? integer|' 0'|' 1' retain flag, default **0**
 ---@return nil
 function MQTT32:lwt(topic, message, qos, retain) end
 
 ---Registers a callback function for an event.
----@param event string|'"connect"'|'"message"'|'"offline"'
----@param handler function|' function(client, topic?:string, message?:string) end'
+---@param event string|'"connect"'|'"message"'|'"offline"' can be "connect", "message" or "offline"
+---@param foo function|' function(client, topic, message) end' `function(client, topic?:string, message?:string)` callback function. The first parameter is the client. If event is "message", the 2nd and 3rd param are received topic and message (strings).
 ---@return nil
-function MQTT32:on(event, handler) end
+function MQTT32:on(event, foo) end
 
 ---Publishes a message.
 ---@param topic string topic the topic to publish to (topic string)
 ---@param payload string message the message to publish, (buffer or string)
----@param qos integer|' 0'|' 1'|' 2'
----@param retain integer|' 0'|' 1'
----@param f_puback? function|' function(client) end'
+---@param qos integer|' 0'|' 1'|' 2' QoS level
+---@param retain integer|' 0'|' 1' retain flag
+---@param foo? function|' function(client) end' optional callback fired when PUBACK received. NOTE: When calling `publish()` more than once, the last callback function defined will be called for ALL publish commands.
 ---@return boolean
-function MQTT32:publish(topic, payload, qos, retain, f_puback) end
+function MQTT32:publish(topic, payload, qos, retain, foo) end
 
 ---Subscribes to one or several topics.
----@param topic string|'""'
----@param qos integer|' 0'|' 1'|' 2'
----@param f32_client? function|' function(client) end'
+---@param topic string a topic string
+---@param qos integer|' 0'|' 1'|' 2' QoS subscription level, default 0
+---@param foo? function|' function(client) end' `function(client)` optional callback fired when subscription(s) succeeded. NOTE: When calling `subscribe()` more than once, the last callback function defined will be called for ALL subscribe commands.
 ---@return boolean
-function MQTT32:subscribe(topic, qos, f32_client) end
+function MQTT32:subscribe(topic, qos, foo) end
 
 ---Unsubscribes from one or several topics.
----@param topic string|'""'
----@param f32_client? function|' function(client) end'
+---@param topic string a topic string
+---@param foo? function|' function(client) end' `function(client)` optional callback fired when unsubscription(s) succeeded. NOTE: When calling unsubscribe() more than once, the last callback function defined will be called for ALL unsubscribe commands.
 ---@return boolean
-function MQTT32:unsubscribe(topic, f32_client) end
+function MQTT32:unsubscribe(topic, foo) end
 
 --*** NET ***
 net = {}
@@ -967,19 +966,23 @@ local NETSRV= {}
 local UDPSOCKET = {}
 
 ---Creates a client.
----@param type? integer|'net.TCP'|'net.UDP'
----@param secure? integer 0 for plain (default)
----@return netsocket submodule net.socket (for net.TCP) or net.udpsocket (for net.UDP)
+---@param type? integer|'net.TCP' `net.TCP` (default) or `net.UDP` There's no such thing as a UDP connection because UDP is connection*less*. Thus no connection `type` parameter should be required.
+---@param secure? integer 0 for plain (default). Secure connections are not supported, and the `secure` parameter is ignored. For UDP use `net.createUDPSocket()` instead.
+---@return netsocket #>
+-- - for `net.TCP` - net.socket sub module
+-- - for `net.UDP` - net.udpsocket sub module
 function net.createConnection(type, secure) end
 
 ---Creates a server.
----@param type? integer|'net.TCP'|'net.UDP'
+---@param type? integer|'net.TCP' The `type` parameter will be removed in upcoming releases so that `net.createServer` will always create a TCP-based server. For UDP use `net.createUDPSocket()` instead.
 ---@param timeout? integer for a TCP server timeout is 1~28'800 seconds, 30 sec by default (for an inactive client to be disconnected)
----@return netsrv submodule net.server (for net.TCP), net.udpsocket (for net.UDP)
+---@return netsrv #>
+-- - for `net.TCP` - net.server sub module
+-- - for `net.UDP` - net.udpsocket sub module
 function net.createServer(type, timeout) end
 
 ---Creates an UDP socket.
----@return udpsocket submodule net.udpsocket
+---@return udpsocket #net.udpsocket submodule
 function net.createUDPSocket() end
 
 ---Join multicast group.
@@ -1000,15 +1003,14 @@ function NETSRV.close() end
 
 ---Listen on port from IP address.
 ---@param port? integer number, can be omitted (random port will be chosen)
----@param ip? string IP address string
----@param fun function |' function(net.socket) end'
---- `fun` callback function, pass to caller function as param if a connection is created successfully
+---@param ip? string IP address string, can be omitted
+---@param foo function|' function(net.socket) end' `function(net.socket)` - callback function, pass to caller function as param if a connection is created successfully
 ---@return nil
-function NETSRV.listen(port, ip, fun) end
+function NETSRV.listen(port, ip, foo) end
 
 ---Returns server local address/port.
----@return integer #port or `nil` if not listening
----@return string #ip or `nil` if not listening
+---@return integer|nil #port or `nil` if not listening
+---@return string|nil #ip or `nil` if not listening
 function NETSRV.getaddr() end
 
 ---Closes socket.
@@ -1023,38 +1025,43 @@ function NETSOCKET:connect(port, ip_or_domain) end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string domain name
----@param fun function|' function(net.socket, ip) end'
---- callback function. The first parameter is the socket, the second parameter is the IP address as a string.
+---@param foo function|' function(net.socket, ip) end' `function(net.socket, ip)` - callback function. The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
-function NETSOCKET:dns(domain, fun) end
+function NETSOCKET:dns(domain, foo) end
 
 ---Retrieve port and ip of remote peer.
----@return integer #port or `nil` if not connected
----@return string #ip or `nil` if not connected
+---@return integer|nil #port or `nil` if not connected
+---@return string|nil #ip or `nil` if not connected
 function NETSOCKET:getpeer() end
 
 ---Retrieve local port and ip of socket.
----@return integer #port or `nil` if not connected
----@return string #ip or `nil` if not connected
+---@return integer|nil #port or `nil` if not connected
+---@return string|nil #ip or `nil` if not connected
 function NETSOCKET:getaddr() end
 
----Throttle data reception by placing a request to block the TCP receive function. net.socket:hold()
+---Throttle data reception by placing a request to block the TCP receive function. This request is not effective immediately, Espressif recommends to call it while reserving 5*1460 bytes of memory.
 ---@return nil
 function NETSOCKET:hold() end
 
 ---Register callback functions for specific events.
 ---@param event string|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' event
----@param fun nil|function|' function(net.socket, string?) end)' callback function. Can be nil to remove callback.
+---@param foo nil|function|' function(net.socket, string) end)' `function(net.socket, string?)` - callback function. Can be `nil` to remove callback.
+--The first parameter of callback is the socket.
+--The seconf parameter:
+-- - If event is `"receive"`, the second parameter is the received data as string.
+-- - If event is `"disconnection"` or `"reconnection"`, the second parameter is error code.
+--If `"reconnection"` event is specified, disconnection receives only "normal close" events.
+--Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
-function NETSOCKET:on(event, fun) end
+function NETSOCKET:on(event, foo) end
 
 ---Sends data to remote peer.
 ---@param str string data in string which will be sent to server
----@param fun? function|' function(sent) end'
+---@param foo? function|' function(sent) end' `function(sent)` callback function for sending string
 ---@return nil
-function NETSOCKET:send(str, fun) end
+function NETSOCKET:send(str, foo) end
 
----Unblock TCP receiving data by revocation of a preceding hold().
+---Unblock TCP receiving data by revocation of a preceding `hold()`.
 ---@return nil
 function NETSOCKET:unhold() end
 
@@ -1063,16 +1070,20 @@ function NETSOCKET:unhold() end
 function UDPSOCKET:close() end
 
 ---Listen on port from IP address.
----@param port? integer
----@param ip? string
+---@param port? integer port number, can be omitted (random port will be chosen)
+---@param ip? string IP address string, can be omitted
 ---@return nil
 function UDPSOCKET:listen(port, ip) end
 
 ---Register callback functions for specific events.
----@param event string|'"receive"'|'"sent"'|'"dns"'
----@param fun nil|function|' function(net.socket, string?) end)'
+---@param event string|'"receive"'|'"sent"'|'"dns"' event
+---@param foo nil|function|' function(net.socket, string) end)' function(net.socket, string?) - callback function. Can be nil to remove callback.
+--The first parameter of callback is the socket.
+--The seconf parameter:
+-- - If event is `"receive"`, the second parameter is the received data as string. The `receive` callback receives port and ip *after* the data argument.
+--Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
-function UDPSOCKET:on(event, fun) end
+function UDPSOCKET:on(event, foo) end
 
 ---Sends data to specific remote peer.
 ---@param port integer remote socket port
@@ -1083,30 +1094,29 @@ function UDPSOCKET:send(port, ip, data) end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string domain name
----@param fun function|' function(net.socket, ip) end'
+---@param foo function|' function(net.socket, ip) end' `function(net.socket, ip)` callback function. The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
-function UDPSOCKET:dns(domain, fun) end
+function UDPSOCKET:dns(domain, foo) end
 
 ---Retrieve local port and ip of socket.
----@return integer port or nil if not connected
----@return string #ip or nil if not connected
+---@return integer|nil #port or `nil` if not connected
+---@return string|nil #ip or `nil` if not connected
 function UDPSOCKET:getaddr() end
 
 ---Gets the IP address of the DNS server used to resolve hostnames.
----@param dns_index integer|'0'|'1'
+---@param dns_index integer|'0'|'1' which DNS server to get (range 0~1)
 ---@return string #IP address (string) of DNS server
 function net.dns.getdnsserver(dns_index) end
 
----Resolve a hostname to an IP address.
----Doesn't require a socket like net.socket.dns().
+---Resolve a hostname to an IP address. Doesn't require a socket like `net.socket.dns()`.
 ---@param host string hostname to resolve
----@param fun function|' function(sk, ip) end'
+---@param foo function|' function(sk, ip) end' `function(sk, ip)` callback called when the name was resolved. **sk** is always `nil`
 ---@return nil
-function net.dns.resolve(host, fun) end
+function net.dns.resolve(host, foo) end
 
 ---Sets the IP of the DNS server used to resolve hostnames.
----@param dns_ip_addr string IP address of a DNS server
----@param dns_index integer|'0'|'1'
+---@param dns_ip_addr string IP address of a DNS server. Default: resolver1.opendns.com (208.67.222.222).
+---@param dns_index integer|'0'|'1' which DNS server to set (range 0~1). Hence, it supports max. 2 servers.
 ---@return nil
 function net.dns.setdnsserver(dns_ip_addr, dns_index) end
 
@@ -1135,8 +1145,7 @@ function node.bootreason() end
 function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as .lc file.
----@param filename string
----|'".lua"' #filename name of Lua text file
+---@param filename string|'".lua"' filename name of Lua text file
 ---@return nil
 function node.compile(filename) end
 
@@ -1154,11 +1163,11 @@ function node.compile(filename) end
 function node.dsleep(options) end
 
 ---Returns the flash chip ID.
----@return number #flash ID
+---@return number flashID #flash ID
 function node.flashid() end
 
 ---Returns the current available heap size in bytes.
----@return number #system heap size left in bytes
+---@return number heap #system heap size left in bytes
 function node.heap() end
 
 ---Returns NodeMCU version, chipid, flashid, flash size, flash mode, flash speed.
@@ -1178,16 +1187,16 @@ function node.info() end
 function node.input(str) end
 
 ---Redirects the Lua interpreter output to a callback function. Optionally also prints it to the serial console.
----@param fun function `output_fn(str)` a function accept every output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
+---@param foo function `output_fn(str)` a function accept every output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
 ---@param serial_output integer
 ---|>' 1' #output also sent out the serial port.
 ---|' 0' #no serial output.
 ---@return nil
-function node.output(fun, serial_output) end
+function node.output(foo, serial_output) end
 
 ---Redirects the debugging output from the Espressif SDK to a callback function allowing it to be captured or processed in Lua.
----@param fun function `function(str)` a function accepts debugging output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
-function node.osoutput(fun) end
+---@param foo function `function(str)` a function accepts debugging output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
+function node.osoutput(foo) end
 
 ---Restarts the chip.
 ---@return nil
@@ -1198,18 +1207,34 @@ function node.restart() end
 function node.restore() end
 
 ---Change the working CPU Frequency.
----@param speed integer|'node.CPU80MHZ'|'node.CPU160MHZ'
+---@param speed integer|'node.CPU80MHZ'|'node.CPU160MHZ' constant
 ---@return number #target CPU frequency
 function node.setcpufreq(speed) end
+
+---Enters light sleep mode, which saves power without losing state. The state of the CPU and peripherals is preserved during light sleep and is resumed once the processor wakes up. When the processor wakes back up depends on the supplied options.
+---@param options table a table containing some of:
+--**secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the **us** parameter.
+--**us**, a number of microseconds to sleep. If both **secs** and **us** are provided, the values are combined.
+--**gpio**, a boolean, whether to allow wakeup by GPIOs. Default is `false` if not specified.
+--**touch**, boolean, whether to trigger wakeup from any previously-configured touchpads. Default is `false` if not specified.
+--**uart**, an integer or list of integers. Which UARTs should trigger wakeup. Default is the empty list if not specified.
+--**ulp**, a boolean, whether to allow the ULP to trigger wakeup. Default is `false` if not specified.
+---@return integer #One of the following values, depending on what triggered the wakeup.
+-- - node.wakeup.GPIO
+-- - node.wakeup.TIMER
+-- - node.wakeup.TOUCHPAD
+-- - node.wakeup.UART
+-- - node.wakeup.ULP
+function node.sleep(options) end
 
 ---Controls the amount of debug information kept during node.compile(), and allows removal of debug information from already compiled Lua code.
 ---@param level? number
 ---|'1' #don't discard debug info
 ---|'2' #discard Local and Upvalue debug info
 ---|'3' #discard Local, Upvalue and line-number debug info
----@param fun? function `function` a compiled function to be stripped per setfenv except 0 is not permitted.
+---@param foo? function `function` a compiled function to be stripped per setfenv except 0 is not permitted.
 ---@return integer|nil #If invoked without arguments, returns the current level settings. Otherwise, `nil` is returned.
-function node.stripdebug(level, fun) end
+function node.stripdebug(level, foo) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
 ---@param enabled boolean
@@ -1237,6 +1262,6 @@ function node.egc.setmode(mode, level) end
 ---|'node.task.LOW_PRIORITY' #= 0
 ---|>'node.task.MEDIUM_PRIORITY' #= 1
 ---|'node.task.HIGH_PRIORITY''0' #= 2
----@param fun function|' function() end' a callback function to be executed when the task is run.
+---@param foo function|' function() end' a callback function to be executed when the task is run.
 ---@return nil
-function node.task.post(task_priority, fun) end
+function node.task.post(task_priority, foo) end
