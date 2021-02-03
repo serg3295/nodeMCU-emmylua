@@ -25,7 +25,7 @@ function gpio.read(pin) end
 ---@param start_level integer|' gpio.HIGH'|' gpio.LOW' level to start on
 ---@param delay_times table an array of delay times in µs between each toggle of the gpio pin.
 ---@param cycle_num? integer an optional number of times to run through the sequence. (default is 1)
----@param callback? function|' function() end' an optional callback function or number, if present the function returns immediately and goes asynchronous.
+---@param callback? function|' function() end' function or `number`, if present the function returns immediately and goes asynchronous. (optional)
 ---@return nil
 function gpio.serout(pin, start_level, delay_times , cycle_num, callback) end
 
@@ -37,12 +37,12 @@ function gpio.serout(pin, start_level, delay_times , cycle_num, callback) end
 ---|' "both"' #both edges
 ---|' "low"'  #low level
 ---|' "high"' #high level
----@param callback_function? function|'callback_function(level, when, eventcount)' callback function when trigger occurs. The parameters are:
+---@param callback? function|' function(level, when, eventcount)' `function(level, when, eventcount)` when trigger occurs. The parameters are:
 -- - level - The level of the specified pin at the interrupt
 -- - when -  timestamp of the event
 -- - eventcount - is the number of interrupts that were elided for this callback.
 ---@return nil
-function gpio.trig(pin, type , callback_function) end
+function gpio.trig(pin, type , callback) end
 
 ---Set digital GPIO pin value.
 ---@param pin integer pin to write, IO index
@@ -74,7 +74,7 @@ function pulser:getstate() end
 
 ---This stops the output operation at some future time.
 ---@param position? integer is the index to stop at. The stopping happens on entry to this state. The stopping happens on entry to this state. If not specified, then stops on the next state transition.
----@param callback? function | ' function(pos, steps, offset, now) end' is invoked (with the same arguments as are returned by `:getstate`) when the operation has been stopped.
+---@param callback? function|' function(pos, steps, offset, now) end' is invoked (with the same arguments as are returned by `:getstate`) when the operation has been stopped.
 ---@return boolean
 function pulser:stop(position , callback) end
 
@@ -326,9 +326,9 @@ local MQTT = {}
 ---@param keepalive integer keepalive seconds
 ---@param username? string user name
 ---@param password? string user password
----@param cleansession? integer 0/1 for false/true. Default is 1 (true).
+---@param cleansession? integer **0/1** for `false/true`. Default is 1 (`true`).
 ---@param max_message_length? integer how large messages to accept. Default is 1024.
----@return mqtt #MQTT client
+---@return mqtt MQTT #MQTT client
 function mqtt.Client(clientid, keepalive, username, password, cleansession, max_message_length) end
 
 ---Closes connection to the broker.
@@ -339,8 +339,8 @@ function MQTT:close() end
 ---@param host string host, domain or IP
 ---@param port? integer broker port (number), default 1883
 ---@param secure? boolean if `true`, use TLS.
----@param conn_est? function|' function(client) end'
----@param conn_notest? function|' function(client, reason) end'
+---@param conn_est? function|' function(client) end' `function(client)` callback function for when the connection was established
+---@param conn_notest? function|' function(client, reason) end' `function(client, reason)` callback function for when the connection could not be established. No further callbacks should be called.
 ---@return nil
 function MQTT:connect(host, port, secure, conn_est, conn_notest) end
 
@@ -354,47 +354,56 @@ function MQTT:lwt(topic, message, qos, retain) end
 
 ---Registers a callback function for an event.
 ---@param event string|'"connect"'|'"connfail"'|'"suback"'|'"unsuback"'|'"puback"'|'"message"'|'"overflow"'|'"offline"' event
----@param handler function|' function(client, topic?, message?) end'
----`client` - callback function. The first parameter is always the client object itself. Any remaining parameters passed differ by event:
--- - If event is `"message"`, the 2nd and 3rd parameters are received topic and message, respectively, as Lua strings.
--- - If the event is `"overflow"`, the parameters are as with "message",save that the message string is truncated to the maximum message size.
+---@param callback function|' function(client, topic, message) end' `function(client, topic, message)`. The first parameter is always the client object itself. Any remaining parameters passed differ by event:
+-- - If event is `"message"`, the 2nd and 3rd parameters are received topic and message, respectively, as Lua strings;
+-- - If the event is `"overflow"`, the parameters are as with `"message"``,save that the message string is truncated to the maximum message size;
 -- - If the event is `"connfail"`, the 2nd parameter will be the connection failure code;
+-- - Other event types do not provide additional arguments.
 ---@return nil
-function MQTT:on(event, handler) end
+function MQTT:on(event, callback) end
 
 ---Publishes a message.
 ---@param topic string the topic to publish to (topic string)
 ---@param payload string the message to publish, (buffer or string)
 ---@param qos integer|' 0'|' 1'|' 2' QoS level
 ---@param retain integer|' 0'|' 1' retain flag
----@param fpuback? function|' function(client) end' optional callback fired when PUBACK received (for QoS 1 or 2) or when message sent (for QoS 0).
+---@param callback? function|' function(client) end' `function(client)` fired when PUBACK received (for QoS 1 or 2) or when message sent (for QoS 0). (optional)
 ---@return boolean
-function MQTT:publish(topic, payload, qos, retain, fpuback) end
+function MQTT:publish(topic, payload, qos, retain, callback) end
 
 ---Subscribes to one or several topics.
 ---@param topic string a topic string
 ---@param qos integer|' 0'|' 1'|' 2' QoS subscription level, default 0
----@param f_client? function|' function(client) end' optional callback fired when subscription(s) succeeded.
+---@param callback? function|' function(client) end' `function(client)` fired when subscription(s) succeeded. (optional)
 ---@return boolean
-function MQTT:subscribe(topic, qos, f_client) end
+function MQTT:subscribe(topic, qos, callback) end
 
 ---Subscribes to one or several topics.
----@param tbl table array of 'topic, qos' pairs to subscribe to
----@param f_client? function|' function(client) end' optional callback fired when subscription(s) succeeded.
+---@param tbl table array of `topic, qos` pairs to subscribe to
+---@param callback? function|' function(client) end' `function(client)` fired when subscription(s) succeeded. (optional)
 ---@return boolean
-function MQTT:subscribe(tbl, f_client) end
+function MQTT:subscribe(tbl, callback) end
+
+--[[ ---Unsubscribes from one or several topics.
+---@param tbl table array of `topic, anything` pairs to unsubscribe from
+---@overload fun(tbl: table, callback: function): boolean
+---@param topic string a topic string
+---@param callback? function|' function(client) end' `function(client)` fired when unsubscription(s) succeeded. (optional)
+---@return boolean
+function MQTT:unsubscribe(topic, callback) end
+ ]]
 
 ---Unsubscribes from one or several topics.
 ---@param topic string a topic string
----@param f_client? function|' function(client) end' optional callback fired when unsubscription(s) succeeded.
+---@param callback? function|' function(client) end' `function(client)` fired when unsubscription(s) succeeded. (optional)
 ---@return boolean
-function MQTT:unsubscribe(topic, f_client) end
+function MQTT:unsubscribe(topic, callback) end
 
 ---Unsubscribes from one or several topics.
----@param tbl table array of 'topic, anything' pairs to unsubscribe from
----@param f_client? function|' function(client) end' optional callback fired when unsubscription(s) succeeded.
+---@param tbl table array of `topic, anything` pairs to unsubscribe from
+---@param callback? function|' function(client) end' `function(client)` fired when unsubscription(s) succeeded. (optional)
 ---@return boolean
-function MQTT:unsubscribe(tbl, f_client) end
+function MQTT:unsubscribe(tbl, callback) end
 
 --*** NET ***
 net = {}
@@ -407,21 +416,27 @@ local NETSRV = {}
 local UDPSOCKET = {}
 
 ---Creates a TCP client.
----@return netsocket submodule net.socket
+---@return netsocket #net.socket submodule
 function net.createConnection() end
 
 ---Creates a TCP listening socket (a server).
 ---@param timeout integer seconds until disconnecting an inactive client; 1~28'800 seconds, 30 sec by default.
----@return netsrv submodule net.server
+---@return netsrv #net.server submodule
 function net.createServer(timeout) end
 
 ---Creates an UDP socket.
----@return udpsocket submodule net.udpsocket
+---@return udpsocket #net.udpsocket submodule
 function net.createUDPSocket() end
 
 ---Return information about a network interface, specified by index.
----@param if_index integer the interface index; on ESP8266, 0 is the wifi client (STA) and 1 is the wifi AP.
----@return nil|table
+---@param if_index integer the interface index; on ESP8266, **0** is the wifi client (STA) and **1** is the wifi AP.
+---@return table|nil #nil if the given if_index does not correspond to an interface. Otherwise, a table containing ...
+--**ip**, **netmask**, and **gateway** configured for this interface, as dotted quad strings or nil if none is set.
+--if DHCP was used to configure the interface, then dhcp will be a table containing...
+-- - server_ip - the DHCP server itself, as a dotted quad
+-- - client_ip - the IP address suggested for the client; likely, this equals ip above, unless the configuration has been overridden.
+-- - ntp_server - the NTP server suggested by the DHCP server.
+--DNS servers are not tracked per-interface in LwIP and, as such, are not reported here; use `net.dns:getdnsserver()`.
 function net.ifinfo(if_index) end
 
 ---Join multicast group.
@@ -431,21 +446,21 @@ function net.ifinfo(if_index) end
 function net.multicastJoin(if_ip, multicast_ip) end
 
 ---Leave multicast group.
----@param if_ip string  string containing the interface ip to leave the multicast group. "any" or "" affects all interfaces.
+---@param if_ip string string containing the interface ip to leave the multicast group. "any" or "" affects all interfaces.
 ---@param multicast_ip string string of the group to leave
 ---@return nil
 function net.multicastLeave(if_ip, multicast_ip) end
 
----Closes the server. net.server.close()
+---Closes the server.
 ---@return nil
 function NETSRV.close() end
 
 ---Listen on port from IP address.
 ---@param port? integer port number, can be omitted (random port will be chosen)
 ---@param ip? string IP address string, can be omitted
----@param fun function|'function(net.socket) end'
+---@param callback function|' function(net.socket) end' `function(net.socket)`, pass to caller function as param if a connection is created successfully
 ---@return nil
-function NETSRV.listen(port, ip, fun) end
+function NETSRV.listen(port, ip, callback) end
 
 ---Returns server local address/port.
 ---@return integer|nil #port or `nil` if not listening
@@ -464,9 +479,9 @@ function NETSOCKET:connect(port, ip_domain) end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string domain name
----@param fun function|' function(net.socket, ip) end'
+---@param callback function|' function(net.socket, ip) end' `function(net.socket, ip)`. The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
-function NETSOCKET:dns(domain, fun) end
+function NETSOCKET:dns(domain, callback) end
 
 ---Retrieve port and ip of remote peer.
 ---@return integer|nil #port or `nil` if not connected
@@ -478,28 +493,32 @@ function NETSOCKET:getpeer() end
 ---@return string|nil #ip or `nil` if not connected
 function NETSOCKET:getaddr() end
 
----Throttle data reception by placing a request to block the TCP receive function. net.socket:hold()
+---Throttle data reception by placing a request to block the TCP receive function.
 ---@return nil
 function NETSOCKET:hold() end
 
 ---Register callback functions for specific events.
----@param event string|' "connection"'|' "reconnection"'|' "disconnection"'|' "receive"'|'  "sent"'
----@param fun nil|function|' function(net.socket, string?) end)' callback function. Can be nil to remove callback.
+---@param event string|' "connection"'|' "reconnection"'|' "disconnection"'|' "receive"'|'  "sent"' event
+---@param callback nil|function|' function(net.socket, string?) end)' callback function. Can be `nil` to remove callback. The first parameter of callback is the socket.
+-- - If event is `"receive"`, the second parameter is the received data as string.
+-- - If event is `"disconnection"` or `"reconnection"`, the second parameter is error code.
+--If reconnection event is specified, disconnection receives only "normal close" events.
+--Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
-function NETSOCKET:on(event, fun) end
+function NETSOCKET:on(event, callback) end
 
 ---Sends data to remote peer.
 ---@param str string data in string which will be sent to server
----@param fun? function|' function(sent) end' callback function for sending string
+---@param callback? function|' function(sent) end' `function(sent)` for sending string
 ---@return nil
-function NETSOCKET:send(str, fun) end
+function NETSOCKET:send(str, callback) end
 
 ---Changes or retrieves Time-To-Live value on socket.
 ---@param ttl? integer (optional) new time-to-live value
 ---@return integer ttl current / new ttl value
 function NETSOCKET:ttl(ttl) end
 
----Unblock TCP receiving data by revocation of a preceding hold().
+---Unblock TCP receiving data by revocation of a preceding `hold()`.
 ---@return nil
 function NETSOCKET:unhold() end
 
@@ -508,16 +527,20 @@ function NETSOCKET:unhold() end
 function UDPSOCKET:close() end
 
 ---Listen on port from IP address.
----@param port? integer
----@param ip? string
+---@param port? integer port number, can be omitted (random port will be chosen)
+---@param ip? string IP address string, can be omitted
 ---@return nil
 function UDPSOCKET:listen(port, ip) end
 
 ---Register callback functions for specific events.
----@param event string|' "receive"'|' "sent"'|' "dns"'
----@param fun nil|function|' function(net.socket, string?) end)'
+---@param event string|' "receive"'|' "sent"'|' "dns"' event
+---@param callback nil|function|' function(net.socket, string) end)' `function(net.socket, string?)`. Can be `nil` to remove callback.
+--The first parameter of callback is the socket.
+--The seconf parameter:
+-- - If event is `"receive"`, the second parameter is the received data as string. The `receive` callback receives port and ip *after* the data argument.
+--Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
-function UDPSOCKET:on(event, fun) end
+function UDPSOCKET:on(event, callback) end
 
 ---Sends data to specific remote peer.
 ---@param port integer remote socket port
@@ -527,10 +550,10 @@ function UDPSOCKET:on(event, fun) end
 function UDPSOCKET:send(port, ip, data) end
 
 ---Provides DNS resolution for a hostname.
----@param domain string
----@param fun function|'function(net.socket, ip) end'
+---@param domain string domain name
+---@param callback function|' function(net.socket, ip) end' `function(net.socket, ip)`. The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
-function UDPSOCKET:dns(domain, fun) end
+function UDPSOCKET:dns(domain, callback) end
 
 ---Retrieve local port and ip of socket.
 ---@return integer|nil #port or `nil` if not connected
@@ -538,8 +561,8 @@ function UDPSOCKET:dns(domain, fun) end
 function UDPSOCKET:getaddr() end
 
 ---Changes or retrieves Time-To-Live value on socket.
----@param ttl integer
----@return integer
+---@param ttl? integer (optional) new time-to-live value
+---@return integer ttl current / new ttl value
 function UDPSOCKET:ttl(ttl) end
 
 ---Gets the IP address of the DNS server used to resolve hostnames.
@@ -547,32 +570,35 @@ function UDPSOCKET:ttl(ttl) end
 ---@return string #IP address (string) of DNS server
 function net.dns.getdnsserver(dns_index) end
 
----Resolve a hostname to an IP address.
+---Resolve a hostname to an IP address. Doesn't require a socket like `net.socket.dns()`.
 ---Doesn't require a socket like net.socket.dns().
 ---@param host string hostname to resolve
----@param fun function|' function(sk, ip) end'
----callback called when the name was resolved. sk is always nil
+---@param callback function|' function(sk, ip) end' `function(sk, ip)` called when the name was resolved. **sk** is always `nil`.
 ---@return nil|string #IP address.
-function net.dns.resolve(host, fun) end
+function net.dns.resolve(host, callback) end
 
----Sets the IP of the DNS server used to resolve hostnames.
+---Sets the IP of the DNS server used to resolve hostnames. You can specify up to 2 DNS servers.
 ---@param dns_ip_addr string IP address of a DNS server
 ---@param dns_index integer which DNS server to set (range 0~1).
 ---@return nil
 function net.dns.setdnsserver(dns_ip_addr, dns_index) end
 
----Pings a server. A callback function is called when response is or is not received.
+---Pings a server. A callback function is called when response is or is not received. Summary statistics can be retrieved via the second callback.
 ---@param domain string destination domain or IP address
 ---@param count? number number of ping packets to be sent (default value is 4)
----@param callback_received function *function(bytes, ipaddr, seqno, rtt)* callback function which is invoked when response is received
----@param callback_sent? function *function(ipaddr, total_count, timeout_count, total_bytes, total_time)* callback function which is invoked when response is received
+---@param cb_received function `function(bytes, ipaddr, seqno, rtt)` callback function which is invoked when response is received where
+-- - **bytes** - number of bytes received from destination server (0 means no response)
+-- - **ipaddr** - destination server IP address
+-- - **seqno** ICMP sequence number
+-- - **rtt** - round trip time in ms If domain name cannot be resolved callback is invoked with bytes parameter equal to 0 (i.e. no response) and nil values for all other parameters.
+---@param cb_sent? function `function(ipaddr, total_count, timeout_count, total_bytes, total_time)` callback function which is invoked when response is received where
 -- - **ipaddrstr** destination server IP address
 -- - **total_count** total number of packets sent
 -- - **timeout_count** total number of packets lost (not received)
 -- - **total_bytes** total number of bytes received from destination server
 -- - **total_time** total time to perform ping
 ---@return nil
-function net.ping(domain, count, callback_received, callback_sent) end
+function net.ping(domain, count, cb_received, cb_sent) end
 
 --*** NODE ***
 node = {}
@@ -595,10 +621,10 @@ node = {}
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
----@return number
+---@return number #chip ID
 function node.chipid() end
 
----Compiles a Lua text file into Lua bytecode, and saves it as.
+---Compiles a Lua text file into Lua bytecode, and saves it as .lc file.
 ---@param filename string|'".lua"' name of Lua text file
 ---@return nil
 function node.compile(filename) end
@@ -617,18 +643,19 @@ function node.compile(filename) end
 function node.dsleep(us, option, instant) end
 
 ---Returns the current theoretical maximum deep sleep duration.
----@return number
+---@return number max_duration
 function node.dsleepMax() end
 
 ---Returns the flash chip ID
+---@return number flashID
 function node.flashid() end
 
 ---Returns the flash chip size in bytes.
----@return integer
+---@return integer #flash size in bytes
 function node.flashsize() end
 
 ---Get the current CPU Frequency.
----@return number
+---@return number #Current CPU frequency
 function node.getcpufreq() end
 
 ---Get the current LFS and SPIFFS partition information./
@@ -640,7 +667,7 @@ function node.getpartitiontable() end
 function node.heap() end
 
 ---Returns information about hardware, software version and build configuration.
----@param group string|'"hw"'|'"sw_version"'|'"build_config"' A designator for a group of properties.
+---@param group? string|'"hw"'|'"sw_version"'|'"build_config"' A designator for a group of properties.
 ---@return any #If a group is given the return value will be a table containing the following elements:
 --for group = `"hw"`
 -- - **chip_id** (number)
@@ -688,11 +715,11 @@ function node.LFS.list() end
 --The reload process internally makes multiple passes through the LFS image file. The first pass validates the file and header formats and detects many errors. If any is detected then an error string is returned.
 function node.LFS.reload(imageName) end
 
----Redirects the Lua interpreter to a stdout pipe when a CB function is specified (See pipe module) and resets output to normal otherwise. Optionally also prints to the serial console.
----@param fun function|'function(pipe) end' `output_fn(pipe)` a function accept every output as str, and can send the output to a socket (or maybe a file). Note that this function must conform to the fules for a pipe reader callback.
+---Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module) and resets output to normal otherwise. Optionally also prints to the serial console.
+---@param foo function|'function(pipe) end' `output_fn(pipe)` a function accept every output as str, and can send the output to a socket (or maybe a file). Note that this function must conform to the fules for a pipe reader callback.
 ---@param serial_debug integer **1** - output also show in serial. **0** - no serial output.
 ---@return nil
-function node.output(fun, serial_debug) end
+function node.output(foo, serial_debug) end
 
 ---Restarts the chip.
 ---@return nil
@@ -708,7 +735,7 @@ function node.restore() end
 function node.setcpufreq(speed) end
 
 ---Sets the current LFS and / or SPIFFS partition information.
----@param partition_info table --An array containing one or more of the following enties. The address values are byte offsets relative to the start of the Flash memory. The size values are in bytes. Note that these parameters must be a multiple of 8Kb to align to Flash page boundaries.
+---@param partition_info table An array containing one or more of the following enties. The address values are byte offsets relative to the start of the Flash memory. The size values are in bytes. Note that these parameters must be a multiple of 8Kb to align to Flash page boundaries.
 --**lfs_addr**. The base address of the LFS region.
 --**lfs_size**. The size of the LFS region.
 --**spiffs_addr**. The base address of the SPIFFS region.
@@ -738,12 +765,12 @@ function node.sleep(wake_pin, int_type, resume_cb, preserve_mode) end
 function node.startupcounts(marker) end
 
 ---Get/set options that control the startup process. This interface will grow over time.
----@param tbl? table If the argument is omitted, then no change is made to the current set of startup options. If the argument is the empty table {} then all options are reset to their default values. `table` one or more options:
+---@param tbl? table If the argument is omitted, then no change is made to the current set of startup options. If the argument is the empty table **{}** then all options are reset to their default values. `table` one or more options:
 --**banner** - set to true or false to indicate whether the startup banner should be displayed or not. (default: true)
 --**frequency** - set to node.CPU80MHZ or node.CPU160MHZ to indicate the initial CPU speed. (default: node.CPU80MHZ)
 --**delay_mount** - set to true or false to indicate whether the SPIFFS filesystem mount is delayed until it is first needed or not. (default: false)
 --**command** - set to a string which is the initial command that is run. This is the same string as in the node.startupcommand.
----@return table #This is the complete set of options in the state that will take effect on the next boot. Note that the command key may be missing # in which case the default value will be used.
+---@return table #This is the complete set of options in the state that will take effect on the next boot. Note that the command key may be missing in which case the default value will be used.
 function node.startup(tbl) end
 
 ---@alias level_n
@@ -753,9 +780,9 @@ function node.startup(tbl) end
 
 ---Controls the amount of debug information kept during `node.compile()`,and allows removal of debug information from already compiled Lua code.
 ---@param level? level_n level
----@param fun? function a compiled function to be stripped per setfenv except 0 is not permitted.
+---@param foo? function a compiled function to be stripped per setfenv except 0 is not permitted.
 ---@return integer|nil #If invoked without arguments, returns the current level settings. Otherwise, `nil` is returned.
-function node.stripdebug(level, fun) end
+function node.stripdebug(level, foo) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
 ---@param enabled boolean This is either `true` to enable printing, or `false` to disable it. The default is `false`.
@@ -782,12 +809,12 @@ function node.random() end
 ---|'node.egc.ON_ALLOC_FAILURE' #Try to allocate a new block of memory, and run the garbage collector if the allocation fails. If the allocation fails even after running the garbage collector, the allocator will return with error.
 ---|'node.egc.ON_MEM_LIMIT' #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit. If the upper limit can't be satisfied even after running the garbage collector, the allocator will return with error. If the given limit is negative, it is interpreted as the desired amount of heap which should be left available. Whenever the free heap (as reported by node.heap() falls below the requested limit, the garbage collector will be run.
 ---|'node.egc.ALWAYS' #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error. This mode is very efficient with regards to memory savings, but it's also the slowest.
----@param level? number in the case of *node.egc.ON_MEM_LIMIT*, this specifies the memory limit.
+---@param level? number in the case of **node.egc.ON_MEM_LIMIT**, this specifies the memory limit.
 ---@return nil
 function node.egc.setmode(mode, level) end
 
 ---Returns memory usage information for the Lua runtime.
----@return number total_allocated The total number of bytes allocated by the Lua runtime. This is the number which is relevant when using the *node.egc.ON_MEM_LIMIT* option with positive limit values.
+---@return number total_allocated The total number of bytes allocated by the Lua runtime. This is the number which is relevant when using the **node.egc.ON_MEM_LIMIT** option with positive limit values.
 ---@return number estimated_used This value shows the estimated usage of the allocated memory.
 function node.egc.meminfo() end
 
@@ -796,9 +823,9 @@ function node.egc.meminfo() end
 ---| 'node.task.LOW_PRIORITY' #=0
 ---|>'node.task.MEDIUM_PRIORITY' #=1
 ---| 'node.task.HIGH_PRIORITY' #=2
----@param fun function|' function() end' a callback function to be executed when the task is run.
+---@param callback function|' function() end' function to be executed when the task is run.
 ---@return nil
-function node.task.post(task_priority, fun) end
+function node.task.post(task_priority, callback) end
 
 --*** 1-wire ***
 ow = {}
@@ -829,20 +856,18 @@ function ow.depower(pin) end
 
 ---Reads a byte.
 ---@param pin integer 1~12, I/O index
----@return integer byte read from slave device
+---@return integer #byte read from slave device
 function ow.read(pin) end
 
 ---Reads multi bytes.
 ---@param pin integer 1~12, I/O index
 ---@param size number of bytes to be read from slave device (up to 256)
----@return string bytes read from slave device
+---@return string #bytes read from slave device
 function ow.read_bytes(pin, size) end
 
 ---Performs a 1-Wire reset cycle.
 ---@param pin integer 1~12, I/O index
----@return integer #is
--- - 1 if a device responds with a presence pulse
--- - 0 if there is no device or the bus is shorted or otherwise held low for more than 250 µS
+---@return integer #**1** if a device responds with a presence pulse; **0** if there is no device or the bus is shorted or otherwise held low for more than 250 µS
 function ow.reset(pin) end
 
 ---Clears the search state so that it will start from the beginning again.
@@ -872,7 +897,7 @@ function ow.setup(pin) end
 function ow.skip(pin) end
 
 ---Sets up the search to find the device type family_code.
----The search itself has to be initiated with a subsequent call to ow.search().
+---The search itself has to be initiated with a subsequent call to `ow.search()`.
 ---@param pin integer 1~12, I/O index
 ---@param family_code integer byte for family code
 ---@return nil
@@ -960,9 +985,9 @@ local pobj = {}
 ---Create a pipe.
 ---@param CB_function? function optional reader callback which is called through the `node.task.post()` when the pipe is written to. If the CB returns a boolean, then the reposting action is forced: it is reposted if true and not if false. If the return is nil or omitted then the deault is to repost if a pipe write has occured since the last call.
 ---@param task_priority? integer
----|'node.task.LOW_PRIORITY' #0
----|>'node.task.MEDIUM_PRIORITY' #1
----|'node.task.HIGH_PRIORITY' #2
+---|' node.task.LOW_PRIORITY' #0
+---|>' node.task.MEDIUM_PRIORITY' #1
+---|' node.task.HIGH_PRIORITY' #2
 ---@return pipe obj A pipe resource.
 function pipe.create(CB_function,task_priority) end
 
