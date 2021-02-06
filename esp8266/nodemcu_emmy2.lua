@@ -214,13 +214,13 @@ local s_uart = {}
 
 ---Creates new SoftUART instance. Note that rx pin cannot be shared between instances but tx pin can.
 ---@param baudrate number SoftUART baudrate. Maximum supported is 230400.
----@param txPin number SoftUART tx pin. If set to `nil` write method will not be supported.
+---@param txPin number SoftUART tx pin. If set to `nil` `write` method will not be supported.
 ---@param rxPin number SoftUART rx pin. If set to `nil` `on("data")` method will not be supported.
 ---@return softuart #softuart instance.
 function softuart.setup(baudrate, txPin, rxPin) end
 
 ---Sets up the callback function to receive data.
----@param event string|"data" Event name. Currently only data is supported.
+---@param event string|"data" Event name. Currently only `data` is supported.
 ---@param trigger number Can be a character or a number.
 -- - If **character** is set, the callback function will only be run when that character gets received.
 -- - When a **number** is set, the callback function will only be run when buffer will have as many characters as number.
@@ -240,13 +240,22 @@ somfy = {}
 
 ---Builds an frame defined by Somfy protocol and sends it to the RF transmitter.
 ---@param pin integer GPIO pin the RF transmitter is connected to.
----@param remote_address number address of the remote control.
+---@param remote_address number address of the remote control. The device to be controlled is programmed with the addresses of the remote controls it should listen to.
 ---@param command integer|' somfy.SOMFY_UP'|' somfy.SOMFY_DOWN'|' somfy.SOMFY_PROG'|' somfy.SOMFY_STOP' somfy command
 ---@param rolling_code number The rolling code is increased every time a button is pressed.
 ---@param repeat_count integer how many times the command is repeated
----@param call_back function to be called after the command is transmitted.
+---@param callback function to be called after the command is transmitted.
 ---@return nil
-function somfy.sendcommand(pin, remote_address, command, rolling_code, repeat_count, call_back) end
+function somfy.sendcommand(pin, remote_address, command, rolling_code, repeat_count, callback) end
+
+---Using RF receiver listens to Somfy commands and triggers a callback when command is identified.
+---@param pin integer GPIO pin the RF receiver is connected to.
+---@param callback function|' function(address, command, rc, frame) end' `function(address, command, rc, frame)` a function called when a Somfy command is identified. Use `nil` to stop listening.
+--**address** - of the remote controller sending the command
+--**command** -  sent by the remote controller. A number between *0* and *0xf*. Can be somfy.SOMFY_UP, somfy.SOMFY_DOWN, somfy.SOMFY_PROG, somfy.SOMFY_STOP.
+--**rc** - rolling code
+--**frame** - String of 10 characters with the full captured data frame.
+function somfy.listen(pin, callback) end
 
 --*** SPI ***
 spi = {}
@@ -1304,7 +1313,7 @@ function buffer:size() end
 function buffer:fill(color) end
 
 ---Returns the contents of the buffer (the pixel values) as a string.
----@return string str A string containing the pixel values.
+---@return string #A string containing the pixel values.
 function buffer:dump() end
 
 ---Inserts a string (or a buffer) into another buffer with an offset.
@@ -1320,12 +1329,12 @@ function buffer:replace(source, offset) end
 function buffer:mix(factor1, buffer1, ...) end
 
 ---Computes the total energy requirement for the buffer.
----@return integer sum An integer which is the sum of all the pixel values.
+---@return integer #An integer which is the sum of all the pixel values.
 function buffer:power() end
 
 ---Fade in or out. Defaults to out
 ---@param value number value by which to divide or multiply each byte
----@param direction? integer|'ws2812.FADE_IN'|' ws2812.FADE_OUT' direction
+---@param direction? integer|' ws2812.FADE_IN'|' ws2812.FADE_OUT' Defaults to ws2812.FADE_OUT
 ---@return nil
 function buffer:fade(value, direction) end
 
@@ -1435,3 +1444,103 @@ function xpt2046.getPositionAvg() end
 ---@return integer rawX position X as a raw value.
 ---@return integer rawY position Y as a raw value.
 function xpt2046.getRaw() end
+
+--*** PIXBUF ***
+pixbuf = {}
+
+---@class pixbuffer
+local pixbuffer = {}
+
+---Allocate a new memory buffer to store led values.
+---@param numberOfLeds integer length of the led strip (in pixels)
+---@param numberOfChannels integer the channel count (bytes per pixel)
+---@return pixbuffer #pixbuf.buffer object
+function pixbuf.newBuffer(numberOfLeds, numberOfChannels) end
+
+---Return the value at the given position, in native strip color order.
+---@param index integer position in the buffer (1 for first led)
+---@return number (color)
+function pixbuffer:get(index) end
+
+---Set the value at the given position, in native strip color order.
+---@param index integer position in the buffer (1 for the first led)
+---@param color number|any payload of the color. Payload could be:
+-- **number, number, ...** passing as many colors as required by the array type
+-- **table** should contain one value per color required by the array type
+-- **string** with a natural multiple of the colors required by the array type. **string** inputs may be used to set multiple consecutive pixels!
+---@return nil
+function pixbuffer:set(index, color) end
+
+---Return the size of the buffer in number of LEDs
+---@return integer
+function pixbuffer:size() end
+
+---Return the buffer's channel count.
+---@return integer
+function pixbuffer:channels() end
+
+---Fill the buffer with the given color. The number of given bytes must match the channel count of the buffer.
+---@param color any bytes for each channel
+---@return nil
+function pixbuffer:fill(color) end
+
+---Returns the contents of the buffer (the pixel values) as a string. This can then be saved to a file or sent over a network and may be fed back to` pixbuf.buffer:set()`.
+---@return string #A string containing the pixel values.
+function pixbuffer:dump() end
+
+---Inserts a string (or a pixbuf) into another buffer with an offset. The buffer must be of the same type or an error will be thrown.
+---@param source string|any he pixel values to be set into the buffer. This is either a string or a pixbuf.
+---@param offset? integer the offset where the source is to be placed in the buffer. Default is 1. Negative values can be used.
+---@return nil
+function pixbuffer:replace(source, offset) end
+
+---This is a general method that loads data into a buffer that is a linear combination of data from other buffers.
+---@param factor1 number This is the factor that the contents of buffer1 are multiplied by. This factor is scaled by a factor of 256. Thus factor1 value of 256 is a factor of 1.0.
+---@param buffer1 any This is the source buffer. It must be of the same shape as the destination buffer.
+---@return nil
+function pixbuffer:mix(factor1, buffer1, ...) end
+
+---Like pixbuf.buffer:mix() but treats the first channel as a scaling, 5-bit intensity value. The buffers must all have four channels.
+function pixbuffer:mix4I5() end
+
+---Computes the total energy requirement for the buffer.
+---@return integer #An integer which is the sum of all the pixel values.
+function pixbuffer:power() end
+
+---Like `pixbuf.buffer:power()` but treats the first channel as a scaling intensity value.
+function pixbuffer:powerI() end
+
+---Fade in or out. Defaults to out. Multiply or divide each byte of each led with/by the given value.
+---@param value number value by which to divide or multiply each byte
+---@param direction? integer|' pixbuf.FADE_IN'|' pixbuf.FADE_OUT' Defaults to pixbuf.FADE_OUT
+---@return nil
+function pixbuffer:fade(value, direction) end
+
+---Like `pixbuf.buffer:fade()` but treats the first channel as a scaling intensity value.
+function pixbuffer:fadeI() end
+
+---Shift the content of (a piece of) the buffer in positive or negative direction. This allows simple animation effects. A slice of the buffer can be specified by using the standard start and end offset Lua notation. Negative values count backwards from the end of the buffer.
+---@param value number  number of pixels by which to rotate the buffer. Positive values rotate forwards, negative values backwards.
+---@param mode? integer
+---|>' pixbuf.SHIFT_LOGICAL' #the freed pixels are set to 0 (off).
+---|' pixbuf.SHIFT_CIRCULAR' #the buffer is treated like a ring buffer, inserting the pixels falling out on one end again on the other end
+---@param i? integer is the first offset in the buffer to be affected. Negative values are permitted and count backwards from the end. Default is 1.
+---@param j? integer is the last offset in the buffer to be affected. Negative values are permitted and count backwards from the end. Default is -1.
+---@return nil
+function pixbuffer:shift(value, mode, i, j) end
+
+---This implements the extraction function like string.sub. The indexes are in leds and all the same rules apply.
+---@param i integer This is the start of the extracted data. Negative values can be used.
+---@param j? integer  this is the end of the extracted data. Negative values can be used. The default is -1.
+---@return pixbuffer #A buffer containing the extracted piece.
+function pixbuffer:sub(i, j) end
+
+---Map a function across each pixel of one, or zip a function along two, pixbuf(s), storing into the buffer on which it is called.
+---@param f function This is the mapping function; it is applied for each pixel to all channels of buffer1 and all channels of `buffer2`, if given. It must return a value for each channel of the output buffer, `buffer0`.
+---@param buffer1? any The first source buffer. Defaults to `buffer0`.
+---@param start1? integer This is the start of the mapped range of `buffer1`. Negative values can be used and will be interpreted as before the end of `buffer1`. The default is 1.
+---@param end1? integer this is the end of the mapped range. Negative values can be used. The default is -1 (i.e., the end of `buffer1`).
+---@param buffer2? any is a second buffer, for zip operations
+---@param start2? integer This is the start of the mapped range within `buffer2`. Negative values can be used and will be interpreted as before the end of `buffer2`. The default is 1.
+---@return pixbuffer buffer0 #buffer0
+function pixbuffer:map(f, buffer1, start1, end1, buffer2, start2) end
