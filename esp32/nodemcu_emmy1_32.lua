@@ -200,12 +200,12 @@ function can.send(format, msg_id, data) end
 --**dual_filter** `true` dual filter mode, `false` single filter mode (default)
 --**code** 4-bytes integer. Use this with mask to filter CAN frame. Default: 0. See SJA1000
 --**mask** 4-bytes integer. Default: 0xffffffff
----@param foo function|' function(format, msg_id, data) end' callback function to be called when CAN data received.
+---@param callback function|' function(format, msg_id, data) end' function to be called when CAN data received.
 --**format** Frame format. can.STANDARD_FRAME or can.EXTENDED_FRAME
 --**msg_id** CAN Messge ID
 --**data** CAN data, up to 8 bytes
 ---@return nil
-function can.setup(tbl, foo) end
+function can.setup(tbl, callback) end
 
 ---Start CAN controller.
 ---@return nil
@@ -393,9 +393,9 @@ function file.list(pattern) end
 
 ---Registers callback functions.
 ---@param event string|'"rtc"' Trigger events are: **rtc** deliver current date & time to the file system. Function is expected to return a table containing the fields **year, mon, day, hour, min, sec** of current date and time. Not supported for internal flash.
----@param foo function|' function() end' callback function. Unregisters the callback if function() is omitted.
+---@param callback function|' function() end' function. Unregisters the callback if function() is omitted.
 ---@return nil
-function file.on(event, foo) end
+function file.on(event, callback) end
 
 ---Opens a file for access, potentially creating it (for write modes). When done with the file, it must be closed using `file.close()`.
 ---@param filename string|'""' #file to be opened, directories are not supported
@@ -644,29 +644,33 @@ function http.get(url, options, callback) end
 --**max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
 --**timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
 ---@param body any The body to post. Required and must already be encoded in the appropriate format, but may be empty.
----@param callback? function|' function(code, data) end' Should be `nil` or omitted to specify synchronous behaviour, otherwise a callback function to be invoked when the response has been received or an error occurred, which is called with the arguments **status_code**, **body** and **headers**. In case of an error status_code will be a negative number.
----@return any|nil #In synchronous mode, returns 3 results `status_code, body, headers` once the request has completed. In asynchronous mode, returns `nil` immediately.
+---@param callback? function|' function(code, data) end' Should be `nil` or omitted to specify synchronous behaviour, otherwise a callback function to be invoked when the response has been received or an error occurred, which is called with the arguments **status_code**, **body** and **headers**. In case of an error **status_code** will be a negative number.
+---@return any|nil #In synchronous mode, returns 3 results **status_code, body, headers** once the request has completed. In asynchronous mode, returns `nil` immediately.
 function http.post(url, options, body, callback) end
 
 --*** I2C ***
 i2c = {}
 
----Send (SW) or queue (HWx) I²C address and read/write mode for the next transfer. Communication stops when the slave answers with NACK to the address byte. This can be avoided with parameter ack_check_en on false.
+---Perform (SW) or enqueue (HWx) an I²C address operation, defining data transfer direction for the next operation (read or write).
 ---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
----@param device_addr number device address
+---@param device_addr number I²C device address
 ---@param direction integer
 ---|' i2c.TRANSMITTER' #for writing mode
 ---|' i2c.RECEIVER' #for reading mode
 ---@param ack_check_en? boolean
 ---|>' true' #enable check for slave ACK
 ---|' false' #disable check for slave ACK
----@return boolean #`true` if ack received (always for ids i2c.HW0 and i2c.HW1), `false` if no ack received (only possible for i2c.SW).
+---@return boolean #>
+-- - for interface `i2c.SW`: returns `true` if ack received, `false` if no ack received. This value should be checked to decide whether to continue communication.
+-- - for interfaces `i2c.HW0` and `i2c.HW1`: always returns `true`.
 function i2c.address(id, device_addr, direction, ack_check_en) end
 
----Read (SW) or queue (HWx) data for variable number of bytes.
----@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
----@param len number number of data bytes
----@return string|nil #`string` of received data for interface i2c.SW; `nil` for ids i2c.HW0 and i2c.HW1
+---Perform (SW) or enqueue (HWx) a data read operation for a variable number of bytes.
+---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' I²C interface id
+---@param len number number of data bytes to read
+---@return string|nil #>
+-- - for software interface `i2c.SW` : returns string of received data
+-- - for hardware interfaces `id i2c.HWx` : no value returned
 function i2c.read(id, len) end
 
 ---Initialize the I²C interface for master mode.
@@ -674,35 +678,37 @@ function i2c.read(id, len) end
 ---@param pinSDA integer IO index
 ---@param pinSCL integer IO index
 ---@param speed integer #bit rate in Hz, positive integer
----|' i2c.SLOW' #for 100000 Hz, max for i2c.SW
+---|' i2c.SLOW' #for 100000 Hz, max for `i2c.SW`
 ---|' i2c.FAST' #for 400000 Hz
 ---|' i2c.FASTPLUS' #for 1000000 Hz
----@return integer speed the selected speed
-function i2c.setup(id, pinSDA, pinSCL, speed) end
+---@param stretchfactor? integer integer multiplier for timeout
+---@return integer #>
+-- - for interface `i2c.SW`: returns `speed` the selected speed.
+-- - for interfaces `i2c.HW0` and `i2c.HW1`: returns `timeout` expressed as CPU clock cycles.
+function i2c.setup(id, pinSDA, pinSCL, speed, stretchfactor) end
 
----Send (SW) or queue (HWx) an I²C start condition.
+---Perform (SW) or enqueue (HWx) an I²C start condition.
 ---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
----@return nil
 function i2c.start(id) end
 
----Send (SW) or queue (HWx) an I²C stop condition.
+---Perform (SW) or enqueue (HWx) an I²C stop condition.
 ---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
----@return nil
 function i2c.stop(id) end
 
 ---Starts a transfer for the specified hardware module.
----@param id integer|'i2c.HW0'|'i2c.HW1' interface id, i2c.SW not allowed
----@param cb_fn? function `cb_fn(data, ack)` function to be called when transfer finished
----@param to_ms? integer timeout for the transfer in ms, defaults to 0=infinite
----@return any|nil #synchronous operation:
+---@param id integer|'i2c.HW0'|'i2c.HW1' hardware interface id only , `i2c.SW` not allowed
+---@param callback? function `function(data, ack)` to be called when transfer finished
+---@param to_ms? integer timeout for the transfer in ms, defaults to **0** (infinite)
+---@return any|nil #>
+-- - for synchronous operation i.e. without any callback function, two values are returned
 --**data** - string of received data (`nil` if no read or NACK)
 --**ack** - `true` if ACK received, `false` for NACK
---**nil** - for asynchronous operation
-function i2c.transfer(id, cb_fn, to_ms) end
+-- - for asynchronous operation, i.e. with a callback function, no value is returned
+function i2c.transfer(id, callback, to_ms) end
 
----Write (SW) or queue (HWx) data to I²C bus. Data items can be multiple numbers, strings or lua tables. Communication stops when the slave answers with NACK to a written byte. This can be avoided with parameter ack_check_en on false.
+---Perform (SW) or enqueue (HWx) data write to I²C bus.
 ---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
----@param dataN string|table|number data can be numbers, string or lua table.
+---@param dataN string|table|number data items can be numbers, strings or lua tables.
 ---@param ack_check_en? boolean
 ---|>' true' #enable check for slave ACK
 ---|' false' #disable check for slave ACK
@@ -712,9 +718,9 @@ function i2c.write(id, dataN, ack_check_en) end
 ---Registers or unregisters an event callback handler.
 ---@param id integer|'i2c.HW0'|'i2c.HW1' interface id
 ---@param event integer|' "receive"' data received from master
----@param cb_fn? function `cb_fn(err, data)` function to be called when data was received from the master. Unregisters previous callback for event when omitted.
+---@param callback? function|' function(err, data) end' `function(err, data)` to be called when data was received from the master. Unregisters previous callback for event when omitted.
 ---@return nil
-function i2c.slave.on(id, event, cb_fn) end
+function i2c.slave.on(id, event, callback) end
 
 ---Initialize the I²C interface for slave mode.
 ---@param id integer|'i2c.HW0'|'i2c.HW1' interface id,
@@ -900,7 +906,7 @@ local MQTT32 = {}
 ---@param username? string user name
 ---@param password? string user password
 ---@param cleansession? integer **0/1** for `false/true`. Default is 1 (`true`).
----@return mqtt MQTT client
+---@return mqtt #MQTT client
 function mqtt.Client(clientid, keepalive, username, password, cleansession) end
 
 ---Closes connection to the broker.
@@ -929,31 +935,31 @@ function MQTT32:lwt(topic, message, qos, retain) end
 
 ---Registers a callback function for an event.
 ---@param event string|'"connect"'|'"message"'|'"offline"' can be "connect", "message" or "offline"
----@param foo function|' function(client, topic, message) end' `function(client, topic?:string, message?:string)` callback function. The first parameter is the client. If event is "message", the 2nd and 3rd param are received topic and message (strings).
+---@param callback function|' function(client, topic, message) end' `function(client, topic?:string, message?:string)`. The first parameter is the client. If event is "message", the 2nd and 3rd param are received topic and message (strings).
 ---@return nil
-function MQTT32:on(event, foo) end
+function MQTT32:on(event, callback) end
 
 ---Publishes a message.
 ---@param topic string topic the topic to publish to (topic string)
 ---@param payload string message the message to publish, (buffer or string)
 ---@param qos integer|' 0'|' 1'|' 2' QoS level
 ---@param retain integer|' 0'|' 1' retain flag
----@param foo? function|' function(client) end' optional callback fired when PUBACK received. NOTE: When calling `publish()` more than once, the last callback function defined will be called for ALL publish commands.
+---@param callback? function|' function(client) end' `function(client)` fired when PUBACK received. (optional) NOTE: When calling `publish()` more than once, the last callback function defined will be called for ALL publish commands.
 ---@return boolean
-function MQTT32:publish(topic, payload, qos, retain, foo) end
+function MQTT32:publish(topic, payload, qos, retain, callback) end
 
 ---Subscribes to one or several topics.
 ---@param topic string a topic string
 ---@param qos integer|' 0'|' 1'|' 2' QoS subscription level, default 0
----@param foo? function|' function(client) end' `function(client)` optional callback fired when subscription(s) succeeded. NOTE: When calling `subscribe()` more than once, the last callback function defined will be called for ALL subscribe commands.
+---@param callback? function|' function(client) end' `function(client)` fired when subscription(s) succeeded. (optional) NOTE: When calling `subscribe()` more than once, the last callback function defined will be called for ALL subscribe commands.
 ---@return boolean
-function MQTT32:subscribe(topic, qos, foo) end
+function MQTT32:subscribe(topic, qos, callback) end
 
 ---Unsubscribes from one or several topics.
 ---@param topic string a topic string
----@param foo? function|' function(client) end' `function(client)` optional callback fired when unsubscription(s) succeeded. NOTE: When calling unsubscribe() more than once, the last callback function defined will be called for ALL unsubscribe commands.
+---@param callback? function|' function(client) end' `function(client)` fired when unsubscription(s) succeeded. (optional) NOTE: When calling unsubscribe() more than once, the last callback function defined will be called for ALL unsubscribe commands.
 ---@return boolean
-function MQTT32:unsubscribe(topic, foo) end
+function MQTT32:unsubscribe(topic, callback) end
 
 --*** NET ***
 net = {}
@@ -1004,9 +1010,9 @@ function NETSRV.close() end
 ---Listen on port from IP address.
 ---@param port? integer number, can be omitted (random port will be chosen)
 ---@param ip? string IP address string, can be omitted
----@param foo function|' function(net.socket) end' `function(net.socket)` - callback function, pass to caller function as param if a connection is created successfully
+---@param callback function|' function(net.socket) end' `function(net.socket)`, pass to caller function as param if a connection is created successfully
 ---@return nil
-function NETSRV.listen(port, ip, foo) end
+function NETSRV.listen(port, ip, callback) end
 
 ---Returns server local address/port.
 ---@return integer|nil #port or `nil` if not listening
@@ -1025,9 +1031,9 @@ function NETSOCKET:connect(port, ip_or_domain) end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string domain name
----@param foo function|' function(net.socket, ip) end' `function(net.socket, ip)` - callback function. The first parameter is the socket, the second parameter is the IP address as a string.
+---@param callback function|' function(net.socket, ip) end' `function(net.socket, ip)`. The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
-function NETSOCKET:dns(domain, foo) end
+function NETSOCKET:dns(domain, callback) end
 
 ---Retrieve port and ip of remote peer.
 ---@return integer|nil #port or `nil` if not connected
@@ -1045,7 +1051,7 @@ function NETSOCKET:hold() end
 
 ---Register callback functions for specific events.
 ---@param event string|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' event
----@param foo nil|function|' function(net.socket, string) end)' `function(net.socket, string?)` - callback function. Can be `nil` to remove callback.
+---@param callback nil|function|' function(net.socket, string) end)' `function(net.socket, string?)`. Can be `nil` to remove callback.
 --The first parameter of callback is the socket.
 --The seconf parameter:
 -- - If event is `"receive"`, the second parameter is the received data as string.
@@ -1053,13 +1059,13 @@ function NETSOCKET:hold() end
 --If `"reconnection"` event is specified, disconnection receives only "normal close" events.
 --Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
-function NETSOCKET:on(event, foo) end
+function NETSOCKET:on(event, callback) end
 
 ---Sends data to remote peer.
 ---@param str string data in string which will be sent to server
----@param foo? function|' function(sent) end' `function(sent)` callback function for sending string
+---@param callback? function|' function(sent) end' `function(sent)` for sending string
 ---@return nil
-function NETSOCKET:send(str, foo) end
+function NETSOCKET:send(str, callback) end
 
 ---Unblock TCP receiving data by revocation of a preceding `hold()`.
 ---@return nil
@@ -1077,13 +1083,13 @@ function UDPSOCKET:listen(port, ip) end
 
 ---Register callback functions for specific events.
 ---@param event string|'"receive"'|'"sent"'|'"dns"' event
----@param foo nil|function|' function(net.socket, string) end)' function(net.socket, string?) - callback function. Can be nil to remove callback.
+---@param callback nil|function|' function(net.socket, string) end)' `function(net.socket, string?)`. Can be nil to remove callback.
 --The first parameter of callback is the socket.
 --The seconf parameter:
 -- - If event is `"receive"`, the second parameter is the received data as string. The `receive` callback receives port and ip *after* the data argument.
 --Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
-function UDPSOCKET:on(event, foo) end
+function UDPSOCKET:on(event, callback) end
 
 ---Sends data to specific remote peer.
 ---@param port integer remote socket port
@@ -1094,9 +1100,9 @@ function UDPSOCKET:send(port, ip, data) end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string domain name
----@param foo function|' function(net.socket, ip) end' `function(net.socket, ip)` callback function. The first parameter is the socket, the second parameter is the IP address as a string.
+---@param callback function|' function(net.socket, ip) end' `function(net.socket, ip)`. The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
-function UDPSOCKET:dns(domain, foo) end
+function UDPSOCKET:dns(domain, callback) end
 
 ---Retrieve local port and ip of socket.
 ---@return integer|nil #port or `nil` if not connected
@@ -1110,13 +1116,13 @@ function net.dns.getdnsserver(dns_index) end
 
 ---Resolve a hostname to an IP address. Doesn't require a socket like `net.socket.dns()`.
 ---@param host string hostname to resolve
----@param foo function|' function(sk, ip) end' `function(sk, ip)` callback called when the name was resolved. **sk** is always `nil`
+---@param callback function|' function(sk, ip) end' `function(sk, ip)` called when the name was resolved. **sk** is always `nil`
 ---@return nil
-function net.dns.resolve(host, foo) end
+function net.dns.resolve(host, callback) end
 
 ---Sets the IP of the DNS server used to resolve hostnames.
 ---@param dns_ip_addr string IP address of a DNS server. Default: resolver1.opendns.com (208.67.222.222).
----@param dns_index integer|'0'|'1' which DNS server to set (range 0~1). Hence, it supports max. 2 servers.
+---@param dns_index integer|' 0'|' 1' which DNS server to set (range 0~1). Hence, it supports max. 2 servers.
 ---@return nil
 function net.dns.setdnsserver(dns_ip_addr, dns_index) end
 
@@ -1151,7 +1157,7 @@ function node.compile(filename) end
 
 ---Enters deep sleep mode.
 ---@overload fun(options:number)
--- For compatibility, a number parameter usecs can be supplied instead of an options table, which is equivalent to node.dsleep({us = usecs}).
+-- For compatibility, a `number` parameter usecs can be supplied instead of an options table, which is equivalent to `node.dsleep({us = usecs})`.
 ---@param options table a table containing some of:
 --**secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the us parameter.
 --**us**, a number of microseconds to sleep. If both secs and us are provided, the values are combined.
@@ -1187,16 +1193,16 @@ function node.info() end
 function node.input(str) end
 
 ---Redirects the Lua interpreter output to a callback function. Optionally also prints it to the serial console.
----@param foo function `output_fn(str)` a function accept every output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
+---@param callback function `output_fn(str)` a function accept every output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
 ---@param serial_output integer
 ---|>' 1' #output also sent out the serial port.
 ---|' 0' #no serial output.
 ---@return nil
-function node.output(foo, serial_output) end
+function node.output(callback, serial_output) end
 
 ---Redirects the debugging output from the Espressif SDK to a callback function allowing it to be captured or processed in Lua.
----@param foo function `function(str)` a function accepts debugging output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
-function node.osoutput(foo) end
+---@param callback function `function(str)` a function accepts debugging output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
+function node.osoutput(callback) end
 
 ---Restarts the chip.
 ---@return nil
@@ -1232,9 +1238,9 @@ function node.sleep(options) end
 ---|'1' #don't discard debug info
 ---|'2' #discard Local and Upvalue debug info
 ---|'3' #discard Local, Upvalue and line-number debug info
----@param foo? function `function` a compiled function to be stripped per setfenv except 0 is not permitted.
+---@param callback? function `function` a compiled function to be stripped per setfenv except 0 is not permitted.
 ---@return integer|nil #If invoked without arguments, returns the current level settings. Otherwise, `nil` is returned.
-function node.stripdebug(level, foo) end
+function node.stripdebug(level, callback) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
 ---@param enabled boolean
@@ -1262,6 +1268,6 @@ function node.egc.setmode(mode, level) end
 ---|'node.task.LOW_PRIORITY' #= 0
 ---|>'node.task.MEDIUM_PRIORITY' #= 1
 ---|'node.task.HIGH_PRIORITY''0' #= 2
----@param foo function|' function() end' a callback function to be executed when the task is run.
+---@param callback function|' function() end' function to be executed when the task is run.
 ---@return nil
-function node.task.post(task_priority, foo) end
+function node.task.post(task_priority, callback) end
