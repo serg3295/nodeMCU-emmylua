@@ -9,7 +9,7 @@ Works with VS Code extension **[Sumneko lua-language-server](https://github.com/
 
 <h2>Install</h2>
 
-Set path to the file **nodemcu_emmy_32.lua**, or **nodemcu_emmy.lua** in parameter:
+Set path to the file **nodemcu_emmy_32.lua**, or **nodemcu_emmy.lua** in the setting:
 
 ```json
 "Lua.workspace.library": {
@@ -24,7 +24,7 @@ Important!
 **nodemcu_emmy_32.lua** and **nodemcu_emmy.lua** files must be located in different folders.
 
 To perform the autocomplete of the ucg and u8g2 functions, place the **plugin.lua** file in any directory
- and specify the path to this file in the parameter
+ and specify the path to this file in the setting:
 
 ```json
  "Lua.runtime.plugin": "c:/PATH/plugin.lua"
