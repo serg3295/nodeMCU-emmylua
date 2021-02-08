@@ -103,8 +103,7 @@ function ds3231.resetStopFlag() end
 --*** FIFO Module is in nodemcu_emmy3.lua ***
 
 --*** FTP server ***
----@class ftp
-local FTP = require('ftpserver')
+FTP = {}
 
 ---Create the FTP server on the standard ports 20 and 21. The global variable FTP is set to the server object.
 ---@param user string Username for access to the server
@@ -113,7 +112,7 @@ local FTP = require('ftpserver')
 ---@return nil
 function FTP:createServer(user, pass, dbgFlag) end
 
----Wrapper to createServer() which also connects to the WiFi channel.
+---Wrapper to `createServer()` which also connects to the WiFi channel.
 ---@param user string Username for access to the server
 ---@param pass string Password for access to the server
 ---@param ssid string SSID for WiFi service
@@ -317,9 +316,15 @@ function mcp23008.writeGPPU(dataByte) end
 ---@return number #The GPPU byte i.e. state of all internal pull-up resistors
 function mcp23008.readGPPU() end
 
-  --*** MCP23017 ***
-  ---@class mcp23017
-  local mcp17 = {}
+--*** MCP23017 ***
+---@class mcp23017
+---@field INPUT boolean
+---@field OUTPUT boolean
+---@field GPA boolean
+---@field GPB boolean
+---@field HIGH boolean
+---@field LOW boolean
+local mcp17 = {}
 
 ---Configures the address of the module and tests the connection to the i2c bus.
 ---@param address number address for MCP23017, default: 0x20 (should be between 0x20 and 0x27)
