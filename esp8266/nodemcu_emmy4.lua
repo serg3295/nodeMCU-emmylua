@@ -617,7 +617,8 @@ node = {}
 --4, software restart
 --5, wake from deep sleep
 --6, external reset
---In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information. These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
+-- In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information.
+-- These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
@@ -658,8 +659,9 @@ function node.flashsize() end
 ---@return number #Current CPU frequency
 function node.getcpufreq() end
 
----Get the current LFS and SPIFFS partition information./
----@return table #An array containing entries for **lfs_addr, lfs_size, spiffs_addr** and **spiffs_size**. The address values are offsets relative to the start of the Flash memory.
+---Get the current LFS and SPIFFS partition information.
+---@return table #An array containing entries for **lfs_addr, lfs_size, spiffs_addr** and **spiffs_size**.
+-- The address values are offsets relative to the start of the Flash memory.
 function node.getpartitiontable() end
 
 ---Returns the current available heap size in bytes.
@@ -695,18 +697,21 @@ function node.heap() end
 -- - **number_type** (string) integer or float
 function node.info(group) end
 
----Submits a string to the Lua interpreter. Similar to `pcall(loadstring(str))`, but without the single-line limitation.
+---Submits a string to the Lua interpreter. Similar to `pcall(loadstring(str))`,
+--but without the single-line limitation.
 ---@param str any Lua chunk
 ---@return nil
 function node.input(str) end
 
 ---Returns the function reference for a function in LFS.
 ---@param modulename string|'""' The name of the module to be loaded.
----@return function|nil #If the LFS is loaded and the modulename is a string that is the name of a valid module in the LFS, then the function is returned in the same way the `load()` and the other Lua load functions do. Otherwise `nil` is returned.
+---@return function|nil #If the LFS is loaded and the modulename is a string that is the name of a valid module in the LFS,
+--then the function is returned in the same way the `load()` and the other Lua load functions do. Otherwise `nil` is returned.
 function node.LFS.get(modulename) end
 
 ---List the modules in LFS.
----@return table|nil #If no LFS image IS LOADED then `nil` is returned. Otherwise an sorted array of the name of modules in LFS is returned.
+---@return table|nil #If no LFS image IS LOADED then `nil` is returned.
+--Otherwise an sorted array of the name of modules in LFS is returned.
 function node.LFS.list() end
 
 ---Reload LFS with the flash image provided.
@@ -715,8 +720,10 @@ function node.LFS.list() end
 --The reload process internally makes multiple passes through the LFS image file. The first pass validates the file and header formats and detects many errors. If any is detected then an error string is returned.
 function node.LFS.reload(imageName) end
 
----Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module) and resets output to normal otherwise. Optionally also prints to the serial console.
----@param foo function|'function(pipe) end' `output_fn(pipe)` a function accept every output as str, and can send the output to a socket (or maybe a file). Note that this function must conform to the fules for a pipe reader callback.
+---Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)
+--and resets output to normal otherwise. Optionally also prints to the serial console.
+---@param foo function|'function(pipe) end' `output_fn(pipe)` a function accept every output as str, and can send the output to a socket (or maybe a file).
+--Note that this function must conform to the fules for a pipe reader callback.
 ---@param serial_debug integer **1** - output also show in serial. **0** - no serial output.
 ---@return nil
 function node.output(foo, serial_debug) end
@@ -735,7 +742,9 @@ function node.restore() end
 function node.setcpufreq(speed) end
 
 ---Sets the current LFS and / or SPIFFS partition information.
----@param partition_info table An array containing one or more of the following enties. The address values are byte offsets relative to the start of the Flash memory. The size values are in bytes. Note that these parameters must be a multiple of 8Kb to align to Flash page boundaries.
+---@param partition_info table An array containing one or more of the following enties.
+--The address values are byte offsets relative to the start of the Flash memory. The size values are in bytes.
+--Note that these parameters must be a multiple of 8Kb to align to Flash page boundaries.
 --**lfs_addr**. The base address of the LFS region.
 --**lfs_size**. The size of the LFS region.
 --**spiffs_addr**. The base address of the SPIFFS region.

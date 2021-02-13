@@ -899,3 +899,10 @@ function gdbstub.pbrk() end
 ---Controls whether system output is encapsulated in gdb remote debugging protocol.
 ---@param enable boolean If `true`, then output is wrapped in gdb remote debugging protocol. If `false`, then it is sent straight to the UART.
 function gdbstub.gdboutput(enable) end
+
+--*** DEBUG ***
+
+---Returns a sorted array of the strings returned from the `lua_getstrings` function.
+---@param type string|'RAM'|'ROM'
+---@return table
+function debug.getstrings(type) end
