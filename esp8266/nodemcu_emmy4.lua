@@ -218,7 +218,7 @@ i2c = {}
 ---Setup I²C address and read/write mode for the next transfer.
 ---@param id integer bus number
 ---@param device_addr number 7-bit device address.
----@param direction integer|' i2c.TRANSMITTER'|' i2c.RECEIVER' direction
+---@param direction integer|' i2c.TRANSMITTER'|' i2c.RECEIVER' transmitter | receiver
 ---@return boolean #`true` if ack received, `false` if no ack received.
 function i2c.address(id, device_addr, direction) end
 
@@ -232,7 +232,7 @@ function i2c.read(id, len) end
 ---@param id integer 0~9, bus number
 ---@param pinSDA integer 1~12, IO index
 ---@param pinSCL integer 0~12, IO index
----@param speed integer|' i2c.SLOW'|' i2c.FAST'|' i2c.FASTPLUS'
+---@param speed integer|' i2c.SLOW'|' i2c.FAST'|' i2c.FASTPLUS' slow | fast | fastplus
 ---@return integer #speed the selected speed, 0 if bus initialization error.
 function i2c.setup(id, pinSDA, pinSCL, speed) end
 
@@ -605,20 +605,20 @@ node = {}
 
 ---Returns the boot reason and extended reset info.
 ---@return integer rawcode The first value returned is the raw code, not the new "reset info" code which was introduced in recent SDKs. Values are:
---1, power-on
---2, reset (software?)
---3, hardware reset via reset pin
---4, WDT reset (watchdog timeout)
+-- - 1, power-on
+-- - 2, reset (software?)
+-- - 3 , hardware reset via reset pin
+-- - 4, WDT reset (watchdog timeout)
 ---@return integer reason The second value returned is the extended reset cause. Values are:
---0, power-on
---1, hardware watchdog reset
---2, exception reset
---3, software watchdog reset
---4, software restart
---5, wake from deep sleep
---6, external reset
--- In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information.
--- These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
+-- - 0, power-on
+-- - 1, hardware watchdog reset
+-- - 2, exception reset
+-- - 3, software watchdog reset
+-- - 4, software restart
+-- - 5, wake from deep sleep
+-- - 6, external reset
+--In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information.
+--These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
@@ -889,7 +889,7 @@ function ow.reset_search(pin) end
 ---@return string|nil #string with length of 8 upon success. It contains the rom code of slave device. Returns `nil` if search was unsuccessful.
 function ow.search(pin) end
 
----Issues a 1-Wire rom select command. Make sure you do the ow.reset(pin) first.
+---Issues a 1-Wire rom select command. Make sure you do the `ow.reset(pin)` first.
 ---@param pin integer 1~12, I/O index
 ---@param rom string string value, len 8, rom code of the slave device
 ---@return nil
@@ -943,20 +943,18 @@ function pcm.new(pcm_SD, pin) end
 function pcmdrv:close() end
 
 ---Register callback functions for events.
----@param event string
+---@param event string #`event` identifier, one of:
 ---|'"data"' #callback function is supposed to return a string containing the next chunk of data.
 ---|'"drained"' #playback was stopped due to lack of data. The last 2 invocations of the data callback didn't provide new chunks in time (intentionally or unintentionally) and the internal buffers were fully consumed.
 ---|'"paused"' #playback was paused by pcm.drv:pause().
 ---|'"stopped"' #playback was stopped by pcm.drv:stop().
 ---|'"vu"' #new peak data, cb_fn is triggered freq times per second (1 to 200 Hz).
----`event` identifier, one of:
----@param cb_fn? function callback function for the specified event. Unregisters previous function if omitted. First parameter is drv, followed by peak data for vu callback.
----@param freq? number
+---@param callback? function function for the specified event. Unregisters previous function if omitted. First parameter is `drv`, followed by peak data for `vu` callback.
 ---@return nil
-function pcmdrv:on(event, cb_fn, freq) end
+function pcmdrv:on(event, callback) end
 
 ---Starts playback.
----@param rate integer|'pcm.RATE_1K'|'pcm.RATE_2K'|'pcm.RATE_4K'|'pcm.RATE_5K'|'pcm.RATE_8K'|'pcm.RATE_10K'|'pcm.RATE_12K'|'pcm.RATE_16K'
+---@param rate integer|'pcm.RATE_1K'|'pcm.RATE_2K'|'pcm.RATE_4K'|'pcm.RATE_5K'|'pcm.RATE_8K'|'pcm.RATE_10K'|'pcm.RATE_12K'|'pcm.RATE_16K' defaults to RATE_8K if omitted
 ---@return nil
 function pcmdrv:play(rate) end
 
