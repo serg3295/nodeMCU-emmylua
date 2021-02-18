@@ -25,11 +25,11 @@ function OnSetText(uri, text)
     end
   end
 
-  for localPos in text:gmatch '[^%-]%s()local%s+[%w_]+%s*=%s*mcp23017%s*%(' do
+  for endPos in text:gmatch 'local%s+[%w_]+%s*=%s*mcp23017%s*%(.-%)()' do
     diffs[#diffs+1] = {
-      start  = localPos,
-      finish = localPos - 1,
-      text   = ('---@type mcp23017\n')
+      start  = endPos,
+      finish = endPos - 1,
+      text   = (' ---@type mcp23017')
     }
   end
 
