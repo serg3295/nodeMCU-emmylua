@@ -199,9 +199,16 @@ function pulsecntObj:getCnt() end
 --*** QRCODEGEN ***
 qrcodegen = {}
 
+---@class QRcodeCfg
+---@field minver integer
+---@field maxver integer
+---@field ecl integer
+---@field mask integer
+---@field boostecl boolean
+
 ---Generates a QR Code from a text string.
 ---@param text any The text or URL to encode. Should be UTF-8 or ASCII.
----@param options? table An optional table, containing any of:
+---@param options? QRcodeCfg An optional table, containing any of:
 --**minver** the minimum version according to the QR Code Model 2 standard. If not specified, defaults to 1.
 --**maxver** the maximum version according to the QR Code Model 2 standard. If not specified, defaults to 40. Specifying a lower maximum version reduces the amount of temporary memory the function requires, so it can be worthwhile to specify a smaller value if you know the text will fit in a lower-version QR Code.
 --**ecl** the error correction level in a QR Code symbol. Higher error correction produces a larger QR Code. One of:
@@ -231,9 +238,15 @@ sdmmc = {}
 ---@class sdmmc
 local card = {}
 
+---@class SDmmcCfg
+---@field cd_pin integer
+---@field wp_pin integer
+---@field fmax integer
+---@field width  integer
+
 ---SDMMC Mode. Initialize the SDMMC and probe the attached SD card.
----@param slot integer SDMMC slot, one of `sdmmc.HS1` | `sdmmc.HS2`
----@param cfg? table `cfg` optional table containing slot configuration:
+---@param slot integer|'sdmmc.HS1'|'sdmmc.HS2' SDMMC slot
+---@param cfg? SDmmcCfg optional table containing slot configuration:
 --**cd_pin** card detect pin, none if omitted
 --**wp_pin** write-protcet pin, none if omitted
 --**fmax** maximum communication frequency, defaults to 20  if omitted
@@ -244,9 +257,18 @@ local card = {}
 ---@return sdmmc cardObj Card object. Error is thrown for invalid parameters or if SDMMC hardware or card cannot be initialized.
 function sdmmc.init(slot, cfg) end
 
+---@class SDspiCfg
+---@field sck_pin integer
+---@field mosi_pin integer
+---@field miso_pin integer
+---@field cs_pin integer
+---@field cd_pin integer
+---@field wp_pin integer
+---@field fmax integer
+
 ---SD SPI Mode. Initialize the SDMMC and probe the attached SD card.
----@param slot integer SD SPI slot, one of `sdmmc.HSPI` | `sdmmc.VSPI`
----@param cfg table `cfg` mandatory table containing slot configuration:
+---@param slot integer|'sdmmc.HSPI'|'sdmmc.VSPI' SD SPI slot
+---@param cfg SDspiCfg mandatory table containing slot configuration:
 --**sck_pin** SPI SCK pin, mandatory
 --**mosi_pin**, SPI MOSI pin, mandatory
 --**miso_pin**, SPI MISO pin, mandatory
@@ -337,9 +359,18 @@ local encoder = {}
 ---@class sjsondec
 local decoder = {}
 
+---@class SjsonCfg1
+---@field depth integer
+---@field null string
+
+---@class SjsonCfg2
+---@field depth integer
+---@field null string
+---@field metatable table
+
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
 ---@param tbl table data to encode
----@param opts? table an optional table of options. The possible entries are:
+---@param opts? SjsonCfg1 an optional table of options. The possible entries are:
 --**depth** the maximum encoding depth needed to encode the table. The default is 20.
 --**null** the string value to treat as null.
 ---@return sjsonenc #A sjson.encoder object.
@@ -352,14 +383,14 @@ function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
 ---@param tbl table data to encode
----@param opts? table an optional table of options. The possible entries are:
+---@param opts? SjsonCfg1 an optional table of options. The possible entries are:
 --**depth** the maximum encoding depth needed to encode the table. The default is 20 which should be enough for nearly all situations.
 --**null** the string value to treat as null.
 ---@return string #JSON string
 function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object. A metatable can be specified for all the newly created Lua tables. This allows you to handle each value as it is inserted into each table (by implementing the __newindex method).
----@param opts? table an optional table of options. The possible entries are:
+---@param opts? SjsonCfg2 an optional table of options. The possible entries are:
 --**depth** the maximum encoding depth needed to encode the table. The default is 20.
 --**null** the string value to treat as null.
 --**metatable** a table to use as the metatable for all the new tables in the returned object.
@@ -376,7 +407,7 @@ function decoder:result() end
 
 ---Decode a JSON string to a Lua table.
 ---@param str string JSON string to decode
----@param opts? table an optional table of options. The possible entries are:
+---@param opts? SjsonCfg2 an optional table of options. The possible entries are:
 --**depth** the maximum encoding depth needed to encode the table. The default is 20.
 --**null** the string value to treat as null.
 --**metatable** a table to use as the metatable for all the new tables in the returned object.
@@ -426,9 +457,16 @@ local busmaster = {}
 ---@class spidev
 local device = {}
 
+---@class SpiMaster
+---@field sclk integer
+---@field mosi integer
+---@field miso integer
+---@field quadwp integer
+---@field quadhd integer
+
 ---Initializes a bus in master mode and returns a bus master object.
 ---@param host integer|'spi.VSPI'|'spi.HSPI'|'spi.SPI1' id
----@param config? table table listing the assigned GPIOs. All signal assignment are optional. **sclk, mosi, miso, quadwp, quadhd**
+---@param config? SpiMaster table listing the assigned GPIOs. All signal assignment are optional. **sclk, mosi, miso, quadwp, quadhd**
 ---@param dma? integer|' 1'|' 2'|' 0' set DMA channel (1 or 2) or disable DMA (0), defaults to 1 if omitted.
 ---@return spi #SPI bus master object
 function spi.master(host, config, dma) end
@@ -436,6 +474,23 @@ function spi.master(host, config, dma) end
 ---Close the bus host. This fails if there are still devices registered on this bus.
 ---@return nil
 function busmaster:close() end
+
+---@class BusMaster
+---@field cs integer
+---@field mode integer
+---@field freq integer
+---@field command_bits integer
+---@field address_bits integer
+---@field dummy_bits integer
+---@field cs_ena_pretrans integer
+---@field cs_ena_posttrans integer
+---@field duty_cycle_pos integer
+---@field tx_lsb_first boolean
+---@field rx_lsb_first boolean
+---@field wire3 boolean
+---@field positive_cs boolean
+---@field halfduplex boolean
+---@field clk_as_cs boolean
 
 ---Adds a device on the given master bus. Up to three devices per bus are supported.
 ---@param config table table describing the device parameters:
@@ -461,10 +516,18 @@ function busmaster:device(config) end
 ---@return nil
 function device:remove() end
 
+---@class SpiTransfer
+---@field command any
+---@field address any
+---@field txdata string
+---@field rxlen integer
+---@field mode integer
+---@field addr_mode number
+
 ---Initiate an SPI transaction.
 --*txdata* string of data to be sent to the device
 ---@overload fun(txdata:string):string
----@param trans table table containing the elements of the transaction:
+---@param trans SpiTransfer table containing the elements of the transaction:
 --**command** data for command phase, amount of bits was defined during device creation, optional
 --**address** data for address phase, amount of bits was defined during device creation, optional
 --**txdata** string of data to be sent to the device, optional
@@ -505,8 +568,16 @@ function struct.size (fmt) end
 --*** TIME ***
 time = {}
 
+---@class CalendarTable
+---@field year integer
+---@field mon integer
+---@field day integer
+---@field hour integer
+---@field min integer
+---@field sec integer
+
 ---Converts calendar table to a timestamp in Unix epoch
----@param calendar table `calendar` Table containing calendar info.
+---@param calendar CalendarTable Table containing calendar info.
 --**year** 1970 ~ 2038
 --**mon** month 1 ~ 12 in current year
 --**day** day 1 ~ 31 in current month
@@ -651,7 +722,7 @@ function tp:read() end
 function tp:setThres(padNum, thresVal) end
 
 ---Set the trigger mode globally for all touch pads.
----@param mode integer|'touch.TOUCH_TRIGGER_BELOW'|'touch.TOUCH_TRIGGER_ABOVE'
+---@param mode integer|'touch.TOUCH_TRIGGER_BELOW'|'touch.TOUCH_TRIGGER_ABOVE' mode
 ---@return nil
 function tp:setTriggerMode(mode) end
 
@@ -1051,22 +1122,33 @@ uart = {}
 
 ---Sets the callback function to handle UART events. To unregister the callback, provide only the "data" parameter.
 ---@param id? integer uart id, default value is uart num of the console.
----@param method string
+---@param method string data | error
 ---|' "data"' #"data", data has been received on the UART.
 ---|' "error"' #error occurred on the UART.
----@param number_end_char? number Only for event data.
+---@param number_or_endChar? number Only for event data.
 -- - if pass in a number *n* < 255, the callback will called when *n* chars are received.
 -- - if *n* = 0, will receive every char in buffer.
 -- - if pass in a one char string "c", the callback will called when "c" is encounterd, or max *n* = 255 received.
----@param callback? function #
+---@param callback? function #function for event
 ---|' function(data) end' #for event "data"
 ---|' function(err) end' #for event "error" `err` could be one of "out_of_memory", "break", "rx_error".
----@param run_input? integer #
+---@param run_input? integer 0 or 1. Only for "data" event on console uart.
 ---|' 0' #input from UART will not go into Lua interpreter, can accept binary data.
 ---|' 1' #input from UART will go into Lua interpreter, and run.
 -- `run_input` Only for "data" event on console uart.
 ---@return nil
-function uart.on(id, method, number_end_char, callback, run_input) end
+function uart.on(id, method, number_or_endChar, callback, run_input) end
+
+---@class UartCfg
+---@field tx integer
+---@field rx integer
+---@field cts integer
+---@field rts integer
+---@field tx_inverse boolean
+---@field rx_inverse boolean
+---@field cts_inverse boolean
+---@field rts_inverse boolean
+---@field flow_control integer
 
 ---(Re-)configures the communication parameters of the UART.
 ---@param id integer uart id
@@ -1074,7 +1156,7 @@ function uart.on(id, method, number_end_char, callback, run_input) end
 ---@param databits integer|' 8'|' 7'|' 6'|' 5' one of 5, 6, 7, 8
 ---@param parity integer|' uart.PARITY_NONE'|' uart.PARITY_ODD'|' uart.PARITY_EVEN' none | odd | even
 ---@param stopbits integer|' uart.STOPBITS_1'|' uart.STOPBITS_1_5'|' uart.STOPBITS_2' 1 | 1.5 | 2
----@param echo_or_pins integer|table for console uart, this should be a int. if 0, disable echo, otherwise enable echo; for others, this is a table:
+---@param echo_or_pins integer|UartCfg for *console uart*, this should be a int. if 0, disable echo, otherwise enable echo; for others, this is a table:
 --**tx** int. TX pin. Required
 --**rx** int. RX pin. Required
 --**cts** in. CTS pin. Optional
@@ -1107,7 +1189,7 @@ function uart.stop(id) end
 
 ---Set UART controllers communication mode
 ---@param id integer uart id
----@param mode integer
+---@param mode integer #value should be one of
 ---|>' uart.MODE_UART' #default UART mode, is set after uart.setup() call
 ---|' uart.MODE_RS485_COLLISION_DETECT' #receiver must be always enabled, transmitter is automatically switched using RTS pin, collision is detected by UART hardware (note: no event is generated on collision, limitation of esp-idf)
 ---|' uart.MODE_RS485_APP_CONTROL' #receiver/transmitter control is left to the application
@@ -1116,9 +1198,14 @@ function uart.stop(id) end
 ---@return nil
 function uart.setmode(id, mode) end
 
+---Wait for any data currently in the UART transmit buffers to be written out. It can be useful to call this immediately before a call to `node.sleep()` because otherwise data might not get written until after wakeup.
+---@param id number uart id
+---@return nil
+function uart.txflush(id) end
+
 ---Configure the light sleep wakeup threshold. This is the number of positive edges that must be seen on the UART RX pin before a light sleep wakeup will be triggered.
 ---@param id integer uart id
----@param val any the new value
+---@param val number the new value. The minimum value is 3. The default value is undefined.
 ---@return nil
 function uart.wakeup(id, val) end
 
@@ -1402,27 +1489,47 @@ function ucgDispObj:undoRotate() end
 function ucgDispObj:undoScale() end
 
 --*** WIFI ***
+---@class wifi
+---@field sta function
+---@field ap function
+---@field AUTH_OPEN integer
+---@field AUTH_WPA_PSK integer
+---@field AUTH_WPA2_PSK integer
+---@field AUTH_WPA_WPA2_PSK integer
+---@field HT20 integer
+---@field HT40_ABOVE integer
+---@field HT40_BELOW integer
+---@field STATION integer
+---@field SOFTAP integer
+---@field STATIONAP integer
+---@field NULLMODE integer
 wifi = {}
 
 ---Gets the current WiFi channel.
 ---@return integer #current WiFi channel (primary channel)
----@return integer #HT20/HT40 information (secondary channel). One of the constants: wifi.HT20, wifi.HT40_ABOVE, wifi.HT40_BELOW
+---@return integer #HT20/HT40 information (secondary channel). One of the constants:
+-- - wifi.HT20,
+-- - wifi.HT40_ABOVE,
+-- - wifi.HT40_BELOW
 function wifi.getchannel() end
 
 ---Gets WiFi operation mode.
----@return integer #The WiFi mode, as one of the wifi.STATION, wifi.SOFTAP, wifi.STATIONAP or wifi.NULLMODE constants.
+---@return integer #The WiFi mode, as one of the constants:
+-- - wifi.STATION
+-- - wifi.SOFTAP
+-- - wifi.STATIONAP
+-- - wifi.NULLMODE
 function wifi.getmode() end
 
 ---Configures the WiFi mode to use.
----@param mode integer
+---@param mode integer station | softap | stationap | nullmode
 ---|'wifi.STATION' #for when the device is connected to a WiFi router.
 ---|'wifi.SOFTAP' #for when the device is acting only as an access point.
 ---|'wifi.STATIONAP' #is the combination of wifi.STATION and wifi.SOFTAP
 ---|'wifi.NULLMODE' #disables the WiFi interface(s).
----@param save? boolean
+---@param save? boolean choose whether or not to save wifi mode to flash
 ---|>' true' #WiFi mode configuration will be retained through power cycle.
 ---|' false' #WiFi mode configuration will not be retained through power cycle.
--- choose whether or not to save wifi mode to flash
 ---@return any #current mode after setup
 function wifi.mode(mode, save) end
 
@@ -1434,8 +1541,14 @@ function wifi.start() end
 ---@return nil
 function wifi.stop() end
 
+---@class StaConfig32
+---@field ssid string
+---@field pwd string
+---@field auto boolean
+---@field bssid string
+
 ---Sets the WiFi station configuration. The WiFi mode must be set to *wifi.STATION* or *wifi.STATIONAP* before this function can be used.
----@param station_config table table containing configuration data for station
+---@param station_config StaConfig32 table containing configuration data for station
 --**ssid** string which is less than 32 bytes.
 --**pwd** string which is 8-64 or 0 bytes. Empty string indicates an open WiFi access point.
 --**auto** defaults to true
@@ -1448,10 +1561,9 @@ function wifi.stop() end
 -- "AC-1D-1C-B1-0B-22"
 -- "DE AD BE EF 7A C0"
 -- "AcDc0123c0DE"
----@param save boolean
+---@param save boolean Save station configuration to flash.
 ---|' true' #configuration will be retained through power cycle.
 ---|>' false' #configuration will not be retained through power cycle.
--- Save station configuration to flash.
 ---@return nil
 function wifi.sta.config(station_config, save) end
 
@@ -1470,21 +1582,21 @@ function wifi.sta.disconnect() end
 --`"start"`: no additional info
 --`"stop"`: no additional info
 --`"connected"`: information about network/AP that was connected to:
---**ssid**: the SSID of the network
---**bssid**: the BSSID of the AP
---**channel**: the primary channel of the network
---**auth** authentication method, one of wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK (default), wifi.WPA_WPA2_PSK
+-- - **ssid**: the SSID of the network
+-- - **bssid**: the BSSID of the AP
+-- - **channel**: the primary channel of the network
+-- - **auth** authentication method, one of wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK (default), wifi.WPA_WPA2_PSK
 --`"disconnected"`: information about the network/AP that was disconnected from:
---**ssid**: the SSID of the network
---**bssid**: the BSSID of the AP
---**reason**: an integer code for the reason (see table below for mapping)
+-- - **ssid**: the SSID of the network
+-- - **bssid**: the BSSID of the AP
+-- - **reason**: an integer code for the reason (see table below for mapping)
 --`"authmode_changed"`: authentication mode information:
---**old_mode**: the previous auth mode used
---**new_mode**: the new auth mode used
+-- - **old_mode**: the previous auth mode used
+-- - **new_mode**: the new auth mode used
 --`"got_ip"`: IP network information:
---**ip**: the IP address assigned
---**netmask**: the IP netmask
---**gw**: the gateway ("0.0.0.0" if no gateway)
+-- - **ip**: the IP address assigned
+-- - **netmask**: the IP netmask
+-- - **gw**: the gateway ("0.0.0.0" if no gateway)
 ---@return nil
 function wifi.sta.on(event, callback) end
 
@@ -1492,8 +1604,14 @@ function wifi.sta.on(event, callback) end
 ---@return string
 function wifi.sta.getmac() end
 
+---@class ScanCfg
+---@field ssid string
+---@field bssid string
+---@field channel integer
+---@field hidden integer
+
 ---Scan for available networks.
----@param cfg table table that contains scan configuration:
+---@param cfg ScanCfg table that contains scan configuration:
 ---**ssid** SSID == `nil`, don't filter SSID
 ---**bssid** BSSID == `nil`, don't filter BSSID
 ---**channel** channel == 0, scan all channels, otherwise scan set channel (default is 0)
@@ -1508,8 +1626,14 @@ function wifi.sta.getmac() end
 ---@return nil
 function wifi.sta.scan(cfg, callback) end
 
+---@class Setip32
+---@field ip string
+---@field netmask string
+---@field gateway string
+---@field dns string
+
 ---Sets IP address, netmask, gateway, dns address in station mode.
----@param cfg table cfg table to hold configuration:
+---@param cfg Setip32 table to hold configuration:
 --**ip** device ip address.
 --**netmask** network netmask.
 --**gateway** gateway address.
@@ -1522,8 +1646,17 @@ function wifi.sta.setip(cfg) end
 ---@return boolean
 function wifi.sta.sethostname(hostname) end
 
+---@class APconfig
+---@field ssid string
+---@field pwd string
+---@field auth integer
+---@field channel integer
+---@field hidden boolean
+---@field max integer
+---@field beacon integer
+
 ---Configures the AP. The WiFi mode must be set to wifi.SOFTAP or wifi.STATIONAP before this function can be used.
----@param cfg table table to hold configuration:
+---@param cfg APconfig table to hold configuration:
 --**ssid** SSID chars 1-32
 --**pwd** password chars 8-64
 --**auth** authentication method, one of *wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK* (default), *wifi.AUTH_WPA_WPA2_PSK*
@@ -1531,10 +1664,9 @@ function wifi.sta.sethostname(hostname) end
 --**hidden** false = not hidden, true = hidden, default = false
 --**max** maximum number of connections 1-4 default=4
 --**beacon** beacon interval time in range 100-60000, default = 100
----@param save boolean
+---@param save boolean save configuration to flash.
 ---|>' true' #configuration will be retained through power cycle.
 ---|' false' #configuration will not be retained through power cycle.
--- save configuration to flash.
 ---@return nil
 function wifi.ap.config(cfg, save) end
 
@@ -1560,7 +1692,7 @@ function wifi.ap.on(event, callback) end
 function wifi.ap.getmac() end
 
 ---Sets IP address, netmask, gateway, dns address in AccessPoint mode.
----@param cfg table table to hold configuration:
+---@param cfg Setip32 table to hold configuration:
 --**ip** device ip address.
 --**netmask** network netmask.
 --**gateway** gateway address.
@@ -1579,12 +1711,16 @@ ws2812 = {}
 ---@class ws2812
 local buffer =  {}
 
+---@class WS2812write
+---@field pin integer
+---@field data any
+
 ---Send data to up to 8 led strip using its native format which is generally Green,Red,Blue for RGB strips and Green,Red,Blue,White for RGBW strips.
----@param tbl table Variable number of tables, each describing a single strip. Required elements are:
---**pin** IO index, see GPIO Overview
+---@param tbl WS2812write Variable number of tables, each describing a single strip. Required elements are:
+--**pin** IO index
 --**data** payload to be sent to one or more WS2812 like leds through GPIO2. Payload type could be:
---*string* representing bytes to send
---*ws2812.buffer* see Buffer module
+-- - *string* representing bytes to send
+-- - *ws2812.buffer* see Buffer module
 ---@return nil
 function ws2812.write(tbl, ...) end
 
@@ -1645,7 +1781,7 @@ function buffer:fade(value, direction) end
 
 ---Shift the content of (a piece of) the buffer in positive or negative direction.
 ---@param value number number of pixels by which to rotate the buffer. Positive values rotate forwards, negative values backwards.
----@param mode? integer
+---@param mode? integer is the shift mode to use. logical | circular
 ---|>' ws2812.SHIFT_LOGICAL' #the freed pixels are set to 0 (off).
 ---|' ws2812.SHIFT_CIRCULAR' #the buffer is treated like a ring buffer, inserting the pixels falling out on one end again on the other end.
 ---@param i? integer is the first offset in the buffer to be affected. Negative values are permitted and count backwards from the end. Default is 1.
