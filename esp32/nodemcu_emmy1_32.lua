@@ -9,7 +9,7 @@ function adc.setwidth(adc_number, bits) end
 
 ---Configuration ADC1 capture attenuation of channels.
 ---@param adc_number integer|'adc.ADC1' Only adc.ADC1 now
----@param channel integer
+---@param channel integer When using adc.ADC1: 0 to 7
 ---|' 0' #GPIO36
 ---|' 1' #GPIO37
 ---|' 2' #GPIO38
@@ -18,7 +18,7 @@ function adc.setwidth(adc_number, bits) end
 ---|' 5' #GPIO33
 ---|' 6' #GPIO34
 ---|' 7' #GPIO35
----@param atten number
+---@param atten number One of following constants
 ---|' adc.ATTEN_0db' #Vinp will be reduced to about 1/1 (1.1V when VDD_A=3.3V)
 ---|' adc.ATTEN_2_5db' #Vinp will be reduced to about 1/1.34 (1.5V when VDD_A=3.3V)
 ---|' adc.ATTEN_6db' #Vinp will be reduced to about 1/2 (2.2V when VDD_A=3.3V)
@@ -140,8 +140,18 @@ function bthci.adv.enable(onoff, callback) end
 ---@return nil
 function bthci.adv.setdata(advbytes, callback) end
 
+---@class BthciSet1
+---@field interval_min number
+---@field interval_max number
+---@field type integer
+---@field own_addr_type number
+---@field peer_addr_type number
+---@field peer_addr number
+---@field channel_map number
+---@field filter_policy number
+
 ---Configures advertisement parameters.
----@param paramtable table a table with zero or more of the following fields:
+---@param paramtable BthciSet1 a table with zero or more of the following fields:
 --**interval_min** value in units of 0.625ms. Default 0x0400 (0.64s).
 --**interval_max** value in units of 0.625ms. Default 0x0800 (1.28s).
 --**type** advertising type, one of following constants:
@@ -165,8 +175,15 @@ function bthci.adv.setparams(paramtable, callback) end
 ---@return nil
 function bthci.scan.enable(onoff, callback) end
 
+---@class BthciSet2
+---@field mode number
+---@field interval number
+---@field window number
+---@field own_addr_type number
+---@field filter_policy number
+
 ---Configures scan parameters.
----@param paramstable table a table with zero or more of the following fields:
+---@param paramstable BthciSet2 a table with zero or more of the following fields:
 --**mode** scanning mode, 0 for passive, 1 for active. Default 0.
 --**interval** scanning interval in units of 0.625ms. Default 0x0010.
 --**window** length of scanning window in units of 0.625ms. Default 0x0010.
@@ -186,14 +203,22 @@ function bthci.scan.on(event, callback) end
 can = {}
 
 ---Send a frame.
----@param format integer|'can.STANDARD_FRAME'|'can.EXTENDED_FRAME'
+---@param format integer|'can.STANDARD_FRAME'|'can.EXTENDED_FRAME' frame standart | extended
 ---@param msg_id any msg_id CAN Message ID
 ---@param data any data CAN data, up to 8 bytes
 ---@return nil
 function can.send(format, msg_id, data) end
 
+---@class CanSetup
+---@field speed number
+---@field tx number
+---@field rx number
+---@field dual_filter number
+---@field code number
+---@field mask number
+
 ---Configuration CAN controller.
----@param tbl table config table
+---@param tbl CanSetup config table
 --**speed** kbps. One of following value: 1000, 800, 500, 250, 100.
 --**tx** Pin num for TX.
 --**rx** Pin num for RX.
@@ -259,7 +284,7 @@ function dac.disable(channel) end
 function dac.enable(channel) end
 
 ---Sets the output value of the DAC.
----@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2' DAC channel
+---@param channel integer|'dac.CHANNEL_1'|'dac.CHANNEL_2' DAC channel 1 | 2
 ---@param value number output value
 ---@return nil
 function dac.write(channel, value) end
@@ -309,6 +334,14 @@ function encoder.toHex(binary) end
 function encoder.fromHex(hexstr) end
 
 --*** ETH ***
+---@class eth
+---@field CLOCK_GPIO0_IN integer
+---@field CLOCK_GPIO0_OUT integer
+---@field CLOCK_GPIO16_OUT integer
+---@field CLOCK_GPIO17_OUT integer
+---@field PHY_IP101 integer
+---@field PHY_LAN8720 integer
+---@field PHY_TLK110 integer
 eth = {}
 
 ---Get MAC address.
@@ -319,8 +352,16 @@ function eth.get_mac() end
 ---@return any #Connection speed in Mbit/s, or error if not connected. - 10 - 100
 function eth.get_speed() end
 
+---@class EthInit
+---@field addr integer
+---@field clock_mode integer
+---@field mdc integer
+---@field mdio integer
+---@field phy integer
+---@field power integer
+
 ---Initialize the PHY chip and set up its tcpip adapter.
----@param cfg table table containing configuration data. All entries are mandatory:
+---@param cfg EthInit table containing configuration data. All entries are mandatory:
 --**addr** PHY address, 0 to 31
 --**clock_mode** external/internal clock mode selection, one of
 -- - eth.CLOCK_GPIO0_IN
@@ -399,14 +440,14 @@ function file.on(event, callback) end
 
 ---Opens a file for access, potentially creating it (for write modes). When done with the file, it must be closed using `file.close()`.
 ---@param filename string|'""' #file to be opened, directories are not supported
----@param mode string
+---@param mode string mode
 ---|>' "r"' # read mode
 ---| ' "w"' # write mode
 ---| ' "a"' # append mode
 ---| ' "r+"' # update mode, all previous data is preserved
 ---| ' "w+"' # update mode, all previous data is erased
 ---| ' "a+"' # append update mode, previous data is preserved, writing is only allowed at the end of file
----@return file #file object if file opened ok. nil if file not opened, or not exists (read modes).
+---@return file #file object if file opened ok. `nil` if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
 ---Remove a file from the file system. The file must not be currently open.
@@ -497,10 +538,24 @@ function file.writeline(str) end
 function fObj:writeline(str) end
 
 --*** GPIO ***
+---@class gpio
+---@field IN integer
+---@field OUT integer
+---@field IN_OUT integer
+---@field FLOATING  integer
+---@field PULL_UP integer
+---@field PULL_DOWN integer
+---@field PULL_UP_DOWN integer
 gpio = {}
 
+---@class GpioConfig
+---@field gpio integer|table
+---@field dir integer
+---@field opendrain integer
+---@field pull integer
+
 ---Configure GPIO mode for one or more pins.
----@param tbl table List of configuration tables:
+---@param tbl GpioConfig List of configuration tables:
 ---**gpio** one or more (given as list) pins,
 ---**dir** direction, one of
 -- - gpio.IN
@@ -512,8 +567,9 @@ gpio = {}
 -- - gpio.PULL_UP -- enables pull-up and disables pull-down
 -- - gpio.PULL_DOWN -- enables pull-down and disables pull-up
 -- - gpio.PULL_UP_DOWN -- enables both pull-up and -down
+---@vararg GpioConfig
 ---@return nil
-function gpio.config(tbl) end
+function gpio.config(tbl, ...) end
 
 ---Read digital GPIO pin value.
 ---@param pin integer pin to read,
@@ -522,7 +578,7 @@ function gpio.read(pin) end
 
 ---Set the drive strength of a given GPIO pin. The higher the drive strength, the more current can be sourced/sunk from the pin. The exact maximum depends on the power domain of the pin and how much current other pins in that domain are consuming.
 ---@param pin integer a valid GPIO pin number.
----@param strength number
+---@param strength number the drive strength to set, one of
 ---|' gpio.DRIVE_0' #weakest drive strength
 ---|' gpio.DRIVE_1' #stronger drive strength
 ---|>' gpio.DRIVE_2' #default drive strength
@@ -533,7 +589,7 @@ function gpio.set_drive(pin, strength) end
 
 ---Establish or clear a callback function to run on interrupt for a GPIO.
 ---@param pin integer GPIO
----@param type? number
+---@param type? number trigger type
 ---|' gpio.INTR_DISABLE' #or `nil` to disable interrupts on this pin (in which case `callback` is ignored and should be `nil` or omitted)
 ---|' gpio.INTR_UP' #for trigger on rising edge
 ---|' gpio.INTR_DOWN' #for trigger on falling edge
@@ -548,7 +604,7 @@ function gpio.trig(pin , type , callback) end
 
 ---Configuring wake-from-sleep-on-GPIO-level.
 ---@param pin integer GPIO
----@param level number
+---@param level number wake-up level, one of
 ---|' gpio.INTR_NONE' #to disable wake-up
 ---|' gpio.INTR_LOW'  #for wake-up on low level
 ---|' gpio.INTR_HIGH' #for wake-up on high level
@@ -567,10 +623,18 @@ http = {}
 ---@class http
 local HTTP = {}
 
+---@class CreateHTTPConn
+---@field async boolean
+---@field bufsz number
+---@field cert string
+---@field headers table
+---@field max_redirects number
+---@field timeout number
+
 ---Creates a connection object which can be configured and then executed.
 ---@param url string|'"http://"'|'"https://"' The URL to fetch, including the http:// or https:// prefix. Required.
 ---@param method? integer|' http.GET'|' http.POST'|' http.DELETE'|' http.HEAD' The HTTP method to use. Optional and may be omitted, the default is http.GET.
----@param options? table An optional table containing any or all of:
+---@param options? CreateHTTPConn An optional table containing any or all of:
 --**async** If true, the request is processed asynchronously, meaning `request()` returns immediately rather than blocking until the connection is complete and all callbacks have been made. Some other connection APIs behave differently in asynchronous mode, see their documentation for details. If not specified, the default is false, meaning requests are processed synchronously.
 --**bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
 --**cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
@@ -581,7 +645,7 @@ local HTTP = {}
 function http.createConnection(url, method, options) end
 
 ---Set a callback to be called when a certain event occurs.
----@param event string
+---@param event string connect | headers | data | complete
 ---|'"connect"' #Called when the connection is first established. Callback receives no arguments.
 ---|'"headers"' #Called once the HTTP headers from the remote end have been received. Callback is called as callback(status_code, headers_table).
 ---|'"data"' #Can be called multiple times, each time more (non-headers) data is received. Callback is called as callback(status_code, data).
@@ -595,7 +659,7 @@ function HTTP:on(event, callback) end
 function HTTP:request() end
 
 ---Sets the connection method.
----@param method? integer|'http.GET'|'http.POST'|'http.DELETE'|'http.HEAD' method one of
+---@param method? integer|'http.GET'|'http.POST'|'http.DELETE'|'http.HEAD' one of
 ---@return nil
 function HTTP:setmethod(method) end
 
@@ -654,10 +718,10 @@ i2c = {}
 ---Perform (SW) or enqueue (HWx) an I²C address operation, defining data transfer direction for the next operation (read or write).
 ---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
 ---@param device_addr number I²C device address
----@param direction integer
+---@param direction integer transmitter | receiver
 ---|' i2c.TRANSMITTER' #for writing mode
 ---|' i2c.RECEIVER' #for reading mode
----@param ack_check_en? boolean
+---@param ack_check_en? boolean check for slave ACK
 ---|>' true' #enable check for slave ACK
 ---|' false' #disable check for slave ACK
 ---@return boolean #>
@@ -677,7 +741,7 @@ function i2c.read(id, len) end
 ---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' interface id
 ---@param pinSDA integer IO index
 ---@param pinSCL integer IO index
----@param speed integer #bit rate in Hz, positive integer
+---@param speed integer bit rate in Hz, positive integer
 ---|' i2c.SLOW' #for 100000 Hz, max for `i2c.SW`
 ---|' i2c.FAST' #for 400000 Hz
 ---|' i2c.FASTPLUS' #for 1000000 Hz
@@ -722,9 +786,17 @@ function i2c.write(id, dataN, ack_check_en) end
 ---@return nil
 function i2c.slave.on(id, event, callback) end
 
+---@class I2cSlaveConfig
+---@field sda integer
+---@field scl integer
+---@field addr number
+-- @field 10bit boolean
+---@field rxbuf_len integer
+---@field txbuf_len integer
+
 ---Initialize the I²C interface for slave mode.
 ---@param id integer|'i2c.HW0'|'i2c.HW1' interface id,
----@param slave_config table table containing slave configuration information
+---@param slave_config I2cSlaveConfig table containing slave configuration information
 --**sda** IO index
 --**scl** IO index
 --**addr** slave address (7bit or 10bit)
@@ -742,6 +814,29 @@ function i2c.slave.setup(id, slave_config) end
 function i2c.slave.send(id, data1, ...) end
 
 --*** I2S ***
+---@class i2s
+---@field MODE_MASTER number
+---@field MODE_SLAVE number
+---@field MODE_TX number
+---@field MODE_RX number
+---@field MODE_DAC_BUILT_IN number
+---@field MODE_ADC_BUILT_IN number
+---@field MODE_PDM number
+---@field CHANNEL_RIGHT_LEFT number
+---@field CHANNEL_ALL_LEFT number
+---@field CHANNEL_ONLY_LEFT number
+---@field CHANNEL_ALL_RIGHT number
+---@field CHANNEL_ONLY_RIGHT number
+---@field FORMAT_I2S number
+---@field FORMAT_I2S_MSB number
+---@field FORMAT_I2S_LSB number
+---@field FORMAT_PCM number
+---@field FORMAT_PCM_SHORT number
+---@field FORMAT_PCM_LONG number
+---@field DAC_CHANNEL_DISABLE number
+---@field DAC_CHANNEL_RIGHT number
+---@field DAC_CHANNEL_LEFT number
+---@field DAC_CHANNEL_BOTH number
 i2s ={}
 
 ---Mute the I2S channel. The hardware buffer is instantly filled with silence.
@@ -756,9 +851,24 @@ function i2s.mute(i2s_num) end
 ---@return any #Data read from data-in pin. If data is not ready in wait_ms millisecond, less than size bytes can be returned. An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.read(i2s_num, size, wait_ms) end
 
+---@class I2sCfg
+---@field mode number
+---@field rate number
+---@field bits number
+---@field channel number
+---@field format number
+---@field buffer_count number
+---@field buffer_len number
+---@field bck_pin number
+---@field ws_pin number
+---@field data_out_pin number
+---@field data_in_pin number
+---@field dac_mode number
+---@field adc1_channel number
+
 ---Configuration and start I2S bus.
 ---@param i2s_num integer|'0'|'1' I2S peripheral
----@param cfg table table containing configuration data:
+---@param cfg I2sCfg table containing configuration data:
 --**mode** I2S work mode. Optional, defaults to i2s.MODE_MASTER + i2s.MODE_TX when omitted.
 -- - i2s.MODE_MASTER
 -- - i2s.MODE_SLAVE
@@ -818,8 +928,17 @@ ledc = {}
 ---@class ledc
 local channel = {}
 
+---@class LedcNew
+---@field gpio integer
+---@field bits integer
+---@field mode integer
+---@field timer integer
+---@field channel integer
+---@field frequency integer
+---@field duty integer
+
 ---Configures a PIN to be controlled by the LEDC system.
----@param tbl table List of configuration tables:
+---@param tbl LedcNew List of configuration tables:
 --**gpio** one or more (given as list) pins, see GPIO Overview
 --**bits** Channel duty depth. Defaults to ledc.TIMER_13_BIT. Otherwise one of
 -- - ledc.TIMER_10_BIT  ...   ledc.TIMER_15_BIT
@@ -1082,7 +1201,7 @@ function UDPSOCKET:close() end
 function UDPSOCKET:listen(port, ip) end
 
 ---Register callback functions for specific events.
----@param event string|'"receive"'|'"sent"'|'"dns"' event
+---@param event string|'"receive"'|'"sent"'|'"dns"' receive | sent | dns
 ---@param callback nil|function|' function(net.socket, string) end)' `function(net.socket, string?)`. Can be nil to remove callback.
 --The first parameter of callback is the socket.
 --The seconf parameter:
@@ -1131,18 +1250,18 @@ node = {}
 
 ---Returns the boot reason and extended reset info.
 ---@return integer rawcode The first value returned is the raw code, not the new "reset info" code which was introduced in recent SDKs. Values are:
---1, power-on
---2, reset (software?)
---3, hardware reset via reset pin
---4, WDT reset (watchdog timeout)
+-- - 1, power-on
+-- - 2, reset (software?)
+-- - 3, hardware reset via reset pin
+-- - 4, WDT reset (watchdog timeout)
 ---@return integer reason The second value returned is the extended reset cause. Values are:
---0, power-on
---1, hardware watchdog reset
---2, exception reset
---3, software watchdog reset
---4, software restart
---5, wake from deep sleep
---6, external reset
+-- - 0, power-on
+-- - 1, hardware watchdog reset
+-- - 2, exception reset
+-- - 3, software watchdog reset
+-- - 4, software restart
+-- - 5, wake from deep sleep
+-- - 6, external reset
 --In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information. These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
 function node.bootreason() end
 
@@ -1155,10 +1274,19 @@ function node.chipid() end
 ---@return nil
 function node.compile(filename) end
 
+---@class DsleepCfg
+---@field secs number
+---@field us number
+---@field gpio number|table
+---@field level number
+---@field isolate table
+---@field pull boolean
+---@field touch boolean
+
 ---Enters deep sleep mode.
 ---@overload fun(options:number)
 -- For compatibility, a `number` parameter usecs can be supplied instead of an options table, which is equivalent to `node.dsleep({us = usecs})`.
----@param options table a table containing some of:
+---@param options DsleepCfg a table containing some of:
 --**secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the us parameter.
 --**us**, a number of microseconds to sleep. If both secs and us are provided, the values are combined.
 --**gpio**, a single GPIO number or a list of GPIOs. These pins must all be RTC-capable otherwise an error is raised.
@@ -1194,7 +1322,7 @@ function node.input(str) end
 
 ---Redirects the Lua interpreter output to a callback function. Optionally also prints it to the serial console.
 ---@param callback function `output_fn(str)` a function accept every output as str, and can send the output to a socket (or maybe a file). `nil` to unregister the previous function.
----@param serial_output integer
+---@param serial_output integer 0 | 1
 ---|>' 1' #output also sent out the serial port.
 ---|' 0' #no serial output.
 ---@return nil
@@ -1217,8 +1345,16 @@ function node.restore() end
 ---@return number #target CPU frequency
 function node.setcpufreq(speed) end
 
+---@class SleepCfg
+---@field secs number
+---@field us number
+---@field gpio boolean
+---@field touch boolean
+---@field uart integer
+---@field ulp boolean
+
 ---Enters light sleep mode, which saves power without losing state. The state of the CPU and peripherals is preserved during light sleep and is resumed once the processor wakes up. When the processor wakes back up depends on the supplied options.
----@param options table a table containing some of:
+---@param options SleepCfg a table containing some of:
 --**secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the **us** parameter.
 --**us**, a number of microseconds to sleep. If both **secs** and **us** are provided, the values are combined.
 --**gpio**, a boolean, whether to allow wakeup by GPIOs. Default is `false` if not specified.
@@ -1234,7 +1370,7 @@ function node.setcpufreq(speed) end
 function node.sleep(options) end
 
 ---Controls the amount of debug information kept during node.compile(), and allows removal of debug information from already compiled Lua code.
----@param level? number
+---@param level? number 1 | 2 | 3
 ---|'1' #don't discard debug info
 ---|'2' #discard Local and Upvalue debug info
 ---|'3' #discard Local, Upvalue and line-number debug info
@@ -1243,7 +1379,7 @@ function node.sleep(options) end
 function node.stripdebug(level, callback) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
----@param enabled boolean
+---@param enabled boolean >
 ---|'true' #to enable printing
 ---|>'false' #to disable printing
 function node.osprint(enabled) end
@@ -1254,7 +1390,7 @@ function node.osprint(enabled) end
 function node.uptime() end
 
 ---Sets the Emergency Garbage Collector mode.
----@param mode integer
+---@param mode integer >
 ---|'node.egc.NOT_ACTIVE' #EGC inactive, no collection cycle will be forced in low memory situations
 ---|'node.egc.ON_ALLOC_FAILURE' #Try to allocate a new block of memory, and run the garbage collector if the allocation fails.
 ---|'node.egc.ON_MEM_LIMIT' #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit.
@@ -1264,7 +1400,7 @@ function node.uptime() end
 function node.egc.setmode(mode, level) end
 
 ---Enable a Lua callback or task to post another task request.
----@param task_priority? number
+---@param task_priority? number 0 | 1 | 2 (optional)
 ---|'node.task.LOW_PRIORITY' #= 0
 ---|>'node.task.MEDIUM_PRIORITY' #= 1
 ---|'node.task.HIGH_PRIORITY''0' #= 2
