@@ -1577,7 +1577,7 @@ function wifi.sta.disconnect() end
 
 ---Registers callbacks for WiFi station status events.
 ---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"authmode_changed"'|'"got_ip"' WiFi station event you would like to set a callback for:
----@param callback function|' function(event, info) end' callback `function(event, info)` to perform when event occurs, or `nil` to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
+---@param callback function|' function(event, info) end' `function(event, info)` to perform when event occurs, or `nil` to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
 -- Event information provided for each event is as follows:
 --`"start"`: no additional info
 --`"stop"`: no additional info

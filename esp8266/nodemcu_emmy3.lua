@@ -20,10 +20,25 @@ local liquidcrystal = lc_meta()
 
 ---@class backend_obj
 
+---@class i2c4bitCfg
+---@field sda integer
+---@field scl integer
+---@field busid integer
+---@field busad integer
+---@field speed integer
+---@field rs integer
+---@field rw integer
+---@field en integer
+---@field bl integer
+---@field d4 integer
+---@field d5 integer
+---@field d6 integer
+---@field d7 integer
+
 --- Loading I²C backend module returns initialization closure. It configures I²C backend and returns backend object.
----@param tbl table
---**sda**: I²C data pin. If set to nil, I²C bus initialization step via i2c.setup will be skipped
---**scl**: I²C clock pin. If set to nil, I²C bus initialization step via i2c.setup will be skipped
+---@param tbl i2c4bitCfg In most cases only **sda** and **scl** parameters are required
+--**sda**: I²C data pin. If set to `nil`, I²C bus initialization step via `i2c.setup` will be skipped
+--**scl**: I²C clock pin. If set to `nil`, I²C bus initialization step via `i2c.setup` will be skipped
 --**busid**: I²C bus ID. Defaults to 0
 --**busad**: chip I²C address. Defaults to 0x27 (default PCF8574 address)
 --**speed**: I²C speed. Defaults to i2c.SLOW
@@ -38,12 +53,22 @@ local liquidcrystal = lc_meta()
 ---@return backend_obj #backend object
 function i2c4bit_meta(tbl) end
 
+---@class gpio4bitCfg
+---@field rs integer
+---@field rw integer
+---@field en integer
+---@field bl integer
+---@field d4 integer
+---@field d5 integer
+---@field d6 integer
+---@field d7 integer
+
 ---Loading GPIO 4 bit backend module returns initialization closure. It configures GPIO 4 bit backend and returns backend object.
----@param tbl table
+---@param tbl gpio4bitCfg >
 --**rs**: GPIO pin connected to RS pin. Defaults to 0
---**rw**: GPIO pin connected to RW pin. If set to nil then busy, position and readChar functions will not be available. Note that RW pin must be pulled to the ground if not connected to GPIO
+--**rw**: GPIO pin connected to RW pin. If set to `nil` then busy, position and readChar functions will not be available. Note that RW pin must be pulled to the ground if not connected to GPIO
 --**en**: GPIO pin connected to EN pin. Defaults to 1
---**bl**: GPIO pin controlling backlight. It is assumed, that high level turns backlight on, low level turns backlight off. If set to nil then backlight function will not be available
+--**bl**: GPIO pin controlling backlight. It is assumed, that high level turns backlight on, low level turns backlight off. If set to `nil` then backlight function will not be available
 --**d4**: GPIO pin connected to D4 pin. Defaults to 2
 --**d5**: GPIO pin connected to D5 pin. Defaults to 3
 --**d6**: GPIO pin connected to D6 pin. Defaults to 4
@@ -51,12 +76,27 @@ function i2c4bit_meta(tbl) end
 ---@return backend_obj #backend object
 function gpio4bit_meta(tbl) end
 
+---@class gpio8bitCfg
+---@field rs integer
+---@field rw integer
+---@field he integer
+---@field en integer
+---@field bl integer
+---@field d0 integer
+---@field d1 integer
+---@field d2 integer
+---@field d3 integer
+---@field d4 integer
+---@field d5 integer
+---@field d6 integer
+---@field d7 integer
+
 ---Loading GPIO 8 bit backend module returns initialization closure. It configures GPIO 8 bit backend and returns backend object.
----@param tbl table
+---@param tbl gpio8bitCfg >
 --**rs**: GPIO pin connected to RS pin. Defaults to 0
---**rw**: GPIO pin connected to RW pin. If set to nil then busy, position and readChar functions will not be available. Note that RW pin must be pulled to the ground if not connected to GPIO
+--**rw**: GPIO pin connected to RW pin. If set to `nil` then busy, position and readChar functions will not be available. Note that RW pin must be pulled to the ground if not connected to GPIO
 --**en**: GPIO pin connected to EN pin. Defaults to 1
---**bl**: GPIO pin controlling backlight. It is assumed, that high level turns backlight on, low level turns backlight off. If set to nil then backlight function will not be available
+--**bl**: GPIO pin controlling backlight. It is assumed, that high level turns backlight on, low level turns backlight off. If set to `nil` then backlight function will not be available
 --**d0**: GPIO pin connected to D0 pin. Defaults to 2
 --**d1**: GPIO pin connected to D1 pin. Defaults to 3
 --**d2**: GPIO pin connected to D2 pin. Defaults to 4
@@ -504,7 +544,7 @@ function u8g2DispObj:setFlipMode(is_enable) end
 function u8g2DispObj:setFont(font) end
 
 ---Set the drawing direction of all strings or glyphs.
----@param dir integer #Writing direction/string rotation.
+---@param dir integer Writing direction/string rotation.
 ---|'0' #0 degree   Left to right
 ---|'1' #90 degree  Top to down
 ---|'2' #180 degree Right to left
@@ -768,12 +808,12 @@ function ucgDispObj:setClipRange(x, y, w, h) end
 function ucgDispObj:setColor(idx, r, g, b) end
 
 ---Define a ucg font for the glyph and string drawing functions. They are available as `ucg.<font_name>` in Lua.
----@param font integer|'ucg.font_7x13B_tr'|'ucg.font_helvB08_hr'|'ucg.font_helvB10_hr'|'ucg.font_helvB12_hr'|'ucg.font_helvB18_hr'|'ucg.font_ncenB24_tr'|'ucg.font_ncenR12_tr'|'ucg.font_ncenR14_hr'constant to identify pre-compiled font
+---@param font integer|'ucg.font_7x13B_tr'|'ucg.font_helvB08_hr'|'ucg.font_helvB10_hr'|'ucg.font_helvB12_hr'|'ucg.font_helvB18_hr'|'ucg.font_ncenB24_tr'|'ucg.font_ncenR12_tr'|'ucg.font_ncenR14_hr' constant to identify pre-compiled font
 ---@return nil
 function ucgDispObj:setFont(font) end
 
 ---Define the text output mode.
----@param fontmode integer|'ucg.FONT_MODE_TRANSPARENT'|'ucg.FONT_MODE_SOLID'
+---@param fontmode integer|'ucg.FONT_MODE_TRANSPARENT'|'ucg.FONT_MODE_SOLID' fontmode
 ---@return number #0, if the init procedure fails.
 function ucgDispObj:setFontMode(fontmode) end
 
@@ -851,8 +891,15 @@ function fifo:queue(a,k) end
 --*** GOSSIP ***
 gossip = {}
 
+---@class GossipCfg
+---@field seedList integer
+---@field roundInterval integer
+---@field comPort integer
+---@field debug integer
+---@field debugOutput integer
+
 ---Sets the configuration for gossip.
----@param config table config table. The available options are:
+---@param config GossipCfg table. The available options are:
 --**seedList**: the list of seeds gossip will start with; this will be updated as new nodes are discovered. Note that it's enough for all nodes to start with the same IP in the seedList, as once they have one seed in common, the data will propagate. Default: `nil`.
 --**roundInterval**: interval in milliseconds at which gossip will pick a random node from the seed list and send a SYN request. Default: 10000 (10 seconds)
 --**comPort**: port for the listening UDP socket. Default: 5000.

@@ -276,12 +276,12 @@ function spi.send(id, data1, ...) end
 
 ---Set up the SPI configuration.
 ---@param id integer SPI ID number: 0 for SPI, 1 for HSPI
----@param mode integer|' spi.MASTER'|' spi.SLAVE'
----@param cpol integer|' spi.CPOL_LOW'|' spi.CPOL_HIGH'
----@param cpha integer|' spi.CPHA_LOW'|' spi.CPHA_HIGH'
+---@param mode integer|' spi.MASTER'|' spi.SLAVE' select master or slave mode. Slave not supported currently
+---@param cpol integer|' spi.CPOL_LOW'|' spi.CPOL_HIGH' clock polarity selection
+---@param cpha integer|' spi.CPHA_LOW'|' spi.CPHA_HIGH' clock phase selection
 ---@param databits number number of bits per data item 1 - 32
 ---@param clock_div number SPI clock divider
----@param duplex_mode? integer|'spi.HALFDUPLEX'|'spi.FULLDUPLEX'
+---@param duplex_mode? integer|'spi.HALFDUPLEX'|'spi.FULLDUPLEX' HALFDUPLEX - default when omitted
 ---@return number
 function spi.setup(id, mode, cpol, cpha, databits, clock_div, duplex_mode) end
 
@@ -540,7 +540,7 @@ function tmr.ccount() end
 ---@return tmr TimerObject timer object
 function tmr.create() end
 
----@alias tmr_m
+---@alias tmr_m integer
 ---|' tmr.ALARM_SINGLE' #a one-shot alarm (and no need to call unregister())
 ---|' tmr.ALARM_SEMI' #manually repeating alarm
 ---|' tmr.ALARM_AUTO' #automatically repeating alarm (call start() to restart)
@@ -685,9 +685,9 @@ function uart.write(id, data1, ...) end
 
 ---Report the depth, in bytes, of TX or RX hardware queues associated with the UART.
 ---@param id integer UART id (0 or 1).
----@param dir integer|' uart.DIR_RX'|' uart.DIR_TX' direction
+---@param direction integer|' uart.DIR_RX'|' uart.DIR_TX' Rx | Tx
 ---@return integer #The number of bytes in the selected FIFO.
-function uart.fifodepth(id, dir) end
+function uart.fifodepth(id, direction) end
 
 --*** ucg Module is in nodemcu-emmy3.lua ***
 
@@ -709,9 +709,12 @@ function websocket.createClient() end
 ---@return nil
 function ws:close() end
 
+---@class WsCfg
+---@field headers table
+
 ---Configures websocket client instance.
----@param params table with configuration parameters.Following keys are recognized:
---**headers** table of extra request headers affecting every request
+---@param params WsCfg with configuration parameters.Following keys are recognized:
+--**headers** - table of extra request headers affecting every request
 ---@return nil
 function ws:config(params) end
 
@@ -722,9 +725,9 @@ function ws:connect(url) end
 
 ---Registers the callback function to handle websockets events (there can be only one handler function registered per event type).
 ---@param eventName integer|'connection'|'receive'|'close' the type of websocket event to register the callback function
----@param foo function|' funtion(ws, ...) end' callback function. The function first parameter is always the **websocketclient**. Other arguments are required depending on the event type. If `nil`, any previously configured callback is unregistered.
+---@param callback function|' funtion(ws, ...) end' function. The function first parameter is always the **websocketclient**. Other arguments are required depending on the event type. If `nil`, any previously configured callback is unregistered.
 ---@return nil
-function websocket:on(eventName, foo) end
+function websocket:on(eventName, callback) end
 
 ---Sends a message through the websocket connection.
 ---@param message any the data to send.
@@ -779,7 +782,7 @@ function wifi.getmode() end
 function wifi.getphymode() end
 
 ---Configures whether or not WiFi automatically goes to sleep in *NULL_MODE*. Enabled by default.
----@param enable? boolean
+---@param enable? boolean WiFi auto sleep in NULL_MODE
 ---|>'true' #Enable WiFi auto sleep in NULL_MODE.
 ---|'false' #Disable WiFi auto sleep in NULL_MODE.
 ---@return any #sleep_enabled Current/New *NULL_MODE* sleep setting.
@@ -792,8 +795,14 @@ function wifi.nullmodesleep(enable) end
 ---@return nil
 function wifi.resume(resume_cb) end
 
+---@class SetCountry
+---@field country string
+---@field start_ch integer
+---@field end_ch integer
+---@field policy integer
+
 ---Set the current country info.
----@param country_info table This table contains the country info configuration. (If a blank table is passed to this function, default values will be configured.)
+---@param country_info SetCountry This table contains the country info configuration. (If a blank table is passed to this function, default values will be configured.)
 --**country** Country code, 2 character string containing the country code. (Default:"CN")
 --**start_ch** Starting channel (range:1-14). (Default:1)
 --**end_ch** Ending channel, must not be less than starting channel (range:1-14). (Default:13)
@@ -804,19 +813,19 @@ function wifi.resume(resume_cb) end
 function wifi.setcountry(country_info) end
 
 ---Configures the WiFi mode to use. NodeMCU can run in one of four WiFi modes.
----@param mode integer
+---@param mode integer Station | Access point (AP) | Station + AP | WiFi off
 ---|'wifi.STATION' #for when the device is connected to a WiFi router.
 ---|'wifi.SOFTAP'  #for when the device is acting only as an access point.
 ---|'wifi.STATIONAP' #is the combination of wifi.STATION and wifi.SOFTAP
 ---|'wifi.NULLMODE' #changing WiFi mode to NULL_MODE will put wifi into a low power state similar to MODEM_SLEEP, provided *wifi.nullmodesleep(false)* has not been called.
----@param save? boolean #choose whether or not to save wifi mode to flash
+---@param save? boolean choose whether or not to save wifi mode to flash
 ---|>' true' #WiFi mode configuration will be retained through power cycle.
 ---|' false' #WiFi mode configuration will not be retained through power cycle.
 ---@return integer #current mode after setup
 function wifi.setmode(mode, save) end
 
 ---Sets WiFi physical mode.
----@param mode integer
+---@param mode integer b | g | n
 ---|'wifi.PHYMODE_B' #802.11b, more range, low Transfer rate, more current draw
 ---|'wifi.PHYMODE_G' #802.11g, medium range, medium transfer rate, medium current draw
 ---|'wifi.PHYMODE_N' #802.11n, least range, fast transfer rate, least current draw (STATION ONLY)
@@ -838,8 +847,14 @@ function wifi.startsmart(type, callback) end
 ---@return nil
 function wifi.stopsmart() end
 
+---@class SuspendCfg
+---@field duration number
+---@field suspend_cb function
+---@field resume_cb function
+---@field preserve_mode boolean
+
 ---Suspend Wifi to reduce current consumption.
----@param tbl table table
+---@param tbl SuspendCfg >
 --**duration** number Suspend duration in microseconds(μs).
 --**suspend_cb?** function Callback to execute when WiFi is suspended.
 --**resume_cb?** function Callback to execute when WiFi wakes from suspension.
@@ -867,8 +882,15 @@ function wifi.sta.changeap(ap_index) end
 ---@return boolean
 function wifi.sta.clearconfig() end
 
+---@class StaStationConfig
+---@field ssid string
+---@field pwd string
+---@field auto boolean
+---@field bssid string
+---@field save boolean
+
 ---Sets the WiFi station configuration.
----@param station_config table table containing configuration data for station
+---@param station_config StaStationConfig table containing configuration data for station
 --**ssid** string which is less than 32 bytes.
 --**pwd** string which is 0-64. Empty string indicates an open WiFi access point.
 --**auto**
@@ -918,16 +940,22 @@ function wifi.sta.connect(connected_cb) end
 ---@return nil
 function wifi.sta.disconnect(disconnected_cb) end
 
+---@class StaGetap
+---@field ssid string
+---@field bssid string
+---@field channel integer
+---@field show_hidden integer
+
 ---Scans AP list as a Lua table into callback function.
----@param cfg? table table that contains scan configuration:
+---@param cfg? StaGetap table that contains scan configuration:
 --**ssid** SSID == nil, don't filter SSID
 --**bssid** BSSID == nil, don't filter BSSID
 --**channel** channel == 0, scan all channels, otherwise scan set channel (default is 0)
 --**show_hidden** show_hidden == 1, get info for router with hidden SSID (default is 0)
----@param format? integer #select output table format, defaults to 0
+---@param format? integer select output table format, defaults to 0
 -- - **0** - old format (SSID : Authmode, RSSI, BSSID, Channel), any duplicate SSIDs will be discarded
 -- - **1** - new format (BSSID : SSID, RSSI, auth mode, Channel)
----@param callback function a callback function to receive the AP table when the scan is done. This function receives a table, the key is the BSSID, the value is other info in format: **SSID, RSSID, auth mode, channel**.
+---@param callback function function to receive the AP table when the scan is done. This function receives a table, the key is the BSSID, the value is other info in format: **SSID, RSSID, auth mode, channel**.
 ---@return nil
 function wifi.sta.getap(cfg, format, callback) end
 
@@ -977,7 +1005,7 @@ function wifi.sta.getdefaultconfig(return_table) end
 function wifi.sta.gethostname() end
 
 ---Gets IP address, netmask, and gateway address in station mode.
----@return string IP_address as string, for example "192.168.0.111". Returns nil if IP = "0.0.0.0".
+---@return string IP_address as string, for example "192.168.0.111". Returns `nil` if IP = "0.0.0.0".
 ---@return string netmask
 ---@return string gateway_address
 --Returns nil if IP = "0.0.0.0".
@@ -1003,8 +1031,13 @@ function wifi.sta.setaplimit(qty) end
 ---@return boolean
 function wifi.sta.sethostname(hostname) end
 
+---@class WifiCfgTbl
+---@field ip string IP address
+---@field netmask string netmask
+---@field gateway string gateway
+
 ---Sets IP address, netmask, gateway address in station mode.
----@param cfg table table contain IP address, netmask, and gateway
+---@param cfg WifiCfgTbl table contain IP address, netmask, and gateway
 --{ ip = "192.168.0.111",
 --netmask = "255.255.255.0",
 --gateway = "192.168.0.1" }
@@ -1016,8 +1049,8 @@ function wifi.sta.setip(cfg) end
 ---@return boolean
 function wifi.sta.setmac(mac) end
 
----Configures the WiFi modem sleep type to be used while station is connected to an Access Point.
----@param type_wanted integer
+---Configures the WiFi modem sleep type to be used while station is connected to an Access Point. Does not apply to *wifi.SOFTAP*, *wifi.STATIONAP* or *wifi.NULLMODE*.
+---@param type_wanted integer none | light | modem sleep
 ---|'wifi.NONE_SLEEP' #to keep the modem on at all times
 ---|'wifi.LIGHT_SLEEP' #to allow the CPU to power down under some circumstances
 ---|'wifi.MODEM_SLEEP' #to power down the modem as much as possible
@@ -1034,8 +1067,18 @@ function wifi.sta.sleeptype(type_wanted) end
 -- - wifi.STA_GOTIP
 function wifi.sta.status() end
 
+---@class APConfig
+---@field ssid string
+---@field pwd string
+---@field auth integer
+---@field channel integer
+---@field hidden boolean
+---@field max integer
+---@field beacon integer
+---@field save boolean
+
 ---Sets SSID and password in AP mode.
----@param cfg table table to hold configuration
+---@param cfg APConfig table to hold configuration
 --**ssid** - SSID chars 1-32
 --**pwd** - password chars 8-64
 --**auth** - authentication method, one of *wifi.OPEN* (default), *wifi.WPA_PSK, wifi.WPA2_PSK, wifi.WPA_WPA2_PSK*
@@ -1110,7 +1153,7 @@ function wifi.ap.getip() end
 function wifi.ap.getmac() end
 
 ---Sets IP address, netmask and gateway address in AP mode.
----@param cfg table table contain IP address, netmask, and gateway
+---@param cfg WifiCfgTbl table contain IP address, netmask, and gateway
 --{  ip="192.168.1.1",
 --  netmask="255.255.255.0",
 --  gateway="192.168.1.1" }
@@ -1137,7 +1180,7 @@ function wifi.ap.dhcp.stop() end
 
 ---Register callbacks for WiFi event monitor.
 ---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED' WiFi event you would like to set a callback for.
----@param foo? function function(T)
+---@param callback? function function(T)
 ---@return nil
 --Callback: T: Table returned by event.
 -- - *wifi.eventmon.STA_CONNECTED* Station is connected to access point.
@@ -1169,7 +1212,7 @@ function wifi.ap.dhcp.stop() end
 -- - *wifi.eventmon.WIFI_MODE_CHANGE*: WiFi mode has changed.
 -->**old_auth_mode**: Old WiFi mode.
 -->**new_auth_mode**: New WiFi mode.
-function wifi.eventmon.register(Event, foo) end
+function wifi.eventmon.register(Event, callback) end
 
 ---Unregister callbacks for WiFi event monitor
 ---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'|'wifi.eventmon.WIFI_MODE_CHANGED' WiFi event you would like to set a callback for.
@@ -1246,9 +1289,9 @@ function wps.disable() end
 function wps.enable() end
 
 ---Start WiFi WPS function. WPS must be enabled prior calling this function.
----@param foo? function callback `function(status)` for when the WPS function ends.
+---@param callback? function `function(status)` for when the WPS function ends.
 ---@return nil
-function wps.start(foo) end
+function wps.start(callback) end
 
 --*** WS2801 ***
 ws2801 = {}
@@ -1271,7 +1314,7 @@ ws2812 = {}
 local buffer = {}
 
 ---Initialize UART1 and GPIO2, should be called once and before write(). Initialize UART0 (TXD0) too if ws2812.MODE_DUAL is set.
----@param mode? integer
+---@param mode? integer single | dual
 ---|>'ws2812.MODE_SINGLE'
 ---|'ws2812.MODE_DUAL' #you will be able to handle two strips in parallel
 ---@return nil
@@ -1279,7 +1322,7 @@ function ws2812.init(mode) end
 
 ---Send data to one or two led strip using its native format which is generally Green,Red,Blue for RGB strips and Green,Red,Blue,White for RGBW strips.
 ---@param data1 string|nil payload to be sent to one or more WS2812 like leds through GPIO2
----@param data2? string|nil payload to be sent to one or more WS2812 like leds through TXD0
+---@param data2? string|nil payload to be sent to one or more WS2812 like leds through TXD0  (ws2812.MODE_DUAL mode required)
 ---@return nil
 function ws2812.write(data1, data2) end
 
@@ -1339,8 +1382,8 @@ function buffer:power() end
 function buffer:fade(value, direction) end
 
 ---Shift the content of (a piece of) the buffer in positive or negative direction.
----@param value number  number of pixels by which to rotate the buffer. Positive values rotate forwards, negative values backwards.
----@param mode? integer
+---@param value number number of pixels by which to rotate the buffer. Positive values rotate forwards, negative values backwards.
+---@param mode? integer is the shift mode to use.
 ---|>' ws2812.SHIFT_LOGICAL' #the freed pixels are set to 0 (off).
 ---|' ws2812.SHIFT_CIRCULAR' #the buffer is treated like a ring buffer, inserting the pixels falling out on one end again on the other end
 ---@param i? integer is the first offset in the buffer to be affected. Negative values are permitted and count backwards from the end. Default is 1.
@@ -1402,7 +1445,7 @@ function ws2812_effects.set_delay(delay) end
 function ws2812_effects.get_delay() end
 
 ---Set the active effect mode.
----@param mode string|'"static"'|'"blink"'|'"gradient"'|'"gradient_rgb"'|'"random_color"'|'"rainbow"'|'"rainbow_cycle"'|'"flicker"'|'"fire"'|'"fire_soft"'|'"fire_intense"'|'"halloween"'|'"circus_combustus"'|'"larson_scanner"'|'"color_wipe"'|'"random_dot"'|'"cycle"' mode
+---@param mode string|'"static"'|'"blink"'|'"gradient"'|'"gradient_rgb"'|'"random_color"'|'"rainbow"'|'"rainbow_cycle"'|'"flicker"'|'"fire"'|'"fire_soft"'|'"fire_intense"'|'"halloween"'|'"circus_combustus"'|'"larson_scanner"'|'"color_wipe"'|'"random_dot"'|'"cycle"' is the effect mode as a string
 ---@param effect_param? integer|string is an optional effect parameter.
 ---@return nil
 function ws2812_effects.set_mode(mode, effect_param) end
@@ -1520,8 +1563,8 @@ function pixbuffer:fade(value, direction) end
 function pixbuffer:fadeI() end
 
 ---Shift the content of (a piece of) the buffer in positive or negative direction. This allows simple animation effects. A slice of the buffer can be specified by using the standard start and end offset Lua notation. Negative values count backwards from the end of the buffer.
----@param value number  number of pixels by which to rotate the buffer. Positive values rotate forwards, negative values backwards.
----@param mode? integer
+---@param value number number of pixels by which to rotate the buffer. Positive values rotate forwards, negative values backwards.
+---@param mode? integer is the shift mode to use.
 ---|>' pixbuf.SHIFT_LOGICAL' #the freed pixels are set to 0 (off).
 ---|' pixbuf.SHIFT_CIRCULAR' #the buffer is treated like a ring buffer, inserting the pixels falling out on one end again on the other end
 ---@param i? integer is the first offset in the buffer to be affected. Negative values are permitted and count backwards from the end. Default is 1.
@@ -1531,7 +1574,7 @@ function pixbuffer:shift(value, mode, i, j) end
 
 ---This implements the extraction function like string.sub. The indexes are in leds and all the same rules apply.
 ---@param i integer This is the start of the extracted data. Negative values can be used.
----@param j? integer  this is the end of the extracted data. Negative values can be used. The default is -1.
+---@param j? integer This is the end of the extracted data. Negative values can be used. The default is -1.
 ---@return pixbuffer #A buffer containing the extracted piece.
 function pixbuffer:sub(i, j) end
 
@@ -1539,7 +1582,7 @@ function pixbuffer:sub(i, j) end
 ---@param f function This is the mapping function; it is applied for each pixel to all channels of buffer1 and all channels of `buffer2`, if given. It must return a value for each channel of the output buffer, `buffer0`.
 ---@param buffer1? any The first source buffer. Defaults to `buffer0`.
 ---@param start1? integer This is the start of the mapped range of `buffer1`. Negative values can be used and will be interpreted as before the end of `buffer1`. The default is 1.
----@param end1? integer this is the end of the mapped range. Negative values can be used. The default is -1 (i.e., the end of `buffer1`).
+---@param end1? integer This is the end of the mapped range. Negative values can be used. The default is -1 (i.e., the end of `buffer1`).
 ---@param buffer2? any is a second buffer, for zip operations
 ---@param start2? integer This is the start of the mapped range within `buffer2`. Negative values can be used and will be interpreted as before the end of `buffer2`. The default is 1.
 ---@return pixbuffer buffer0 #buffer0

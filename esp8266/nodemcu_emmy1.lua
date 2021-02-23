@@ -467,9 +467,8 @@ ads1115 ={}
 local ads1x15
 
 ---Registers ADS1115 (ADS1113, ADS1114) device.
----@param I2C_ID number - always 0
----`ADDRESS` - I²C address of a device
----@param I2C_ADDR number
+---@param I2C_ID number always 0
+---@param I2C_ADDR number I²C address of a device
 ---|' ads1115.ADDR_GND'
 ---|' ads1115.ADDR_VDD'
 ---|' ads1115.ADDR_SDA'
@@ -478,9 +477,8 @@ local ads1x15
 function ads1115.ads1115(I2C_ID, I2C_ADDR) end
 
 ---Registers ADS1015 (ADS1013, ADS1014) device.
----@param I2C_ID number - always 0
----`ADDRESS` - I²C address of a device
----@param I2C_ADDR number
+---@param I2C_ID number always 0
+---@param I2C_ADDR number I²C address of a device
 ---|' ads1115.ADDR_GND'
 ---|' ads1115.ADDR_VDD'
 ---|' ads1115.ADDR_SDA'
@@ -500,15 +498,14 @@ function ads1115.reset() end
 function ads1x15:read() end
 
 ---Configuration settings for the ADC.
----@param GAIN number
+---@param GAIN number Programmable gain amplifier
 ---|'ads1115.GAIN_6_144V' #2/3x Gain
 ---|'ads1115.GAIN_4_096V' #1x Gain
 ---|'ads1115.GAIN_2_048V' #2x Gain
 ---|'ads1115.GAIN_1_024V' #4x Gain
 ---|'ads1115.GAIN_0_512V' #8x Gain
 ---|'ads1115.GAIN_0_256V' #16x Gain
----`GAIN` Programmable gain amplifier
----@param SAMPLES number
+---@param SAMPLES number Data rate in samples per second
 ---|' ads1115.DR_8SPS' #ADS1115 only
 ---|' ads1115.DR_16SPS' #ADS1115 only
 ---|' ads1115.DR_32SPS' #ADS1115 only
@@ -522,8 +519,7 @@ function ads1x15:read() end
 ---|' ads1115.DR_1600SPS' #ADS1015 only
 ---|' ads1115.DR_2400SPS' #ADS1015 only
 ---|' ads1115.DR_3300SPS' #ADS1015 only
----`SAMPLES` Data rate in samples per second
----@param CHANNEL number
+---@param CHANNEL number Input multiplexer for single-ended or differential measurement
 ---|' ads1115.SINGLE_0' #channel 0 to GND
 ---|' ads1115.SINGLE_1' #channel 1 to GND
 ---|' ads1115.SINGLE_2' #channel 2 to GND
@@ -532,42 +528,33 @@ function ads1x15:read() end
 ---|' ads1115.DIFF_0_3' #channel 0 to 3
 ---|' ads1115.DIFF_1_3' #channel 1 to 3
 ---|' ads1115.DIFF_2_3' #channel 2 to 3
----`CHANNEL` Input multiplexer for single-ended or differential measurement
----@param MODE number
+---@param MODE number Device operating mode
 ---|' ads1115.SINGLE_SHOT' #single-shot mode
 ---|' ads1115.CONTINUOUS' #continuous mode
----`MODE` Device operating mode
----@param CONVERSION_RDY? number
+---@param CONVERSION_RDY? number Number of conversions after conversion ready asserts (optional)
 ---|' ads1115.CONV_RDY_1'
 ---|' ads1115.CONV_RDY_2'
 ---|' ads1115.CONV_RDY_4'
----`CONVERSION_RDY` Number of conversions after conversion ready asserts
----@param COMPARATOR? number
+---@param COMPARATOR? number Number of conversions after comparator asserts
 ---|' ads1115.COMP_1CONV'
 ---|' ads1115.COMP_2CONV'
 ---|' ads1115.COMP_4CONV'
----`COMPARATOR` Number of conversions after comparator asserts
----@param THRESHOLD_LOW number
----`THRESHOLD_LOW`
----`0` - `+ GAIN_MAX` in mV for single-ended inputs
----`- GAIN_MAX` - `+ GAIN_MAX` in mV for differential inputs
----@param THRESHOLD_HI number
----`THRESHOLD_HI`
----`0` - `+ GAIN_MAX` in mV for single-ended inputs
----`- GAIN_MAX` - `+ GAIN_MAX` in mV for differential inputs
----@param COMP_MODE? number
+---@param THRESHOLD_LOW number ->
+---**0** - **+ GAIN_MAX** in mV for single-ended inputs
+---**- GAIN_MAX** - **+ GAIN_MAX** in mV for differential inputs
+---@param THRESHOLD_HI number ->
+---**0** - **+ GAIN_MAX** in mV for single-ended inputs
+---**- GAIN_MAX** - **+ GAIN_MAX** in mV for differential inputs
+---@param COMP_MODE? number Comparator mode
 ---|' ads1115.CMODE_TRAD' #traditional comparator mode (with hysteresis)
 ---|' ads1115.CMODE_WINDOW' #window comparator mode
----COMP_MODE Comparator mode
 ---@return nil
 function ads1x15:setting(GAIN, SAMPLES, CHANNEL, MODE, CONVERSION_RDY, COMPARATOR, THRESHOLD_LOW, THRESHOLD_HI,COMP_MODE) end
 
 ---Starts the ADC reading for single-shot mode and after the conversion is done it will invoke an optional callback function in which the ADC conversion result can be obtained.
----@param CALLBACK function
----|'function(volt, volt_dec, adc, sign) end'
----callback function which will be invoked after the adc conversion is done
+---@param callback function|'function(volt, volt_dec, adc, sign) end' function which will be invoked after the adc conversion is done
 ---@return nil
-function ads1x15:startread(CALLBACK) end
+function ads1x15:startread(callback) end
 
 --*** ADXL345 ***
 adxl345 = {}
@@ -696,18 +683,18 @@ bloom = {}
 local filter = {}
 
 ---Create a filter object.
----@param elements number elements The largest number of elements to be added to the filter.
----@param errorrate number errorrate The error rate (the false positive rate).
+---@param elements number The largest number of elements to be added to the filter.
+---@param errorrate number The error rate (the false positive rate).
 ---@return bloom objfilter A filter object.
 function bloom.create(elements, errorrate) end
 
 ---Adds a string to the set and returns an indication of whether the string was already present.
----@param str string string The string to be added to the filter set.
+---@param str string The string to be added to the filter set.
 ---@return boolean #`true` if the string was already present in the filter. `false` otherwise.
 function filter:add(str) end
 
 ---Checks to see if a string is present in the filter set.
----@param str string string The string to be checked for membership in the set.
+---@param str string The string to be checked for membership in the set.
 ---@return boolean #`true` if the string was already present in the filter. `false` otherwise.
 function filter:check(str) end
 
@@ -841,7 +828,10 @@ function sobj:qfe2qnh(P, altitude) end
 function sobj:read(altitude) end
 
 ---Starts readout (turns the sensor into forced mode). After the readout the sensor turns to sleep mode. Callback function is called with readout results.
----@param callback? function if provided it will be invoked after given delay. Callback parameters are identical to `sobj:read` results.
+---@param callback? function if provided it will be invoked after given delay. Callback parameters are:
+-- - T - temperature in celsius (number)
+-- - P - air pressure in hectopascals (number)
+-- - H - relative humidity in percent (number)
 ---@param delay? number sets sensor to forced mode and calls the callback (if provided) after given number of milliseconds. For **0** the default delay is set to 113ms.
 ---@param altitude number in meters of measurement point (QNH is returned when specified)
 ---@return nil
@@ -1296,7 +1286,7 @@ function file.fsinfo() end
 
 ---Open and read the contents of a file.
 ---@param filename string|'""' file to be opened and read
----@return any|nil #file contents if the file exists. *nil* if the file does not exist.
+---@return any|nil #file contents if the file exists. `nil` if the file does not exist.
 function file.getcontents(filename) end
 
 ---Lists all files in the file system.
@@ -1311,9 +1301,9 @@ function file.mount(ldrv, pin) end
 
 ---Registers callback functions.
 ---@param event string|'"rtc"' Trigger events are: `rtc` deliver current *date & time* to the file system. Function is expected to return a table containing the fields **year, mon, day, hour, min, sec** of current date and time. Not supported for internal flash.
----@param foo? function|' function() end' callback function. Unregisters the callback if function() is omitted or `nil`.
+---@param callback? function|' function() end' function. Unregisters the callback if function() is omitted or `nil`.
 ---@return nil
-function file.on(event, foo) end
+function file.on(event, callback) end
 
 ---@alias mode_f
 ---|>' "r"' # read mode
@@ -1326,7 +1316,7 @@ function file.on(event, foo) end
 ---Opens a file for access, potentially creating it (for write modes).
 ---@param filename string|'""' file to be opened
 ---@param mode mode_f
----@return file fileobject if file opened ok. nil if file not opened, or not exists (read modes).
+---@return file fileobject if file opened ok. `nil` if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
 ---Remove a file from the file system. The file must not be currently open.
@@ -1377,7 +1367,7 @@ function file.flush() end
 function fObj:flush() end
 
 ---Read content from the open file.
----@param n_or_char? integer :
+---@param n_or_char? integer >
 ---if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
 ---if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
 ---if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
@@ -1385,7 +1375,7 @@ function fObj:flush() end
 function file.read(n_or_char) end
 
 ---Read content from the open file.
----@param n_or_char integer :
+---@param n_or_char integer >
 --if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
 --  if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
 --  if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.

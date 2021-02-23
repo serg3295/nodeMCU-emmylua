@@ -3,14 +3,14 @@
 --*** GPIO  ***
 gpio = {}
 
----@class gpio
+---@class pulser
 local pulser = {}
 
 ---Initialize pin to GPIO mode, set the pin in/out direction, and optional internal weak pull-up.
 ---@param pin integer pin to configure, IO index
 ---@param mode integer|' gpio.OUTPUT'|' gpio.INPUT'|' gpio.OPENDRAIN'|' gpio.INT' interrupt mode
----@param pullup? integer
----|' gpio.PULLUP' #enables the weak pull-up resistor
+---@param pullup? integer enables the weak pull-up resistor; default is gpio.FLOAT
+---|' gpio.PULLUP'
 ---|>' gpio.FLOAT'
 ---@return nil
 function gpio.mode(pin, mode , pullup) end
@@ -31,7 +31,7 @@ function gpio.serout(pin, start_level, delay_times , cycle_num, callback) end
 
 ---Establish or clear a callback function to run on interrupt for a pin.
 ---@param pin integer 1-12, pin to trigger on, IO index.
----@param type? string
+---@param type? string If the type is "none" or omitted then the callback function is removed and the interrupt is disabled.
 ---|' "up"'   #rising edge
 ---|' "down"' #falling edge
 ---|' "both"' #both edges
@@ -39,14 +39,14 @@ function gpio.serout(pin, start_level, delay_times , cycle_num, callback) end
 ---|' "high"' #high level
 ---@param callback? function|' function(level, when, eventcount)' `function(level, when, eventcount)` when trigger occurs. The parameters are:
 -- - level - The level of the specified pin at the interrupt
--- - when -  timestamp of the event
+-- - when - timestamp of the event
 -- - eventcount - is the number of interrupts that were elided for this callback.
 ---@return nil
 function gpio.trig(pin, type , callback) end
 
 ---Set digital GPIO pin value.
 ---@param pin integer pin to write, IO index
----@param level integer|' gpio.HIGH'|' gpio.LOW' level
+---@param level integer|' gpio.HIGH'|' gpio.LOW' high | low
 ---@return nil
 function gpio.write(pin, level) end
 
@@ -56,7 +56,7 @@ function gpio.write(pin, level) end
 --**delay** specifies the number of microseconds after setting the pin values to wait until moving to the next state.
 --**min** and **max** can be used to specify (along with delay) that this time can be varied.
 --**count** and **loop** allow simple looping.
----@return gpio obj gpio.pulse object.
+---@return pulser obj gpio.pulse object.
 function gpio.pulse.build(tbl) end
 
 ---This starts the output operations.
@@ -372,38 +372,17 @@ function MQTT:on(event, callback) end
 function MQTT:publish(topic, payload, qos, retain, callback) end
 
 ---Subscribes to one or several topics.
----@param topic string a topic string
+---@param topic string|table a topic string, or table array of `topic, qos` pairs to subscribe to.
 ---@param qos integer|' 0'|' 1'|' 2' QoS subscription level, default 0
 ---@param callback? function|' function(client) end' `function(client)` fired when subscription(s) succeeded. (optional)
 ---@return boolean
 function MQTT:subscribe(topic, qos, callback) end
 
----Subscribes to one or several topics.
----@param tbl table array of `topic, qos` pairs to subscribe to
----@param callback? function|' function(client) end' `function(client)` fired when subscription(s) succeeded. (optional)
----@return boolean
-function MQTT:subscribe(tbl, callback) end
-
---[[ ---Unsubscribes from one or several topics.
----@param tbl table array of `topic, anything` pairs to unsubscribe from
----@overload fun(tbl: table, callback: function): boolean
----@param topic string a topic string
+---Unsubscribes from one or several topics.
+---@param topic string|table a topic string, or table array of `topic, anything` pairs to unsubscribe from.
 ---@param callback? function|' function(client) end' `function(client)` fired when unsubscription(s) succeeded. (optional)
 ---@return boolean
 function MQTT:unsubscribe(topic, callback) end
- ]]
-
----Unsubscribes from one or several topics.
----@param topic string a topic string
----@param callback? function|' function(client) end' `function(client)` fired when unsubscription(s) succeeded. (optional)
----@return boolean
-function MQTT:unsubscribe(topic, callback) end
-
----Unsubscribes from one or several topics.
----@param tbl table array of `topic, anything` pairs to unsubscribe from
----@param callback? function|' function(client) end' `function(client)` fired when unsubscription(s) succeeded. (optional)
----@return boolean
-function MQTT:unsubscribe(tbl, callback) end
 
 --*** NET ***
 net = {}
@@ -798,22 +777,18 @@ function node.stripdebug(level, foo) end
 function node.osprint(enabled) end
 
 ---This behaves like math.random except that it uses true random numbers derived from the ESP8266 hardware. It returns uniformly distributed numbers in the required range.
+---* `node.random()` Returns a random real number with uniform distribution in the interval [0,1).
+---* `node.random(u)` Returns an integer random number x such that 1 <= x <= u.
+---* `node.random(l, u)` Returns a pseudo-random integer x such that l <= x <= u.
+---@overload fun():number
+---@overload fun(u: integer):integer
 ---@param l integer the lower bound of the range
 ---@param u integer the upper bound of the range
----@return integer #a pseudo-random integer x such that l <= x <= u.
+---@return integer #The random number in the appropriate range. Note that the zero argument form will always return 0 in the integer build.
 function node.random(l, u) end
 
----This behaves like math.random except that it uses true random numbers derived from the ESP8266 hardware. It returns uniformly distributed numbers in the required range.
----@param n? integer the number of distinct integer values that can be returned in the (inclusive) range 1 .. n
----@return integer #an integer random number x such that 1 <= x <= n.
-function node.random(n) end
-
----This behaves like math.random except that it uses true random numbers derived from the ESP8266 hardware. It returns uniformly distributed numbers in the required range.
----@return number #a random real number with uniform distribution in the interval [0,1]
-function node.random() end
-
 ---Sets the Emergency Garbage Collector mode.
----@param mode integer
+---@param mode integer mode
 ---|'node.egc.NOT_ACTIVE' #EGC inactive, no collection cycle will be forced in low memory situations
 ---|'node.egc.ON_ALLOC_FAILURE' #Try to allocate a new block of memory, and run the garbage collector if the allocation fails. If the allocation fails even after running the garbage collector, the allocator will return with error.
 ---|'node.egc.ON_MEM_LIMIT' #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit. If the upper limit can't be satisfied even after running the garbage collector, the allocator will return with error. If the given limit is negative, it is interpreted as the desired amount of heap which should be left available. Whenever the free heap (as reported by node.heap() falls below the requested limit, the garbage collector will be run.
@@ -828,7 +803,7 @@ function node.egc.setmode(mode, level) end
 function node.egc.meminfo() end
 
 ---Enable a Lua callback or task to post another task request.
----@param task_priority? integer
+---@param task_priority? integer 0 | 1 | 2 (optional)
 ---| 'node.task.LOW_PRIORITY' #=0
 ---|>'node.task.MEDIUM_PRIORITY' #=1
 ---| 'node.task.HIGH_PRIORITY' #=2
@@ -991,7 +966,7 @@ local pobj = {}
 
 ---Create a pipe.
 ---@param CB_function? function optional reader callback which is called through the `node.task.post()` when the pipe is written to. If the CB returns a boolean, then the reposting action is forced: it is reposted if true and not if false. If the return is nil or omitted then the deault is to repost if a pipe write has occured since the last call.
----@param task_priority? integer
+---@param task_priority? integer low | medium | high
 ---|' node.task.LOW_PRIORITY' #0
 ---|>' node.task.MEDIUM_PRIORITY' #1
 ---|' node.task.HIGH_PRIORITY' #2
@@ -1154,7 +1129,7 @@ function rotary.setup(channel, pina, pinb, pinpress, longpress_time_ms, dblclick
 
 ---Sets a callback on specific events.
 ---@param channel integer The rotary module supports three switches. The channel is either 0, 1 or 2.
----@param eventtype integer
+---@param eventtype integer This defines the type of event being registered.
 ---|' rotary.PRESS' #= 1 The eventtype for the switch press.
 ---|' rotary.LONGPRESS' #= 2 The eventtype for a long press.
 ---|' rotary.RELEASE' #= 4 The eventtype for the switch release.
@@ -1162,7 +1137,6 @@ function rotary.setup(channel, pina, pinb, pinpress, longpress_time_ms, dblclick
 ---|' rotary.CLICK' #= 16 The eventtype for a single click (after release)
 ---|' rotary.DBLCLICK' #= 32 The eventtype for a double click (after second release)
 ---|' rotary.ALL' #= 63 All event types.
----`eventtype` This defines the type of event being registered.
 ---@param callback? function This is a function that will be invoked when the specified event happens.
 ---@return any #If an invalid eventtype is supplied, then an error will be thrown.
 function rotary.on(channel, eventtype, callback) end
