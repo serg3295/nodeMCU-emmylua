@@ -50,14 +50,22 @@ function gpio.trig(pin, type , callback) end
 ---@return nil
 function gpio.write(pin, level) end
 
+---@class GpioPulse
+---@field delay integer
+---@field min integer
+---@field max integer
+---@field count integer
+---@field loop integer
+
 ---This builds the `gpio.pulse` object from the supplied argument
----@param tbl table this is view as an array of instructions. Each instruction is represented by a table as follows:
---**{ [pin] = gpio.level }** For example { [1] = gpio.HIGH }. All numeric keys are considered to be pin numbers. The values of each are the value to be set onto the respective GPIO line.
+---@param tbl GpioPulse this is view as an array of instructions. Each instruction is represented by a table as follows:
+--**[pin] = gpio.level** For example { [1] = gpio.HIGH, }. All numeric keys are considered to be pin numbers. The values of each are the value to be set onto the respective GPIO line.
 --**delay** specifies the number of microseconds after setting the pin values to wait until moving to the next state.
 --**min** and **max** can be used to specify (along with delay) that this time can be varied.
 --**count** and **loop** allow simple looping.
+---@vararg GpioPulse
 ---@return pulser obj gpio.pulse object.
-function gpio.pulse.build(tbl) end
+function gpio.pulse.build(tbl, ...) end
 
 ---This starts the output operations.
 ---@param adjust? number This is the number of microseconds to add to the next adjustable period.
@@ -95,8 +103,8 @@ function pulser:adjust(offset) end
 
 ---This can change the contents of a particular step in the output program.
 ---@param entrynum number is the number of the entry in the original pulse sequence definition. The first entry is numbered 1.
----@param entrytable table this is view as an array of instructions. Each instruction is represented by a table as follows:
---**{ [pin] = gpio.level }** For example { [1] = gpio.HIGH }. All numeric keys are considered to be pin numbers. The values of each are the value to be set onto the respective GPIO line.
+---@param entrytable GpioPulse this is view as an array of instructions. Each instruction is represented by a table as follows:
+--**[pin] = gpio.level** For example { [1] = gpio.HIGH, }. All numeric keys are considered to be pin numbers. The values of each are the value to be set onto the respective GPIO line.
 --**delay** specifies the number of microseconds after setting the pin values to wait until moving to the next state.
 --**min** and **max** can be used to specify (along with delay) that this time can be varied.
 --**count** and **loop** allow simple looping.
@@ -136,7 +144,7 @@ http = {}
 ---|' ""' #Optional additional headers to append, including \r\n; may be `nil`
 ---@alias bodyHTTP string
 ---|' ""' #The body to post; must already be encoded in the appropriate format, but may be empty
----@alias callbackHTTP
+---@alias callbackHTTP function
 ---|' function(code, data) end' #The callback function to be invoked when the response has been received or an error occurred; it is invoked with the arguments status_code, body and headers. In case of an error status_code is set to -1.
 
 ---Executes a HTTP DELETE request. Note that concurrent requests are not supported.
@@ -432,19 +440,19 @@ function net.multicastLeave(if_ip, multicast_ip) end
 
 ---Closes the server.
 ---@return nil
-function NETSRV.close() end
+function NETSRV:close() end
 
 ---Listen on port from IP address.
 ---@param port? integer port number, can be omitted (random port will be chosen)
 ---@param ip? string IP address string, can be omitted
 ---@param callback function|' function(net.socket) end' `function(net.socket)`, pass to caller function as param if a connection is created successfully
 ---@return nil
-function NETSRV.listen(port, ip, callback) end
+function NETSRV:listen(port, ip, callback) end
 
 ---Returns server local address/port.
 ---@return integer|nil #port or `nil` if not listening
 ---@return string|nil #ip or `nil` if not listening
-function NETSRV.getaddr() end
+function NETSRV:getaddr() end
 
 ---Closes socket.
 ---@return nil
@@ -586,7 +594,7 @@ node = {}
 ---@return integer rawcode The first value returned is the raw code, not the new "reset info" code which was introduced in recent SDKs. Values are:
 -- - 1, power-on
 -- - 2, reset (software?)
--- - 3 , hardware reset via reset pin
+-- - 3, hardware reset via reset pin
 -- - 4, WDT reset (watchdog timeout)
 ---@return integer reason The second value returned is the extended reset cause. Values are:
 -- - 0, power-on
@@ -720,26 +728,30 @@ function node.restore() end
 ---@return number #target CPU frequency
 function node.setcpufreq(speed) end
 
+---@class NodeSetPartTbl
+---@field lfs_addr number
+---@field lfs_size number
+---@field spiffs_addr number
+---@field spiffs_size number
+
 ---Sets the current LFS and / or SPIFFS partition information.
----@param partition_info table An array containing one or more of the following enties.
+---@param partition_info NodeSetPartTbl An array containing one or more of the following enties.
 --The address values are byte offsets relative to the start of the Flash memory. The size values are in bytes.
 --Note that these parameters must be a multiple of 8Kb to align to Flash page boundaries.
---**lfs_addr**. The base address of the LFS region.
---**lfs_size**. The size of the LFS region.
---**spiffs_addr**. The base address of the SPIFFS region.
---**spiffs_size**. The size of the SPIFFS region.
+--**lfs_addr** - The base address of the LFS region.
+--**lfs_size** - The size of the LFS region.
+--**spiffs_addr** - The base address of the SPIFFS region.
+--**spiffs_size** - The size of the SPIFFS region.
 function node.setpartitiontable(partition_info) end
 
----@alias node_a1 number
+---Put NodeMCU in light sleep mode to reduce current consumption.
+---@param wake_pin integer 1-12, pin to attach wake interrupt to. Note that pin 0(GPIO 16) does not support interrupts.
+---@param int_type? integer type of interrupt that you would like to wake on.
 ---| 'node.INT_UP'   #Rising edge
 ---| 'node.INT_DOWN' #Falling edge
 ---| 'node.INT_BOTH' #Both edges
 ---|>'node.INT_LOW'  #Low level
 ---| 'node.INT_HIGH' #High level
-
----Put NodeMCU in light sleep mode to reduce current consumption.
----@param wake_pin integer 1-12, pin to attach wake interrupt to. Note that pin 0(GPIO 16) does not support interrupts.
----@param int_type? node_a1 type of interrupt that you would like to wake on.
 ---@param resume_cb? function|' function() end' Callback to execute when WiFi wakes from suspension.
 ---@param preserve_mode? boolean #preserve current WiFi mode through node sleep.
 ---|'true' #Station and StationAP modes will automatically reconnect to previously configured Access Point when NodeMCU resumes.
@@ -752,22 +764,26 @@ function node.sleep(wake_pin, int_type, resume_cb, preserve_mode) end
 ---@return table #An array of tables which indicate how many CPU cycles had been consumed at each step of platform boot.
 function node.startupcounts(marker) end
 
+---@class NodeStartup
+---@field banner boolean
+---@field frequency number
+---@field delay_mount number
+---@field command number
+
 ---Get/set options that control the startup process. This interface will grow over time.
----@param tbl? table If the argument is omitted, then no change is made to the current set of startup options. If the argument is the empty table **{}** then all options are reset to their default values. `table` one or more options:
---**banner** - set to true or false to indicate whether the startup banner should be displayed or not. (default: true)
+---@param tbl? NodeStartup If the argument is omitted, then no change is made to the current set of startup options. If the argument is the empty table **{ }** then all options are reset to their default values. Table one or more options:
+--**banner** - set to `true` or `false` to indicate whether the startup banner should be displayed or not. (default: true)
 --**frequency** - set to node.CPU80MHZ or node.CPU160MHZ to indicate the initial CPU speed. (default: node.CPU80MHZ)
 --**delay_mount** - set to true or false to indicate whether the SPIFFS filesystem mount is delayed until it is first needed or not. (default: false)
 --**command** - set to a string which is the initial command that is run. This is the same string as in the node.startupcommand.
 ---@return table #This is the complete set of options in the state that will take effect on the next boot. Note that the command key may be missing in which case the default value will be used.
 function node.startup(tbl) end
 
----@alias level_n
+---Controls the amount of debug information kept during `node.compile()`,and allows removal of debug information from already compiled Lua code.
+---@param level? integer level
 ---|'1' #don't discard debug info
 ---|'2' #discard Local and Upvalue debug info
 ---|'3' #discard Local, Upvalue and line-number debug info
-
----Controls the amount of debug information kept during `node.compile()`,and allows removal of debug information from already compiled Lua code.
----@param level? level_n level
 ---@param foo? function a compiled function to be stripped per setfenv except 0 is not permitted.
 ---@return integer|nil #If invoked without arguments, returns the current level settings. Otherwise, `nil` is returned.
 function node.stripdebug(level, foo) end
