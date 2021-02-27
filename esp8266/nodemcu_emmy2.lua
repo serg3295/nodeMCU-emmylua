@@ -143,29 +143,29 @@ local decoder = {}
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
 ---@param tbl table data to encode
 ---@param opts? table an optional table of options. The possible entries are:
---**depth** the maximum encoding depth needed to encode the table. The default is 20.
---**null** the string value to treat as null.
+--**depth** - the maximum encoding depth needed to encode the table. The default is 20.
+--**null** - the string value to treat as null.
 ---@return sjsonenc #A `sjson.encoder` object.
 function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
 ---@param size? integer an optional value for the number of bytes to return. The default is 1024.
----@return string|nil #A string of up to size bytes, or `nil` if the encoding is complete and all data has been returned.
+---@return string|nil #A string of up to `size` bytes, or `nil` if the encoding is complete and all data has been returned.
 function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
 ---@param tbl table data to encode
 ---@param opts? table an optional table of options. The possible entries are:
---**depth** the maximum encoding depth needed to encode the table. The default is 20.
---**null** the string value to treat as null.
+--**depth** - the maximum encoding depth needed to encode the table. The default is 20.
+--**null** - the string value to treat as null.
 ---@return string #JSON string
 function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object.
 ---@param opts? table an optional table of options. The possible entries are:
---**depth** the maximum encoding depth needed to encode the table. The default is 20.
---**null** the string value to treat as null.
---**metatable** a table to use as the metatable for all the new tables in the returned object.
+--**depth** - the maximum encoding depth needed to encode the table. The default is 20.
+--**null** - the string value to treat as null.
+--**metatable** - a table to use as the metatable for all the new tables in the returned object.
 ---@return sjsondec #A `sjson.decoder` object
 function sjson.decoder(opts) end
 
@@ -180,9 +180,9 @@ function decoder:result() end
 ---Decode a JSON string to a Lua table.
 ---@param str string JSON string to decode
 ---@param opts? table an optional table of options. The possible entries are:
---**depth** the maximum encoding depth needed to encode the table. The default is 20.
---**null** the string value to treat as null.
---**metatable** a table to use as the metatable for all the new tables in the returned object.
+--**depth** - the maximum encoding depth needed to encode the table. The default is 20.
+--**null** - the string value to treat as null.
+--**metatable** - a table to use as the metatable for all the new tables in the returned object.
 ---@return table #Lua table representation of the JSON data
 function sjson.decode(str, opts) end
 
@@ -224,9 +224,9 @@ function softuart.setup(baudrate, txPin, rxPin) end
 ---@param trigger number Can be a character or a number.
 -- - If **character** is set, the callback function will only be run when that character gets received.
 -- - When a **number** is set, the callback function will only be run when buffer will have as many characters as number.
----@param foo function Callback function. the data parameter is software UART receiving buffer.
+---@param callback function function. the data parameter is software UART receiving buffer.
 ---@return nil
-function s_uart:on(event, trigger, foo) end
+function s_uart:on(event, trigger, callback) end
 
 ---Transmits a byte or sequence of them.
 ---@param data number|string Can be a number or string.
@@ -447,12 +447,12 @@ function TLS:hold() end
 
 ---Register callback functions for specific events.
 ---@param event string|'"dns"'|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' event
----@param foo function|'function(tls.socket, string?) end' callback function. The first parameter is the socket.
+---@param callback function|'function(tls.socket, string?) end' function. The first parameter is the socket.
 -- - If event is *"receive"*, the second parameter is the received data as string.
 -- - If event is *"reconnection"*, the second parameter is the reason of connection error (string).
 -- - If event is *"dns"*, the second parameter will be either `nil` or a string rendering of the resolved address.
 ---@return nil
-function TLS:on(event, foo) end
+function TLS:on(event, callback) end
 
 ---Sends data to remote peer.
 ---@param string string data in string which will be sent to server
@@ -548,9 +548,9 @@ function tmr.create() end
 ---This is a convenience function combining `tobj:register()` and `tobj:start()` into a single call.
 ---@param interval number timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m timer mode
----@param foo function|" function(t) end" callback function which is invoked with the timer object as an argument
+---@param callback function|" function(t) end" function which is invoked with the timer object as an argument
 ---@return boolean #`true` if the timer was started, `false` on error
-function tObj:alarm(interval, mode, foo) end
+function tObj:alarm(interval, mode, callback) end
 
 ---Changes a registered timer's expiry interval.
 ---@param interval_ms integer new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
@@ -560,9 +560,9 @@ function tObj:interval(interval_ms) end
 ---Configures a timer and registers the callback function to call on expiry. Note that registering does not start the alarm.
 ---@param interval_ms integer new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m timer mode
----@param foo function|" function() end" callback function which is invoked with the timer object as an argument
+---@param callback function|" function() end" function which is invoked with the timer object as an argument
 ---@return nil
-function tObj:register(interval_ms, mode, foo) end
+function tObj:register(interval_ms, mode, callback) end
 
 ---Starts or restarts a previously configured timer. If the timer is running the timer is restarted only when restart parameter is `true`. Otherwise `false` is returned signaling error.
 ---@param restart? boolean optional boolean parameter forcing to restart already running timer
@@ -651,12 +651,12 @@ function uart.alt(on) end
 --**number** if n=0, will receive every char in buffer
 --**number** if n<255, the callback is called when n chars are received
 --**end_char** if one char "c", the callback will be called when "c" is encountered, or max n=255 received
----@param foo? function|' function(data) end' callback function, event `"data"` has a callback like this: `function(data) end`
+---@param callback? function|' function(data) end' function, event `"data"` has a callback like this: `function(data) end`
 ---@param run_input? integer 0 or 1.
 --`0` input from UART will not go into Lua interpreter, and this can accept binary data.
 --`1` input from UART is treated as a text stream with the DEL, BS, CR and LF characters processed as normal. Completed lines will be passed to the Lua interpreter for execution.
 ---@return nil
-function uart.on(method, number_or_endChar, foo, run_input) end
+function uart.on(method, number_or_endChar, callback, run_input) end
 
 ---(Re-)configures the communication parameters of the UART.
 ---@param id integer UART id (0 or 1).

@@ -1290,7 +1290,8 @@ function file.fsinfo() end
 function file.getcontents(filename) end
 
 ---Lists all files in the file system.
----@return table #a Lua table which contains all *{file name: file size}* pairs, if no pattern given. If a pattern is given, only those file names matching the pattern (interpreted as a traditional Lua pattern, not, say, a UNIX shell glob) will be included in the resulting table. file.list will throw any errors encountered during pattern matching.
+---@param pattern string interpreted as a traditional Lua pattern, not, say, a UNIX shell glob
+---@return table #a Lua table which contains all *{file name: file size}* pairs, if no pattern given. If a pattern is given, only those file names matching the pattern will be included in the resulting table. `file.list` will throw any errors encountered during pattern matching.
 function file.list(pattern) end
 
 ---Mounts a FatFs volume on SD card. Function is only available when FatFS support is compiled into the firmware and it is not supported for internal flash.
@@ -1305,17 +1306,15 @@ function file.mount(ldrv, pin) end
 ---@return nil
 function file.on(event, callback) end
 
----@alias mode_f
+---Opens a file for access, potentially creating it (for write modes).
+---@param filename string|'""' file to be opened
+---@param mode string r | w | a | r+ | w+ | a+
 ---|>' "r"' # read mode
 ---| ' "w"' # write mode
 ---| ' "a"' # append mode
 ---| ' "r+"' # update mode, all previous data is preserved
 ---| ' "w+"' # update mode, all previous data is erased
 ---| ' "a+"' # append update mode, previous data is preserved, writing is only allowed at the end of file
-
----Opens a file for access, potentially creating it (for write modes).
----@param filename string|'""' file to be opened
----@param mode mode_f
 ---@return file fileobject if file opened ok. `nil` if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
@@ -1326,28 +1325,28 @@ function file.remove(filename) end
 
 ---Open and write the contents of a file.
 ---@param filename string|'""' file to be created
----@param contents any contents to be written to the file
+---@param contents any to be written to the file
 ---@return boolean|nil #`true` if the write is ok, `nil` on error
 function file.putcontents(filename, contents) end
 
 ---Renames a file.
 ---@param oldname string|'""' old file name
 ---@param newname string|' ""' new file name
----@return boolean
+---@return boolean #`true` on success, `false` on error.
 function file.rename(oldname, newname) end
 
 ---Get attribtues of a file or directory in a table.
 ---@param filename string|'""'
 ---@return table #table containing file attributes. Elements of the table are:
---**size** file size in bytes
---**name** file name
---**time** table with time stamp information. Default is 1970-01-01 00:00:00 in case time stamps are not supported (on SPIFFS).
+--**size** - file size in bytes
+--**name** - file name
+--**time** - table with time stamp information. Default is 1970-01-01 00:00:00 in case time stamps are not supported (on SPIFFS).
 --    year    mon    day    hour    min    sec
---**is_dir** flag true if item is a directory, otherwise false
---**is_rdonly** flag true if item is read-only, otherwise false
---**is_hidden** flag true if item is hidden, otherwise false
---**is_sys** flag true if item is system, otherwise false
---**is_arch** flag true if item is archive, otherwise false
+--**is_dir** - flag true if item is a directory, otherwise false
+--**is_rdonly** - flag true if item is read-only, otherwise false
+--**is_hidden** - flag true if item is hidden, otherwise false
+--**is_sys** - flag true if item is system, otherwise false
+--**is_arch** - flag true if item is archive, otherwise false
 function file.stat(filename) end
 
 ---Closes the open file, if any.
@@ -1368,63 +1367,63 @@ function fObj:flush() end
 
 ---Read content from the open file.
 ---@param n_or_char? integer >
----if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
----if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
----if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+-- - if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
+-- - if passed a number **n**, then read up to **n** bytes or the entire file (whichever is smaller).
+-- - if passed a string containing the single character **char**, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil
 function file.read(n_or_char) end
 
 ---Read content from the open file.
 ---@param n_or_char integer >
---if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
---  if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
---  if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
----@return string|nil content File content as a string, or `nil` when EOF
+-- - if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
+-- - if passed a number **n**, then read up to **n** bytes or the entire file (whichever is smaller).
+-- - if passed a string containing the single character **char**, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+---@return string|nil #File content as a string, or `nil` when EOF
 function fObj:read(n_or_char) end
 
 ---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte. If the next line is longer than 1024, this function only returns the first 1024 bytes.
----@return string|nil content File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
+---@return string|nil #File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 function file.readline() end
 
 ---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte. If the next line is longer than 1024, this function only returns the first 1024 bytes.
----@return string|nil content File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
+---@return string|nil #File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 function fObj:readline() end
 
----@alias seekwhence_f
+---@alias seekwhence_f string
 ---| '"set"' #Base is position 0 (beginning of the file)
 ---|>'"cur"' #Base is current position
 ---| '"end"' #Base is end of file
 
----Sets and gets the file position, measured from the beginning of the file, to the position given by `offset` plus a base specified by the string whence.
----@param whence? seekwhence_f
+---Sets and gets the file position, measured from the beginning of the file, to the position given by `offset` plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
+---@param whence? seekwhence_f set | cur | end
 ---@param offset? integer default 0
----@return integer|nil offset the resulting file position, or nil on error
+---@return integer|nil #the resulting file position, or nil on error
 function file.seek(whence , offset) end
 
----Sets and gets the file position, measured from the beginning of the file, to the position given by `offset` plus a base specified by the string whence.
----@param whence? seekwhence_f
+---Sets and gets the file position, measured from the beginning of the file, to the position given by `offset` plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
+---@param whence? seekwhence_f set | cur | end
 ---@param offset? integer default 0
----@return integer|nil offset the resulting file position, or `nil` on error
+---@return integer|nil #the resulting file position, or `nil` on error
 function fObj:seek(whence , offset) end
 
 ---Write a string to the open file.
 ---@param str string|'""' content to be write to file
----@return boolean|nil
+---@return boolean|nil #`true` if write ok, `nil` on error
 function file.write(str) end
 
 ---Write a string to the open file.
 ---@param str string|'""' content to be write to file
----@return boolean|nil
+---@return boolean|nil #`true` if write ok, `nil` on error
 function fObj:write(str) end
 
 ---Write a string to the open file and append '\n' at the end.
 ---@param str string|'""' content to be write to file
----@return boolean|nil
+---@return boolean|nil #`true` if write ok, `nil` on error
 function file.writeline(str) end
 
 ---Write a string to the open file and append '\n' at the end.
 ---@param str string|'""' content to be write to file
----@return boolean|nil
+---@return boolean|nil #`true` if write ok, `nil` on error
 function fObj:writeline(str) end
 
 --*** gdbstub Module is in nodemcu_emmy3.lua ***
