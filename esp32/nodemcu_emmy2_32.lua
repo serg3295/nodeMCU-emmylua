@@ -1132,10 +1132,9 @@ uart = {}
 ---@param callback? function #function for event
 ---|' function(data) end' #for event "data"
 ---|' function(err) end' #for event "error" `err` could be one of "out_of_memory", "break", "rx_error".
----@param run_input? integer 0 or 1. Only for "data" event on console uart.
+---@param run_input? integer **0** or **1**. Only for "data" event on console uart.
 ---|' 0' #input from UART will not go into Lua interpreter, can accept binary data.
 ---|' 1' #input from UART will go into Lua interpreter, and run.
--- `run_input` Only for "data" event on console uart.
 ---@return nil
 function uart.on(id, method, number_or_endChar, callback, run_input) end
 
