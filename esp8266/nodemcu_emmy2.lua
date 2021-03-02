@@ -888,6 +888,11 @@ function wifi.sta.clearconfig() end
 ---@field auto boolean
 ---@field bssid string
 ---@field save boolean
+---@field connect_cb function
+---@field disconnect_cb function
+---@field authmode_change_cb function
+---@field got_ip_cb function
+---@field dhcp_timeout_cb function
 
 ---Sets the WiFi station configuration.
 ---@param station_config StaStationConfig table containing configuration data for station
@@ -904,14 +909,14 @@ function wifi.sta.clearconfig() end
 -- - `true` configuration will be retained through power cycle. (Default).
 -- - `false` configuration will not be retained through power cycle.
 --**Event callbacks** will only be available if WIFI_SDK_EVENT_MONITOR_ENABLE is uncommented in user_config.h:
---*connected_cb*: Callback to execute when station is connected to an access point. (Optional). Items returned in table:
+--*connect_cb*: Callback to execute when station is connected to an access point. (Optional). Items returned in table:
 -- - SSID: SSID of access point. (format: string)
 -- - BSSID: BSSID of access point. (format: string)
 -- - channel: The channel the access point is on. (format: number)
---*disconnected_cb*: Callback to execute when station is disconnected from an access point. (Optional) Items returned in table:
+--*disconnect_cb*: Callback to execute when station is disconnected from an access point. (Optional) Items returned in table:
 -- - SSID: SSID of access point. (format: string)
 -- - BSSID: BSSID of access point. (format: string)
--- - reason: See wifi.eventmon.reason below. (format: number)
+-- - reason: See wifi.eventmon.reason. (format: number)
 --*authmode_change_cb*: Callback to execute when the access point has changed authorization mode. (Optional) Items returned in tabl:
 -- - old_auth_mode: Old wifi authorization mode. (format: number)
 -- - new_auth_mode: New wifi authorization mode. (format: number)
@@ -1190,7 +1195,7 @@ function wifi.ap.dhcp.stop() end
 -- - *wifi.eventmon.STA_DISCONNECTED*: Station was disconnected from access point.
 -->**SSID**: SSID of access point.
 -->**BSSID**: BSSID of access point.
--->**reason**: See wifi.eventmon.reason below.
+-->**reason**: See wifi.eventmon.reason.
 -- - *wifi.eventmon.STA_AUTHMODE_CHANGE*: Access point has changed authorization mode.
 -->**old_auth_mode**: Old wifi authorization mode.
 -->**new_auth_mode**: New wifi authorization mode.
