@@ -11,7 +11,17 @@ Works with VS Code extension **[Sumneko lua-language-server](https://github.com/
 
 Set path to the file **nodemcu_emmy_32.lua**, or **nodemcu_emmy.lua** in the setting:
 
+Starting from version 1.18.0 of Sumneko.lua, you have to use the "Lua.workspace.library": [ path ] instead of {path}: true
+
 ```json
+//now
+"Lua.workspace.library": [
+      "path"
+    ]
+```
+
+```json
+//instead of
 "Lua.workspace.library": {
     "c:/users/..../": true
 }
