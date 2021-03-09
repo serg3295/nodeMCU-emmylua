@@ -3,5 +3,8 @@
         "lowercase-global",
         "duplicate-doc-class"
     ],
-    "Lua.runtime.version": "Lua 5.1"
+    "Lua.runtime.version": "Lua 5.1",
+    "Lua.workspace.library": [
+      "c:\\Users\\Lua\\nodeMCU\\nodeMCU-emmy\\esp8266\\"
+    ]
 }
