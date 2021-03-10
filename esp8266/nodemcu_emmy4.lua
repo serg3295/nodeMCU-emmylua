@@ -728,6 +728,16 @@ function node.restore() end
 ---@return number #target CPU frequency
 function node.setcpufreq(speed) end
 
+---Overrides the default crash handling which always restarts the system. It can be used to e.g. write an error to a logfile or to secure connected hardware before restarting.
+--**!!! attention** It is strongly advised to ensure that the callback ends with a restart. Something has gone quite wrong and it is probably not safe to just wait for the next event (e.g., timer tick) and hope everything works out.
+--    node.setonerror(function(s)
+--        print("Error: "..s)
+--        node.restart()
+--      end)
+---@param callback function function to be executed when an error occurs, gets the error string as an argument, remember to **trigger a restart** at the end of the callback
+---@return nil
+function node.setonerror(callback) end
+
 ---@class NodeSetPartTbl
 ---@field lfs_addr number
 ---@field lfs_size number
