@@ -36,7 +36,7 @@ function otaupgrade.accept() end
 --Note that it is also possible to roll back to a previous firmware version even after the new version has called `otaupgrade.accept()`.
 function otaupgrade.rollback() end
 
---*** 1-WIRE ***
+--*** OW ***
 ow = {}
 
 ---Computes the 1-Wire CRC16 and compare it against the received CRC.

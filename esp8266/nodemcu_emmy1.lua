@@ -15,8 +15,6 @@ function bh1750.read() end
 ---@return number #Last known lux value.
 function bh1750.getlux() end
 
---*** cohelper Module is in nodemcu_emmy3.lua ***
-
 --*** DS18B20 ***
 ---@class ds18b20
 local ds18 = require("ds18b20")
@@ -100,8 +98,6 @@ function ds3231.getBytes() end
 ---@return nil
 function ds3231.resetStopFlag() end
 
---*** FIFO Module is in nodemcu_emmy3.lua ***
-
 --*** FTP server ***
 FTP = {}
 
@@ -124,8 +120,6 @@ function FTP:open(user, pass, ssid, wifipwd, dbgFlag) end
 ---Close down server including any sockets and return all resources to Lua.
 ---@return nil
 function FTP:close() end
-
---*** gossip Module is in nodemcu_emmy3.lua ***
 
 --*** HDC1000 ***
 ---@class hdc1000
@@ -219,8 +213,6 @@ function imap.fetch_body_plain_text(socket, msg_number) end
 ---@param socket any IMAP TCP socket object created using `net.createConnection`
 ---@return nil
 function imap.logout(socket) end
-
---*** LiquidCrystal Module is in nodemcu_emmy3.lua ***
 
 --*** LM92 ***
 lm92 ={}
@@ -443,7 +435,7 @@ function yeelink.getDNS() end
 ---@return nil
 function yeelink.update(datapoint) end
 
---*** ADC  ***
+--*** ADC ***
 adc = {}
 
 ---Checks and if necessary reconfigures the ADC `mode` setting in the ESP init data block.
@@ -708,7 +700,7 @@ function filter:reset() end
 ---@return number #The approximate chance that the next check will return true when it should return false
 function filter:info() end
 
---*** BME280 C module***
+--*** BME280 C module ***
 
 ---@deprecated Warning, deprecated API! bme280. It will be removed soon. Use bme280math and bme280 Lua module instead.
 ---Initializes the module. Initialization is mandatory before reading values.
@@ -1233,7 +1225,7 @@ function encoder.toHex(binary) end
 ---@return string #Decoded string of hex representation.
 function encoder.fromHex(hexstr) end
 
---*** WiFi Manager ***
+--*** ENDUSER SETUP ***
 enduser_setup = {}
 
 ---Controls whether manual AP configuration is used.
@@ -1425,7 +1417,3 @@ function file.writeline(str) end
 ---@param str string|'""' content to be write to file
 ---@return boolean|nil #`true` if write ok, `nil` on error
 function fObj:writeline(str) end
-
---*** gdbstub Module is in nodemcu_emmy3.lua ***
-
---*** continued in file nodemcu_emmy4.lua ***

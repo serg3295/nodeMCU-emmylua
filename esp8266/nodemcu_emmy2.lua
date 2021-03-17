@@ -1,6 +1,4 @@
---*** beginning in file nodemcu_emmy4.lua ***
-
---*** RTCMEM  ***
+--*** RTCMEM ***
 rtcmem = {}
 
 ---Reads one or more 32bit values from RTC user memory.
@@ -383,7 +381,7 @@ function switec.getpos(channel) end
 --- The needle must not be moving, otherwise an error is thrown.
 function switec.close(channel) end
 
---*** TCS34725  TODO ***
+--*** TCS34725 TODO ***
 tcs34725 ={}
 
 ---Initialization via this call is mandatory before values can be read.
@@ -689,8 +687,6 @@ function uart.write(id, data1, ...) end
 ---@return integer #The number of bytes in the selected FIFO.
 function uart.fifodepth(id, direction) end
 
---*** ucg Module is in nodemcu-emmy3.lua ***
-
 --*** WEBSOCKET ***
 websocket = {}
 
@@ -735,7 +731,7 @@ function websocket:on(eventName, callback) end
 ---@return nil #'nil', or an error if socket is not connected
 function websocket:send(message, opcode) end
 
---*** WIEGANG ***
+--*** WIEGAND ***
 wiegand = {}
 
 ---@class wiegand
@@ -1402,7 +1398,7 @@ function buffer:shift(value, mode, i, j) end
 ---@return ws2812 buff A buffer containing the extracted piece.
 function buffer:sub(i, j) end
 
---*** WS2812-EFFECTS ***
+--*** WS2812 EFFECTS ***
 ws2812_effects = {}
 
 ---Initialize the effects library with the provided buffer for the connected LED strip.

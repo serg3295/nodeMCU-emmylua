@@ -1,6 +1,4 @@
---*** beginning in file nodemcu_emmy1.lua ***
-
---*** GPIO  ***
+--*** GPIO ***
 gpio = {}
 
 ---@class pulser
@@ -837,7 +835,7 @@ function node.egc.meminfo() end
 ---@return nil
 function node.task.post(task_priority, callback) end
 
---*** 1-wire ***
+--*** OW ***
 ow = {}
 
 ---Computes the 1-Wire CRC16 and compare it against the received CRC.
@@ -1219,5 +1217,3 @@ function rtcfifo.put(timestamp, value, neg_e, name) end
 ---Returns non-zero if the rtcfifo has been prepared and is ready for use, zero if not.
 ---@return number #Non-zero if the rtcfifo has been prepared and is ready for use, zero if not.
 function rtcfifo.ready() end
-
---*** continued in file nodemcu_emmy2.lua ***
