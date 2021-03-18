@@ -18,12 +18,12 @@ local files = {
 for _, v in ipairs(files) do
 
   local fInp = assert(io.open(v, "r"))
-  local cont = fInp:read("a")
+  local cont = fInp:read("*a")
 
-  cont = cont:gsub("%sTODO", ""):gsub("(%-%-%*%*%*%s.-%s%*%*%*)", "%1\n%1"):gsub("%-%-%*%*%*%s.-%s%*%*%*","",1)
+  cont = cont:gsub("%sTODO", ""):gsub("(%-%-%*%*%*%s.-%s%*%*%*)", "%1\n%1"):gsub("%-%-%*%*%*%s.-%s%*%*%*", "", 1)
   cont = cont .. "\n--*** EOF ***"
 
-  for fileOut, fileName in string.gmatch(cont, "(%-%-%*%*%*%s([%w_%s%-]-)%s%*%*%*.-)%-%-%*%*%*%s[%w_%s%-]-%s%*%*%*", 1) do
+  for fileOut, fileName in string.gmatch(cont, "(%-%-%*%*%*%s([%w_%s%-]-)%s%*%*%*.-)%-%-%*%*%*%s[%w_%s%-]-%s%*%*%*") do
      fileName = string.gsub(fileName, "%s", "_")
     -- print(fileName)
     -- local fo = assert(io.open(string.lower(fileName), "w"))
