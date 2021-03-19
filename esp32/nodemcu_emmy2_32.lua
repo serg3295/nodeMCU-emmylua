@@ -143,12 +143,12 @@ local pulsecntObj = {}
 ---@return pulsecnt #pulsecnt object
 function pulsecnt.create(unit, callbackOnEvents) end
 
----@alias pulse_mode1
+---@alias pulse_mode1 integer
 ---|' pulsecnt.PCNT_COUNT_DIS' #= 0 Counter mode: Inhibit counter (counter value will not change in this condition).
 ---|' pulsecnt.PCNT_COUNT_INC' #= 1 Counter mode: Increase counter value.
 ---|' pulsecnt.PCNT_COUNT_DEC' #= 2 Counter mode: Decrease counter value.
 
----@alias pulse_mode2
+---@alias pulse_mode2 integer
 ---|' pulsecnt.PCNT_MODE_KEEP' #= 0 Control mode: will not change counter mode.
 ---|' pulsecnt.PCNT_MODE_REVERSE' #= 1 Control mode: invert counter mode (increase -> decrease, decrease -> increase).
 ---|' pulsecnt.PCNT_MODE_DISABLE' #= 2 Control mode: Inhibit counter (counter value will not change in this condition).
@@ -658,7 +658,7 @@ local tObj = {}
 ---@return tmr #timer object
 function tmr.create() end
 
----@alias t32
+---@alias t32 integer
 ---|' tmr.ALARM_AUTO' #automatically repeating alarm
 ---|' tmr.ALARM_SINGLE' #a one-shot alarm (and no need to call tmr.unregister())
 ---|' tmr.ALARM_SEMI' #manually repeating alarm (call tmr.start() to restart)
