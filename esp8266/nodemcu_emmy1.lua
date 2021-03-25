@@ -532,11 +532,11 @@ function ads1x15:read() end
 ---|' ads1115.COMP_2CONV'
 ---|' ads1115.COMP_4CONV'
 ---@param THRESHOLD_LOW number ->
----**0** - **+ GAIN_MAX** in mV for single-ended inputs
----**- GAIN_MAX** - **+ GAIN_MAX** in mV for differential inputs
+-- - **0** - **+ GAIN_MAX** in mV for single-ended inputs
+-- - **- GAIN_MAX** - **+ GAIN_MAX** in mV for differential inputs
 ---@param THRESHOLD_HI number ->
----**0** - **+ GAIN_MAX** in mV for single-ended inputs
----**- GAIN_MAX** - **+ GAIN_MAX** in mV for differential inputs
+-- - **0** - **+ GAIN_MAX** in mV for single-ended inputs
+-- - **- GAIN_MAX** - **+ GAIN_MAX** in mV for differential inputs
 ---@param COMP_MODE? number Comparator mode
 ---|' ads1115.CMODE_TRAD' #traditional comparator mode (with hysteresis)
 ---|' ads1115.CMODE_WINDOW' #window comparator mode
@@ -1330,15 +1330,15 @@ function file.rename(oldname, newname) end
 ---Get attribtues of a file or directory in a table.
 ---@param filename string|'""'
 ---@return table #table containing file attributes. Elements of the table are:
---**size** - file size in bytes
---**name** - file name
---**time** - table with time stamp information. Default is 1970-01-01 00:00:00 in case time stamps are not supported (on SPIFFS).
---    year    mon    day    hour    min    sec
---**is_dir** - flag true if item is a directory, otherwise false
---**is_rdonly** - flag true if item is read-only, otherwise false
---**is_hidden** - flag true if item is hidden, otherwise false
---**is_sys** - flag true if item is system, otherwise false
---**is_arch** - flag true if item is archive, otherwise false
+-- - **size** - file size in bytes
+-- - **name** - file name
+-- - **time** - table with time stamp information. Default is 1970-01-01 00:00:00 in case time stamps are not supported (on SPIFFS).
+--   -    year mon day hour min sec
+-- - **is_dir** - flag true if item is a directory, otherwise false
+-- - **is_rdonly** - flag true if item is read-only, otherwise false
+-- - **is_hidden** - flag true if item is hidden, otherwise false
+-- - **is_sys** - flag true if item is system, otherwise false
+-- - **is_arch** - flag true if item is archive, otherwise false
 function file.stat(filename) end
 
 ---Closes the open file, if any.

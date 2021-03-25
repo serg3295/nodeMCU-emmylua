@@ -57,10 +57,10 @@ function gpio.write(pin, level) end
 
 ---This builds the `gpio.pulse` object from the supplied argument
 ---@param tbl GpioPulse this is view as an array of instructions. Each instruction is represented by a table as follows:
---**[pin] = gpio.level** For example { [1] = gpio.HIGH, }. All numeric keys are considered to be pin numbers. The values of each are the value to be set onto the respective GPIO line.
---**delay** specifies the number of microseconds after setting the pin values to wait until moving to the next state.
---**min** and **max** can be used to specify (along with delay) that this time can be varied.
---**count** and **loop** allow simple looping.
+-- - **[pin] = gpio.level** For example { [1] = gpio.HIGH, }. All numeric keys are considered to be pin numbers. The values of each are the value to be set onto the respective GPIO line.
+-- - **delay** specifies the number of microseconds after setting the pin values to wait until moving to the next state.
+-- - **min** and **max** can be used to specify (along with delay) that this time can be varied.
+-- - **count** and **loop** allow simple looping.
 ---@vararg GpioPulse
 ---@return pulser obj gpio.pulse object.
 function gpio.pulse.build(tbl, ...) end
@@ -102,10 +102,10 @@ function pulser:adjust(offset) end
 ---This can change the contents of a particular step in the output program.
 ---@param entrynum number is the number of the entry in the original pulse sequence definition. The first entry is numbered 1.
 ---@param entrytable GpioPulse this is view as an array of instructions. Each instruction is represented by a table as follows:
---**[pin] = gpio.level** For example { [1] = gpio.HIGH, }. All numeric keys are considered to be pin numbers. The values of each are the value to be set onto the respective GPIO line.
---**delay** specifies the number of microseconds after setting the pin values to wait until moving to the next state.
---**min** and **max** can be used to specify (along with delay) that this time can be varied.
---**count** and **loop** allow simple looping.
+-- - **[pin] = gpio.level** For example { [1] = gpio.HIGH, }. All numeric keys are considered to be pin numbers. The values of each are the value to be set onto the respective GPIO line.
+-- - **delay** specifies the number of microseconds after setting the pin values to wait until moving to the next state.
+-- - **min** and **max** can be used to specify (along with delay) that this time can be varied.
+-- - **count** and **loop** allow simple looping.
 function pulser:update(entrynum, entrytable) end
 
 --*** HDC1080 ***
@@ -276,9 +276,9 @@ mcp4725 = {}
 
 ---Gets contents of the dac register and EEPROM.
 ---@param tbl table {[a0], [a1], [a2]}
---**A0** Address bit 0. This bit is user configurable via MCP4725 pin 6(A0). (valid states: 0 or 1) (default: 0)
---**A1** Address bit 1. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
---**A2** Address bit 2. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
+-- - **A0** Address bit 0. This bit is user configurable via MCP4725 pin 6(A0). (valid states: 0 or 1) (default: 0)
+-- - **A1** Address bit 1. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
+-- - **A2** Address bit 2. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
 ---@return number cur_pwrdn Current power down configuration value.
 ---@return number cur_val Current value stored in dac register.
 ---@return number eeprom_pwrdn Power down configuration stored in EEPROM.
@@ -293,18 +293,18 @@ function mcp4725.read(tbl) end
 
 ---Write configuration to dac register or dac register and eeprom.
 ---@param tbl table {[a0], [a1], [a2], value, [pwrdn], [save]}
---**A0** Address bit 0. This bit is user configurable via MCP4725 pin 6(A0). (valid states: 0 or 1) (default: 0)
---**A1** Address bit 1. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
---**A2** Address bit 2. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
---**value** The value to be used to configure DAC (and EEPROM). (Range: 0 - 4095)
---**pwrdn** Set power down bits.
--- - mcp4725.PWRDN_NONE MCP4725 - output enabled. (Default)
--- - mcp4725.PWRDN_1K MCP4725 - output disabled, output pulled to ground via 1K restistor.
--- - mcp4725.PWRDN_100K MCP4725 - output disabled, output pulled to ground via 100K restistor.
--- - mcp4725.PWRDN_500K MCP4725 - output disabled, output pulled to ground via 500K restistor.
---**save** Save pwrdn and dac values to EEPROM. (Values are loaded on power-up or during reset.)
--- - `true` Save configuration to EEPROM.
--- - `false` Do not save configuration to EEPROM. (Default)
+-- - **A0** Address bit 0. This bit is user configurable via MCP4725 pin 6(A0). (valid states: 0 or 1) (default: 0)
+-- - **A1** Address bit 1. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
+-- - **A2** Address bit 2. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
+-- - **value** The value to be used to configure DAC (and EEPROM). (Range: 0 - 4095)
+-- - **pwrdn** Set power down bits.
+--   - mcp4725.PWRDN_NONE MCP4725 - output enabled. (Default)
+--   - mcp4725.PWRDN_1K MCP4725 - output disabled, output pulled to ground via 1K restistor.
+--   - mcp4725.PWRDN_100K MCP4725 - output disabled, output pulled to ground via 100K restistor.
+--   - mcp4725.PWRDN_500K MCP4725 - output disabled, output pulled to ground via 500K restistor.
+-- - **save** Save pwrdn and dac values to EEPROM. (Values are loaded on power-up or during reset.)
+--   - `true` Save configuration to EEPROM.
+--   - `false` Do not save configuration to EEPROM. (Default)
 ---@return nil
 function mcp4725.write(tbl) end
 
@@ -656,30 +656,30 @@ function node.heap() end
 ---Returns information about hardware, software version and build configuration.
 ---@param group? string|'"hw"'|'"sw_version"'|'"build_config"' A designator for a group of properties.
 ---@return any #If a group is given the return value will be a table containing the following elements:
---for group = `"hw"`
--- - **chip_id** (number)
--- - **flash_id** (number)
--- - **flash_size** (number)
--- - **flash_mode** (number) 0 = QIO, 1 = QOUT, 2 = DIO, 15 = DOUT.
--- - **flash_speed** (number)
---for group = `"lfs"`
--- - **lfs_base** (number) Flash offset of selected LFS region
--- - **lfs_mapped** (number) Mapped memory address of selected LFS region
--- - **lfs_size** (number) size of selected LFS region
--- - **lfs_used** (number) actual size used by current LFS image
---for group = `"sw_version"`
--- - **git_branch** (string)
--- - **git_commit_id** (string)
--- - **git_release** (string) release name +additional commits e.g. "2.0.0-master_20170202 +403"
--- - **git_commit_dts** (string) commit timestamp in an ordering format. e.g. "201908111200"
--- - **node_version_major** (number)
--- - **node_version_minor** (number)
--- - **node_version_revision** (number)
---for group = `"build_config"`
--- - **ssl** (boolean)
--- - **lfs_size** (number) as defined at build time
--- - **modules** (string) comma separated list
--- - **number_type** (string) integer or float
+-- - for group = `"hw"`
+--   - **chip_id** (number)
+--   - **flash_id** (number)
+--   - **flash_size** (number)
+--   - **flash_mode** (number) 0 = QIO, 1 = QOUT, 2 = DIO, 15 = DOUT.
+--   - **flash_speed** (number)
+-- - for group = `"lfs"`
+--   - **lfs_base** (number) Flash offset of selected LFS region
+--   - **lfs_mapped** (number) Mapped memory address of selected LFS region
+--   - **lfs_size** (number) size of selected LFS region
+--   - **lfs_used** (number) actual size used by current LFS image
+-- - for group = `"sw_version"`
+--   - **git_branch** (string)
+--   - **git_commit_id** (string)
+--   - **git_release** (string) release name +additional commits e.g. "2.0.0-master_20170202 +403"
+--   - **git_commit_dts** (string) commit timestamp in an ordering format. e.g. "201908111200"
+--   - **node_version_major** (number)
+--   - **node_version_minor** (number)
+--   - **node_version_revision** (number)
+-- - for group = `"build_config"`
+--   - **ssl** (boolean)
+--   - **lfs_size** (number) as defined at build time
+--   - **modules** (string) comma separated list
+--   - **number_type** (string) integer or float
 function node.info(group) end
 
 ---Submits a string to the Lua interpreter. Similar to `pcall(loadstring(str))`,
@@ -746,10 +746,10 @@ function node.setonerror(callback) end
 ---@param partition_info NodeSetPartTbl An array containing one or more of the following enties.
 --The address values are byte offsets relative to the start of the Flash memory. The size values are in bytes.
 --Note that these parameters must be a multiple of 8Kb to align to Flash page boundaries.
---**lfs_addr** - The base address of the LFS region.
---**lfs_size** - The size of the LFS region.
---**spiffs_addr** - The base address of the SPIFFS region.
---**spiffs_size** - The size of the SPIFFS region.
+-- - **lfs_addr** - The base address of the LFS region.
+-- - **lfs_size** - The size of the LFS region.
+-- - **spiffs_addr** - The base address of the SPIFFS region.
+-- - **spiffs_size** - The size of the SPIFFS region.
 function node.setpartitiontable(partition_info) end
 
 ---Put NodeMCU in light sleep mode to reduce current consumption.
@@ -780,10 +780,10 @@ function node.startupcounts(marker) end
 
 ---Get/set options that control the startup process. This interface will grow over time.
 ---@param tbl? NodeStartup If the argument is omitted, then no change is made to the current set of startup options. If the argument is the empty table **{ }** then all options are reset to their default values. Table one or more options:
---**banner** - set to `true` or `false` to indicate whether the startup banner should be displayed or not. (default: true)
---**frequency** - set to node.CPU80MHZ or node.CPU160MHZ to indicate the initial CPU speed. (default: node.CPU80MHZ)
---**delay_mount** - set to true or false to indicate whether the SPIFFS filesystem mount is delayed until it is first needed or not. (default: false)
---**command** - set to a string which is the initial command that is run. This is the same string as in the node.startupcommand.
+-- - **banner** - set to `true` or `false` to indicate whether the startup banner should be displayed or not. (default: true)
+-- - **frequency** - set to node.CPU80MHZ or node.CPU160MHZ to indicate the initial CPU speed. (default: node.CPU80MHZ)
+-- - **delay_mount** - set to true or false to indicate whether the SPIFFS filesystem mount is delayed until it is first needed or not. (default: false)
+-- - **command** - set to a string which is the initial command that is run. This is the same string as in the node.startupcommand.
 ---@return table #This is the complete set of options in the state that will take effect on the next boot. Note that the command key may be missing in which case the default value will be used.
 function node.startup(tbl) end
 
@@ -1199,10 +1199,10 @@ function rtcfifo.pop() end
 
 ---Initializes the rtcfifo module for use. Calling `rtcfifo.prepare()` unconditionally re-initializes the storage - any samples stored are discarded.
 ---@param tbl? table This function takes an optional configuration *table* as an argument. The following items may be configured:
---**interval_us** If wanting to make use of the `rtcfifo.sleep_until_sample()` function, this field sets the sample interval (in microseconds) to use. It is effectively the first argument of `rtctime.dsleep_aligned()`.
---**sensor_count** Specifies the number of different sensors to allocate name space for. This directly corresponds to a number of slots reserved for names in the variable block. The default value is 5, minimum is 1, and maximum is 16.
---**storage_begin** Specifies the first RTC user memory slot to use for the variable block. Default is 32. Only takes effect if storage_end is also specified.
---**storage_end** Specified the end of the RTC user memory slots. This slot number will not be touched. Default is 128. Only takes effect if storage_begin is also specified.
+-- - **interval_us** If wanting to make use of the `rtcfifo.sleep_until_sample()` function, this field sets the sample interval (in microseconds) to use. It is effectively the first argument of `rtctime.dsleep_aligned()`.
+-- - **sensor_count** Specifies the number of different sensors to allocate name space for. This directly corresponds to a number of slots reserved for names in the variable block. The default value is 5, minimum is 1, and maximum is 16.
+-- - **storage_begin** Specifies the first RTC user memory slot to use for the variable block. Default is 32. Only takes effect if storage_end is also specified.
+-- - **storage_end** Specified the end of the RTC user memory slots. This slot number will not be touched. Default is 128. Only takes effect if storage_begin is also specified.
 ---@return nil
 function rtcfifo.prepare(tbl) end
 
