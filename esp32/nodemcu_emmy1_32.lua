@@ -152,19 +152,19 @@ function bthci.adv.setdata(advbytes, callback) end
 
 ---Configures advertisement parameters.
 ---@param paramtable BthciSet1 a table with zero or more of the following fields:
---**interval_min** value in units of 0.625ms. Default 0x0400 (0.64s).
---**interval_max** value in units of 0.625ms. Default 0x0800 (1.28s).
---**type** advertising type, one of following constants:
--- - bthci.adv.CONN_UNDIR, the default (ADV_IND in BT spec)
--- - bthci.adv.CONN_DIR_HI (ADV_DIRECT_IND, high duty cycle in the BT spec)
--- - bthci.adv.SCAN_UNDIR (ADV_SCAN_IND in the BT spec)
--- - bthci.adv.NONCONN_UNDIR (ADV_NONCONN_IND in the BT spec)
--- - bthci.adv.CONN_DIR_LO (ADV_DIRECT_IND, low duty cycle in the BT spec)
---**own_addr_type** own address type. Default 0 (public address).
---**peer_addr_type** peer address type. Default 0 (public address).
---**peer_addr** TODO, not yet implemented
---**channel_map** which channels to advertise on. The constants *bthci.adv.CHAN_37, bthci.adv.CHAN_38, bthci.adv.CHAN_39* or *bthci.adv.CHAN_ALL* may be used. Default is all channels.
---**filter_policy** filter policy, default 0 (no filtering).
+-- - **interval_min** value in units of 0.625ms. Default 0x0400 (0.64s).
+-- - **interval_max** value in units of 0.625ms. Default 0x0800 (1.28s).
+-- - **type** advertising type, one of following constants:
+--   - bthci.adv.CONN_UNDIR, the default (ADV_IND in BT spec)
+--   - bthci.adv.CONN_DIR_HI (ADV_DIRECT_IND, high duty cycle in the BT spec)
+--   - bthci.adv.SCAN_UNDIR (ADV_SCAN_IND in the BT spec)
+--   - bthci.adv.NONCONN_UNDIR (ADV_NONCONN_IND in the BT spec)
+--   - bthci.adv.CONN_DIR_LO (ADV_DIRECT_IND, low duty cycle in the BT spec)
+-- - **own_addr_type** own address type. Default 0 (public address).
+-- - **peer_addr_type** peer address type. Default 0 (public address).
+-- - **peer_addr** TODO, not yet implemented
+-- - **channel_map** which channels to advertise on. The constants *bthci.adv.CHAN_37, bthci.adv.CHAN_38, bthci.adv.CHAN_39* or *bthci.adv.CHAN_ALL* may be used. Default is all channels.
+-- - **filter_policy** filter policy, default 0 (no filtering).
 ---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
 function bthci.adv.setparams(paramtable, callback) end
@@ -184,11 +184,11 @@ function bthci.scan.enable(onoff, callback) end
 
 ---Configures scan parameters.
 ---@param paramstable BthciSet2 a table with zero or more of the following fields:
---**mode** scanning mode, 0 for passive, 1 for active. Default 0.
---**interval** scanning interval in units of 0.625ms. Default 0x0010.
---**window** length of scanning window in units of 0.625ms. Default 0x0010.
---**own_addr_type** own address type. Default 0 (public).
---**filter_policy** filtering policy. Default 0 (no filtering).
+-- - **mode** scanning mode, 0 for passive, 1 for active. Default 0.
+-- - **interval** scanning interval in units of 0.625ms. Default 0x0010.
+-- - **window** length of scanning window in units of 0.625ms. Default 0x0010.
+-- - **own_addr_type** own address type. Default 0 (public).
+-- - **filter_policy** filtering policy. Default 0 (no filtering).
 ---@param callback? function optional function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
 function bthci.scan.setparams(paramstable, callback) end
@@ -219,16 +219,16 @@ function can.send(format, msg_id, data) end
 
 ---Configuration CAN controller.
 ---@param tbl CanSetup config table
---**speed** kbps. One of following value: 1000, 800, 500, 250, 100.
---**tx** Pin num for TX.
---**rx** Pin num for RX.
---**dual_filter** `true` dual filter mode, `false` single filter mode (default)
---**code** 4-bytes integer. Use this with mask to filter CAN frame. Default: 0. See SJA1000
---**mask** 4-bytes integer. Default: 0xffffffff
+-- - **speed** kbps. One of following value: 1000, 800, 500, 250, 100.
+-- - **tx** Pin num for TX.
+-- - **rx** Pin num for RX.
+-- - **dual_filter** `true` dual filter mode, `false` single filter mode (default)
+-- - **code** 4-bytes integer. Use this with mask to filter CAN frame. Default: 0. See SJA1000
+-- - **mask** 4-bytes integer. Default: 0xffffffff
 ---@param callback function|' function(format, msg_id, data) end' function to be called when CAN data received.
---**format** Frame format. can.STANDARD_FRAME or can.EXTENDED_FRAME
---**msg_id** CAN Messge ID
---**data** CAN data, up to 8 bytes
+-- - **format** Frame format. can.STANDARD_FRAME or can.EXTENDED_FRAME
+-- - **msg_id** CAN Messge ID
+-- - **data** CAN data, up to 8 bytes
 ---@return nil
 function can.setup(tbl, callback) end
 
@@ -364,19 +364,19 @@ function eth.get_speed() end
 
 ---Initialize the PHY chip and set up its tcpip adapter.
 ---@param cfg EthInit table containing configuration data. All entries are mandatory:
---**addr** PHY address, 0 to 31
---**clock_mode** external/internal clock mode selection, one of
--- - eth.CLOCK_GPIO0_IN
--- - eth.CLOCK_GPIO0_OUT
--- - eth.CLOCK_GPIO16_OUT
--- - eth.CLOCK_GPIO17_OUT
---**mdc** MDC pin number
---**mdio** MDIO pin number
---**phy** PHY chip model, one of
--- - eth.PHY_IP101
--- - eth.PHY_LAN8720
--- - eth.PHY_TLK110
---**power** power enable pin, optional
+-- - **addr** PHY address, 0 to 31
+-- - **clock_mode** external/internal clock mode selection, one of
+--   - eth.CLOCK_GPIO0_IN
+--   - eth.CLOCK_GPIO0_OUT
+--   - eth.CLOCK_GPIO16_OUT
+--   - eth.CLOCK_GPIO17_OUT
+-- - **mdc** MDC pin number
+-- - **mdio** MDIO pin number
+-- - **phy** PHY chip model, one of
+--   - eth.PHY_IP101
+--   - eth.PHY_LAN8720
+--   - eth.PHY_TLK110
+-- - **power** power enable pin, optional
 ---@return nil
 function eth.init(cfg) end
 
@@ -384,14 +384,14 @@ function eth.init(cfg) end
 ---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"got_ip"' event
 ---@param callback function|' function(event, info) end' callback function(event, info) to perform when event occurs, or nil to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
 --Event information provided for each event is as follows:
---**start**: no additional info
---**stop**: no additional info
---**connected**: no additional info
---**disconnected**: no additional info
---**got_ip**: IP network information:
---*ip*: the IP address assigned
---*netmask*: the IP netmask
---*gw*: the gateway ("0.0.0.0" if no gateway)
+-- - **start**: no additional info
+-- - **stop**: no additional info
+-- - **connected**: no additional info
+-- - **disconnected**: no additional info
+-- - **got_ip**: IP network information:
+--   - *ip*: the IP address assigned
+--   - *netmask*: the IP netmask
+--   - *gw*: the gateway ("0.0.0.0" if no gateway)
 function eth.on(event, callback) end
 
 ---Set MAC address.
@@ -480,17 +480,17 @@ function fObj:flush() end
 
 ---Read content from the open file.
 ---@param n_or_char? integer :
----if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
----if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
----if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+-- - if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
+-- - if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
+-- - if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil #File content as a string, or `nil` when EOF
 function file.read(n_or_char) end
 
 ---Read content from the open file.
 ---@param n_or_char? integer :
----if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
----if passed a number `n`, then read up to *n* bytes or the entire file (whichever is smaller).
----if passed a string containing the single character `char`, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+-- - if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
+-- - if passed a number `n`, then read up to *n* bytes or the entire file (whichever is smaller).
+-- - if passed a string containing the single character `char`, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil #File content as a string, or `nil` when EOF
 function fObj:read(n_or_char) end
 
@@ -558,17 +558,17 @@ gpio = {}
 
 ---Configure GPIO mode for one or more pins.
 ---@param tbl GpioConfig List of configuration tables:
----**gpio** one or more (given as list) pins,
----**dir** direction, one of
--- - gpio.IN
--- - gpio.OUT
--- - gpio.IN_OUT
----**opendrain** 1 enables opendrain mode, defaults to 0 if omitted
----**pull** enable pull-up and -down resistors, one of
--- - gpio.FLOATING -- disables both pull-up and -down
--- - gpio.PULL_UP -- enables pull-up and disables pull-down
--- - gpio.PULL_DOWN -- enables pull-down and disables pull-up
--- - gpio.PULL_UP_DOWN -- enables both pull-up and -down
+-- - **gpio** one or more (given as list) pins,
+-- - **dir** direction, one of
+--   - gpio.IN
+--   - gpio.OUT
+--   - gpio.IN_OUT
+-- - **opendrain** 1 enables opendrain mode, defaults to 0 if omitted
+-- - **pull** enable pull-up and -down resistors, one of
+--   - gpio.FLOATING -- disables both pull-up and -down
+--   - gpio.PULL_UP -- enables pull-up and disables pull-down
+--   - gpio.PULL_DOWN -- enables pull-down and disables pull-up
+--   - gpio.PULL_UP_DOWN -- enables both pull-up and -down
 ---@vararg GpioConfig
 ---@return nil
 function gpio.config(tbl, ...) end
@@ -637,12 +637,12 @@ local HTTP = {}
 ---@param url string|'"http://"'|'"https://"' The URL to fetch, including the http:// or https:// prefix. Required.
 ---@param method? integer|' http.GET'|' http.POST'|' http.DELETE'|' http.HEAD' The HTTP method to use. Optional and may be omitted, the default is http.GET.
 ---@param options? CreateHTTPConn An optional table containing any or all of:
---**async** If true, the request is processed asynchronously, meaning `request()` returns immediately rather than blocking until the connection is complete and all callbacks have been made. Some other connection APIs behave differently in asynchronous mode, see their documentation for details. If not specified, the default is false, meaning requests are processed synchronously.
---**bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
---**cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
---**headers** Table of headers to add to the request.
---**max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
---**timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
+-- - **async** If true, the request is processed asynchronously, meaning `request()` returns immediately rather than blocking until the connection is complete and all callbacks have been made. Some other connection APIs behave differently in asynchronous mode, see their documentation for details. If not specified, the default is false, meaning requests are processed synchronously.
+-- - **bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
+-- - **cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
+-- - **headers** Table of headers to add to the request.
+-- - **max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
+-- - **timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
 ---@return http #The connection object.
 function http.createConnection(url, method, options) end
 
@@ -692,11 +692,11 @@ function HTTP:close() end
 ---Make an HTTP GET request. If a callback is specifed then the function operates in asynchronous mode, otherwise it is synchronous.
 ---@param url string|'"http://"'|'"https://"' The URL to fetch
 ---@param options? any|nil Same options as http.createConnection(), except that async is set for you based on whether a callback is specified or not. May be `nil` or omitted.
---**bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
---**cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
---**headers** Table of headers to add to the request.
---**max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
---**timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
+-- - **bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
+-- - **cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
+-- - **headers** Table of headers to add to the request.
+-- - **max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
+-- - **timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
 ---@param callback? function|nil|' function(code, data) end'
 ---@return any|nil #In synchronous mode, returns 3 results `status_code, body, headers` once the request has completed. In asynchronous mode, returns `nil` immediately.
 function http.get(url, options, callback) end
@@ -704,11 +704,11 @@ function http.get(url, options, callback) end
 ---Executes a single HTTP POST request and closes the connection. If a callback is specifed then the function operates in asynchronous mode, otherwise it is synchronous.
 ---@param url string|'"http://"'|'"https://"' The URL to fetch
 ---@param options any|nil Same options as http.createConnection(), except that async is set for you based on whether a callback is specified or not. May be `nil`.
---**bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
---**cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
---**headers** Table of headers to add to the request.
---**max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
---**timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
+-- - **bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
+-- - **cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
+-- - **headers** Table of headers to add to the request.
+-- - **max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
+-- - **timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
 ---@param body any The body to post. Required and must already be encoded in the appropriate format, but may be empty.
 ---@param callback? function|' function(code, data) end' Should be `nil` or omitted to specify synchronous behaviour, otherwise a callback function to be invoked when the response has been received or an error occurred, which is called with the arguments **status_code**, **body** and **headers**. In case of an error **status_code** will be a negative number.
 ---@return any|nil #In synchronous mode, returns 3 results **status_code, body, headers** once the request has completed. In asynchronous mode, returns `nil` immediately.
@@ -767,8 +767,8 @@ function i2c.stop(id) end
 ---@param to_ms? integer timeout for the transfer in ms, defaults to **0** (infinite)
 ---@return any|nil #>
 -- - for synchronous operation i.e. without any callback function, two values are returned
---**data** - string of received data (`nil` if no read or NACK)
---**ack** - `true` if ACK received, `false` for NACK
+--   - **data** - string of received data (`nil` if no read or NACK)
+--   - **ack** - `true` if ACK received, `false` for NACK
 -- - for asynchronous operation, i.e. with a callback function, no value is returned
 function i2c.transfer(id, callback, to_ms) end
 
@@ -799,12 +799,12 @@ function i2c.slave.on(id, event, callback) end
 ---Initialize the I²C interface for slave mode.
 ---@param id integer|'i2c.HW0'|'i2c.HW1' interface id,
 ---@param slave_config I2cSlaveConfig table containing slave configuration information
---**sda** IO index
---**scl** IO index
---**addr** slave address (7bit or 10bit)
---**10bit** enable 10bit addressing with true, use 7bit with false (optional, defaults to false is omitted)
---**rxbuf_len** length of receive buffer (optional, defaults to 128 if omitted)
---**txbuf_len** length of transmit buffer (optional, defaults to 128 if omitted)
+-- - **sda** IO index
+-- - **scl** IO index
+-- - **addr** slave address (7bit or 10bit)
+-- - **10bit** enable 10bit addressing with true, use 7bit with false (optional, defaults to false is omitted)
+-- - **rxbuf_len** length of receive buffer (optional, defaults to 128 if omitted)
+-- - **txbuf_len** length of transmit buffer (optional, defaults to 128 if omitted)
 ---@return nil
 function i2c.slave.setup(id, slave_config) end
 
@@ -871,45 +871,45 @@ function i2s.read(i2s_num, size, wait_ms) end
 ---Configuration and start I2S bus.
 ---@param i2s_num integer|'0'|'1' I2S peripheral
 ---@param cfg I2sCfg table containing configuration data:
---**mode** I2S work mode. Optional, defaults to i2s.MODE_MASTER + i2s.MODE_TX when omitted.
--- - i2s.MODE_MASTER
--- - i2s.MODE_SLAVE
--- - i2s.MODE_TX
--- - i2s.MODE_RX
--- - i2s.MODE_DAC_BUILT_IN
--- - i2s.MODE_ADC_BUILT_IN
--- - i2s.MODE_PDM
---**rate** audio sample rate. Optional, defauls to 44100 when omitted.
---**bits** bits per sample. Optional, defaults to 16 when omitted.
---**channel** channel format of I2S stream. Optional, defaults to i2s.CHANNEL_RIGHT_LEFT when omitted.
--- - i2s.CHANNEL_RIGHT_LEFT
--- - i2s.CHANNEL_ALL_LEFT
--- - i2s.CHANNEL_ONLY_LEFT
--- - i2s.CHANNEL_ALL_RIGHT
--- - i2s.CHANNEL_ONLY_RIGHT
---**format** communication format. Optional, defaults to i2s.FORMAT_I2S + i2s.FORMAT_I2S_MSB when omitted.
--- - i2s.FORMAT_I2S
--- - i2s.FORMAT_I2S_MSB
--- - i2s.FORMAT_I2S_LSB
--- - i2s.FORMAT_PCM
--- - i2s.FORMAT_PCM_SHORT
--- - i2s.FORMAT_PCM_LONG
---**buffer_count** number of dma buffers. Optional, defaults to 2 when omitted.
---**buffer_len** size of one dma buffer. Optional, defaults to rate/100 when omitted.
---**bck_pin** clock pin, optional
---**ws_pin** WS pin, optional
---**data_out_pin** data output pin, optional
---**data_in_pin** data input pin, optional
---**dac_mode** DAC mode configuration. Optional, defaults to i2s.
+-- - **mode** I2S work mode. Optional, defaults to i2s.MODE_MASTER + i2s.MODE_TX when omitted.
+--   - i2s.MODE_MASTER
+--   - i2s.MODE_SLAVE
+--   - i2s.MODE_TX
+--   - i2s.MODE_RX
+--   - i2s.MODE_DAC_BUILT_IN
+--   - i2s.MODE_ADC_BUILT_IN
+--   - i2s.MODE_PDM
+-- - **rate** audio sample rate. Optional, defauls to 44100 when omitted.
+-- - **bits** bits per sample. Optional, defaults to 16 when omitted.
+-- - **channel** channel format of I2S stream. Optional, defaults to i2s.CHANNEL_RIGHT_LEFT when omitted.
+--   - i2s.CHANNEL_RIGHT_LEFT
+--   - i2s.CHANNEL_ALL_LEFT
+--   - i2s.CHANNEL_ONLY_LEFT
+--   - i2s.CHANNEL_ALL_RIGHT
+--   - i2s.CHANNEL_ONLY_RIGHT
+-- - **format** communication format. Optional, defaults to i2s.FORMAT_I2S + i2s.FORMAT_I2S_MSB when omitted.
+--   - i2s.FORMAT_I2S
+--   - i2s.FORMAT_I2S_MSB
+--   - i2s.FORMAT_I2S_LSB
+--   - i2s.FORMAT_PCM
+--   - i2s.FORMAT_PCM_SHORT
+--   - i2s.FORMAT_PCM_LONG
+-- - **buffer_count** number of dma buffers. Optional, defaults to 2 when omitted.
+-- - **buffer_len** size of one dma buffer. Optional, defaults to rate/100 when omitted.
+-- - **bck_pin** clock pin, optional
+-- - **ws_pin** WS pin, optional
+-- - **data_out_pin** data output pin, optional
+-- - **data_in_pin** data input pin, optional
+-- - **dac_mode** DAC mode configuration. Optional, defaults to i2s.
 -- - i2s.DAC_CHANNEL_DISABLE (DAC_CHANNEL_DISABLE) when omitted.
--- - i2s.DAC_CHANNEL_RIGHT
--- - i2s.DAC_CHANNEL_LEFT
--- - i2s.DAC_CHANNEL_BOTH
---**adc1_channel** ADC1 channel number 0..7. Optional, defaults to off when omitted.
+--   - i2s.DAC_CHANNEL_RIGHT
+--   - i2s.DAC_CHANNEL_LEFT
+--   - i2s.DAC_CHANNEL_BOTH
+-- - **adc1_channel** ADC1 channel number 0..7. Optional, defaults to off when omitted.
 ---@param cb function function called when transmit data is requested or received data is available. The function is called with parameters **i2s_num** and
---**dir**
--- - "tx", for TX data request. Function shall call i2s.write().
--- - "rx", for RX data available. Function shall call i2s.read().
+-- - **dir**
+--   - "tx", for TX data request. Function shall call i2s.write().
+--   - "rx", for RX data available. Function shall call i2s.read().
 ---@return nil
 function i2s.start(i2s_num, cfg, cb) end
 
@@ -941,17 +941,17 @@ local channel = {}
 
 ---Configures a PIN to be controlled by the LEDC system.
 ---@param tbl LedcNew List of configuration tables:
---**gpio** one or more (given as list) pins, see GPIO Overview
---**bits** Channel duty depth. Defaults to ledc.TIMER_13_BIT. Otherwise one of
--- - ledc.TIMER_10_BIT  ...   ledc.TIMER_15_BIT
---**mode** High-speed mode or low-speed mode
--- - ledc.HIGH_SPEED or ledc.LOW_SPEED
---**timer** The timer source of channel
--- - ledc.TIMER_0  ...  ledc.TIMER_3
---**channel** The timer source of channel
--- - ledc.CHANNEL_0  ...  ledc.CHANNEL_7
---**frequency** Timer frequency(Hz)
---**duty** Channel duty, the duty range is [0, (2**bit_num) - 1]. Example: if `ledc.TIMER_13_BIT` is used maximum value is 4096 x 2 -1 = 8091
+-- - **gpio** one or more (given as list) pins, see GPIO Overview
+-- - **bits** Channel duty depth. Defaults to ledc.TIMER_13_BIT. Otherwise one of
+--   - ledc.TIMER_10_BIT  ...   ledc.TIMER_15_BIT
+-- - **mode** High-speed mode or low-speed mode
+--   - ledc.HIGH_SPEED or ledc.LOW_SPEED
+-- - **timer** The timer source of channel
+--   - ledc.TIMER_0  ...  ledc.TIMER_3
+-- - **channel** The timer source of channel
+--   - ledc.CHANNEL_0  ...  ledc.CHANNEL_7
+-- - **frequency** Timer frequency(Hz)
+-- - **duty** Channel duty, the duty range is [0, (2**bit_num) - 1]. Example: if `ledc.TIMER_13_BIT` is used maximum value is 4096 x 2 -1 = 8091
 ---@return ledc #ledc.channel
 function ledc.newChannel(tbl) end
 
@@ -1038,9 +1038,9 @@ function MQTT32:close() end
 ---@param host string host, domain or IP (string)
 ---@param port? integer broker port (number), default 1883
 ---@param secure? boolean|table either an interger with **0/1** for `false/true` (default 0), or a table with optional entries
---**ca_cert CA** - certificate data in PEM format for server verify with SSL
---**client_cert** - client certificate data in PEM format for SSL mutual authentication
---**client_key** - client private key data in PEM format for SSL mutual authentication. Note that both client_cert and client_key have to be provided for mutual authentication.
+-- - **ca_cert CA** - certificate data in PEM format for server verify with SSL
+-- - **client_cert** - client certificate data in PEM format for SSL mutual authentication
+-- - **client_key** - client private key data in PEM format for SSL mutual authentication. Note that both client_cert and client_key have to be provided for mutual authentication.
 ---@param conn_est? function|' function(client) end' `function(client: any)` callback function for when the connection was established
 ---@param conn_notest? function|' function(client, reason) end' `function(client: any, reason: number` callback function for when the connection could not be established. No further callbacks should be called.
 ---@return boolean
@@ -1289,13 +1289,13 @@ function node.compile(filename) end
 ---@overload fun(options:number)
 -- For compatibility, a `number` parameter usecs can be supplied instead of an options table, which is equivalent to `node.dsleep({us = usecs})`.
 ---@param options DsleepCfg a table containing some of:
---**secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the us parameter.
---**us**, a number of microseconds to sleep. If both secs and us are provided, the values are combined.
---**gpio**, a single GPIO number or a list of GPIOs. These pins must all be RTC-capable otherwise an error is raised.
---**level**. Whether to trigger when *any* of the GPIOs are high (level=1, which is the default if not specified), or when *all* the GPIOs are low (level=0).
---**isolate**. A list of GPIOs to isolate. Isolating a GPIO disables input, output, pullup, pulldown, and enables hold feature for an RTC IO. Use this function if an RTC IO needs to be disconnected from internal circuits in deep sleep, to minimize leakage current.
---**pull**, boolean, whether to keep powering previously-configured internal pullup/pulldown resistors. Default is false if not specified.
---**touch**, boolean, whether to trigger wakeup from any previously-configured touchpads. Default is false if not specified.
+-- - **secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the us parameter.
+-- - **us**, a number of microseconds to sleep. If both secs and us are provided, the values are combined.
+-- - **gpio**, a single GPIO number or a list of GPIOs. These pins must all be RTC-capable otherwise an error is raised.
+-- - **level**. Whether to trigger when *any* of the GPIOs are high (level=1, which is the default if not specified), or when *all* the GPIOs are low (level=0).
+-- - **isolate**. A list of GPIOs to isolate. Isolating a GPIO disables input, output, pullup, pulldown, and enables hold feature for an RTC IO. Use this function if an RTC IO needs to be disconnected from internal circuits in deep sleep, to minimize leakage current.
+-- - **pull**, boolean, whether to keep powering previously-configured internal pullup/pulldown resistors. Default is false if not specified.
+-- - **touch**, boolean, whether to trigger wakeup from any previously-configured touchpads. Default is false if not specified.
 function node.dsleep(options) end
 
 ---Returns the flash chip ID.
@@ -1357,12 +1357,12 @@ function node.setcpufreq(speed) end
 
 ---Enters light sleep mode, which saves power without losing state. The state of the CPU and peripherals is preserved during light sleep and is resumed once the processor wakes up. When the processor wakes back up depends on the supplied options.
 ---@param options SleepCfg a table containing some of:
---**secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the **us** parameter.
---**us**, a number of microseconds to sleep. If both **secs** and **us** are provided, the values are combined.
---**gpio**, a boolean, whether to allow wakeup by GPIOs. Default is `false` if not specified.
---**touch**, boolean, whether to trigger wakeup from any previously-configured touchpads. Default is `false` if not specified.
---**uart**, an integer or list of integers. Which UARTs should trigger wakeup. Default is the empty list if not specified.
---**ulp**, a boolean, whether to allow the ULP to trigger wakeup. Default is `false` if not specified.
+-- - **secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the **us** parameter.
+-- - **us**, a number of microseconds to sleep. If both **secs** and **us** are provided, the values are combined.
+-- - **gpio**, a boolean, whether to allow wakeup by GPIOs. Default is `false` if not specified.
+-- - **touch**, boolean, whether to trigger wakeup from any previously-configured touchpads. Default is `false` if not specified.
+-- - **uart**, an integer or list of integers. Which UARTs should trigger wakeup. Default is the empty list if not specified.
+-- - **ulp**, a boolean, whether to allow the ULP to trigger wakeup. Default is `false` if not specified.
 ---@return integer #One of the following values, depending on what triggered the wakeup.
 -- - node.wakeup.GPIO
 -- - node.wakeup.TIMER

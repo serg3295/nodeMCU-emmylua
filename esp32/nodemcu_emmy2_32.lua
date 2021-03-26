@@ -5,13 +5,13 @@ otaupgrade = {}
 ---@return string #the name of the partition of the running application
 ---@return string #the name of the partition currently marked for boot next
 ---@return table #a table whose keys are the names of OTA partitions and corresponding values are tables containing:
---**state** one of *new, testing, valid, invalid, aborted* or possibly *undefined*
---**name** the application name, typically "NodeMCU"
---**date** the build date
---**time** the build time
---**version** the build version, as set by the *PROJECT_VER* variable during build
---**secure_version** the secure version number, if secure boot is enabled
---**idf_version** the IDF version
+-- - **state** one of *new, testing, valid, invalid, aborted* or possibly *undefined*
+-- - **name** the application name, typically "NodeMCU"
+-- - **date** the build date
+-- - **time** the build time
+-- - **version** the build version, as set by the *PROJECT_VER* variable during build
+-- - **secure_version** the secure version number, if secure boot is enabled
+-- - **idf_version** the IDF version
 function otaupgrade.info() end
 
 ---Wipes the spare application partition and prepares to receive the new application firmware.
@@ -209,15 +209,15 @@ qrcodegen = {}
 ---Generates a QR Code from a text string.
 ---@param text any The text or URL to encode. Should be UTF-8 or ASCII.
 ---@param options? QRcodeCfg An optional table, containing any of:
---**minver** the minimum version according to the QR Code Model 2 standard. If not specified, defaults to 1.
---**maxver** the maximum version according to the QR Code Model 2 standard. If not specified, defaults to 40. Specifying a lower maximum version reduces the amount of temporary memory the function requires, so it can be worthwhile to specify a smaller value if you know the text will fit in a lower-version QR Code.
---**ecl** the error correction level in a QR Code symbol. Higher error correction produces a larger QR Code. One of:
--- - qrcodegen.LOW (default if not specified)
--- - qrcodegen.MEDIUM
--- - qrcodegen.QUARTILE
--- - qrcodegen.HIGH
---**mask** the mask pattern used in a QR Code symbol. An integer 0-7, or qrcodegen.AUTO (the default).
---**boostecl** defaults to false.
+-- - **minver** the minimum version according to the QR Code Model 2 standard. If not specified, defaults to 1.
+-- - **maxver** the maximum version according to the QR Code Model 2 standard. If not specified, defaults to 40. Specifying a lower maximum version reduces the amount of temporary memory the function requires, so it can be worthwhile to specify a smaller value if you know the text will fit in a lower-version QR Code.
+-- - **ecl** the error correction level in a QR Code symbol. Higher error correction produces a larger QR Code. One of:
+--   - qrcodegen.LOW (default if not specified)
+--   - qrcodegen.MEDIUM
+--   - qrcodegen.QUARTILE
+--   - qrcodegen.HIGH
+-- - **mask** the mask pattern used in a QR Code symbol. An integer 0-7, or qrcodegen.AUTO (the default).
+-- - **boostecl** defaults to false.
 ---@return string|nil #The QR Code, encoded as a string. Use `qrcodegen.getSize()` and `qrcodegen.getPixel()` to extract data from the result. If the text cannot be represented within the given version range (for example it is too long) then `nil` is returned.
 function qrcodegen.encodeText(text, options) end
 
@@ -247,13 +247,13 @@ local card = {}
 ---SDMMC Mode. Initialize the SDMMC and probe the attached SD card.
 ---@param slot integer|'sdmmc.HS1'|'sdmmc.HS2' SDMMC slot
 ---@param cfg? SDmmcCfg optional table containing slot configuration:
---**cd_pin** card detect pin, none if omitted
---**wp_pin** write-protcet pin, none if omitted
---**fmax** maximum communication frequency, defaults to 20  if omitted
---**width** bis width, defaults to sdmmc.W1BIT if omitted, one of:
--- - sdmmc.W1BIT
--- - sdmmc.W4BIT
--- - sdmmc.W8BIT, not supported yet
+-- - **cd_pin** card detect pin, none if omitted
+-- - **wp_pin** write-protcet pin, none if omitted
+-- - **fmax** maximum communication frequency, defaults to 20  if omitted
+-- - **width** bis width, defaults to sdmmc.W1BIT if omitted, one of:
+--   - sdmmc.W1BIT
+--   - sdmmc.W4BIT
+--   - sdmmc.W8BIT, not supported yet
 ---@return sdmmc cardObj Card object. Error is thrown for invalid parameters or if SDMMC hardware or card cannot be initialized.
 function sdmmc.init(slot, cfg) end
 
@@ -269,38 +269,38 @@ function sdmmc.init(slot, cfg) end
 ---SD SPI Mode. Initialize the SDMMC and probe the attached SD card.
 ---@param slot integer|'sdmmc.HSPI'|'sdmmc.VSPI' SD SPI slot
 ---@param cfg SDspiCfg mandatory table containing slot configuration:
---**sck_pin** SPI SCK pin, mandatory
---**mosi_pin**, SPI MOSI pin, mandatory
---**miso_pin**, SPI MISO pin, mandatory
---**cs_pin**, SPI CS pin, mandatory
---**cd_pin** card detect pin, none if omitted
---**wp_pin** write-protcet pin, none if omitted
---**fmax** maximum communication frequency, defaults to 20  if omitted
+-- - **sck_pin** SPI SCK pin, mandatory
+-- - **mosi_pin**, SPI MOSI pin, mandatory
+-- - **miso_pin**, SPI MISO pin, mandatory
+-- - **cs_pin**, SPI CS pin, mandatory
+-- - **cd_pin** card detect pin, none if omitted
+-- - **wp_pin** write-protcet pin, none if omitted
+-- - **fmax** maximum communication frequency, defaults to 20  if omitted
 ---@return sdmmc cardObj Card object. Error is thrown for invalid parameters or if SDMMC hardware or card cannot be initialized.
 function sdmmc.init(slot, cfg) end
 
 ---Retrieve information from the SD card.
 ---@return table #Table containing the card's OCR, CID, CSD, SCR, and RCA with elements:
---**ocr** Operation Conditions Register
---**cid** Card IDentification:
--- - date - manufacturing date
--- - mfg_id - manufacturer ID
--- - name - product name
--- - oem_id - OEM/product ID
--- - revision - product revision
--- - serial - product serial number
---**csd** Card-Specific Data:
--- - capacity - total number of sectors
--- - card_command_class - card command class for SD
--- - csd_ver - CSD structure format
--- - mmc_ver - MMC version (for CID format)
--- - read_block_len - block length for reads
--- - sector_size - sector size in bytes
--- - tr_speed - maximum transfer speed
---**scr**:
--- - sd_spec-  SD physical layer specification version, reported by card
--- - bus_width - bus widths supported by card
---**rca** Relative Card Address
+-- - **ocr** Operation Conditions Register
+-- - **cid** Card IDentification:
+--   - date - manufacturing date
+--   - mfg_id - manufacturer ID
+--   - name - product name
+--   - oem_id - OEM/product ID
+--   - revision - product revision
+--   - serial - product serial number
+-- - **csd** Card-Specific Data:
+--   - capacity - total number of sectors
+--   - card_command_class - card command class for SD
+--   - csd_ver - CSD structure format
+--   - mmc_ver - MMC version (for CID format)
+--   - read_block_len - block length for reads
+--   - sector_size - sector size in bytes
+--   - tr_speed - maximum transfer speed
+-- - **scr**:
+--   - sd_spec-  SD physical layer specification version, reported by card
+--   - bus_width - bus widths supported by card
+-- - **rca** Relative Card Address
 function card:get_info() end
 
 ---Mount filesystem on SD card.
@@ -371,8 +371,8 @@ local decoder = {}
 ---This creates an encoder object that can convert a Lua object into a JSON encoded string.
 ---@param tbl table data to encode
 ---@param opts? SjsonCfg1 an optional table of options. The possible entries are:
---**depth** the maximum encoding depth needed to encode the table. The default is 20.
---**null** the string value to treat as null.
+-- - **depth** the maximum encoding depth needed to encode the table. The default is 20.
+-- - **null** the string value to treat as null.
 ---@return sjsonenc #A sjson.encoder object.
 function sjson.encoder(tbl, opts) end
 
@@ -384,16 +384,16 @@ function encoder:read(size) end
 ---Encode a Lua table to a JSON string.
 ---@param tbl table data to encode
 ---@param opts? SjsonCfg1 an optional table of options. The possible entries are:
---**depth** the maximum encoding depth needed to encode the table. The default is 20 which should be enough for nearly all situations.
---**null** the string value to treat as null.
+-- - **depth** the maximum encoding depth needed to encode the table. The default is 20 which should be enough for nearly all situations.
+-- - **null** the string value to treat as null.
 ---@return string #JSON string
 function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object. A metatable can be specified for all the newly created Lua tables. This allows you to handle each value as it is inserted into each table (by implementing the __newindex method).
 ---@param opts? SjsonCfg2 an optional table of options. The possible entries are:
---**depth** the maximum encoding depth needed to encode the table. The default is 20.
---**null** the string value to treat as null.
---**metatable** a table to use as the metatable for all the new tables in the returned object.
+-- - **depth** the maximum encoding depth needed to encode the table. The default is 20.
+-- - **null** the string value to treat as null.
+-- - **metatable** a table to use as the metatable for all the new tables in the returned object.
 ---@return sjsondec #A `sjson.decoder` object
 function sjson.decoder(opts) end
 
@@ -408,9 +408,9 @@ function decoder:result() end
 ---Decode a JSON string to a Lua table.
 ---@param str string JSON string to decode
 ---@param opts? SjsonCfg2 an optional table of options. The possible entries are:
---**depth** the maximum encoding depth needed to encode the table. The default is 20.
---**null** the string value to treat as null.
---**metatable** a table to use as the metatable for all the new tables in the returned object.
+-- - **depth** the maximum encoding depth needed to encode the table. The default is 20.
+-- - **null** the string value to treat as null.
+-- - **metatable** a table to use as the metatable for all the new tables in the returned object.
 ---@return table #Lua table representation of the JSON data. If the string is not valid JSON, then an error is thrown.
 function sjson.decode(str, opts) end
 
@@ -494,21 +494,21 @@ function busmaster:close() end
 
 ---Adds a device on the given master bus. Up to three devices per bus are supported.
 ---@param config table table describing the device parameters:
---**cs** GPIO connected to device's chip-select pin, optional
---**mode** SPI mode used for this device (0-3), mandatory
---**freq** clock frequency used for this device [Hz], mandatory
---**command_bits** amount of bits in command phase (0-16), defaults to 0 if omitted
---**address_bits** amount of bits in address phase (0-64), defaults to 0 if omitted
---**dummy_bits** amount of dummy bits to insert address and data phase, defaults to 0 if omitted
---**cs_ena_pretrans**, optional
---**cs_ena_posttrans**, optional
---**duty_cycle_pos**, optional
---**tx_lsb_first** transmit command/address/data LSB first if true, MSB first otherwise (or if omitted)
---**rx_lsb_first** receive data LSB first if true, MSB first otherwise (or if omitted)
---**wire3** use spiq for both transmit and receive if true, use mosi and miso otherwise (or if omitted)
---**positive_cs** chip-select is active high during a transaction if true, cs is active low otherwise (or if omitted)
---**halfduplex** transmit data before receiving data if true, transmit and receive simultaneously otherwise (or if omitted)
---**clk_as_cs** output clock on cs line when cs is active if true, defaults to false if omitted
+-- - **cs** GPIO connected to device's chip-select pin, optional
+-- - **mode** SPI mode used for this device (0-3), mandatory
+-- - **freq** clock frequency used for this device [Hz], mandatory
+-- - **command_bits** amount of bits in command phase (0-16), defaults to 0 if omitted
+-- - **address_bits** amount of bits in address phase (0-64), defaults to 0 if omitted
+-- - **dummy_bits** amount of dummy bits to insert address and data phase, defaults to 0 if omitted
+-- - **cs_ena_pretrans**, optional
+-- - **cs_ena_posttrans**, optional
+-- - **duty_cycle_pos**, optional
+-- - **tx_lsb_first** transmit command/address/data LSB first if true, MSB first otherwise (or if omitted)
+-- - **rx_lsb_first** receive data LSB first if true, MSB first otherwise (or if omitted)
+-- - **wire3** use spiq for both transmit and receive if true, use mosi and miso otherwise (or if omitted)
+-- - **positive_cs** chip-select is active high during a transaction if true, cs is active low otherwise (or if omitted)
+-- - **halfduplex** transmit data before receiving data if true, transmit and receive simultaneously otherwise (or if omitted)
+-- - **clk_as_cs** output clock on cs line when cs is active if true, defaults to false if omitted
 ---@return spidev #SPI device object
 function busmaster:device(config) end
 
@@ -528,15 +528,15 @@ function device:remove() end
 --*txdata* string of data to be sent to the device
 ---@overload fun(txdata:string):string
 ---@param trans SpiTransfer table containing the elements of the transaction:
---**command** data for command phase, amount of bits was defined during device creation, optional
---**address** data for address phase, amount of bits was defined during device creation, optional
---**txdata** string of data to be sent to the device, optional
---**rxlen** number of bytes to be received, optional
---**mode** optional, one of:
--- - sio transmit in SIO mode, default if omitted
--- - dio transmit in DIO mode
--- - qio transmit in QIO mode
---**addr_mode** transmit address also in selected mode if true, transmit address in SIO otherwise.
+-- - **command** data for command phase, amount of bits was defined during device creation, optional
+-- - **address** data for address phase, amount of bits was defined during device creation, optional
+-- - **txdata** string of data to be sent to the device, optional
+-- - **rxlen** number of bytes to be received, optional
+-- - **mode** optional, one of:
+--   - sio transmit in SIO mode, default if omitted
+--   - dio transmit in DIO mode
+--   - qio transmit in QIO mode
+-- - **addr_mode** transmit address also in selected mode if true, transmit address in SIO otherwise.
 ---@return string #String of rxlen length, or #txdata length if rxlen is omitted.
 function device:transfer(trans) end
 
@@ -578,30 +578,30 @@ time = {}
 
 ---Converts calendar table to a timestamp in Unix epoch
 ---@param calendar CalendarTable Table containing calendar info.
---**year** 1970 ~ 2038
---**mon** month 1 ~ 12 in current year
---**day** day 1 ~ 31 in current month
---**hour**
---**min**
---**sec**
+-- - **year** 1970 ~ 2038
+-- - **mon** month 1 ~ 12 in current year
+-- - **day** day 1 ~ 31 in current month
+-- - **hour**
+-- - **min**
+-- - **sec**
 ---@return integer #number of seconds since the Epoch
 function time.cal2epoch(calendar) end
 
 ---Converts timestamp in Unix epoch to calendar format
 ---@param time integer number of seconds since the Epoch
 ---@return table #A table containing the fields:
---**year** 1970 ~ 2038
---**mon** month 1 ~ 12 in current year
---**day** day 1 ~ 31 in current month
---**hour**
---**min**
---**sec**
---**yday** day 1 ~ 366 in current year
---**wday** day 1 ~ 7 in current weak (Sunday is 1)
---**dst** day time adjustment:
--- - 1, (DST in effect, i.e. daylight time)
--- - 0, (DST not in effect, i.e. standard time)
--- - -1, (Unknown DST status)
+-- - **year** 1970 ~ 2038
+-- - **mon** month 1 ~ 12 in current year
+-- - **day** day 1 ~ 31 in current month
+-- - **hour**
+-- - **min**
+-- - **sec**
+-- - **yday** day 1 ~ 366 in current year
+-- - **wday** day 1 ~ 7 in current weak (Sunday is 1)
+-- - **dst** day time adjustment:
+--   - 1, (DST in effect, i.e. daylight time)
+--   - 0, (DST not in effect, i.e. standard time)
+--   - -1, (Unknown DST status)
 function time.epoch2cal(time) end
 
 ---Returns current system time in the Unix epoch (seconds from midnight 1970/01/01).
@@ -611,18 +611,18 @@ function time.get() end
 
 ---Returns current system time adjusted for the locale in calendar format.
 ---@return table #A table containing the fields:
---**year** 1970 ~ 2038
---**mon** month 1 ~ 12 in current year
---**day** day 1 ~ 31 in current month
---**hour**
---**min**
---**sec**
---**yday** day 1 ~ 366 in current year
---**wday** day 1 ~ 7 in current weak (Sunday is 1)
---**dst** day time adjustment:
--- - 1, (DST in effect, i.e. daylight time)
--- - 0, (DST not in effect, i.e. standard time)
--- - -1, (Unknown DST status)
+-- - **year** 1970 ~ 2038
+-- - **mon** month 1 ~ 12 in current year
+-- - **day** day 1 ~ 31 in current month
+-- - **hour**
+-- - **min**
+-- - **sec**
+-- - **yday** day 1 ~ 366 in current year
+-- - **wday** day 1 ~ 7 in current weak (Sunday is 1)
+-- - **dst** day time adjustment:
+--   - 1, (DST in effect, i.e. daylight time)
+--   - 0, (DST not in effect, i.e. standard time)
+--   - -1, (Unknown DST status)
 function time.getlocal() end
 
 ---Initializes and starts NTP client
@@ -1156,15 +1156,15 @@ function uart.on(id, method, number_or_endChar, callback, run_input) end
 ---@param parity integer|' uart.PARITY_NONE'|' uart.PARITY_ODD'|' uart.PARITY_EVEN' none | odd | even
 ---@param stopbits integer|' uart.STOPBITS_1'|' uart.STOPBITS_1_5'|' uart.STOPBITS_2' 1 | 1.5 | 2
 ---@param echo_or_pins integer|UartCfg for *console uart*, this should be a int. if 0, disable echo, otherwise enable echo; for others, this is a table:
---**tx** int. TX pin. Required
---**rx** int. RX pin. Required
---**cts** in. CTS pin. Optional
---**rts** in. RTS pin. Optional
---**tx_inverse** boolean. Inverse TX pin. Default: false
---**rx_inverse** boolean. Inverse RX pin. Default: false
---**cts_inverse** boolean. Inverse CTS pin. Default: false
---**rts_inverse** boolean. Inverse RTS pin. Default: false
---**flow_control** int. Combination of uart.FLOWCTRL_NONE, uart.FLOWCTRL_CTS, uart.FLOWCTRL_RTS. Default: uart.FLOWCTRL_NONE
+-- - **tx** int. TX pin. Required
+-- - **rx** int. RX pin. Required
+-- - **cts** in. CTS pin. Optional
+-- - **rts** in. RTS pin. Optional
+-- - **tx_inverse** boolean. Inverse TX pin. Default: false
+-- - **rx_inverse** boolean. Inverse RX pin. Default: false
+-- - **cts_inverse** boolean. Inverse CTS pin. Default: false
+-- - **rts_inverse** boolean. Inverse RTS pin. Default: false
+-- - **flow_control** int. Combination of uart.FLOWCTRL_NONE, uart.FLOWCTRL_CTS, uart.FLOWCTRL_RTS. Default: uart.FLOWCTRL_NONE
 ---@return number #configured baud rate
 function uart.setup(id, baud, databits, parity, stopbits, echo_or_pins) end
 
@@ -1548,12 +1548,12 @@ function wifi.stop() end
 
 ---Sets the WiFi station configuration. The WiFi mode must be set to *wifi.STATION* or *wifi.STATIONAP* before this function can be used.
 ---@param station_config StaConfig32 table containing configuration data for station
---**ssid** string which is less than 32 bytes.
---**pwd** string which is 8-64 or 0 bytes. Empty string indicates an open WiFi access point.
---**auto** defaults to true
--- - `true` to enable auto connect and connect to access point, hence with auto=true there's no need to call `wifi.sta.connect()`
--- - `false` to disable auto connect and remain disconnected from access point
---**bssid** string that contains the MAC address of the access point (optional). You can set BSSID if you have multiple access points with the same SSID.
+-- - **ssid** string which is less than 32 bytes.
+-- - **pwd** string which is 8-64 or 0 bytes. Empty string indicates an open WiFi access point.
+-- - **auto** defaults to true
+--   - `true` to enable auto connect and connect to access point, hence with auto=true there's no need to call `wifi.sta.connect()`
+--   - `false` to disable auto connect and remain disconnected from access point
+-- - **bssid** string that contains the MAC address of the access point (optional). You can set BSSID if you have multiple access points with the same SSID.
 -- Note: if you set BSSID for a specific SSID and would like to configure station to connect to the same SSID only without the BSSID requirement, you MUST first configure to station to a different SSID first, then connect to the desired SSID
 -- The following formats are valid:
 -- "DE:C1:A5:51:F1:ED"
@@ -1611,17 +1611,17 @@ function wifi.sta.getmac() end
 
 ---Scan for available networks.
 ---@param cfg ScanCfg table that contains scan configuration:
----**ssid** SSID == `nil`, don't filter SSID
----**bssid** BSSID == `nil`, don't filter BSSID
----**channel** channel == 0, scan all channels, otherwise scan set channel (default is 0)
----**hidden** hidden == 1, get info for router with hidden SSID (default is 0)
+-- - **ssid** SSID == `nil`, don't filter SSID
+-- - **bssid** BSSID == `nil`, don't filter BSSID
+-- - **channel** channel == 0, scan all channels, otherwise scan set channel (default is 0)
+-- - **hidden** hidden == 1, get info for router with hidden SSID (default is 0)
 ---@param callback function |' function(ap_list) end' `function(ap_list)` to receive the list of APs when the scan is done. Each entry in the returned array follows the format used for `wifi.sta.config()`, with some additional fields. The following fields are provided for each scanned AP:
---**ssid**: the network SSID
---**bssid**: the BSSID of the AP
---**channel**: primary WiFi channel of the AP
---**rssi**: Received Signal Strength Indicator value
---**auth** authentication method, one of *wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK* (default), *wifi.WPA_WPA2_PSK*
---**bandwidth**: one of the following constants: *wifi.HT20, wifi.HT40_ABOVE, wifi.HT40_BELOW*
+-- - **ssid**: the network SSID
+-- - **bssid**: the BSSID of the AP
+-- - **channel**: primary WiFi channel of the AP
+-- - **rssi**: Received Signal Strength Indicator value
+-- - **auth** authentication method, one of *wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK* (default), *wifi.WPA_WPA2_PSK*
+-- - **bandwidth**: one of the following constants: *wifi.HT20, wifi.HT40_ABOVE, wifi.HT40_BELOW*
 ---@return nil
 function wifi.sta.scan(cfg, callback) end
 
@@ -1633,10 +1633,10 @@ function wifi.sta.scan(cfg, callback) end
 
 ---Sets IP address, netmask, gateway, dns address in station mode.
 ---@param cfg Setip32 table to hold configuration:
---**ip** device ip address.
---**netmask** network netmask.
---**gateway** gateway address.
---**dns** name server address.
+-- - **ip** device ip address.
+-- - **netmask** network netmask.
+-- - **gateway** gateway address.
+-- - **dns** name server address.
 ---@return nil
 function wifi.sta.setip(cfg) end
 
@@ -1656,13 +1656,13 @@ function wifi.sta.sethostname(hostname) end
 
 ---Configures the AP. The WiFi mode must be set to wifi.SOFTAP or wifi.STATIONAP before this function can be used.
 ---@param cfg APconfig table to hold configuration:
---**ssid** SSID chars 1-32
---**pwd** password chars 8-64
---**auth** authentication method, one of *wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK* (default), *wifi.AUTH_WPA_WPA2_PSK*
---**channel** channel number 1-14 default = 11
---**hidden** false = not hidden, true = hidden, default = false
---**max** maximum number of connections 1-4 default=4
---**beacon** beacon interval time in range 100-60000, default = 100
+-- - **ssid** SSID chars 1-32
+-- - **pwd** password chars 8-64
+-- - **auth** authentication method, one of *wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK* (default), *wifi.AUTH_WPA_WPA2_PSK*
+-- - **channel** channel number 1-14 default = 11
+-- - **hidden** false = not hidden, true = hidden, default = false
+-- - **max** maximum number of connections 1-4 default=4
+-- - **beacon** beacon interval time in range 100-60000, default = 100
 ---@param save boolean save configuration to flash.
 ---|>' true' #configuration will be retained through power cycle.
 ---|' false' #configuration will not be retained through power cycle.
@@ -1692,10 +1692,10 @@ function wifi.ap.getmac() end
 
 ---Sets IP address, netmask, gateway, dns address in AccessPoint mode.
 ---@param cfg Setip32 table to hold configuration:
---**ip** device ip address.
---**netmask** network netmask.
---**gateway** gateway address.
---**dns** name server address, which will be provided to clients over DHCP. (Optional)
+-- - **ip** device ip address.
+-- - **netmask** network netmask.
+-- - **gateway** gateway address.
+-- - **dns** name server address, which will be provided to clients over DHCP. (Optional)
 ---@return nil
 function wifi.ap.setip(cfg) end
 
@@ -1716,10 +1716,10 @@ local buffer =  {}
 
 ---Send data to up to 8 led strip using its native format which is generally Green,Red,Blue for RGB strips and Green,Red,Blue,White for RGBW strips.
 ---@param tbl WS2812write Variable number of tables, each describing a single strip. Required elements are:
---**pin** IO index
---**data** payload to be sent to one or more WS2812 like leds through GPIO2. Payload type could be:
--- - *string* representing bytes to send
--- - *ws2812.buffer* see Buffer module
+-- - **pin** IO index
+-- - **data** payload to be sent to one or more WS2812 like leds through GPIO2. Payload type could be:
+--   - *string* representing bytes to send
+--   - *ws2812.buffer* see Buffer module
 ---@return nil
 function ws2812.write(tbl, ...) end
 
@@ -1737,9 +1737,9 @@ function buffer:get(index) end
 ---Set the value at the given position
 ---@param index integer position in the buffer (1 for the first led)
 ---@param color number|any payload of the color
--- `number, number, ...` you should pass as many arguments as *bytesPerLed*
--- `table` should contains *bytesPerLed* numbers
--- `string` should contains *bytesPerLed* bytes
+-- - **number, number, ...** you should pass as many arguments as *bytesPerLed*
+-- - **table** should contains *bytesPerLed* numbers
+-- - **string** should contains *bytesPerLed* bytes
 ---@return nil
 function buffer:set(index, color) end
 
