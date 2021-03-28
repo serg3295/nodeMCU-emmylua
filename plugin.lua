@@ -1,5 +1,6 @@
 ---@param  uri  string # The uri of file
 ---@param  text string # The content of file
+---@diagnostic disable-next-line: undefined-doc-name
 ---@return diff[]
 function OnSetText(uri, text)
   local diffs = {}
@@ -11,6 +12,9 @@ function OnSetText(uri, text)
     ['()node%.LFS%.ftpserver[%(%s]+[%)]+()']         = 'FTP',
     ['()require[%(%s\"\']+ftpserver[%)\"\']+()']     = 'FTP',
     ['()require[%(%s\"\']+liquidcrystal[%)\"\']+()'] = 'lc_meta',
+    ['()require[%(%s\"\']+lc%-i2c4bit[%)\"\']+()']   = 'i2c4bit_meta',
+    ['()require[%(%s\"\']+lc%-gpio4bit[%)\"\']+()']  = 'gpio4bit_meta',
+    ['()require[%(%s\"\']+lc%-gpio8bit[%)\"\']+()']  = 'gpio8bit_meta',
     ['()require[%(%s\"\']+mcp23017[%)\"\']+()']      = 'mcp23017',
     ['()require[%(%s\"\']+bme280[%)\"\']+()']        = 'bme280',
   }
@@ -25,7 +29,7 @@ function OnSetText(uri, text)
     end
   end
 
-  for endPos in text:gmatch 'local%s+[%w_]+%s*=%s*mcp23017%s*%(.-%)()' do
+  for endPos in text:gmatch '[%w ]*[%w_]+%s*=%s*mcp23017%s*%(.-%)()' do
     diffs[#diffs+1] = {
       start  = endPos,
       finish = endPos - 1,
