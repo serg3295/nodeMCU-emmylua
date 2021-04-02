@@ -20,13 +20,12 @@ for _, v in ipairs(files) do
   local fInp = assert(io.open(v, "r"))
   local cont = fInp:read("*a")
 
-  cont = cont:gsub("%sTODO", ""):gsub("(%-%-%*%*%*%s.-%s%*%*%*)", "%1\n%1"):gsub("%-%-%*%*%*%s.-%s%*%*%*", "", 1)
+  cont = cont:gsub("%sTODO%s+%*%*%*", " ***"):                        -- clear file name
+              gsub("(%-%-%*%*%*%s(.-)%s%*%*%*)", "%1\n--=== %2 ===")  -- mark borders
   cont = cont .. "\n--*** EOF ***"
 
-  for fileOut, fileName in string.gmatch(cont, "(%-%-%*%*%*%s([%w_%s%-]-)%s%*%*%*.-)%-%-%*%*%*%s[%w_%s%-]-%s%*%*%*") do
-     fileName = string.gsub(fileName, "%s", "_")
-    -- print(fileName)
-    -- local fo = assert(io.open(string.lower(fileName), "w"))
+  for fileOut, fileName in string.gmatch(cont, "(%-%-===%s([%w_%s%-]-)%s===.-)%-%-%*%*%*%s[%w_%s%-]-%s%*%*%*") do
+    fileName = string.gsub(fileName, "%s", "_")
     local fo = assert(io.open(string.lower(fileName .. ".lua"), "w"))
     fo:write(fileOut)
     fo:close()

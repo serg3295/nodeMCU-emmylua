@@ -1,6 +1,6 @@
 <h1>Emmy Lua annotations for NodeMCU ESP8266 & ESP32.</h1>
 
-for Auto Completion of nodeMCU functions
+Autocomplete NodeMCU functions in Visual Studio Code
 
 <img src="https://github.com/serg3295/nodeMCU-emmy/blob/main/images/nodemcu_emmy1.gif" style="max-width:100%;">
 
