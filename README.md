@@ -1,17 +1,17 @@
-<h1>Emmy Lua annotations for NodeMCU ESP8266 & ESP32.</h1>
+# Emmy Lua annotations for NodeMCU ESP8266 & ESP32.
 
-Autocomplete NodeMCU functions in Visual Studio Code
+NodeMCU function annotations for autocomplete in Visual Studio Code, Neovim and IntelliJ IDEA
 
-<img src="https://github.com/serg3295/nodeMCU-emmy/blob/main/images/nodemcu_emmy1.gif" style="max-width:100%;">
+<img src="./images/nodemcu_emmy1.gif" style="max-width:100%;">
 
 
-<img src="https://github.com/serg3295/nodeMCU-emmy/blob/main/images/nodemcu_emmy2.gif" style="max-width:100%;">
+<img src="./images/nodemcu_emmy2.gif" style="max-width:100%;">
 
-Only works with VS Code extension **[sumneko lua-language-server](https://github.com/sumneko/lua-language-server)**
+## Install
 
-<h2>Install</h2>
+### VS Code and Neovim
 
-Firstly install VS Code extension **sumneko.lua**
+If you are using VSCode or Neovim, then you have to first install the **[sumneko lua-language-server](https://github.com/sumneko/lua-language-server)** extension.
 
 Then create directories and put files from this repository into them as shown in the example below.<br>
 Note. Files for esp32 and for esp8266 must be located in different directories.
@@ -46,7 +46,7 @@ To perform the autocomplete of the ucg and u8g2 functions, place the **plugin.lu
 The script **plugin.lua** is common for both projects.
 
 
-<h2>Changes</h2>
+#### Changes
 
 Starting from version 1.18.0 of sumneko.lua extension, you have to use the ```"Lua.workspace.library": [ path ]``` instead of ```{path}: true```
 
@@ -63,3 +63,9 @@ Starting from version 1.18.0 of sumneko.lua extension, you have to use the ```"L
     "c:/users/..../": true
 }
 ```
+
+### IntelliJ IDEA
+
+You have to install the **[IntelliJ-EmmyLua ](https://github.com/EmmyLua/IntelliJ-EmmyLua)** plugin. The auto-completion capabilities of this plugin differ from those of the sumneko extension. Therefore, some of the advanced features will not be supported.
+
+You will need to convert files from the sumneko format to the IDEA format by running a script **sumn2idea.lua** from the `tools` directory.
