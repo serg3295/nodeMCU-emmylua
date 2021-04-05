@@ -28,7 +28,7 @@ for _, fileName in ipairs(files) do
   local content = fInp:read("*a")
   fInp:close()
 
-  content   = content:gsub("(---@param [%w_]+)?", "%1") -- removes '?'
+  content   = content:gsub("(%-%-%-@param%s[%w_]+)%?", "%1") -- removes '?'
 
   local fo  = assert(io.open(("i_" .. fileName), "w"))
   fo:write(content)
