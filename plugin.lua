@@ -17,6 +17,7 @@ function OnSetText(uri, text)
     ['()require[%(%s\"\']+lc%-gpio8bit[%)\"\']+()']  = 'gpio8bit_meta',
     ['()require[%(%s\"\']+mcp23017[%)\"\']+()']      = 'mcp23017',
     ['()require[%(%s\"\']+bme280[%)\"\']+()']        = 'bme280',
+    ['()require[%(%s\"\']+ds18b20[%)\"\']+()']       = 'ds18b20',
   }
 
   for patt, txt in pairs(subst) do
