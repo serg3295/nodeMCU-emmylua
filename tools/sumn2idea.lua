@@ -1,5 +1,6 @@
 --
 -- Script converts a file from the sumneko format to the IDEA format
+-- The Unlicense
 --
 -- removes the char '?' which denotes an optional parameter from --@param name? type
 -- converts
@@ -32,19 +33,19 @@ local function main()
     local content = fInp:read("*a")  ---@type string
     fInp:close()
 
-    content = content:gsub("(%-%-%-@param%s[%w_]+)%?", "%1"): -- delete '?'
-                      gsub("(alias%s[%w_]+%s[%a]+\n.-)(%-%-%-[^|])", function (alias, tail)
-                          ---@type table<integer, string>
-                          local tbl = lines(alias)
-                          for k, v in ipairs(tbl) do
-                            tbl[k]  = v:gsub("(alias%s[%w_]+%s)[%a]+\n*", "%1"):
-                                        gsub("^%-%-%-|[%s>]?('.+')%s?#?.*\n*", "%1|")
-                          end
-                          local   result = table.concat(tbl)
-                                  result = result:sub(1, -2)  -- delete the last '|'
-                          return  result .. '\n\n' .. tail
-                        end):
-                      gsub("(%-%-%-@alias%s[%w_]+%s)[%a]+|", "%1")  -- delete type of alias
+    content = content : gsub("(%-%-%-@param%s[%w_]+)%?", "%1") -- delete '?'
+                      : gsub("(alias%s[%w_]+%s[%a]+\n.-)(%-%-%-[^|])", function (alias, tail)
+                            ---@type table<integer, string>
+                            local tbl = lines(alias)
+                            for k, v in ipairs(tbl) do
+                              tbl[k]  = v:gsub("(alias%s[%w_]+%s)[%a]+\n*", "%1"):
+                                          gsub("^%-%-%-|[%s>]?('.+')%s?#?.*\n*", "%1|")
+                            end
+                            local   result = table.concat(tbl)
+                                    result = result:sub(1, -2)  -- delete the last '|'
+                            return  result .. '\n\n' .. tail
+                            end)
+                      : gsub("(%-%-%-@alias%s[%w_]+%s)[%a]+|", "%1")  -- delete type of alias
 
     local fo  = assert(io.open(("i_" .. fileName), "w"))
     fo:write(content)

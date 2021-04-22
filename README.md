@@ -19,7 +19,7 @@ Note. Files for esp32 and for esp8266 must be located in different directories.
 This is an example of a directory structure:
 ```
 nodeMCU
-|  plugin.lua  # script
+| plugin.lua  # script
 |
 |___esp32
 |   | *.lua   # files with functions definitions for esp32 (e.g. nodemcu_emmy_32.lua)

@@ -1,4 +1,5 @@
 -- splitter
+-- The Unlicense
 -- lua pattern "--%*%*%*%s([%w_%s%-]-)%s%*%*%*"
 
 local files = {
@@ -20,8 +21,8 @@ for _, v in ipairs(files) do
   local fInp = assert(io.open(v, "r"))
   local cont = fInp:read("*a")
 
-  cont = cont:gsub("%sTODO%s+%*%*%*", " ***"):                        -- clear file name
-              gsub("(%-%-%*%*%*%s(.-)%s%*%*%*)", "%1\n--=== %2 ===")  -- mark borders
+  cont = cont : gsub("%sTODO%s+%*%*%*", " ***")                        -- clear file name
+              : gsub("(%-%-%*%*%*%s(.-)%s%*%*%*)", "%1\n--=== %2 ===") -- mark borders
   cont = cont .. "\n--*** EOF ***"
 
   for fileOut, fileName in string.gmatch(cont, "(%-%-===%s([%w_%s%-]-)%s===.-)%-%-%*%*%*%s[%w_%s%-]-%s%*%*%*") do

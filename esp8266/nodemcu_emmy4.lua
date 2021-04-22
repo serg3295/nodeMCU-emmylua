@@ -373,7 +373,7 @@ function MQTT:on(event, callback) end
 ---@param payload string @the message to publish, (buffer or string)
 ---@param qos integer|' 0'|' 1'|' 2' @QoS level
 ---@param retain integer|' 0'|' 1' @retain flag
----@param callback? function|' function(client) end' @(optional) `function(client)` fired when PUBACK received (for QoS 1 or 2) or when message sent (for QoS 0). (optional)
+---@param callback? function|' function(client) end' @(optional) `function(client)` fired when PUBACK received (for QoS 1 or 2) or when message sent (for QoS 0).
 ---@return boolean
 function MQTT:publish(topic, payload, qos, retain, callback) end
 
