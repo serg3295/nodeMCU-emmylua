@@ -94,7 +94,8 @@ function ds3231.enableAlarm(alarmId) end
 ---@return nil
 function ds3231.disableAlarm(alarmId) end
 
----Get bytes of control, for debug purpose, and status of DS3231.
+---Get bytes of control, for debug purpose,\
+---and status of DS3231.
 ---@return integer control @0-255
 ---@return integer status @0-143 (bit 6-5-4 unused)
 function ds3231.getBytes() end
@@ -105,7 +106,8 @@ function ds3231.resetStopFlag() end
 --*** FTP server ***
 FTP = {}
 
----Create the FTP server on the standard ports 20 and 21. The global variable FTP is set to the server object.
+---Create the FTP server on the standard ports 20 and 21.\
+---The global variable FTP is set to the server object.
 ---@param user string @Username for access to the server
 ---@param pass string @Password for access to the server
 ---@param dbgFlag? boolean @optional flag. If set `true` then internal debug output is printed
@@ -121,7 +123,8 @@ function FTP:createServer(user, pass, dbgFlag) end
 ---@return nil
 function FTP:open(user, pass, ssid, wifipwd, dbgFlag) end
 
----Close down server including any sockets and return all resources to Lua.
+---Close down server including any sockets\
+---and return all resources to Lua.
 ---@return nil
 function FTP:close() end
 
@@ -149,7 +152,8 @@ function HDC1000.getTemp() end
 ---@return number Humidity @in percents.
 function HDC1000.getHumi() end
 
----Function that checks if voltage of sensor power supply is bellow or above 2.8V.
+---Function that checks if voltage of sensor power supply\
+---is bellow or above 2.8V.
 ---@return boolean @`true` if battery voltage is bellow 2.8V, `false` otherwise.
 function HDC1000.batteryDead() end
 
@@ -182,7 +186,8 @@ function imap.config(username, password, tag, dbug) end
 ---@return nil
 function imap.login(socket) end
 
----Function to check the most recent email number. Should only be called after examine function.
+---Function to check the most recent email number.\
+---Should only be called after examine function.
 ---@return number @The most recent email number.
 function imap.get_most_recent_num() end
 
@@ -349,7 +354,8 @@ function mcp17:setPin(register, pin, state) end
 ---@return boolean @`true` for HIGH, `false` for LOW, in case of error `nil`.
 function mcp17:getPinState(register, pin) end
 
----By calling this function, a safe state is established. All channels are set to input.
+---By calling this function, a safe state is established.\
+---All channels are set to input.
 function mcp17:reset() end
 
 ---Enable or disable the internal pullup resistors.
@@ -478,7 +484,9 @@ function ads1115.ads1015(I2C_ID, I2C_ADDR) end
 ---@return nil
 function ads1115.reset() end
 
----Gets the result stored in the register of a previously issued conversion, e.g. in continuous mode or with a conversion ready interrupt.
+---Gets the result stored in the register of\
+---a previously issued conversion, e.g. in continuous\
+---mode or with a conversion ready interrupt.
 ---@return number volt @voltage in mV
 ---@return number volt_dec @voltage decimal in uV
 ---@return number adc @raw adc register value
@@ -533,7 +541,8 @@ function ads1x15:read() end
 ---@return nil
 function ads1x15:setting(GAIN, SAMPLES, CHANNEL, MODE, CONVERSION_RDY, COMPARATOR, THRESHOLD_LOW, THRESHOLD_HI,COMP_MODE) end
 
----Starts the ADC reading for single-shot mode and after the conversion is done it will invoke an optional callback function in which the ADC conversion result can be obtained.
+---Starts the ADC reading for single-shot mode and after the conversion is done it will invoke\
+---an optional callback function in which the ADC conversion result can be obtained.
 ---@param callback function|'function(volt, volt_dec, adc, sign) end' @function which will be invoked after the adc conversion is done
 ---@return nil
 function ads1x15:startread(callback) end
@@ -541,7 +550,8 @@ function ads1x15:startread(callback) end
 --*** ADXL345 ***
 adxl345 = {}
 
----Samples the sensor and returns X,Y and Z data from the accelerometer.
+---Samples the sensor and returns\
+---X,Y and Z data from the accelerometer.
 ---@return integer x @data
 ---@return integer y @data
 ---@return integer z @data
@@ -554,7 +564,8 @@ function adxl345.setup() end
 --*** AM2320 ***
 am2320 = {}
 
----Samples the sensor and returns the relative humidity in % and temperature in celsius, as an integer multiplied with 10.
+---Samples the sensor and returns the relative humidity in %\
+---and temperature in celsius, as an integer multiplied with 10.
 ---@return integer RH @relative humidity percentage multiplied with 10
 ---@return integer T @temperature in celcius multiplied with 10
 function am2320.read() end
@@ -596,7 +607,8 @@ function bit.arshift(value, shift) end
 ---@return integer @the bitwise *AND* of all the arguments
 function bit.band(val1, val2, ...) end
 
----Generate a number with a 1 bit (used for mask generation). Equivalent to `1 << position` in C.
+---Generate a number with a 1 bit (used for mask generation).\
+---Equivalent to `1 << position` in C.
 ---@param position number @position of the bit that will be set to 1
 ---@return number @a number with only one 1 bit at position (the rest are set to 0)
 function bit.bit(position) end
@@ -645,7 +657,8 @@ function bit.isset(value, position) end
 ---@return integer @the number shifted left
 function bit.lshift(value, shift) end
 
----Logical right shift a number, equivalent to `( unsigned )value >> shift` in C.
+---Logical right shift a number, equivalent to\
+---`( unsigned )value >> shift` in C.
 ---@param value integer @the value to shift.
 ---@param shift integer @positions to shift.
 ---@return integer @the number shifted right (logically)
@@ -670,7 +683,8 @@ local filter = {}
 ---@return bloom objfilter @A filter object.
 function bloom.create(elements, errorrate) end
 
----Adds a string to the set and returns an indication of whether the string was already present.
+---Adds a string to the set and returns an indication of whether\
+---the string was already present.
 ---@param str string @The string to be added to the filter set.
 ---@return boolean @`true` if the string was already present in the filter. `false` otherwise.
 function filter:add(str) end
@@ -692,24 +706,32 @@ function filter:info() end
 
 --*** BME280 C module ***
 
----For given air pressure and sea level air pressure returns the altitude in meters as an integer multiplied with 100, i.e. altimeter function.
+---For given air pressure and sea level air pressure returns the altitude\
+---in meters as an integer multiplied with 100, i.e. altimeter function.
 ---@param P number @measured pressure
 ---@param QNH number @current sea level pressure
 ---@return number altitude @in meters of measurement point
 function bme280.altitude(P, QNH) end
 
----Reads the sensor and returns the air pressure in hectopascals as an integer multiplied with 1000 or nil when readout is not successful. Current temperature is needed to calculate the air pressure so temperature reading is performed prior reading pressure data. Second returned variable is therefore current air temperature.
+---Reads the sensor and returns the air pressure in hectopascals as an integer multiplied with 1000\
+---or nil when readout is not successful. Current temperature is needed to calculate the air pressure\
+---so temperature reading is performed prior reading pressure data.\
+---Second returned variable is therefore current air temperature.
 ---@return number P @air pressure in hectopascals multiplied by 1000
 ---@return number T @temperature in celsius as an integer multiplied with 100
 function bme280.baro() end
 
----For given temperature and relative humidity returns the dew point in celsius as an integer multiplied with 100.
+---For given temperature and relative humidity returns the dew point\
+---in celsius as an integer multiplied with 100.
 ---@param H number @relative humidity in percent multiplied by 1000.
 ---@param T number @temperate in celsius multiplied by 100.
 ---@return number dewpoint @dew point in celsisus
 function bme280.dewpoint(H, T) end
 
----Reads the sensor and returns the air relative humidity in percents as an integer multiplied with 100 or `nil` when readout is not successful. Current temperature is needed to calculate the relative humidity so temperature reading is performed prior reading pressure data. Second returned variable is therefore current temperature.
+---Reads the sensor and returns the air relative humidity in percents as an integer multiplied with 100\
+---or `nil` when readout is not successful. Current temperature is needed to calculate the relative humidity\
+---so temperature reading is performed prior reading pressure data.\
+---Second returned variable is therefore current temperature.
 ---@return number H @last relative humidity reading in % times 1000
 ---@return number T @temperature in celsius as an integer multiplied with 100
 function bme280.humi() end
@@ -734,7 +756,8 @@ function bme280.read(altitude) end
 ---@return nil
 function bme280.startreadout(delay, callback) end
 
----@deprecated Warning, deprecated API! bme280. It will be removed soon. Use bme280math and bme280 Lua module instead.
+---@deprecated
+---Warning, deprecated API! bme280. It will be removed soon. Use bme280math and bme280 Lua module instead.
 ---Initializes the module. Initialization is mandatory before reading values.
 ---@param temp_oss? number @(optional) Controls oversampling of temperature data.
 ---@param press_oss? number @(optional) Controls oversampling of pressure data.
@@ -782,7 +805,8 @@ function bme280.setup(id, address, temp_oss, press_oss, humi_oss, power_mode, in
 ---@return bme280 @BME280 Sensor Object (`nil` if initialization has failed)
 function sobj:setup(id, address, temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter, cold_start) end
 
----For given air pressure (called QFE in aviation) and sea level air pressure returns the altitude in meters, i.e. altimeter function.
+---For given air pressure (called QFE in aviation) and sea level air pressure\
+---returns the altitude in meters, i.e. altimeter function.
 ---@param P number @measured pressure
 ---@param QNH number @current sea level pressure
 ---@return number altitude @in meters of measurement point
@@ -800,7 +824,8 @@ function sobj:dewpoint(H, T) end
 ---@return number P @sea level pressure
 function sobj:qfe2qnh(P, altitude) end
 
----Reads the sensor and returns the temperature, the air pressure, the air relative humidity and see level pressure when `altitude` is specified.
+---Reads the sensor and returns the temperature, the air pressure,\
+---the air relative humidity and see level pressure when `altitude` is specified.
 ---@param altitude? number @(optional) altitude in meters of measurement point. If provided also the air pressure converted to sea level air pressure is returned.
 ---@return number T @temperature in celsius
 ---@return number P @air pressure in hectopascals
@@ -809,7 +834,8 @@ function sobj:qfe2qnh(P, altitude) end
 --- Returns `nil` if the readout is not successful.
 function sobj:read(altitude) end
 
----Starts readout (turns the sensor into forced mode). After the readout the sensor turns to sleep mode. Callback function is called with readout results.
+---Starts readout (turns the sensor into forced mode). After the readout the sensor turns to sleep mode.\
+---Callback function is called with readout results.
 ---@param callback? function @(optional) if provided it will be invoked after given delay. Callback parameters are:
 --- - T - temperature in celsius (number)
 --- - P - air pressure in hectopascals (number)
@@ -843,7 +869,8 @@ function bme280_math.dewpoint(self, H, T) end
 ---@return number P @sea level pressure
 function bme280_math.qfe2qnh(self, P, altitude) end
 
----Reads the sensor and returns the temperature, the air pressure, the air relative humidity and see level air pressure when **altitude** is specified.
+---Reads the sensor and returns the temperature, the air pressure, the air relative humidity\
+---and see level air pressure when **altitude** is specified.
 ---@param bme280sensor userdata @BME280 sensor user data returned by `bme280_math.setup()`
 ---@param registers string @string of 8 bytes (chars) registers read from BME280_REGISTER_PRESS
 ---@param altitude? number @(optional) in meters of measurement point. If provided also the air pressure converted to sea level air pressure is returned.
@@ -871,13 +898,15 @@ function bme280_math.setup(registers, temp_oss, press_oss, humi_oss, power_mode,
 --*** BME680 ***
 bme680 = {}
 
----For given air pressure and sea level air pressure returns the altitude in meters as an integer multiplied with 100.
+---For given air pressure and sea level air pressure returns\
+---the altitude in meters as an integer multiplied with 100.
 ---@param P number @measured pressure
 ---@param QNH number @current sea level pressure
 ---@return number altitude @in meters of measurement point
 function bme680.altitude(P, QNH) end
 
----For given temperature and relative humidity returns the dew point in Celsius as an integer multiplied with 100.
+---For given temperature and relative humidity returns\
+---the dew point in Celsius as an integer multiplied with 100.
 ---@param H number @relative humidity in percent multiplied by 1000.
 ---@param T number @temperate in Celsius multiplied by 100.
 ---@return number dewpoint @dew point in Celsius
@@ -889,7 +918,8 @@ function bme680.dewpoint(H, T) end
 ---@return number P @sea level pressure
 function bme680.qfe2qnh(P, altitude) end
 
----Reads the sensor and returns the temperature, the air pressure, the air relative humidity
+---Reads the sensor and returns the temperature,\
+---the air pressure, the air relative humidity
 ---@param altitude? number @(optional) altitude in meters of measurement point.
 ---@return number T @temperature in Celsius as an integer multiplied with 100
 ---@return number P @air pressure in hectopascals multiplied by 100
@@ -923,7 +953,8 @@ bmp085 = {}
 ---@return nil
 function bmp085.setup() end
 
----Samples the sensor and returns the temperature in celsius as an integer multiplied with 10.
+---Samples the sensor and returns the temperature\
+---in celsius as an integer multiplied with 10.
 ---@return integer T @temperature multiplied with 10 (integer)
 function bmp085.temperature() end
 
@@ -1034,7 +1065,8 @@ function color_utils.hsv2grbw(hue, saturation, value) end
 ---@return number value
 function color_utils.grb2hsv(green, red, blue) end
 
----makes use of the HSV color space and calculates colors based on the color circle.
+---makes use of the HSV color space\
+---and calculates colors based on the color circle.
 ---@param angle number @is the angle on the color circle, between 0 and 359
 ---@return number green @as values between 0 and 255
 ---@return number red
@@ -1101,19 +1133,21 @@ function crypto.fhash(algo, filename)	end
 ---@return any @A binary string containing the message digest. To obtain the textual version (ASCII hex characters), please use `encoder.toHex()`.
 function crypto.hash(algo, str) end
 
----Create a digest/hash object that can have any number of strings. Object has update and finalize functions.added to it.
+---Create a digest/hash object that can have any number of strings.\
+---Object has update and finalize functions.added to it.
 ---@param algo string @the hash algorithm to use, case insensitive string
 ---@return any @Userdata object with update and finalize functions available.
 function crypto.new_hash(algo) end
 
----	Compute a HMAC (Hashed Message Authentication Code) signature for a Lua string.
+---Compute a HMAC (Hashed Message Authentication Code) signature for a Lua string.
 ---@param algo string @hash algorithm to use, case insensitive string
 ---@param str string @data to calculate the hash for
 ---@param key any @key to use for signing, may be a binary string
 ---@return any @A binary string containing the HMAC signature. Use `encoder.toHex()` to obtain the textual version.
 function crypto.hmac(algo, str, key) end
 
----Create a hmac object that can have any number of strings added to it. Object has update and finalize functions.
+---Create a hmac object that can have any number of strings added to it.\
+---Object has update and finalize functions.
 ---@param algo string @he hash algorithm to use, case insensitive string
 ---@param key any @the key to use (may be a binary string)
 ---@return any @Userdata object with `update` and `finalize` functions available.
@@ -1162,7 +1196,8 @@ function dcc.close() end
 --*** DHT ***
 dht = {}
 
----Read all kinds of DHT sensors, including DHT11, 21, 22, 33, 44 humidity temperature combo sensor.
+---Read all kinds of DHT sensors, including DHT11, 21, 22, 33, 44\
+---humidity temperature combo sensor.
 ---@param pin number @pin number of DHT sensor (can't be 0)
 ---@return integer status @as defined in Constants
 ---@return number temp @temperature
@@ -1197,17 +1232,24 @@ encoder = {}
 ---@return string @A Base64 encoded string.
 function encoder.toBase64(binary) end
 
----Decodes a Base64 representation of a (binary) Lua string back into the original string. An error is thrown if the string is not a valid base64 encoding.
+---Decodes a Base64 representation of a (binary) Lua string\
+---back into the original string. An error is thrown\
+---if the string is not a valid base64 encoding.
 ---@param b64 string @Base64 encoded input string
 ---@return string @The decoded Lua (binary) string.
 function encoder.fromBase64(b64) end
 
----Provides an ASCII hex representation of a (binary) Lua string. Each byte in the input string is represented as two hex characters in the output.
+---Provides an ASCII hex representation of a (binary) Lua string.\
+---Each byte in the input string is represented\
+---as two hex characters in the output.
 ---@param binary string @input string to get hex representation for
 ---@return string @An ASCII hex string.
 function encoder.toHex(binary) end
 
----Returns the Lua binary string decode of a ASCII hex string. Each byte in the output string is represented as two hex characters in the input. An error is thrown if the string is not a valid base64 encoding.
+---Returns the Lua binary string decode of a ASCII hex string.\
+---Each byte in the output string is represented as\
+---two hex characters in the input. An error is thrown\
+---if the string is not a valid base64 encoding.
 ---@param hexstr string @An ASCII hex string.
 ---@return string @Decoded string of hex representation.
 function encoder.fromHex(hexstr) end
@@ -1238,7 +1280,8 @@ file = {}
 ---@class file
 local fObj = {}
 
----Change current directory (and drive). This will be used when no drive/directory is prepended to filenames.
+---Change current directory (and drive).\
+---This will be used when no drive/directory is prepended to filenames.
 ---@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"' @directory name
 ---@return boolean
 function file.chdir(dir) end
@@ -1248,16 +1291,20 @@ function file.chdir(dir) end
 ---@return boolean @`true` of the file exists (even if 0 bytes in size), and `false` if it does not exist
 function file.exists(filename) end
 
----Format the file system. Completely erases any existing file system and writes a new one. Function is not supported for SD cards.
+---Format the file system. Completely erases any existing file system\
+---and writes a new one. Function is not supported for SD cards.
 ---@return nil
 function file.format() end
 
----Returns the flash address and physical size of the file system area, in bytes. Function is not supported for SD cards.
+---Returns the flash address and physical size\
+---of the file system area, in bytes.\
+---Function is not supported for SD cards.
 ---@return number flash_address
 ---@return number size
 function file.fscfg() end
 
----Return size information for the file system. The unit is Byte for SPIFFS and kByte for FatFS.
+---Return size information for the file system.\
+---The unit is Byte for SPIFFS and kByte for FatFS.
 ---@return number remaining
 ---@return number used
 ---@return number total
@@ -1273,7 +1320,9 @@ function file.getcontents(filename) end
 ---@return table @a Lua table which contains all *{file name: file size}* pairs, if no pattern given. If a pattern is given, only those file names matching the pattern will be included in the resulting table. `file.list` will throw any errors encountered during pattern matching.
 function file.list(pattern) end
 
----Mounts a FatFs volume on SD card. Function is only available when FatFS support is compiled into the firmware and it is not supported for internal flash.
+---Mounts a FatFs volume on SD card. Function is only available\
+---when FatFS support is compiled into the firmware\
+---and it is not supported for internal flash.
 ---@param ldrv string|'"/SD0"'|'"/SD1"' @name of the logical drive, /SD0, /SD1, etc.
 ---@param pin? integer @(optional) 1~12, IO index for SS/CS, defaults to 8 if omitted.
 ---@return any obj @Volume object
@@ -1315,7 +1364,7 @@ function file.putcontents(filename, contents) end
 function file.rename(oldname, newname) end
 
 ---Get attribtues of a file or directory in a table.
----@param filename string|'""'
+---@param filename string|'""' @file name
 ---@return table @table containing file attributes. Elements of the table are:
 --- - **size** - file size in bytes
 --- - **name** - file name
@@ -1336,11 +1385,17 @@ function file.close() end
 ---@return nil
 function fObj:close() end
 
----Flushes any pending writes to the file system, ensuring no data is lost on a restart.Closing the open file using `file.close() / fd:close()` performs an implicit flush as well.
+---Flushes any pending writes to the file system,\
+---ensuring no data is lost on a restart. Closing\
+---the open file using `file.close()/fd:close()`\
+---performs an implicit flush as well.
 ---@return nil
 function file.flush() end
 
----Flushes any pending writes to the file system, ensuring no data is lost on a restart.Closing the open file using `file.close() / fd:close()` performs an implicit flush as well.
+---Flushes any pending writes to the file system,\
+---ensuring no data is lost on a restart.\
+---Closing the open file using `file.close()/fd:close()`\
+---performs an implicit flush as well.
 ---@return nil
 function fObj:flush() end
 
@@ -1360,11 +1415,15 @@ function file.read(n_or_char) end
 ---@return string|nil @File content as a string, or `nil` when EOF
 function fObj:read(n_or_char) end
 
----Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte. If the next line is longer than 1024, this function only returns the first 1024 bytes.
+---Read the next line from the open file.\
+---Lines are defined as zero or more bytes ending with a EOL ('\n') byte.\
+---If the next line is longer than 1024, this function only returns the first 1024 bytes.
 ---@return string|nil @File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 function file.readline() end
 
----Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte. If the next line is longer than 1024, this function only returns the first 1024 bytes.
+---Read the next line from the open file.\
+---Lines are defined as zero or more bytes ending with a EOL ('\n') byte.\
+---If the next line is longer than 1024, this function only returns the first 1024 bytes.
 ---@return string|nil @File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 function fObj:readline() end
 
@@ -1373,13 +1432,17 @@ function fObj:readline() end
 ---|>'"cur"' #Base is current position
 ---| '"end"' #Base is end of file
 
----Sets and gets the file position, measured from the beginning of the file, to the position given by `offset` plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
+---Sets and gets the file position, measured from the beginning of the file, to the position\
+---given by `offset` plus a base specified by the string whence. If no parameters are given,\
+---the function simply returns the current file offset.
 ---@param whence? seekwhence_f @(optional) set | cur | end
 ---@param offset? integer @(optional) default 0
 ---@return integer|nil @the resulting file position, or nil on error
 function file.seek(whence , offset) end
 
----Sets and gets the file position, measured from the beginning of the file, to the position given by `offset` plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
+---Sets and gets the file position, measured from the beginning of the file, to the position\
+---given by `offset` plus a base specified by the string whence. If no parameters are given,\
+---the function simply returns the current file offset.
 ---@param whence? seekwhence_f @(optional) set | cur | end
 ---@param offset? integer @(optional) default 0
 ---@return integer|nil @the resulting file position, or `nil` on error

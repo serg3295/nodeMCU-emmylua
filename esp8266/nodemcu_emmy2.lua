@@ -54,7 +54,8 @@ function rtctime.get() end
 ---@return nil
 function rtctime.set(seconds , microseconds, rate) end
 
----This takes a time interval in 'system clock microseconds' based on the timestamps returned by tmr.
+---This takes a time interval in 'system clock microseconds'\
+---based on the timestamps returned by tmr.
 ---@param microseconds number @a time interval measured in system clock microseconds.
 ---@return number @The same interval but measured in wall clock microseconds
 function rtctime.adjust_delta(microseconds) end
@@ -105,7 +106,8 @@ function si7021.setup() end
 --*** SIGMA DELTA ***
 sigma_delta = {}
 
----Stops signal generation and reenables GPIO functionality at the specified pin.
+---Stops signal generation and reenables GPIO functionality\
+---at the specified pin.
 ---@param pin integer @1~12
 ---@return nil
 function sigma_delta.close(pin) end
@@ -172,7 +174,8 @@ function sjson.decoder(opts) end
 ---@return any|nil obj @The constructed Lua object or `nil` if the decode is not yet complete.
 function decoder:write(str) end
 
----This gets the decoded Lua object, or raises an error if the decode is not yet complete.
+---This gets the decoded Lua object, or raises\
+---an error if the decode is not yet complete.
 function decoder:result() end
 
 ---Decode a JSON string to a Lua table.
@@ -210,7 +213,8 @@ softuart = {}
 ---@class softuart
 local s_uart = {}
 
----Creates new SoftUART instance. Note that rx pin cannot be shared between instances but tx pin can.
+---Creates new SoftUART instance.\
+---Note that rx pin cannot be shared between instances but tx pin can.
 ---@param baudrate number @SoftUART baudrate. Maximum supported is 230400.
 ---@param txPin number @SoftUART tx pin. If set to `nil` `write` method will not be supported.
 ---@param rxPin number @SoftUART rx pin. If set to `nil` `on("data")` method will not be supported.
@@ -265,7 +269,8 @@ spi = {}
 ---@return string @String containing the bytes read from SPI.
 function spi.recv(id, size, default_data) end
 
----Send data via SPI in half-duplex mode. Send & receive data in full-duplex mode.
+---Send data via SPI in half-duplex mode.\
+---Send & receive data in full-duplex mode.
 ---@param id integer @SPI ID number: 0 for SPI, 1 for HSPI
 ---@param data1 string|table|integer @data
 ---@return number @number of written bytes
@@ -393,24 +398,28 @@ function tcs34725.setup() end
 ---@return nil
 function tcs34725.enable(foo) end
 
----Disables the sensor. Enables a low-power sleep mode.
+---Disables the sensor.\
+---Enables a low-power sleep mode.
 ---@return nil
 function tcs34725.disable() end
 
----Reads the clear, red, green and blue values from the sensor.
+---Reads the clear, red, green and blue\
+---values from the sensor.
 ---@return integer clear @in uint16_t.
 ---@return integer red @in uint16_t.
 ---@return integer green @in uint16_t.
 ---@return integer blue @in uint16_t.
 function tcs34725.raw() end
 
----Sets the gain of the sensor. Must be called after the sensor is enabled.
----@param gain number
+---Sets the gain of the sensor.\
+---Must be called after the sensor is enabled.
+---@param gain number @gain
 ---@return nil
 function tcs34725.setGain(gain) end
 
----Sets the integration time of the sensor. Must be called after the sensor is enabled.
----@param time number
+---Sets the integration time of the sensor.\
+---Must be called after the sensor is enabled.
+---@param time number @time
 ---@return nil
 function tcs34725.setIntegrationTime(time) end
 
@@ -439,7 +448,8 @@ function TLS:connect(port, ip_domain) end
 ---@return number @port of peer
 function TLS:getpeer() end
 
----Throttle data reception by placing a request to block the TCP receive function.
+---Throttle data reception by placing\
+---a request to block the TCP receive function.
 ---@return nil
 function TLS:hold() end
 
@@ -457,7 +467,8 @@ function TLS:on(event, callback) end
 ---@return nil
 function TLS:send(string) end
 
----Unblock TCP receiving data by revocation of a preceding `hold()`.
+---Unblock TCP receiving data\
+---by revocation of a preceding `hold()`.
 ---@return nil
 function TLS:unhold() end
 
@@ -507,21 +518,28 @@ tmr = {}
 ---@class tmr
 local tObj = {}
 
----Busyloops the processor for a specified number of microseconds.
+---Busyloops the processor for\
+---a specified number of microseconds.
 ---@param us number @us microseconds to busyloop for
 ---@return nil
 function tmr.delay(us) end
 
----Returns the system counter, which counts in microseconds. Limited to 31 bits, after that it wraps around back to zero.
+---Returns the system counter, which counts\
+---in microseconds. Limited to 31 bits,\
+---after that it wraps around back to zero.
 ---@return number @the current value of the system counter
 function tmr.now() end
 
----Provides a simple software watchdog, which needs to be re-armed or disabled before it expires, or the system will be restarted.
----@param timeout_s number @watchdog timeout, in seconds. To disable the watchdog, use -1 (or any other negative value).
+---Provides a simple software watchdog,\
+---which needs to be re-armed or disabled\
+---before it expires, or the system will be restarted.
+---@param timeout_s number @watchdog timeout, in seconds.
+---To disable the watchdog, use -1 (or any other negative value).
 ---@return nil
 function tmr.softwd(timeout_s) end
 
----Returns the system uptime, in seconds. Limited to 31 bits, after that it wraps around back to zero.
+---Returns the system uptime, in seconds.\
+---Limited to 31 bits, after that it wraps around back to zero.
 ---@return number @the system uptime, in seconds, possibly wrapped around
 function tmr.time() end
 
@@ -529,8 +547,13 @@ function tmr.time() end
 ---@return nil
 function tmr.wdclr() end
 
----Get value of CPU CCOUNT register which contains CPU ticks. The register is 32-bit and rolls over. Converting the register's CPU ticks to us is done by dividing it to 80 or 160 (CPU80/CPU160) i.e. `tmr.ccount() / node.getcpufreq()`.
----Register arithmetic works without need to account for roll over, unlike `tmr.now()`. Because of same reason when CCOUNT is having its 32nd bit set, it appears in Lua as negative number.
+---Get value of CPU CCOUNT register which contains CPU ticks.\
+---The register is 32-bit and rolls over. Converting\
+---the register's CPU ticks to us is done by dividing it to 80\
+---or 160 (CPU80/CPU160) i.e. `tmr.ccount() / node.getcpufreq()`.\
+---Register arithmetic works without need to account for roll over,\
+---unlike `tmr.now()`. Because of same reason when CCOUNT is having\
+--- its 32nd bit set, it appears in Lua as negative number.
 ---@return number @The current value of CCOUNT register.
 function tmr.ccount() end
 
@@ -562,7 +585,10 @@ function tObj:interval(interval_ms) end
 ---@return nil
 function tObj:register(interval_ms, mode, callback) end
 
----Starts or restarts a previously configured timer. If the timer is running the timer is restarted only when restart parameter is `true`. Otherwise `false` is returned signaling error.
+---Starts or restarts a previously configured timer.\
+---If the timer is running the timer is restarted only\
+---when restart parameter is `true`.\
+---Otherwise `false` is returned signaling error.
 ---@param restart? boolean @optional boolean parameter forcing to restart already running timer
 ---@return boolean @true if the timer was (re)started, false on error
 function tObj:start(restart) end
@@ -571,11 +597,13 @@ function tObj:start(restart) end
 ---@return boolean|integer|nil @If the specified timer is registered, returns whether it is currently started and its mode. If the timer is not registered, `nil` is returned.
 function tObj:state() end
 
----Stops a running timer, but does *not* unregister it. A stopped timer can be restarted with `tobj:start()`.
+---Stops a running timer, but does *not* unregister it.\
+---A stopped timer can be restarted with `tobj:start()`.
 ---@return boolean @`true` if the timer was stopped, `false` on error
 function tObj:stop() end
 
----Stops the timer (if running) and unregisters the associated callback.
+---Stops the timer (if running) and\
+---unregisters the associated callback.
 ---@return nil
 function tObj:unregister() end
 
@@ -691,15 +719,20 @@ websocket = {}
 ---@class websocket
 local ws = {}
 
----Creates a new websocket client. This client should be stored in a variable and will provide all the functions to handle a connection.
----When the connection becomes closed, the same client can still be reused - the callback functions are kept - and you can connect again to any server.
+---Creates a new websocket client. This client should be stored in a variable\
+---and will provide all the functions to handle a connection.\
+---When the connection becomes closed, the same client can still be reused -\
+---the callback functions are kept - and you can connect again to any server.\
 ---Before disposing the client, make sure to call `ws:close()`.
 ---@return websocket websocketclient
 function websocket.createClient() end
 
----Closes a websocket connection. he client issues a close frame and attempts to gracefully close the websocket. If server doesn't reply, the connection is terminated after a small timeout.
----This function can be called even if the websocket isn't connected.
----This function must *always* be called before disposing the reference to the websocket client.
+---Closes a websocket connection. he client issues a close frame and\
+---attempts to gracefully close the websocket. If server doesn't reply,\
+---the connection is terminated after a small timeout. This function\
+---can be called even if the websocket isn't connected. This function\
+---must *always* be called before disposing the reference\
+---to the websocket client.
 ---@return nil
 function ws:close() end
 
@@ -717,7 +750,8 @@ function ws:config(params) end
 ---@return nil @`nil`. If it fails, an error will be delivered via `websocket:on("close", handler)`.
 function ws:connect(url) end
 
----Registers the callback function to handle websockets events (there can be only one handler function registered per event type).
+---Registers the callback function to handle websockets events\
+---(there can be only one handler function registered per event type).
 ---@param eventName integer|'connection'|'receive'|'close' @the type of websocket event to register the callback function
 ---@param callback function|' funtion(ws, ...) end' @function. The function first parameter is always the **websocketclient**. Other arguments are required depending on the event type. If `nil`, any previously configured callback is unregistered.
 ---@return nil
@@ -742,7 +776,8 @@ local wiegandobj = {}
 ---@return wiegand wiegandObject @If the arguments are in error, or the operation cannot be completed, then an error is thrown.
 function wiegand.create(pinD0, pinD1, callback) end
 
----Releases the resources associated with the card reader.
+---Releases the resources\
+---associated with the card reader.
 ---@return nil
 function wiegandobj:close() end
 
@@ -775,7 +810,8 @@ function wifi.getmode() end
 ---@return integer @**wifi.PHYMODE_B, wifi.PHYMODE_G** or **wifi.PHYMODE_N**.
 function wifi.getphymode() end
 
----Configures whether or not WiFi automatically goes to sleep in *NULL_MODE*. Enabled by default.
+---Configures whether or not WiFi automatically goes to sleep in *NULL_MODE*.\
+---Enabled by default.
 ---@param enable? boolean @(optional) WiFi auto sleep in NULL_MODE
 ---|>'true' #Enable WiFi auto sleep in NULL_MODE.
 ---|'false' #Disable WiFi auto sleep in NULL_MODE.
@@ -826,12 +862,14 @@ function wifi.setmode(mode, save) end
 ---@return integer @physical mode after setup
 function wifi.setphymode(mode) end
 
----Sets WiFi maximum TX power. The default value, 82, corresponds to maximum TX power.
+---Sets WiFi maximum TX power.\
+---The default value, 82, corresponds to maximum TX power.
 ---@param max_tpw number @maximum value of RF Tx Power, unit: 0.25 dBm, range [0, 82].
 ---@return nil
 function wifi.setmaxtxpower(max_tpw) end
 
----Starts to auto configuration, if success set up SSID and password automatically. Only usable in *wifi.STATION* mode.
+---Starts to auto configuration, if success set up SSID and password automatically.\
+---Only usable in *wifi.STATION* mode.
 ---@param type integer @**0** for ESP_TOUCH, **1** for AIR_KISS
 ---@param callback function|' function() end' @a callback function of the form `function(ssid, password)` end which gets called after configuration.
 ---@return nil
@@ -872,7 +910,9 @@ function wifi.sta.autoconnect(auto) end
 ---@return boolean
 function wifi.sta.changeap(ap_index) end
 
----Clears the currently saved WiFi station configuration, erasing it from the flash.
+---Clears the currently saved\
+---WiFi station configuration,\
+---erasing it from the flash.
 ---@return boolean
 function wifi.sta.clearconfig() end
 
@@ -923,7 +963,8 @@ function wifi.sta.clearconfig() end
 ---@return boolean
 function wifi.sta.config(station_config) end
 
----Connects to the configured AP in station mode. You only ever need to call this if auto-connect was disabled in `wifi.sta.config()`.
+---Connects to the configured AP in station mode.\
+---You only ever need to call this if auto-connect was disabled in `wifi.sta.config()`.
 ---@param connected_cb? function @(optional) Callback to execute when station is connected to an access point. Items returned in table:
 --- - **SSID**: SSID of access point. (format: string)
 --- - **BSSID**: BSSID of access point. (format: string)
@@ -1013,13 +1054,15 @@ function wifi.sta.getip() end
 ---@return string MAC @address as string e.g. "18:fe:34:a2:d7:34"
 function wifi.sta.getmac() end
 
----Get RSSI (Received Signal Strength Indicator) of the Access Point which ESP8266 station connected to.
+---Get RSSI (Received Signal Strength Indicator)\
+---of the Access Point which ESP8266 station connected to.
 ---@return number|nil @>
 --- - If station is connected to an access point, `rssi` is returned.
 --- - If station is not connected to an access point, `nil` is returned.
 function wifi.sta.getrssi() end
 
----Set Maximum number of Access Points to store in flash. This value is written to flash
+---Set Maximum number of Access Points to store in flash.\
+---This value is written to flash
 ---@param qty integer @Quantity of Access Points to store in flash. Range: 1-5 (Default: 1)
 ---@return boolean
 function wifi.sta.setaplimit(qty) end
@@ -1047,7 +1090,8 @@ function wifi.sta.setip(cfg) end
 ---@return boolean
 function wifi.sta.setmac(mac) end
 
----Configures the WiFi modem sleep type to be used while station is connected to an Access Point. Does not apply to *wifi.SOFTAP*, *wifi.STATIONAP* or *wifi.NULLMODE*.
+---Configures the WiFi modem sleep type to be used while station is connected to an Access Point.\
+---Does not apply to *wifi.SOFTAP*, *wifi.STATIONAP* or *wifi.NULLMODE*.
 ---@param type_wanted integer @none | light | modem sleep
 ---|'wifi.NONE_SLEEP' #to keep the modem on at all times
 ---|'wifi.LIGHT_SLEEP' #to allow the CPU to power down under some circumstances
@@ -1109,7 +1153,8 @@ function wifi.ap.deauth(MAC) end
 ---@return string|nil @broadcast address in string, for example "192.168.0.255", returns `nil` if IP address = "0.0.0.0".
 function wifi.ap.getbroadcast() end
 
----Gets table of clients connected to device in AP mode.
+---Gets table of clients\
+---connected to device in AP mode.
 ---@return table @table of connected clients
 function wifi.ap.getclient() end
 
@@ -1163,7 +1208,8 @@ function wifi.ap.setip(cfg) end
 ---@return boolean
 function wifi.ap.setmac(mac) end
 
----Configure the dhcp service. Currently only supports setting the start address of the dhcp address pool.
+---Configure the dhcp service. Currently only supports setting\
+---the start address of the dhcp address pool.
 ---@param dhcp_config table @table containing the start-IP of the DHCP address pool, eg. "192.168.1.100"
 ---@return string @pool_startip, pool_endip
 function wifi.ap.dhcp.config(dhcp_config) end
@@ -1234,30 +1280,34 @@ function wifi.monitor.channel(channel) end
 ---wifi.packet object. This object provides access to the raw packet data and also many methods to extract data from the packet in a simple way.
 local packet = {}
 
----This is like the string.byte method, except that it gives access to the bytes of the radio header.
+---This is like the string.byte method,\
+---except that it gives access to the bytes of the radio header.
 ---@param n number @the byte number (1 based) to get from the radio header portion of the packet
 ---@return integer @0-255 as the value of the byte nothing if the offset is not within the radio header.
 function packet:radio_byte(n) end
 
----This is like the string.byte method, except that it gives access to the bytes of the received frame.
----comment
+---This is like the string.byte method,\
+---except that it gives access to the bytes of the received frame.
 ---@param n number @the byte number (1 based) to get from the received frame.
 ---@return integer @0-255 as the value of the byte nothing if the offset is not within the received frame.
 function packet:frame_byte(n) end
 
----This is like the string.sub method, except that it gives access to the bytes of the radio header.
+---This is like the string.sub method,\
+---except that it gives access to the bytes of the radio header.
 ---@param start any @Same rules as for string.sub except that it operates on the radio header.
 ---@param end_sub any
 ---@return string @A string according to the `string.sub` rules.
 function packet:radio_sub(start, end_sub) end
 
----This is like the string.sub method, except that it gives access to the bytes of the received frame.
+---This is like the string.sub method,\
+---except that it gives access to the bytes of the received frame.
 ---@param start any @Same rules as for string.sub except that it operates on the received frame.
 ---@param end_sub any
 ---@return string @A string according to the `string.sub` rules.
 function packet:frame_sub(start, end_sub) end
 
----This is like the string.sub method, except that it gives access to the bytes of the radio header. It also converts them into hex efficiently.
+---This is like the string.sub method, except that it gives access to the bytes of the radio header.\
+---It also converts them into hex efficiently.
 ---@param start any @Same rules as for string.sub except that it operates on the radio header
 ---@param end_sub any
 ---@param seperator? string @is an optional sting which is placed between the individual hex pairs returned.
@@ -1271,7 +1321,9 @@ function packet:radio_subhex(start, end_sub, seperator) end
 ---@return string @A string according to the `string.sub` rules, converted into hex with possible inserted spacers.
 function packet:frame_subhex(start, end_sub, seperator) end
 
----This returns a table of the information elements from the management frame. The table keys values are the information element numbers (0 - 255).
+---This returns a table of the information elements\
+---from the management frame. The table keys values\
+---are the information element numbers (0 - 255).
 ---@return table @A table with all the information elements in it.
 function packet:ie_table() end
 
@@ -1311,14 +1363,16 @@ ws2812 = {}
 ---@class ws2812
 local buffer = {}
 
----Initialize UART1 and GPIO2, should be called once and before write(). Initialize UART0 (TXD0) too if ws2812.MODE_DUAL is set.
+---Initialize UART1 and GPIO2, should be called once and before write().\
+---Initialize UART0 (TXD0) too if ws2812.MODE_DUAL is set.
 ---@param mode? integer @(optional) single | dual
 ---|>'ws2812.MODE_SINGLE'
 ---|'ws2812.MODE_DUAL' #you will be able to handle two strips in parallel
 ---@return nil
 function ws2812.init(mode) end
 
----Send data to one or two led strip using its native format which is generally Green,Red,Blue for RGB strips and Green,Red,Blue,White for RGBW strips.
+---Send data to one or two led strip using its native format which is generally Green,Red,Blue\
+---for RGB strips and Green,Red,Blue,White for RGBW strips.
 ---@param data1 string|nil @payload to be sent to one or more WS2812 like leds through GPIO2
 ---@param data2? string|nil @(optional) payload to be sent to one or more WS2812 like leds through TXD0 (ws2812.MODE_DUAL mode required)
 ---@return nil
@@ -1348,12 +1402,14 @@ function buffer:set(index, color) end
 ---@return integer
 function buffer:size() end
 
----Fill the buffer with the given color. The number of given bytes must match the number of bytesPerLed of the buffer
+---Fill the buffer with the given color. The number of given bytes\
+---must match the number of bytesPerLed of the buffer
 ---@param color any @bytes of the color, you should pass as many arguments as bytesPerLed
 ---@return nil
 function buffer:fill(color) end
 
----Returns the contents of the buffer (the pixel values) as a string.
+---Returns the contents of the buffer\
+---(the pixel values) as a string.
 ---@return string @A string containing the pixel values.
 function buffer:dump() end
 
@@ -1398,7 +1454,8 @@ function buffer:sub(i, j) end
 --*** WS2812 EFFECTS ***
 ws2812_effects = {}
 
----Initialize the effects library with the provided buffer for the connected LED strip.
+---Initialize the effects library with the provided buffer\
+---for the connected LED strip.
 ---@param buffer ws2812 @is a ws2812.buffer for the connected strip.
 ---@return nil
 function ws2812_effects.init(buffer) end
@@ -1471,12 +1528,15 @@ function xpt2046.setCalibration(x1, y1, x2, y2) end
 ---@return boolean touch @`true` if the display is touched, else `false`
 function xpt2046.isTouched() end
 
----Returns the position the display is touched using the calibration values and given width and height.
+---Returns the position the display is touched\
+---using the calibration values and given\
+---width and height.
 ---@return integer posX
 ---@return integer posY
 function xpt2046.getPosition() end
 
----reads the position three times and averages the two positions with the least distance.
+---reads the position three times and averages\
+---the two positions with the least distance.
 ---@return integer posX
 ---@return integer posY
 function xpt2046.getPositionAvg() end
@@ -1498,7 +1558,8 @@ local pixbuffer = {}
 ---@return pixbuffer @pixbuf.buffer object
 function pixbuf.newBuffer(numberOfLeds, numberOfChannels) end
 
----Return the value at the given position, in native strip color order.
+---Return the value at the given position,\
+---in native strip color order.
 ---@param index integer @position in the buffer (1 for first led)
 ---@return number @(color)
 function pixbuffer:get(index) end
@@ -1520,16 +1581,23 @@ function pixbuffer:size() end
 ---@return integer
 function pixbuffer:channels() end
 
----Fill the buffer with the given color. The number of given bytes must match the channel count of the buffer.
+---Fill the buffer with the given color.\
+---The number of given bytes must match\
+---the channel count of the buffer.
 ---@param color any @bytes for each channel
 ---@return nil
 function pixbuffer:fill(color) end
 
----Returns the contents of the buffer (the pixel values) as a string. This can then be saved to a file or sent over a network and may be fed back to` pixbuf.buffer:set()`.
+---Returns the contents of the buffer\
+---(the pixel values) as a string.\
+---This can then be saved to a file or\
+---sent over a network and\
+---may be fed back to` pixbuf.buffer:set()`.
 ---@return string @A string containing the pixel values.
 function pixbuffer:dump() end
 
----Inserts a string (or a pixbuf) into another buffer with an offset. The buffer must be of the same type or an error will be thrown.
+---Inserts a string (or a pixbuf) into another buffer with an offset.\
+---The buffer must be of the same type or an error will be thrown.
 ---@param source string|any @he pixel values to be set into the buffer. This is either a string or a pixbuf.
 ---@param offset? integer @(optional) the offset where the source is to be placed in the buffer. Default is 1. Negative values can be used.
 ---@return nil
@@ -1541,14 +1609,18 @@ function pixbuffer:replace(source, offset) end
 ---@return nil
 function pixbuffer:mix(factor1, buffer1, ...) end
 
----Like pixbuf.buffer:mix() but treats the first channel as a scaling, 5-bit intensity value. The buffers must all have four channels.
+---Like pixbuf.buffer:mix() but treats the first channel\
+---as a scaling, 5-bit intensity value.\
+---The buffers must all have four channels.
 function pixbuffer:mix4I5() end
 
 ---Computes the total energy requirement for the buffer.
 ---@return integer @An integer which is the sum of all the pixel values.
 function pixbuffer:power() end
 
----Like `pixbuf.buffer:power()` but treats the first channel as a scaling intensity value.
+---Like `pixbuf.buffer:power()`\
+---but treats the first channel as\
+---a scaling intensity value.
 function pixbuffer:powerI() end
 
 ---Fade in or out. Defaults to out. Multiply or divide each byte of each led with/by the given value.
@@ -1557,10 +1629,14 @@ function pixbuffer:powerI() end
 ---@return nil
 function pixbuffer:fade(value, direction) end
 
----Like `pixbuf.buffer:fade()` but treats the first channel as a scaling intensity value.
+---Like `pixbuf.buffer:fade()`\
+---but treats the first channel as\
+---a scaling intensity value.
 function pixbuffer:fadeI() end
 
----Shift the content of (a piece of) the buffer in positive or negative direction. This allows simple animation effects. A slice of the buffer can be specified by using the standard start and end offset Lua notation. Negative values count backwards from the end of the buffer.
+---Shift the content of (a piece of) the buffer in positive or negative direction. This allows simple animation effects.\
+---A slice of the buffer can be specified by using the standard start and end offset Lua notation.\
+---Negative values count backwards from the end of the buffer.
 ---@param value number @number of pixels by which to rotate the buffer. Positive values rotate forwards, negative values backwards.
 ---@param mode? integer @(optional) is the shift mode to use.
 ---|>' pixbuf.SHIFT_LOGICAL' #the freed pixels are set to 0 (off).
@@ -1570,7 +1646,8 @@ function pixbuffer:fadeI() end
 ---@return nil
 function pixbuffer:shift(value, mode, i, j) end
 
----This implements the extraction function like string.sub. The indexes are in leds and all the same rules apply.
+---This implements the extraction function like string.sub.\
+---The indexes are in leds and all the same rules apply.
 ---@param i integer @This is the start of the extracted data. Negative values can be used.
 ---@param j? integer @(optional) This is the end of the extracted data. Negative values can be used. The default is -1.
 ---@return pixbuffer @A buffer containing the extracted piece.

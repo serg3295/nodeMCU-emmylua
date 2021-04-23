@@ -18,7 +18,8 @@ function gpio.mode(pin, mode , pullup) end
 ---@return number @0 = low, 1 = high
 function gpio.read(pin) end
 
----Serialize output based on a sequence of delay-times in µs. After each delay, the pin is toggled. After the last cycle and last delay the pin is not toggled.
+---Serialize output based on a sequence of delay-times in µs. After each delay, the pin is toggled.\
+---After the last cycle and last delay the pin is not toggled.
 ---@param pin integer @pin to use, IO index
 ---@param start_level integer|' gpio.HIGH'|' gpio.LOW' @level to start on
 ---@param delay_times table @an array of delay times in µs between each toggle of the gpio pin.
@@ -71,7 +72,8 @@ function gpio.pulse.build(tbl, ...) end
 ---@return nil
 function pulser:start(adjust,  callback) end
 
----This returns the current state. These four values are also passed into the callback functions.
+---This returns the current state.\
+---These four values are also passed into the callback functions.
 ---@return integer position @is the index of the currently active state.  The first state is state 1. This is `nil` if the output operation is complete.
 ---@return integer steps @is the number of states that have been executed (including the current one). This allows monitoring of progress when there are loops.
 ---@return number offset @is the time (in microseconds) until the next state transition. This will be negative once the output operation is complete.
@@ -214,7 +216,9 @@ function hx711.read(mode) end
 ---@return nil
 function hx711.start(mode, samples, callback) end
 
----Stops a previously started set of reads. Any data in buffers is lost. No more callbacks will be invoked.
+---Stops a previously started set of reads.\
+---Any data in buffers is lost.\
+---No more callbacks will be invoked.
 ---@return nil
 function hx711.stop() end
 
@@ -261,7 +265,8 @@ function i2c.write(id, data1, ...) end
 --*** L3G4200D ***
 l3g4200d = {}
 
----Samples the sensor and returns the gyroscope output.
+---Samples the sensor and\
+---returns the gyroscope output.
 ---@return number X @gyroscope output
 ---@return number Y @gyroscope output
 ---@return number Z @gyroscope output
@@ -317,7 +322,8 @@ mdns ={}
 ---@return nil
 function mdns.register(hostname , attributes) end
 
----Shut down the mDNS service. This is not normally needed.
+---Shut down the mDNS service.\
+---This is not normally needed.
 ---@return nil
 function mdns.close() end
 
@@ -478,7 +484,8 @@ function NETSOCKET:getpeer() end
 ---@return string|nil @ip or `nil` if not connected
 function NETSOCKET:getaddr() end
 
----Throttle data reception by placing a request to block the TCP receive function.
+---Throttle data reception by placing\
+---a request to block the TCP receive function.
 ---@return nil
 function NETSOCKET:hold() end
 
@@ -503,7 +510,8 @@ function NETSOCKET:send(str, callback) end
 ---@return integer ttl @current / new ttl value
 function NETSOCKET:ttl(ttl) end
 
----Unblock TCP receiving data by revocation of a preceding `hold()`.
+---Unblock TCP receiving data\
+---by revocation of a preceding `hold()`.
 ---@return nil
 function NETSOCKET:unhold() end
 
@@ -555,20 +563,21 @@ function UDPSOCKET:ttl(ttl) end
 ---@return string @IP address (string) of DNS server
 function net.dns.getdnsserver(dns_index) end
 
----Resolve a hostname to an IP address. Doesn't require a socket like `net.socket.dns()`.
----Doesn't require a socket like net.socket.dns().
+---Resolve a hostname to an IP address. Doesn't require a socket like net.socket.dns().
 ---@param host string @hostname to resolve
 ---@param callback function|' function(sk, ip) end' @`function(sk, ip)` called when the name was resolved. **sk** is always `nil`.
 ---@return nil|string @IP address.
 function net.dns.resolve(host, callback) end
 
----Sets the IP of the DNS server used to resolve hostnames. You can specify up to 2 DNS servers.
+---Sets the IP of the DNS server used to resolve hostnames.\
+---You can specify up to 2 DNS servers.
 ---@param dns_ip_addr string @IP address of a DNS server
 ---@param dns_index integer @which DNS server to set (range 0~1).
 ---@return nil
 function net.dns.setdnsserver(dns_ip_addr, dns_index) end
 
----Pings a server. A callback function is called when response is or is not received. Summary statistics can be retrieved via the second callback.
+---Pings a server. A callback function is called when response is or is not received.\
+---Summary statistics can be retrieved via the second callback.
 ---@param domain string @destination domain or IP address
 ---@param count? number @(optional) number of ping packets to be sent (default value is 4)
 ---@param cb_received function @`function(bytes, ipaddr, seqno, rtt)` callback function which is invoked when response is received where
@@ -610,7 +619,8 @@ function node.bootreason() end
 ---@return number @chip ID
 function node.chipid() end
 
----Compiles a Lua text file into Lua bytecode, and saves it as .lc file.
+---Compiles a Lua text file into Lua bytecode,\
+---and saves it as .lc file.
 ---@param filename string|'".lua"' @name of Lua text file
 ---@return nil
 function node.compile(filename) end
@@ -628,7 +638,8 @@ function node.compile(filename) end
 ---@return nil
 function node.dsleep(us, option, instant) end
 
----Returns the current theoretical maximum deep sleep duration.
+---Returns the current theoretical\
+---maximum deep sleep duration.
 ---@return number max_duration
 function node.dsleepMax() end
 
@@ -682,7 +693,9 @@ function node.heap() end
 ---   - **number_type** (string) integer or float
 function node.info(group) end
 
----Submits a string to the Lua interpreter. Similar to `pcall(loadstring(str))`, but without the single-line limitation.
+---Submits a string to the Lua interpreter.\
+---Similar to `pcall(loadstring(str))`,\
+---but without the single-line limitation.
 ---@param str any @Lua chunk
 ---@return nil
 function node.input(str) end
@@ -704,7 +717,7 @@ function node.LFS.list() end
 ---The reload process internally makes multiple passes through the LFS image file. The first pass validates the file and header formats and detects many errors. If any is detected then an error string is returned.
 function node.LFS.reload(imageName) end
 
----Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)
+---Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)\
 ---and resets output to normal otherwise. Optionally also prints to the serial console.
 ---@param foo function|'function(pipe) end' @`output_fn(pipe)` a function accept every output as str, and can send the output to a socket (or maybe a file).
 ---Note that this function must conform to the fules for a pipe reader callback.
@@ -716,7 +729,8 @@ function node.output(foo, serial_debug) end
 ---@return nil
 function node.restart() end
 
----Restores system configuration to defaults using the SDK function `system_restore()`
+---Restores system configuration to defaults\
+---using the SDK function `system_restore()`
 ---@return nil
 function node.restore() end
 
@@ -725,12 +739,18 @@ function node.restore() end
 ---@return number @target CPU frequency
 function node.setcpufreq(speed) end
 
----Overrides the default crash handling which always restarts the system. It can be used to e.g. write an error to a logfile or to secure connected hardware before restarting.
----**!!! attention** It is strongly advised to ensure that the callback ends with a restart. Something has gone quite wrong and it is probably not safe to just wait for the next event (e.g., timer tick) and hope everything works out.
+---Overrides the default crash handling which always restarts the system.\
+---It can be used to e.g. write an error to a logfile or to secure connected hardware\
+---before restarting.\
+---**!!! attention** It is strongly advised to ensure that the callback ends with a restart.\
+---Something has gone quite wrong and it is probably not safe to just wait for\
+---the next event (e.g., timer tick) and hope everything works out.\
+---```
 ---    node.setonerror(function(s)
 ---        print("Error: "..s)
 ---        node.restart()
 ---      end)
+---```
 ---@param callback function @function to be executed when an error occurs, gets the error string as an argument, remember to **trigger a restart** at the end of the callback
 ---@return nil
 function node.setonerror(callback) end
@@ -777,7 +797,8 @@ function node.startupcounts(marker) end
 ---@field delay_mount number
 ---@field command number
 
----Get/set options that control the startup process. This interface will grow over time.
+---Get/set options that control the startup process.\
+---This interface will grow over time.
 ---@param tbl? NodeStartup @(optional) If the argument is omitted, then no change is made to the current set of startup options. If the argument is the empty table **{ }** then all options are reset to their default values. Table one or more options:
 --- - **banner** - set to `true` or `false` to indicate whether the startup banner should be displayed or not. (default: true)
 --- - **frequency** - set to node.CPU80MHZ or node.CPU160MHZ to indicate the initial CPU speed. (default: node.CPU80MHZ)
@@ -786,7 +807,8 @@ function node.startupcounts(marker) end
 ---@return table @This is the complete set of options in the state that will take effect on the next boot. Note that the command key may be missing in which case the default value will be used.
 function node.startup(tbl) end
 
----Controls the amount of debug information kept during `node.compile()`,and allows removal of debug information from already compiled Lua code.
+---Controls the amount of debug information kept during `node.compile()`,\
+---and allows removal of debug information from already compiled Lua code.
 ---@param level? integer @(optional) level
 ---|'1' #don't discard debug info
 ---|'2' #discard Local and Upvalue debug info
@@ -795,11 +817,13 @@ function node.startup(tbl) end
 ---@return integer|nil @If invoked without arguments, returns the current level settings. Otherwise, `nil` is returned.
 function node.stripdebug(level, foo) end
 
----Controls whether the debugging output from the Espressif SDK is printed.
+---Controls whether the debugging output\
+---from the Espressif SDK is printed.
 ---@param enabled boolean @This is either `true` to enable printing, or `false` to disable it. The default is `false`.
 function node.osprint(enabled) end
 
----This behaves like math.random except that it uses true random numbers derived from the ESP8266 hardware. It returns uniformly distributed numbers in the required range.
+---This behaves like math.random except that it uses true random numbers derived from\
+---the ESP8266 hardware. It returns uniformly distributed numbers in the required range.
 ---* `node.random()` Returns a random real number with uniform distribution in the interval [0,1).
 ---* `node.random(u)` Returns an integer random number x such that 1 <= x <= u.
 ---* `node.random(l, u)` Returns a pseudo-random integer x such that l <= x <= u.
@@ -807,7 +831,8 @@ function node.osprint(enabled) end
 ---@overload fun(u: integer):integer
 ---@param l integer @the lower bound of the range
 ---@param u integer @the upper bound of the range
----@return integer @The random number in the appropriate range. Note that the zero argument form will always return 0 in the integer build.
+---@return integer @The random number in the appropriate range.
+---Note that the zero argument form will always return 0 in the integer build.
 function node.random(l, u) end
 
 ---Sets the Emergency Garbage Collector mode.
@@ -851,7 +876,8 @@ function ow.check_crc16(buf, inverted_crc0, inverted_crc1, crc) end
 ---@return number @the CRC16 as defined by Dallas Semiconductor
 function ow.crc16(buf, crc) end
 
----Computes a Dallas Semiconductor 8 bit CRC, these are used in the ROM and scratchpad registers.
+---Computes a Dallas Semiconductor 8 bit CRC,\
+---these are used in the ROM and scratchpad registers.
 ---@param buf string @value, data to be calculated check sum in string
 ---@return number CRC @result as byte
 function ow.crc8(buf) end
@@ -877,7 +903,8 @@ function ow.read_bytes(pin, size) end
 ---@return integer @**1** if a device responds with a presence pulse; **0** if there is no device or the bus is shorted or otherwise held low for more than 250 µS
 function ow.reset(pin) end
 
----Clears the search state so that it will start from the beginning again.
+---Clears the search state so that it will start\
+---from the beginning again.
 ---@param pin integer @1~12, I/O index
 ---@return nil
 function ow.reset_search(pin) end
@@ -887,7 +914,8 @@ function ow.reset_search(pin) end
 ---@return string|nil @string with length of 8 upon success. It contains the rom code of slave device. Returns `nil` if search was unsuccessful.
 function ow.search(pin) end
 
----Issues a 1-Wire rom select command. Make sure you do the `ow.reset(pin)` first.
+---Issues a 1-Wire rom select command.\
+---Make sure you do the `ow.reset(pin)` first.
 ---@param pin integer @1~12, I/O index
 ---@param rom string @string value, len 8, rom code of the slave device
 ---@return nil
@@ -898,26 +926,29 @@ function ow.select(pin, rom) end
 ---@return nil
 function ow.setup(pin) end
 
----Issues a 1-Wire rom skip command, to address all on bus.
+---Issues a 1-Wire rom skip command,\
+---to address all on bus.
 ---@param pin integer @1~12, I/O index
 ---@return nil
 function ow.skip(pin) end
 
----Sets up the search to find the device type family_code.
+---Sets up the search to find the device type family_code.\
 ---The search itself has to be initiated with a subsequent call to `ow.search()`.
 ---@param pin integer @1~12, I/O index
 ---@param family_code integer @byte for family code
 ---@return nil
 function ow.target_search(pin, family_code) end
 
----Writes a byte. If power is 1 then the wire is held high at the end for parasitically powered devices.
+---Writes a byte. If power is 1 then the wire is held high\
+---at the end for parasitically powered devices.
 ---@param pin integer @1~12, I/O index
 ---@param v integer @byte to be written to slave device
 ---@param power integer @1 for wire being held high for parasitically powered devices
 ---@return nil
 function ow.write(pin, v, power) end
 
----Writes multi bytes. If power is 1 then the wire is held high at the end for parasitically powered devices.
+---Writes multi bytes. If power is 1 then the wire is held high\
+---at the end for parasitically powered devices.
 ---@param pin integer @1~12, I/O index
 ---@param buf string @string to be written to slave device
 ---@param power integer @1 for wire being held high for parasitically powered devices
@@ -936,7 +967,8 @@ local pcmdrv = {}
 ---@return pcm obj @Audio driver object.
 function pcm.new(pcm_SD, pin) end
 
----Stops playback and releases the audio hardware.
+---Stops playback and releases\
+---the audio hardware.
 ---@return nil
 function pcmdrv:close() end
 
@@ -956,11 +988,13 @@ function pcmdrv:on(event, callback) end
 ---@return nil
 function pcmdrv:play(rate) end
 
----Pauses playback. A call to `drv:play()` will resume from the last position.
+---Pauses playback. A call to `drv:play()`\
+---will resume from the last position.
 ---@return nil
 function pcmdrv:pause() end
 
----Stops playback and releases buffered chunks.
+---Stops playback and releases\
+---buffered chunks.
 ---@return nil
 function pcmdrv:stop() end
 
@@ -1010,7 +1044,8 @@ function pobj:read(size_or_endChar) end
 ---@return function @myFunc iterator function
 function pobj:reader(size_or_endChar) end
 
----Write a string to the head of a pipe object. This can be used to back-out a previous read.
+---Write a string to the head of a pipe object.\
+---This can be used to back-out a previous read.
 ---@param s string @Any input string. Note that with all Lua strings, these may contain all character values including "\0".
 function pobj:unread(s) end
 
@@ -1086,11 +1121,14 @@ function pwm2.setup_pin_hz(pin,frequencyAsHz,pulsePeriod,initialDuty ,frequencyD
 ---@return nil
 function pwm2.setup_pin_sec(pin,frequencyAsSec,pulsePeriod,initialDuty ,frequencyDivisor) end
 
----Starts PWM for all setup pins. At this moment GPIO pins are marked as output and TIMER1 is being reserved for this module.
+---Starts PWM for all setup pins. At this moment GPIO pins are marked\
+---as output and TIMER1 is being reserved for this module.
 ---@return boolean @`true` if PWM started ok, `false` of TIMER1 is reserved by another module.
 function pwm2.start() end
 
----Stops PWM for all pins. All GPIO pins and TIMER1 are being released.
+---Stops PWM for all pins.\
+---All GPIO pins and TIMER1\
+---are being released.
 ---@return nil
 function pwm2.stop() end
 
@@ -1181,7 +1219,8 @@ rtcfifo = {}
 ---@param minsleep_us number @minimum sleep time, in microseconds
 function rtcfifo.dsleep_until_sample(minsleep_us) end
 
----Reads a sample from the rtcfifo. An offset into the rtcfifo may be specified, but by default it reads the first sample (offset 0).
+---Reads a sample from the rtcfifo. An offset into the rtcfifo\
+---may be specified, but by default it reads the first sample (offset 0).
 ---@param offset? number @(optional) Peek at sample at position `offset` in the fifo.
 ---@return number timestamp @timestamp in seconds
 ---@return number value @the value
@@ -1189,7 +1228,8 @@ function rtcfifo.dsleep_until_sample(minsleep_us) end
 ---@return any @sensor name. If no sample is available (at the specified offset), nothing is returned.
 function rtcfifo.peek(offset) end
 
----Reads the first sample from the rtcfifo, and removes it from there.
+---Reads the first sample from the rtcfifo,\
+---and removes it from there.
 ---@return number timestamp @timestamp in seconds
 ---@return number value @the value
 ---@return number neg_e @scaling factor

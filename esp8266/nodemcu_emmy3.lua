@@ -19,7 +19,8 @@ local liquidcrystal = lc_meta()
 ---@field d6 integer
 ---@field d7 integer
 
---- Loading I²C backend module returns initialization closure. It configures I²C backend and returns backend object.
+---Loading I²C backend module returns initialization closure.\
+---It configures I²C backend and returns backend object.
 ---@param tbl i2c4bitCfg @In most cases only **sda** and **scl** parameters are required
 --- - **sda**: I²C data pin. If set to `nil`, I²C bus initialization step via `i2c.setup` will be skipped
 --- - **scl**: I²C clock pin. If set to `nil`, I²C bus initialization step via `i2c.setup` will be skipped
@@ -47,7 +48,8 @@ function i2c4bit_meta(tbl) end
 ---@field d6 integer
 ---@field d7 integer
 
----Loading GPIO 4 bit backend module returns initialization closure. It configures GPIO 4 bit backend and returns backend object.
+---Loading GPIO 4 bit backend module returns initialization closure.\
+---It configures GPIO 4 bit backend and returns backend object.
 ---@param tbl gpio4bitCfg @>
 --- - **rs**: GPIO pin connected to RS pin. Defaults to 0
 --- - **rw**: GPIO pin connected to RW pin. If set to `nil` then busy, position and readChar functions will not be available. Note that RW pin must be pulled to the ground if not connected to GPIO
@@ -75,7 +77,8 @@ function gpio4bit_meta(tbl) end
 ---@field d6 integer
 ---@field d7 integer
 
----Loading GPIO 8 bit backend module returns initialization closure. It configures GPIO 8 bit backend and returns backend object.
+---Loading GPIO 8 bit backend module returns initialization closure.\
+---It configures GPIO 8 bit backend and returns backend object.
 ---@param tbl gpio8bitCfg @>
 --- - **rs**: GPIO pin connected to RS pin. Defaults to 0
 --- - **rw**: GPIO pin connected to RW pin. If set to `nil` then busy, position and readChar functions will not be available. Note that RW pin must be pulled to the ground if not connected to GPIO
@@ -92,7 +95,8 @@ function gpio4bit_meta(tbl) end
 ---@return backend_obj @backend object
 function gpio8bit_meta(tbl) end
 
----Loading Liquidcrystal module returns initialization closure. It requires backend object and returns LCD object.
+---Loading Liquidcrystal module returns initialization closure.\
+---It requires backend object and returns LCD object.
 ---@param backend backend_obj @backend object
 ---@param onelinemode boolean @`true` to use one line mode, `false` to use two line mode
 ---@param eightdotsmode boolean @`true` to use 5x8 dot font, `false` to use 5x10 dot font
@@ -100,12 +104,14 @@ function gpio8bit_meta(tbl) end
 ---@return liquidcrystal LCD_obj @screen object
 function lc_meta(backend, onelinemode, eightdotsmode, column_width) end
 
----Autoscroll text when printing. When turned off, cursor moves and text stays still, when turned on, vice versa.
+---Autoscroll text when printing. When turned off, cursor moves\
+---and text stays still, when turned on, vice versa.
 ---@param on boolean @`true` to turn on, `false` to turn off
 ---@return any @sent data
 function liquidcrystal:autoscroll(on) end
 
----Control LCDs backlight. When using GPIO backend without **bl** argument specification function does nothing.
+---Control LCDs backlight. When using GPIO backend\
+---without **bl** argument specification function does nothing.
 ---@param on boolean @`true` to turn on, `false` to turn off
 ---@return boolean @backlight status
 function liquidcrystal:backlight(on) end
@@ -115,7 +121,8 @@ function liquidcrystal:backlight(on) end
 ---@return any @sent data
 function liquidcrystal:blink(on) end
 
----Get busy status of the LCD. When using GPIO backend without rw argument specification function does nothing.
+---Get busy status of the LCD. When using GPIO backend\
+---without rw argument specification function does nothing.
 ---@return boolean @`true` if device is busy, `false` if device is ready to receive commands
 function liquidcrystal:busy() end
 
@@ -148,7 +155,8 @@ function liquidcrystal:cursorRight() end
 ---@return nil
 function liquidcrystal:customChar(index, bytes) end
 
----Turn display on and off. Does not affect display backlight. Does not clear the display.
+---Turn display on and off. Does not affect display backlight.\
+---Does not clear the display.
 ---@param on boolean @`true` to turn on, `false` to turn off
 ---@return any @sent data
 function liquidcrystal:display(on) end
@@ -161,15 +169,20 @@ function liquidcrystal:home() end
 ---@return any @sent data
 function liquidcrystal:leftToRight() end
 
----Get current position of the cursor. Position is 0 indexed. When using GPIO backend without **rw** argument specification function does nothing.
+---Get current position of the cursor.\
+---Position is 0 indexed. When using GPIO backend\
+---without **rw** argument specification function does nothing.
 ---@return number @0 indexed position of the cursor
 function liquidcrystal:position() end
 
----Return current character numerical representation. When using GPIO backend without **rw** argument specification function does nothing.
+---Return current character numerical representation.\
+---When using GPIO backend without **rw** argument specification\
+---function does nothing.
 ---@return number @numerical representation of the current character
 function liquidcrystal:read() end
 
----Return custom char byte array. When using GPIO backend without **rw** argument specification function returns zeros.
+---Return custom char byte array. When using GPIO backend\
+--- without **rw** argument specification function returns zeros.
 ---@param index integer custom char index in range from 0 to 7
 ---@return table @table of size 8 in eight dot mode or 11 in ten dot mode. Each 8 bit number represents a character dot line
 function liquidcrystal:readCustom(index) end
@@ -356,28 +369,32 @@ function u8g2.u8g2DisplayTypeSPI(bus, cs, dc, res, cb_fn) end
 ---Clears all pixel in the memory frame buffer.
 function u8g2DispObj:clearBuffer() end
 
----Draw a box (filled frame), starting at `x/y` position (upper left edge). The box has width `w` and height `h`.
+---Draw a box (filled frame), starting at `x/y` position (upper left edge).\
+---The box has width `w` and height `h`.
 ---@param x integer @X-position of upper left edge.
 ---@param y integer @Y-position of upper left edge.
 ---@param w integer @Width of the box.
 ---@param h integer @Height of the box.
 function u8g2DispObj:drawBox(x, y, w, h) end
 
----Draw a circle with radus `rad` at position (`x0`, `y0`). The diameter of the circle is 2*rad+1.
+---Draw a circle with radus `rad` at position (`x0`, `y0`).\
+---The diameter of the circle is 2*rad+1.
 ---@param x0 integer @Position of the center of the circle.
 ---@param y0 integer @Position of the center of the circle.
 ---@param rad integer  @Defines the size of the circle: Radus = rad.
 ---@param opt? integer|' u8g2.DRAW_ALL'|' u8g2.DRAW_UPPER_RIGHT'|' u8g2.DRAW_UPPER_LEFT'|' u8g2.DRAW_LOWER_LEFT'|' u8g2.DRAW_LOWER_RIGHT' @is optional and defaults to u8g2.DRAW_ALL if omitted.
 function u8g2DispObj:drawCircle(x0, y0, rad, opt) end
 
----Draw a filled circle with radus `rad` at position (`x0`, `y0`). The diameter of the circle is 2*rad+1.
+---Draw a filled circle with radus `rad` at position (`x0`, `y0`).\
+---The diameter of the circle is 2*rad+1.
 ---@param x0 integer @Position of the center of the disc.
 ---@param y0 integer @Position of the center of the disc.
 ---@param rad integer @Defines the size of the circle: Radus = rad.
 ---@param opt? integer|' u8g2.DRAW_ALL'|' u8g2.DRAW_UPPER_RIGHT'|' u8g2.DRAW_UPPER_LEFT'|' u8g2.DRAW_LOWER_LEFT'|' u8g2.DRAW_LOWER_RIGHT' @is optional and defaults to u8g2.DRAW_ALL if omitted.
 function u8g2DispObj:drawDisc(x0, y0, rad, opt) end
 
----Draw an ellipse with radus `rx` and `ry` at position (`x0, y0`). rx*ry must be lower than 512 in 8 Bit mode of u8g2.
+---Draw an ellipse with radus `rx` and `ry` at position (`x0, y0`).\
+---rx*ry must be lower than 512 in 8 Bit mode of u8g2.
 ---@param x0 integer @Position of the center of the filled circle.
 ---@param y0 integer @Position of the center of the filled circle.
 ---@param rx integer @Defines the size of the ellipse.
@@ -385,7 +402,8 @@ function u8g2DispObj:drawDisc(x0, y0, rad, opt) end
 ---@param opt integer|' u8g2.DRAW_ALL'|' u8g2.DRAW_UPPER_RIGHT'|' u8g2.DRAW_UPPER_LEFT'|' u8g2.DRAW_LOWER_LEFT'|' u8g2.DRAW_LOWER_RIGHT' @is optional and defaults to u8g2.DRAW_ALL if omitted.
 function u8g2DispObj:drawEllipse(x0, y0, rx, ry, opt) end
 
----Draw a filled ellipse with radus `rx` and `ry` at position (`x0, y0`). rx*ry must be lower than 512 in 8 Bit mode of u8g2.
+---Draw a filled ellipse with radus `rx` and `ry` at position (`x0, y0`).\
+---rx*ry must be lower than 512 in 8 Bit mode of u8g2.
 ---@param x0 integer @Position of the center of the filled circle.
 ---@param y0 integer @Position of the center of the filled circle.
 ---@param rx integer @Defines the size of the ellipse.
@@ -393,7 +411,8 @@ function u8g2DispObj:drawEllipse(x0, y0, rx, ry, opt) end
 ---@param opt integer|' u8g2.DRAW_ALL'|' u8g2.DRAW_UPPER_RIGHT'|' u8g2.DRAW_UPPER_LEFT'|' u8g2.DRAW_LOWER_LEFT'|' u8g2.DRAW_LOWER_RIGHT' @is optional and defaults to u8g2.DRAW_ALL if omitted.
 function u8g2DispObj:drawFilledEllipse(x0, y0, rx, ry, opt) end
 
----Draw a frame (empty box), starting at `x/y` position (upper left edge). The box has width `w` and height `h`.
+---Draw a frame (empty box), starting at `x/y` position (upper left edge).\
+---The box has width `w` and height `h`.
 ---@param x integer @X-position of upper left edge.
 ---@param y integer @Y-position of upper left edge.
 ---@param w integer @Width of the frame.
@@ -406,7 +425,8 @@ function u8g2DispObj:drawFrame(x, y, w, h) end
 ---@param encoding integer @Unicode value of the character.
 function u8g2DispObj:drawGlyph(x, y, encoding) end
 
----Draw a horizontal line, starting at `x/y` position (left edge). The width (length) of the line is `w` pixel.
+---Draw a horizontal line, starting at `x/y` position (left edge).\
+---The width (length) of the line is `w` pixel.
 ---@param x integer @X-position
 ---@param y integer @Y-position
 ---@param w integer @Length of the horizontal line.
@@ -419,12 +439,15 @@ function u8g2DispObj:drawHLine(x, y, w) end
 ---@param y1 integer @Y-position of the second point.
 function u8g2DispObj:drawLine(x0, y0, x1, y1) end
 
----Draw a pixel at the specified `x/y` position. Position (0,0) is at the upper left corner of the display.
+---Draw a pixel at the specified `x/y` position.\
+---Position (0,0) is at the upper left corner of the display.
 ---@param x integer @Position of pixel.
 ---@param y integer @Position of pixel.
 function u8g2DispObj:drawPixel(x, y) end
 
----Draw a box with round edges, starting at `x/y` position (upper left edge). The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries. Edges have radius `r`. It is required that w >= 2*(r+1) and h >= 2*(r+1).
+---Draw a box with round edges, starting at `x/y` position (upper left edge).\
+---The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries.\
+---Edges have radius `r`. It is required that w >= 2*(r+1) and h >= 2*(r+1).
 ---@param x integer @Position of upper left edge.
 ---@param y integer @Position of upper left edge.
 ---@param w integer @Width of the box.
@@ -432,7 +455,9 @@ function u8g2DispObj:drawPixel(x, y) end
 ---@param r integer @Radius for the four edges.
 function u8g2DispObj:drawRBox(x, y, w, h, r) end
 
----Draw a frame with round edges, starting at `x/y` position (upper left edge). The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries. Edges have radius `r`. It is required that w >= 2*(r+1) and h >= 2*(r+1).
+---Draw a frame with round edges, starting at `x/y` position (upper left edge).\
+---The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries.\
+---Edges have radius `r`. It is required that w >= 2*(r+1) and h >= 2*(r+1).
 ---@param x integer @Position of upper left edge.
 ---@param y integer @Position of upper left edge.
 ---@param w integer @Width of the frame.
@@ -463,13 +488,15 @@ function u8g2DispObj:drawTriangle(x0, y0, x1, y1, x2, y2) end
 ---@return number @The width of the string.
 function u8g2DispObj:drawUTF8(x, y, s) end
 
----Draw a vertical line, starting at `x/y` position (upper end). The height (length) of the line is `h` pixel.
+---Draw a vertical line, starting at `x/y` position (upper end).\
+---The height (length) of the line is `h` pixel.
 ---@param x integer @Top position of the line.
 ---@param y integer @Top position of the line.
 ---@param h integer @The height (length) of the vertical line.
 function u8g2DispObj:drawVLine(x, y, h) end
 
----Draw a XBM Bitmap. Position (`x,y`) is the upper left corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.
+---Draw a XBM Bitmap. Position (`x,y`) is the upper left corner of the bitmap.\
+---XBM contains monochrome, 1-bit bitmaps.
 ---@param x integer @X-position.
 ---@param y integer @Y-position.
 ---@param w integer @Width of the bitmap.
@@ -477,11 +504,13 @@ function u8g2DispObj:drawVLine(x, y, h) end
 ---@param bitmap string @bitmap string.char()
 function u8g2DispObj:drawXBM(x, y, w, h, bitmap) end
 
----Returns the reference height of the glyphs above the baseline (ascent).
+---Returns the reference height of the glyphs\
+---above the baseline (ascent).
 ---@return number @The ascent of the current font.
 function u8g2DispObj:getAscent() end
 
----Returns the reference height of the glyphs below the baseline (descent).
+---Returns the reference height of the glyphs\
+---below the baseline (descent).
 ---@return number @The descent of the current font.
 function u8g2DispObj:getDescent() end
 
@@ -498,7 +527,9 @@ function u8g2DispObj:getUTF8Width(s) end
 ---Send the content of the memory frame buffer to the display.
 function u8g2DispObj:sendBuffer() end
 
----Defines, whether the bitmap functions will write the background color (mode 0/solid, `is_transparent` = 0) or not (mode 1/transparent, `is_transparent` = 1). Default mode is 0 (solid mode).
+---Defines, whether the bitmap functions will write the background color\
+---(mode 0/solid, `is_transparent` = 0) or not (mode 1/transparent,\
+---`is_transparent` = 1). Default mode is 0 (solid mode).
 ---@param is_transparent integer @Enable (1) or disable (0) transparent mode.
 function u8g2DispObj:setBitmapMode(is_transparent) end
 
@@ -523,7 +554,8 @@ function u8g2DispObj:setDrawColor(color) end
 ---@param is_enable integer @Enable (1) or disable (0) 180 degree rotation of the display
 function u8g2DispObj:setFlipMode(is_enable) end
 
----Define a u8g2 font for the glyph and string drawing functions. They can be supplied as strings or compiled into the firmware image.
+---Define a u8g2 font for the glyph and string drawing functions.\
+---They can be supplied as strings or compiled into the firmware image.
 ---@param font number|'u8g2.font_6x10_tf'|'u8g2.font_unifont_t_symbols'
 function u8g2DispObj:setFont(font) end
 
@@ -535,29 +567,39 @@ function u8g2DispObj:setFont(font) end
 ---|'3' #270 degree Down to top
 function u8g2DispObj:setFontDirection(dir) end
 
----Defines, whether the glyph and string drawing functions will write the background color (mode 0/solid, 'is_transparent' = 0) or not (mode 1/transparent, 'is_transparent' = 1). Default mode is 0 (background color of the characters is overwritten).
+---Defines, whether the glyph and string drawing functions will write\
+---the background color (mode 0/solid, 'is_transparent' = 0) or not\
+---(mode 1/transparent, 'is_transparent' = 1). Default mode is 0\
+---(background color of the characters is overwritten).
 ---@param is_transparent integer @Enable (1) or disable (0) transparent mode.
 function u8g2DispObj:setFontMode(is_transparent) end
 
----Change the reference position for the glyph and string draw functions to "baseline".
+---Change the reference position for the glyph\
+---and string draw functions to "baseline".
 function u8g2DispObj:setFontPosBaseline() end
 
----Change the reference position for the glyph and string draw functions to "bottom".
+---Change the reference position for the glyph\
+---and string draw functions to "bottom".
 function u8g2DispObj:setFontPosBottom() end
 
----Change the reference position for the glyph and string draw functions to "top".
+---Change the reference position for the glyph\
+---and string draw functions to "top".
 function u8g2DispObj:setFontPosTop() end
 
----Change the reference position for the glyph and string draw functions to "center".
+---Change the reference position for the glyph\
+---and string draw functions to "center".
 function u8g2DispObj:setFontPosCenter() end
 
----Set ascent and descent calculation mode to "highest and lowest glyph".
+---Set ascent and descent calculation mode\
+---to "highest and lowest glyph".
 function u8g2DispObj:setFontRefHeightAll() end
 
----Set ascent and descent calculation mode to "highest of [A1(], lowest of [g(]".
+---Set ascent and descent calculation mode\
+---to "highest of [A1(], lowest of [g(]".
 function u8g2DispObj:setFontRefHeightExtendedText() end
 
----Set ascent and descent calculation mode to "highest of [A1], lowest of [g]".
+---Set ascent and descent calculation mode\
+---to "highest of [A1], lowest of [g]".
 function u8g2DispObj:setFontRefHeightText() end
 
 ---Activate or disable power save mode of the display.
@@ -632,35 +674,40 @@ function ucgDispObj:clearScreen() end
 ---@param col_idx integer
 function ucgDispObj:draw90Line(x, y, len, dir, col_idx) end
 
----Draw a filled box. Use current color from index 0. The top-left pixel is at `x`, `y`. The box has width of `w` and the height is `h` pixel.
+---Draw a filled box. Use current color from index 0. The top-left pixel is at `x`, `y`.\
+---The box has width of `w` and the height is `h` pixel.
 ---@param x integer @Top-left position of the box.
 ---@param y integer @Top-left position of the box.
 ---@param w integer @Width of the box.
 ---@param h integer @Height of the box.
 function ucgDispObj:drawBox(x, y, w, h) end
 
----Draw a full circle or a quarter of a circle. Use current color from index 0. The center of the circle is at `x0`, `y0`. The circle has a diameter of `2*rad+1` pixel.
+---Draw a full circle or a quarter of a circle. Use current color from index 0.\
+---The center of the circle is at `x0`, `y0`. The circle has a diameter of `2*rad+1` pixel.
 ---@param x0 integer @Center of the circle.
 ---@param y0 integer @Center of the circle.
 ---@param rad integer @Radius of the circle.
 ---@param option integer|' ucg.DRAW_ALL'|' ucg.DRAW_UPPER_RIGHT'|' ucg.DRAW_UPPER_LEFT'|' ucg.DRAW_LOWER_LEFT'|' ucg.DRAW_LOWER_RIGHT' @One of the following constants:
 function ucgDispObj:drawCircle(x0, y0, rad, option) end
 
----Draw a filled full circle or a quarter of a filled circle. Use current color from index 0. The center of the filled circle is at `x0`, `y0`. The filled circle has a diameter of `2*rad+1` pixel.
+---Draw a filled full circle or a quarter of a filled circle. Use current color from index 0.\
+---The center of the filled circle is at `x0`, `y0`. The filled circle has a diameter of `2*rad+1` pixel.
 ---@param x0 integer @Center of the filled circle.
 ---@param y0 integer @Center of the filled circle.
 ---@param rad integer @Radius of the filled circle.
 ---@param option integer|' ucg.DRAW_ALL'|' ucg.DRAW_UPPER_RIGHT'|' ucg.DRAW_UPPER_LEFT'|' ucg.DRAW_LOWER_LEFT'|' ucg.DRAW_LOWER_RIGHT' @One of the following constants:
 function ucgDispObj:drawDisc(x0, y0, rad, option) end
 
----Draw a rectangle. Use current color from index 0. The top-left pixel is at `x`, `y`. The rectangle has width of `w` and the height is `h` pixel.
+---Draw a rectangle. Use current color from index 0. The top-left pixel is at `x`, `y`.\
+---The rectangle has width of `w` and the height is `h` pixel.
 ---@param x integer @Top-left position of the rectangle.
 ---@param y integer @Top-left position of the rectangle.
 ---@param w integer @Width of the rectangle.
 ---@param h integer @Height of the rectangle.
 function ucgDispObj:drawFrame(x, y, w, h) end
 
----Draw a single character. Use current color from index 0. If the *setFontMode* is `ucg.FONT_MODE_SOLID`, then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`).
+---Draw a single character. Use current color from index 0. If the *setFontMode* is `ucg.FONT_MODE_SOLID`,\
+---then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`).
 ---@param x integer @Reference position of the character.
 ---@param y integer @Reference position of the character.
 ---@param dir integer @One of the values **0** (left to right), **1** (top down), **2** (right left) or **3** (bottom up)
@@ -668,27 +715,34 @@ function ucgDispObj:drawFrame(x, y, w, h) end
 ---@return number @Width of the gylph.
 function ucgDispObj:drawGlyph(x, y, dir, encoding) end
 
----Draw a filled box. The upper left position is at `x`, `y`. Dimensions of the box are `w` (width) and `h` (height) pixel. The pixel at the upper left will have the color from index 0, upper right pixel has color from index 1, lower left from index 2 and lower right from index 3. The remaining colors will be interpolated between the four colors.
+---Draw a filled box. The upper left position is at `x`, `y`. Dimensions of the box are `w` (width) and\
+---`h` (height) pixel. The pixel at the upper left will have the color from index 0, upper right pixel\
+---has color from index 1, lower left from index 2 and lower right from index 3.\
+---The remaining colors will be interpolated between the four colors.
 ---@param x integer @Start position of the line.
 ---@param y integer @Start position of the line.
 ---@param w integer @Width of the box.
 ---@param h integer @Height of the box.
 function ucgDispObj:drawGradientBox(x, y, w, h) end
 
----Draw a horizontal or vertical line. The line will start at `x`, `y` and has a total of `len` pixel. The pixel at `x`, `y` will have the color from index 0. The color will be changed until it matches the color of index 1.
+---Draw a horizontal or vertical line. The line will start at `x`, `y` and has a total of `len` pixel.\
+---The pixel at `x`, `y` will have the color from index 0.\
+---The color will be changed until it matches the color of index 1.
 ---@param x integer @Start position of the line.
 ---@param y integer @Start position of the line.
 ---@param len integer @Length of the line.
 ---@param dir integer @One of the values **0** (left to right), **1** (top down), **2** (right left) or **3** (bottom up)
 function ucgDispObj:drawGradientLine(x, y, len, dir) end
 
----Draw a horizontal line. Use current color from index 0. The leftmost pixel is at `x`, `y` and the rightmost pixel is at `x+len-1`, `y`
+---Draw a horizontal line. Use current color from index 0.\
+---The leftmost pixel is at `x`, `y` and the rightmost pixel is at `x+len-1`, `y`
 ---@param x integer @Left position of the horizontal line.
 ---@param y integer @Left position of the horizontal line.
 ---@param len integer @Length of the line.
 function ucgDispObj:drawHLine(x, y, len) end
 
----Draw a line from pixel at `x1`, `y1` to pixel `x2`, `y2`. Use current color from index 0.
+---Draw a line from pixel at `x1`, `y1` to pixel `x2`, `y2`.\
+---Use current color from index 0.
 ---@param x1 integer @Start pixel of the line.
 ---@param y1 integer @Start pixel of the line.
 ---@param x2 integer @End pixel of the line.
@@ -700,7 +754,11 @@ function ucgDispObj:drawLine(x1, y1, x2, y2) end
 ---@param y integer @Position of pixel.
 function ucgDispObj:drawPixel(x, y) end
 
----Draw a box/frame with round edges, starting at x/y position (upper left edge). The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries. Edges have radius `r`. It is required that `w >= 2*(r+1)` and `h >= 2*(r+1)`. This condition is not checked. Behavior is undefined if `w` or `h` is smaller than `2*(r+1)`. Use current color from index 0.
+---Draw a box/frame with round edges, starting at x/y position (upper left edge).\
+---The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries.\
+---Edges have radius `r`. It is required that `w >= 2*(r+1)` and `h >= 2*(r+1)`.\
+---This condition is not checked. Behavior is undefined if `w` or `h` is smaller than `2*(r+1)`.\
+---Use current color from index 0.
 ---@param x integer @Position of upper left edge.
 ---@param y integer @Position of upper left edge.
 ---@param w integer @Width of the box.
@@ -708,7 +766,11 @@ function ucgDispObj:drawPixel(x, y) end
 ---@param r integer @Radius for the four edges.
 function ucgDispObj:drawRBox(x, y, w, h, r) end
 
----Draw a box/frame with round edges, starting at x/y position (upper left edge). The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries. Edges have radius `r`. It is required that `w >= 2*(r+1)` and `h >= 2*(r+1)`. This condition is not checked. Behavior is undefined if `w` or `h` is smaller than `2*(r+1)`. Use current color from index 0.
+---Draw a box/frame with round edges, starting at x/y position (upper left edge).\
+---The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries.\
+---Edges have radius `r`. It is required that `w >= 2*(r+1)` and `h >= 2*(r+1)`.\
+---This condition is not checked. Behavior is undefined if `w` or `h` is smaller than `2*(r+1)`.\
+---Use current color from index 0.
 ---@param x integer @Position of upper left edge.
 ---@param y integer @Position of upper left edge.
 ---@param w integer @Width of the frame.
@@ -716,7 +778,8 @@ function ucgDispObj:drawRBox(x, y, w, h, r) end
 ---@param r integer @Radius for the four edges.
 function ucgDispObj:drawRFrame(x, y, w, h, r) end
 
----Draw a string. Use current color from index 0. If the *setFontMode* is `ucg.FONT_MODE_SOLID`, then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`).
+---Draw a string. Use current color from index 0. If the *setFontMode* is `ucg.FONT_MODE_SOLID`,\
+---then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`).
 ---@param x integer @Reference position of the string.
 ---@param y integer @Reference position of the string.
 ---@param dir integer @One of the values **0** (left to right), **1** (top down), **2** (right left) or **3** (bottom up)
@@ -724,7 +787,7 @@ function ucgDispObj:drawRFrame(x, y, w, h, r) end
 ---@return number @The width of the string.
 function ucgDispObj:drawString(x, y, dir, str) end
 
----Draw a filled tetragon (a shape with four corners), defined by four edge points. Use current color from index 0.
+---Draw a filled tetragon (a shape with four corners), defined by four edge points. Use current color from index 0.\
 ---This procedure will only draw "simple"/convex tetragons. The result will be undefined, if the tetragon is not convex.
 ---@param x0 integer @Point 0 of the tetragon.
 ---@param y0 integer @Point 0 of the tetragon.
@@ -736,7 +799,8 @@ function ucgDispObj:drawString(x, y, dir, str) end
 ---@param y3 integer @Point 3 of the tetragon.
 function ucgDispObj:drawTetragon(x0, y0, x1, y1, x2, y2, x3, y3) end
 
----Draw a filled triangle, defined by three edge points. Use current color from index 0.
+---Draw a filled triangle, defined by three edge points.\
+---Use current color from index 0.
 ---@param x0 integer @Point 0 of the triangle.
 ---@param y0 integer @Point 0 of the triangle.
 ---@param x1 integer @Point 1 of the triangle.
@@ -745,17 +809,25 @@ function ucgDispObj:drawTetragon(x0, y0, x1, y1, x2, y2, x3, y3) end
 ---@param y2 integer @Point 2 of the triangle.
 function ucgDispObj:drawTriangle(x0, y0, x1, y1, x2, y2) end
 
----Draw a vertical line. Use current color from index 0. The topmost pixel is at `x`, `y`. The bottom pixel is at `x,y+len-1`
+---Draw a vertical line. Use current color from index 0.\
+---The topmost pixel is at `x`, `y`. The bottom pixel is at `x,y+len-1`
 ---@param x integer @Top position of the vertical line.
 ---@param y integer @Top position of the vertical line.
 ---@param len integer @Length of the vertical line.
 function ucgDispObj:drawVLine(x, y, len) end
 
----Returns the height of the character 'A' or the number '1' above the baseline. For the font in the example below, getFontAscent returns the value 24.
+---Returns the height of the character 'A'\
+---or the number '1' above the baseline.\
+---For the font in the example below,\
+---getFontAscent returns the value 24.
 ---@return number @The height of the font.
 function ucgDispObj:getFontAscent() end
 
----Some glphys of a font might are extended below the baseline ('g' or ')'). This procedure returns the extension of these characters above baseline. If the extension is below the baseline (which is usually the case) then a negative number is returned. In the example below, the returned descent value is "-7".
+---Some glphys of a font might are extended below the baseline ('g' or ')').\
+---This procedure returns the extension of these characters above baseline.\
+---If the extension is below the baseline (which is usually the case) then\
+---a negative number is returned. In the example below, the returned\
+---descent value is "-7".
 ---@return number @The extension of the characters below the baseline.
 function ucgDispObj:getFontDescent() end
 
@@ -763,7 +835,9 @@ function ucgDispObj:getFontDescent() end
 ---@return number @The height of the display.
 function ucgDispObj:getHeight() end
 
----Returns the number of pixels, required for the text in `*s` with the current font settings. Some extra pixels are added in front and after the text as defined in the current font.
+---Returns the number of pixels, required for the text in `*s`\
+---with the current font settings. Some extra pixels are added\
+---in front and after the text as defined in the current font.
 ---@param str string string
 ---@return number @Width of the text in pixel.
 function ucgDispObj:getStrWidth(str) end
@@ -772,26 +846,34 @@ function ucgDispObj:getStrWidth(str) end
 ---@return number @The width of the display.
 function ucgDispObj:getWidth() end
 
----Print text or values. The position of the output is defined by `setPrintPos()`, the writing direction is defined by `setPrintDir()`. Values and text will have the current color from index 0. If the setFontMode is `ucg.FONT_MODE_SOLID`, then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`). For best results use `h`, `m` or `8` fonts with `ucg.FONT_MODE_SOLID`
+---Print text or values. The position of the output is defined by `setPrintPos()`,\
+---the writing direction is defined by `setPrintDir()`. Values and text will have\
+---the current color from index 0. If the setFontMode is `ucg.FONT_MODE_SOLID`,\
+---then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`).\
+---For best results use `h`, `m` or `8` fonts with `ucg.FONT_MODE_SOLID`
 ---@param str string @string
 ---@return number @Number of characters.
 function ucgDispObj:print(str) end
 
---- Defines the drawing area for all other commands. Graphics commands are "clipped" against this area. By default this is the complete visible area of the screen.
+--- Defines the drawing area for all other commands. Graphics commands are "clipped"\
+---against this area. By default this is the complete visible area of the screen.
 ---@param x integer @Upper left position of the drawing area.
 ---@param y integer @Upper left position of the drawing area.
 ---@param w integer @Width of the drawing area. Behavior is undefined for w=0 or h=0.
 ---@param h integer @Height of the drawing area.
 function ucgDispObj:setClipRange(x, y, w, h) end
 
----Defines up to four different colors for the graphics primitives. Most commands will use the color at index position 0. If the index (first argument) is skipped, then the color is stored as index 0.
+---Defines up to four different colors for the graphics primitives.\
+---Most commands will use the color at index position 0.\
+---If the index (first argument) is skipped, then the color is stored as index 0.
 ---@param idx integer The index of the color being set. See each drawing function to determine the index to use. (Default: 0)
 ---@param r integer @Red,
 ---@param g integer @green, and
 ---@param b integer @blue component of the color. Color range is always from 0 to 255 for each of the color components.
 function ucgDispObj:setColor(idx, r, g, b) end
 
----Define a ucg font for the glyph and string drawing functions. They are available as `ucg.<font_name>` in Lua.
+---Define a ucg font for the glyph and string drawing functions.\
+---They are available as `ucg.<font_name>` in Lua.
 ---@param font integer|'ucg.font_7x13B_tr'|'ucg.font_helvB08_hr'|'ucg.font_helvB10_hr'|'ucg.font_helvB12_hr'|'ucg.font_helvB18_hr'|'ucg.font_ncenB24_tr'|'ucg.font_ncenR12_tr'|'ucg.font_ncenR14_hr' @constant to identify pre-compiled font
 ---@return nil
 function ucgDispObj:setFont(font) end
@@ -801,19 +883,24 @@ function ucgDispObj:setFont(font) end
 ---@return number @0, if the init procedure fails.
 function ucgDispObj:setFontMode(fontmode) end
 
----Change the reference position for the character output procedures *print*, *drawString* and *drawGlyph*.
+---Change the reference position for the character output procedures\
+---*print*, *drawString* and *drawGlyph*.
 function ucgDispObj:setFontPosBaseline() end
 
----Change the reference position for the character output procedures *print*, *drawString* and *drawGlyph*.
+---Change the reference position for the character output procedures\
+---*print*, *drawString* and *drawGlyph*.
 function ucgDispObj:setFontPosBottom() end
 
----Change the reference position for the character output procedures *print*, *drawString* and *drawGlyph*.
+---Change the reference position for the character output procedures\
+---*print*, *drawString* and *drawGlyph*.
 function ucgDispObj:setFontPosCenter() end
 
----Change the reference position for the character output procedures *print*, *drawString* and *drawGlyph*.
+---Change the reference position for the character output procedures\
+---*print*, *drawString* and *drawGlyph*.
 function ucgDispObj:setFontPosTop() end
 
----This command will reset the clip area to the full display size. It will undo any settings from *setClipRange*.
+---This command will reset the clip area to the full display size.\
+---It will undo any settings from *setClipRange*.
 function ucgDispObj:setMaxClipRange() end
 
 --- This command will set the print direction for the following "print" commands.
@@ -825,19 +912,29 @@ function ucgDispObj:setPrintDir(dir) end
 ---@param y integer @Reference position for the characters of the next print command.
 function ucgDispObj:setPrintPos(x, y) end
 
----Rotate the screen by 90 degree. Depending on the aspect ratio of the display, this will put the display in portrait or landscape mode.
+---Rotate the screen by 90 degree.\
+---Depending on the aspect ratio of the display, this\
+---will put the display in portrait or landscape mode.
 function ucgDispObj:setRotate90() end
 
----Rotate the screen by 180 degree. Depending on the aspect ratio of the display, this will put the display in portrait or landscape mode.
+---Rotate the screen by 180 degree.\
+---Depending on the aspect ratio of the display, this\
+---will put the display in portrait or landscape mode.
 function ucgDispObj:setRotate180() end
 
----Rotate the screen by 270 degree. Depending on the aspect ratio of the display, this will put the display in portrait or landscape mode.
+---Rotate the screen by 270 degree.\
+---Depending on the aspect ratio of the display, this\
+---will put the display in portrait or landscape mode.
 function ucgDispObj:setRotate270() end
 
----Scale everything by 2. This includes position values, lines, fonts, circles, etc. As long as scaling is active, the screen rotation commands must not be used.
+---Scale everything by 2. This includes position\
+---values, lines, fonts, circles, etc.\
+---As long as scaling is active, the screen\
+---rotation commands must not be used.
 function ucgDispObj:setScale2x2() end
 
----Removes the clip window. All graphics commands can now write to the entire screen.
+---Removes the clip window. All graphics\
+---commands can now write to the entire screen.
 function ucgDispObj:undoClipRange() end
 
 ---Restore the original display orientation.
@@ -862,12 +959,16 @@ fifo = {}
 ---@class fifo
 local fifo = (require "fifo").new()
 
----Fetch an element from the fifo and pass it to the function `k`, together with a boolean indicating whether this is the last element in the fifo. If the fifo is empty, `k` will not be called and the fifo will enter "immediate dequeue" mode.
+---Fetch an element from the fifo and pass it to the function `k`, together with\
+---a boolean indicating whether this is the last element in the fifo. If the fifo is empty,\
+---`k` will not be called and the fifo will enter "immediate dequeue" mode.
 ---@param k function
 ---@return boolean @`true` if the queue contained at least one non-phantom entry, `false` otherwise.
 function fifo:dequeue(k) end
 
----Enqueue the element `a` onto the fifo. If `k` is not `nil` and the fifo is in "immediate dequeue" mode (whence it starts), immediately pass the first element of the fifo (usually, but not necessarily, `a`) to `k`, as if `fifo:dequeue(k)` had been called, and exit "immediate dequeue" mode.
+---Enqueue the element `a` onto the fifo. If `k` is not `nil` and the fifo is in "immediate dequeue" mode (whence it starts),\
+---immediately pass the first element of the fifo (usually, but not necessarily, `a`) to `k`,\
+---as if `fifo:dequeue(k)` had been called, and exit "immediate dequeue" mode.
 ---@param a any
 ---@param k any
 function fifo:queue(a,k) end
@@ -891,10 +992,12 @@ gossip = {}
 --- - **debugOutput**: if debug is set to true, then this method will be used as a callback with the debug message as the first parameter. Default: print
 function gossip.setConfig(config) end
 
----Starts gossip, sets the started flag to `true` and initiates the revision.
+---Starts gossip, sets the started flag\
+---to `true` and initiates the revision.
 function gossip.start() end
 
----If declared, this function will get called every time there is a SYN with new data.
+---If declared, this function will get called\
+---every time there is a SYN with new data.
 ---```lua
 ---gossip.callbackFunction = function(data)
 ---  processData(data)
@@ -903,28 +1006,38 @@ function gossip.start() end
 ---```
 function gossip.callbackFunction() end
 
----Send a SYN request outside of the normal gossip round. The IP is optional and if none given, it will pick a random node.
+---Send a SYN request outside of the normal gossip round.\
+---The IP is optional and if none given, it will pick a random node.
 ---@param data any|nil @By calling `pushGossip(nil)` you effectively remove the **data** table from the node's network state and notify other nodes of this.
 ---@param ip? string @The IP is optional and if none given, it will pick a random node.
 function gossip.pushGossip(data, ip) end
 
----The only scenario when rev should be set manually is when a new node is added to the network and has the same IP. Having a smaller revision than the previous node with the same IP would make gossip think the data it received is old, thus ignoring it.
+---The only scenario when rev should be set manually is when a new node is added\
+---to the network and has the same IP. Having a smaller revision than the previous node\
+---with the same IP would make gossip think the data it received is old, thus ignoring it.
 function gossip.setRevFileValue(number) end
 
----The network state can be directly accessed as a Lua table : `gossip.networkState` or it can be received as a JSON with this method.
+---The network state can be directly accessed as a Lua table:\
+---`gossip.networkState` or it can be received as a JSON with this method.
 ---@return string @JSON formatted string regarding the network state.
 function gossip.getNetworkState() end
 
 --*** GDBSTUB ***
 gdbstub = {}
 
----Runs gdbstub initialization routine. Note that subsequent calls are ignored and the break functions will do this automatically if not already done so this is options
+---Runs gdbstub initialization routine. Note that subsequent calls are\
+---ignored and the break functions will do this automatically\
+---if not already done so this is options
 function gdbstub.open() end
 
----Enters gdb by executing a break 0,0 instruction, and if necessary first does initialisation.
+---Enters gdb by executing a break 0,0 instruction,\
+---and if necessary first does initialisation.
 function gdbstub.brk() end
 
----Enters gdb by executing a break 0,0 instruction, and if necessary first does initialisation; It also set the gdboutput mode to 1 allowing the debug client to capture and echo UART output through the debug session.
+---Enters gdb by executing a break 0,0 instruction,\
+---and if necessary first does initialisation;\
+---It also set the gdboutput mode to 1 allowing the debug client\
+---to capture and echo UART output through the debug session.
 function gdbstub.pbrk() end
 
 ---Controls whether system output is encapsulated in gdb remote debugging protocol.
@@ -933,7 +1046,8 @@ function gdbstub.gdboutput(enable) end
 
 --*** DEBUG ***
 
----Returns a sorted array of the strings returned from the `lua_getstrings` function.
+---Returns a sorted array of the strings returned\
+---from the `lua_getstrings` function.
 ---@param type string|'RAM'|'ROM'
 ---@return table
 function debug.getstrings(type) end
