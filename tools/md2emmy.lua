@@ -6,6 +6,7 @@
 -- Expected structure is following:
 --
 -- ## functionName()
+--
 -- Description
 --
 -- #### Syntax
@@ -43,12 +44,13 @@ local function fileParse(arg)
                   : gsub("###%s*See", "####See")
                   : gsub("####%s*Return", "####Return")
                   : gsub("####%s?(.-)", "####%1")
-                  : gsub("##%s[%a]+\n", "") -- remove lines like ## Constructor
-                  : gsub("### ([%a]+)", "## %1" )          -- e.g. for tmr:...
-                  : gsub("##%s%w-%s", "")    -- remove lines like ## Timer Object Methods
-                  : gsub("## gpio.pulse\n", "") -- ambigous header
+                  : gsub("##%s[%a]+\n", "")     -- remove lines like ## Constructor
+                  : gsub("### ([%a]+)", "## %1" ) -- e.g. for tmr:...
+                  : gsub("##%s%w-%s", "")       -- remove lines like ## Timer Object Methods
+                  : gsub("## gpio.pulse\n", "") -- ambigous headers
+                  : gsub("## node.LFS\n", "")
                   : gsub("(##%s%w-[:%._].-)\n", "%1\n%1") -- duplicate headers
-                  : gsub("##%s.-%(%)", "", 1) -- and remove first header ##
+                  : gsub("##%s.-%(%)", "", 1)   -- and remove first header ##
 
   mdFile = mdFile .. "\n## EOF()" -- end of file
 
@@ -58,7 +60,7 @@ local function fileParse(arg)
   allFunc = {}
   -- split on blocks
   for oneFunc in string.gmatch(mdFile, "(##%s.-)##%s") do
-    oneFunc = oneFunc .. "## end()" -- end marker
+    oneFunc = oneFunc .. "####end\n" -- end marker
     table.insert(allFunc, oneFunc)
   end
 
@@ -79,11 +81,11 @@ local function fileParse(arg)
 end
 --#endregion beforeParser
 
----get multi-line "Descriptions"
+-- Get "Descriptions"
 ---@param cont string
 ---@return string
 function getDescr(cont)
-  func = cont:match("## ([%w_:%.]+%(%).-\n)")
+  func = cont:match("## ([%w_:%.]+%(%)).-\n")
   if not func then
     func = cont:match("##%s?([%w_:%.]+).-\n")
     error("Probably missing parentheses in the function declaration. ## " .. func)
@@ -104,7 +106,7 @@ function getDescr(cont)
   return buff
 end
 
---- function syntax getting
+-- Get "Syntax"
 ---@param cont string
 ---@return string
 function getSyntax(cont)
@@ -126,7 +128,7 @@ function getSyntax(cont)
   return buff
 end
 
---- multi-line "Returns" getting
+-- Get "Returns"
 ---@param cont string
 ---@return string
 function getRet(cont)
@@ -153,7 +155,7 @@ function getRet(cont)
   return buff
 end
 
----milti-line parameters getting
+-- Get "Parameters"
 ---@param cont string
 ---@return string
 function getParams(cont)
@@ -211,7 +213,7 @@ function getParams(cont)
   return buff
 end
 
----Load contents of the given file
+-- Load contents of the given file
 ---@param  fname string file name
 ---@return string @data from file
 readFile = function(fname)
@@ -222,7 +224,7 @@ readFile = function(fname)
   return data
 end
 
----Save contents to the given file
+-- Save contents to the given file
 ---@param fname string file name
 ---@param data  string data for save
 ---@return nil
@@ -254,7 +256,7 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  arg = "bit.md"
+  arg = "node.md"
   fileParse(arg)
 --]]
 
