@@ -99,15 +99,16 @@ function si7021.serial() end
 ---@return integer heater_setting @0 - 15
 function si7021.setting(RESOLUTION, HEATER, HEATER_SETTING) end
 
----Initializes the device on fixed I²C device address (0x40).
+---Initializes the device on\
+---fixed I²C device address (0x40).
 ---@return nil
 function si7021.setup() end
 
 --*** SIGMA DELTA ***
 sigma_delta = {}
 
----Stops signal generation and reenables GPIO functionality\
----at the specified pin.
+---Stops signal generation and reenables GPIO\
+---functionality at the specified pin.
 ---@param pin integer @1~12
 ---@return nil
 function sigma_delta.close(pin) end
@@ -117,7 +118,8 @@ function sigma_delta.close(pin) end
 ---@return nil
 function sigma_delta.setprescale(value) end
 
----Operate the sigma-delta module in PWM-like mode with fixed base frequency.
+---Operate the sigma-delta module in PWM-like mode\
+---with fixed base frequency.
 ---@param ratio integer @0...255 for duty cycle 0...100%, 0 stops the signal at low
 ---@return nil
 function sigma_delta.setpwmduty(ratio) end
@@ -574,7 +576,8 @@ function tmr.create() end
 function tObj:alarm(interval, mode, callback) end
 
 ---Changes a registered timer's expiry interval.
----@param interval_ms integer @new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
+---@param interval_ms integer @new timer interval in milliseconds.
+---Maximum value is 6870947 (1:54:30.947).
 ---@return nil
 function tObj:interval(interval_ms) end
 
@@ -585,16 +588,16 @@ function tObj:interval(interval_ms) end
 ---@return nil
 function tObj:register(interval_ms, mode, callback) end
 
----Starts or restarts a previously configured timer.\
----If the timer is running the timer is restarted only\
----when restart parameter is `true`.\
----Otherwise `false` is returned signaling error.
+---Starts or restarts a previously configured timer. If the timer is running the timer is restarted\
+---only when restart parameter is `true`. Otherwise `false` is returned signaling error.
 ---@param restart? boolean @optional boolean parameter forcing to restart already running timer
 ---@return boolean @true if the timer was (re)started, false on error
 function tObj:start(restart) end
 
 ---Checks the state of a timer.
----@return boolean|integer|nil @If the specified timer is registered, returns whether it is currently started and its mode. If the timer is not registered, `nil` is returned.
+---@return boolean|integer|nil @If the specified timer is registered,
+---returns whether it is currently started and its mode.\
+---If the timer is not registered, `nil` is returned.
 function tObj:state() end
 
 ---Stops a running timer, but does *not* unregister it.\
@@ -906,7 +909,8 @@ function wifi.suspend(tbl) end
 function wifi.sta.autoconnect(auto) end
 
 ---Select Access Point from list returned by `wifi.sta.getapinfo()`
----@param ap_index integer @Index of Access Point you would like to change to. (Range:1-5) - Corresponds to index used by `wifi.sta.getapinfo()` and `wifi.sta.getapindex()`
+---@param ap_index integer @Index of Access Point you would like to change to. (Range:1-5)
+---Corresponds to index used by `wifi.sta.getapinfo()` and `wifi.sta.getapindex()`
 ---@return boolean
 function wifi.sta.changeap(ap_index) end
 
@@ -1013,7 +1017,8 @@ function wifi.sta.getapindex() end
 function wifi.sta.getapinfo() end
 
 ---Gets the broadcast address in station mode.
----@return string|nil @broadcast address as string, for example "192.168.0.255", returns `nil` if IP address = "0.0.0.0".
+---@return string|nil @broadcast address as string, for example "192.168.0.255",
+---returns `nil` if IP address = "0.0.0.0".
 function wifi.sta.getbroadcast() end
 
 ---Gets the WiFi station configuration.
@@ -1063,12 +1068,14 @@ function wifi.sta.getrssi() end
 
 ---Set Maximum number of Access Points to store in flash.\
 ---This value is written to flash
----@param qty integer @Quantity of Access Points to store in flash. Range: 1-5 (Default: 1)
+---@param qty integer @Quantity of Access Points to store in flash.
+---Range: 1-5 (Default: 1)
 ---@return boolean
 function wifi.sta.setaplimit(qty) end
 
 ---Sets station hostname.
----@param hostname string @must only contain letters, numbers and hyphens('-') and be 32 characters or less with first and last character being alphanumeric.
+---@param hostname string @must only contain letters, numbers and hyphens('-')
+---and be 32 characters or less with first and last character being alphanumeric.
 ---@return boolean
 function wifi.sta.sethostname(hostname) end
 
@@ -1079,9 +1086,11 @@ function wifi.sta.sethostname(hostname) end
 
 ---Sets IP address, netmask, gateway address in station mode.
 ---@param cfg WifiCfgTbl @table contain IP address, netmask, and gateway
----{ ip = "192.168.0.111",
+---```
+---{    ip = "192.168.0.111",
 ---netmask = "255.255.255.0",
 ---gateway = "192.168.0.1" }
+---```
 ---@return boolean
 function wifi.sta.setip(cfg) end
 
@@ -1150,7 +1159,9 @@ function wifi.ap.config(cfg) end
 function wifi.ap.deauth(MAC) end
 
 ---Gets broadcast address in AP mode.
----@return string|nil @broadcast address in string, for example "192.168.0.255", returns `nil` if IP address = "0.0.0.0".
+---@return string|nil @broadcast address in string,
+---for example "192.168.0.255",\
+---returns `nil` if IP address = "0.0.0.0".
 function wifi.ap.getbroadcast() end
 
 ---Gets table of clients\
@@ -1192,19 +1203,23 @@ function wifi.ap.getdefaultconfig(return_table) end
 function wifi.ap.getip() end
 
 ---Gets MAC address in AP mode.
----@return string @MAC address as string, for example "1A-33-44-FE-55-BB"
+---@return string @MAC address as string,
+---for example "1A-33-44-FE-55-BB"
 function wifi.ap.getmac() end
 
 ---Sets IP address, netmask and gateway address in AP mode.
 ---@param cfg WifiCfgTbl @table contain IP address, netmask, and gateway
----{  ip="192.168.1.1",
----  netmask="255.255.255.0",
----  gateway="192.168.1.1" }
+---```
+---{      ip = "192.168.1.1",
+---  netmask = "255.255.255.0",
+---  gateway = "192.168.1.1" }
+---```
 ---@return boolean
 function wifi.ap.setip(cfg) end
 
 ---Sets MAC address in AP mode.
----@param mac string @MAC address in byte string, for example "AC-1D-1C-B1-0B-22"
+---@param mac string @MAC address in byte string,
+---for example "AC-1D-1C-B1-0B-22"
 ---@return boolean
 function wifi.ap.setmac(mac) end
 

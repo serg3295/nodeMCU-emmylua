@@ -58,7 +58,8 @@ function gpio.write(pin, level) end
 
 ---This builds the `gpio.pulse` object from the supplied argument
 ---@param tbl GpioPulse @this is view as an array of instructions. Each instruction is represented by a table as follows:
---- - **[pin] = gpio.level** For example { [1] = gpio.HIGH, }. All numeric keys are considered to be pin numbers. The values of each are the value to be set onto the respective GPIO line.
+--- - **[pin] = gpio.level** For example { [1] = gpio.HIGH, }. All numeric keys are considered to be pin numbers.\
+---The values of each are the value to be set onto the respective GPIO line.
 --- - **delay** specifies the number of microseconds after setting the pin values to wait until moving to the next state.
 --- - **min** and **max** can be used to specify (along with delay) that this time can be varied.
 --- - **count** and **loop** allow simple looping.
@@ -104,7 +105,8 @@ function pulser:adjust(offset) end
 ---This can change the contents of a particular step in the output program.
 ---@param entrynum number @is the number of the entry in the original pulse sequence definition. The first entry is numbered 1.
 ---@param entrytable GpioPulse @this is view as an array of instructions. Each instruction is represented by a table as follows:
---- - **[pin] = gpio.level** For example { [1] = gpio.HIGH, }. All numeric keys are considered to be pin numbers. The values of each are the value to be set onto the respective GPIO line.
+--- - **[pin] = gpio.level** For example { [1] = gpio.HIGH, }. All numeric keys are considered to be pin numbers.\
+---The values of each are the value to be set onto the respective GPIO line.
 --- - **delay** specifies the number of microseconds after setting the pin values to wait until moving to the next state.
 --- - **min** and **max** can be used to specify (along with delay) that this time can be varied.
 --- - **count** and **loop** allow simple looping.
@@ -210,9 +212,11 @@ function hx711.read(mode) end
 ---@param mode hx711_a1 @ADC mode
 ---@param samples number @The number of samples before the callback is invoked.
 ---@param callback function @The callback is invoked with three arguments
---- - s - A string which contains samples packed 24 bit values. This can be unpacked with the struct module (using the "i3" format).
+--- - s - A string which contains samples packed 24 bit values.\
+---This can be unpacked with the struct module (using the "i3" format).
 --- - t - The time in microseconds of the reception of the last sample in the buffer.
---- - d - The number of samples dropped before the start of this buffer  (after the end of the previous buffer).
+--- - d - The number of samples dropped before the start of this buffer\
+---(after the end of the previous buffer).
 ---@return nil
 function hx711.start(mode, samples, callback) end
 
@@ -281,9 +285,12 @@ mcp4725 = {}
 
 ---Gets contents of the dac register and EEPROM.
 ---@param tbl table @{[a0], [a1], [a2]}
---- - **A0** Address bit 0. This bit is user configurable via MCP4725 pin 6(A0). (valid states: 0 or 1) (default: 0)
---- - **A1** Address bit 1. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
---- - **A2** Address bit 2. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
+--- - **A0** Address bit 0. This bit is user configurable via MCP4725 pin 6(A0).\
+---(valid states: 0 or 1) (default: 0)
+--- - **A1** Address bit 1. This bit is hard-wired during manufacture.\
+---(valid states: 0 or 1) (default: 0)
+--- - **A2** Address bit 2. This bit is hard-wired during manufacture.\
+---(valid states: 0 or 1) (default: 0)
 ---@return number cur_pwrdn @Current power down configuration value.
 ---@return number cur_val @Current value stored in dac register.
 ---@return number eeprom_pwrdn @Power down configuration stored in EEPROM.
@@ -298,15 +305,21 @@ function mcp4725.read(tbl) end
 
 ---Write configuration to dac register or dac register and eeprom.
 ---@param tbl table @{[a0], [a1], [a2], value, [pwrdn], [save]}
---- - **A0** Address bit 0. This bit is user configurable via MCP4725 pin 6(A0). (valid states: 0 or 1) (default: 0)
---- - **A1** Address bit 1. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
---- - **A2** Address bit 2. This bit is hard-wired during manufacture. (valid states: 0 or 1) (default: 0)
+--- - **A0** Address bit 0. This bit is user configurable via MCP4725 pin 6(A0).\
+---(valid states: 0 or 1) (default: 0)
+--- - **A1** Address bit 1. This bit is hard-wired during manufacture.\
+---(valid states: 0 or 1) (default: 0)
+--- - **A2** Address bit 2. This bit is hard-wired during manufacture.\
+---(valid states: 0 or 1) (default: 0)
 --- - **value** The value to be used to configure DAC (and EEPROM). (Range: 0 - 4095)
 --- - **pwrdn** Set power down bits.
 ---   - mcp4725.PWRDN_NONE MCP4725 - output enabled. (Default)
----   - mcp4725.PWRDN_1K MCP4725 - output disabled, output pulled to ground via 1K restistor.
----   - mcp4725.PWRDN_100K MCP4725 - output disabled, output pulled to ground via 100K restistor.
----   - mcp4725.PWRDN_500K MCP4725 - output disabled, output pulled to ground via 500K restistor.
+---   - mcp4725.PWRDN_1K MCP4725 - output disabled,\
+---output pulled to ground via 1K restistor.
+---   - mcp4725.PWRDN_100K MCP4725 - output disabled,\
+---output pulled to ground via 100K restistor.
+---   - mcp4725.PWRDN_500K MCP4725 - output disabled,\
+---output pulled to ground via 500K restistor.
 --- - **save** Save pwrdn and dac values to EEPROM. (Values are loaded on power-up or during reset.)
 ---   - `true` Save configuration to EEPROM.
 ---   - `false` Do not save configuration to EEPROM. (Default)
@@ -422,12 +435,14 @@ function net.createUDPSocket() end
 ---Return information about a network interface, specified by index.
 ---@param if_index integer @the interface index; on ESP8266, **0** is the wifi client (STA) and **1** is the wifi AP.
 ---@return table|nil @`nil` if the given if_index does not correspond to an interface. Otherwise, a table containing ...
----**ip**, **netmask**, and **gateway** configured for this interface, as dotted quad strings or nil if none is set.
+---**ip**, **netmask**, and **gateway** configured for this interface, as dotted quad strings or nil if none is set.\
 ---if DHCP was used to configure the interface, then dhcp will be a table containing...
 --- - server_ip - the DHCP server itself, as a dotted quad
---- - client_ip - the IP address suggested for the client; likely, this equals ip above, unless the configuration has been overridden.
---- - ntp_server - the NTP server suggested by the DHCP server.
----DNS servers are not tracked per-interface in LwIP and, as such, are not reported here; use `net.dns:getdnsserver()`.
+--- - client_ip - the IP address suggested for the client; likely, this equals ip above,\
+---unless the configuration has been overridden.
+--- - ntp_server - the NTP server suggested by the DHCP server.\
+---DNS servers are not tracked per-interface in LwIP and, as such, are not reported here;\
+---use `net.dns:getdnsserver()`.
 function net.ifinfo(if_index) end
 
 ---Join multicast group.
@@ -530,7 +545,8 @@ function UDPSOCKET:listen(port, ip) end
 ---@param callback nil|function|' function(net.socket, string) end)' @`function(net.socket, string?)`. Can be `nil` to remove callback.
 ---The first parameter of callback is the socket.
 ---The seconf parameter:
---- - If event is `"receive"`, the second parameter is the received data as string. The `receive` callback receives port and ip *after* the data argument.
+--- - If event is `"receive"`, the second parameter is the received data as string.\
+---The `receive` callback receives port and ip *after* the data argument.\
 ---Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
 function UDPSOCKET:on(event, callback) end
@@ -580,12 +596,15 @@ function net.dns.setdnsserver(dns_ip_addr, dns_index) end
 ---Summary statistics can be retrieved via the second callback.
 ---@param domain string @destination domain or IP address
 ---@param count? number @(optional) number of ping packets to be sent (default value is 4)
----@param cb_received function @`function(bytes, ipaddr, seqno, rtt)` callback function which is invoked when response is received where
+---@param cb_received function @`function(bytes, ipaddr, seqno, rtt)`
+---callback function which is invoked when response is received where
 --- - **bytes** - number of bytes received from destination server (0 means no response)
 --- - **ipaddr** - destination server IP address
 --- - **seqno** ICMP sequence number
---- - **rtt** - round trip time in ms If domain name cannot be resolved callback is invoked with bytes parameter equal to 0 (i.e. no response) and nil values for all other parameters.
----@param cb_sent? function @(optional) `function(ipaddr, total_count, timeout_count, total_bytes, total_time)` callback function which is invoked when response is received where
+--- - **rtt** - round trip time in ms If domain name cannot be resolved callback is invoked with bytes parameter\
+--- equal to 0 (i.e. no response) and nil values for all other parameters.
+---@param cb_sent? function @(optional) `function(ipaddr, total_count, timeout_count, total_bytes, total_time)`
+---callback function which is invoked when response is received where
 --- - **ipaddrstr** destination server IP address
 --- - **total_count** total number of packets sent
 --- - **timeout_count** total number of packets lost (not received)
@@ -598,7 +617,8 @@ function net.ping(domain, count, cb_received, cb_sent) end
 node = {}
 
 ---Returns the boot reason and extended reset info.
----@return integer rawcode @The first value returned is the raw code, not the new "reset info" code which was introduced in recent SDKs. Values are:
+---@return integer rawcode @The first value returned is the raw code,
+---not the new "reset info" code which was introduced in recent SDKs. Values are:
 --- - 1, power-on
 --- - 2, reset (software?)
 --- - 3, hardware reset via reset pin
@@ -611,7 +631,8 @@ node = {}
 --- - 4, software restart
 --- - 5, wake from deep sleep
 --- - 6, external reset
----In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information.
+---In case of extended reset cause 3 (exception reset),\
+---additional values are returned containing the crash information.\
 ---These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
 function node.bootreason() end
 
@@ -656,7 +677,8 @@ function node.flashsize() end
 function node.getcpufreq() end
 
 ---Get the current LFS and SPIFFS partition information.
----@return table @An array containing entries for **lfs_addr, lfs_size, spiffs_addr** and **spiffs_size**.
+---@return table @An array containing entries for
+---**lfs_addr, lfs_size, spiffs_addr** and **spiffs_size**.\
 ---The address values are offsets relative to the start of the Flash memory.
 function node.getpartitiontable() end
 
@@ -702,8 +724,10 @@ function node.input(str) end
 
 ---Returns the function reference for a function in LFS.
 ---@param modulename string|'""' @The name of the module to be loaded.
----@return function|nil @If the LFS is loaded and the modulename is a string that is the name of a valid module in the LFS,
----then the function is returned in the same way the `load()` and the other Lua load functions do. Otherwise `nil` is returned.
+---@return function|nil @If the LFS is loaded and the modulename is a string
+---that is the name of a valid module in the LFS, then the function\
+--- is returned in the same way the `load()` and the other\
+---Lua load functions do. Otherwise `nil` is returned.
 function node.LFS.get(modulename) end
 
 ---List the modules in LFS.
@@ -713,8 +737,11 @@ function node.LFS.list() end
 
 ---Reload LFS with the flash image provided.
 ---@param imageName string|'""' @The name of a image file in the filesystem to be loaded into the LFS.
----@return any|nil @In the case when the imagename is a valid LFS image, this is expanded and loaded into flash, and the ESP is then immediately rebooted, *so control is not returned to the calling Lua application* in the case of a successful reload.
----The reload process internally makes multiple passes through the LFS image file. The first pass validates the file and header formats and detects many errors. If any is detected then an error string is returned.
+---@return any|nil @In the case when the imagename is a valid LFS image, this is expanded and loaded into flash,
+---and the ESP is then immediately rebooted, *so control is not returned to the calling Lua application*\
+---in the case of a successful reload. The reload process internally makes multiple passes\
+---through the LFS image file. The first pass validates the file and header formats and detects many errors.\
+---If any is detected then an error string is returned.
 function node.LFS.reload(imageName) end
 
 ---Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)\
@@ -763,7 +790,8 @@ function node.setonerror(callback) end
 
 ---Sets the current LFS and / or SPIFFS partition information.
 ---@param partition_info NodeSetPartTbl @An array containing one or more of the following enties.
----The address values are byte offsets relative to the start of the Flash memory. The size values are in bytes.
+---The address values are byte offsets relative to the start of the Flash memory.\
+---The size values are in bytes.\
 ---Note that these parameters must be a multiple of 8Kb to align to Flash page boundaries.
 --- - **lfs_addr** - The base address of the LFS region.
 --- - **lfs_size** - The size of the LFS region.
@@ -797,14 +825,16 @@ function node.startupcounts(marker) end
 ---@field delay_mount number
 ---@field command number
 
----Get/set options that control the startup process.\
----This interface will grow over time.
----@param tbl? NodeStartup @(optional) If the argument is omitted, then no change is made to the current set of startup options. If the argument is the empty table **{ }** then all options are reset to their default values. Table one or more options:
+---Get/set options that control the startup process. This interface will grow over time.
+---@param tbl? NodeStartup @(optional) If the argument is omitted, then no change is made to the current set of startup options.
+---If the argument is the empty table **{ }** then all options are reset to their default values. Table one or more options:
 --- - **banner** - set to `true` or `false` to indicate whether the startup banner should be displayed or not. (default: true)
 --- - **frequency** - set to node.CPU80MHZ or node.CPU160MHZ to indicate the initial CPU speed. (default: node.CPU80MHZ)
---- - **delay_mount** - set to true or false to indicate whether the SPIFFS filesystem mount is delayed until it is first needed or not. (default: false)
+--- - **delay_mount** - set to true or false to indicate whether the SPIFFS filesystem mount is delayed until it is first needed or not.\
+---(default: false)
 --- - **command** - set to a string which is the initial command that is run. This is the same string as in the node.startupcommand.
----@return table @This is the complete set of options in the state that will take effect on the next boot. Note that the command key may be missing in which case the default value will be used.
+---@return table @This is the complete set of options in the state that will take effect on the next boot.
+---Note that the command key may be missing in which case the default value will be used.
 function node.startup(tbl) end
 
 ---Controls the amount of debug information kept during `node.compile()`,\
@@ -846,7 +876,8 @@ function node.random(l, u) end
 function node.egc.setmode(mode, level) end
 
 ---Returns memory usage information for the Lua runtime.
----@return number total_allocated @The total number of bytes allocated by the Lua runtime. This is the number which is relevant when using the **node.egc.ON_MEM_LIMIT** option with positive limit values.
+---@return number total_allocated @The total number of bytes allocated by the Lua runtime.
+---This is the number which is relevant when using the **node.egc.ON_MEM_LIMIT** option with positive limit values.
 ---@return number estimated_used @This value shows the estimated usage of the allocated memory.
 function node.egc.meminfo() end
 
@@ -900,7 +931,9 @@ function ow.read_bytes(pin, size) end
 
 ---Performs a 1-Wire reset cycle.
 ---@param pin integer @1~12, I/O index
----@return integer @**1** if a device responds with a presence pulse; **0** if there is no device or the bus is shorted or otherwise held low for more than 250 µS
+---@return integer @**1** if a device responds with a presence pulse;
+---**0** if there is no device or the bus is shorted\
+---or otherwise held low for more than 250 µS
 function ow.reset(pin) end
 
 ---Clears the search state so that it will start\
@@ -911,7 +944,9 @@ function ow.reset_search(pin) end
 
 ---Looks for the next device.
 ---@param pin integer @1~12, I/O index
----@return string|nil @string with length of 8 upon success. It contains the rom code of slave device. Returns `nil` if search was unsuccessful.
+---@return string|nil @string with length of 8 upon success.
+---It contains the rom code of slave device.\
+---Returns `nil` if search was unsuccessful.
 function ow.search(pin) end
 
 ---Issues a 1-Wire rom select command.\
@@ -1033,14 +1068,20 @@ function pipe.create(CB_function,task_priority) end
 ---Read a record from a pipe object.
 ---@param size_or_endChar? number|string @(optional) If omitted, then this defaults to "\n+"
 --- - If numeric then a string of size length will be returned from the pipe.
---- - If a string then this is a single character delimiter, followed by an optional "+" flag. The delimiter is used as an end-of-record to split the character stream into separate records. If the flag "+" is specified then the delimiter is also returned at the end of the record, otherwise it is discarded.
+--- - If a string then this is a single character delimiter, followed by an optional "+" flag.\
+---The delimiter is used as an end-of-record to split the character stream into separate records.\
+---If the flag "+" is specified then the delimiter is also returned at the end of the record,\
+---otherwise it is discarded.
 ---@return string|nil @A string or `nil` if the pipe is empty
 function pobj:read(size_or_endChar) end
 
 ---Returns a Lua iterator function for a pipe object.
 ---@param size_or_endChar? number|string @(optional) If omitted, then this defaults to "\n+"
 --- - If numeric then a string of size length will be returned from the pipe.
---- - If a string then this is a single character delimiter, followed by an optional "+" flag. The delimiter is used as an end-of-record to split the character stream into separate records. If the flag "+" is specified then the delimiter is also returned at the end of the record, otherwise it is discarded.
+--- - If a string then this is a single character delimiter, followed by an optional "+" flag.\
+---The delimiter is used as an end-of-record to split the character stream into separate records.\
+---If the flag "+" is specified then the delimiter is also returned at the end of the record,\
+---otherwise it is discarded.
 ---@return function @myFunc iterator function
 function pobj:reader(size_or_endChar) end
 
@@ -1238,10 +1279,13 @@ function rtcfifo.pop() end
 
 ---Initializes the rtcfifo module for use. Calling `rtcfifo.prepare()` unconditionally re-initializes the storage - any samples stored are discarded.
 ---@param tbl? table @(optional) This function takes an optional configuration *table* as an argument. The following items may be configured:
---- - **interval_us** If wanting to make use of the `rtcfifo.sleep_until_sample()` function, this field sets the sample interval (in microseconds) to use. It is effectively the first argument of `rtctime.dsleep_aligned()`.
---- - **sensor_count** Specifies the number of different sensors to allocate name space for. This directly corresponds to a number of slots reserved for names in the variable block. The default value is 5, minimum is 1, and maximum is 16.
+--- - **interval_us** If wanting to make use of the `rtcfifo.sleep_until_sample()` function, this field sets the sample interval (in microseconds) to use.\
+---It is effectively the first argument of `rtctime.dsleep_aligned()`.
+--- - **sensor_count** Specifies the number of different sensors to allocate name space for. This directly corresponds to a number of slots reserved\
+---for names in the variable block. The default value is 5, minimum is 1, and maximum is 16.
 --- - **storage_begin** Specifies the first RTC user memory slot to use for the variable block. Default is 32. Only takes effect if storage_end is also specified.
---- - **storage_end** Specified the end of the RTC user memory slots. This slot number will not be touched. Default is 128. Only takes effect if storage_begin is also specified.
+--- - **storage_end** Specified the end of the RTC user memory slots. This slot number will not be touched. Default is 128.\
+---Only takes effect if storage_begin is also specified.
 ---@return nil
 function rtcfifo.prepare(tbl) end
 

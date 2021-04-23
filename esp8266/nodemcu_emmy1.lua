@@ -436,8 +436,10 @@ yeelink = {}
 ---@return string @IP address of api.yeelink.net, if not obtained then false
 function yeelink.init(device, sensor, apikey) end
 
----Function to check DNS resolution of api.yeelink.net status.
----@return string @IP address of api.yeelink.net or `nil` when name resolution failed.
+---Function to check DNS resolution\
+---of api.yeelink.net status.
+---@return string @IP address of api.yeelink.net
+---or `nil` when name resolution failed.
 function yeelink.getDNS() end
 
 ---Send data to Yeelink Sever.
@@ -582,12 +584,14 @@ apa102 = {}
 ---Send ABGR data in 8 bits to a APA102 chain.
 ---@param data_pin integer @any GPIO pin 0, 1, 2, ...
 ---@param clock_pin integer @any GPIO pin 0, 1, 2, ...
----@param str string @payload to be sent to one or more APA102 LEDs. It should be composed from a ABGR quadruplet per element.
+---@param str string @payload to be sent to one or more APA102 LEDs.
+---It should be composed from a ABGR quadruplet per element.
 --- - A1 - the first pixel's Intensity channel (0-31)
 --- - B1 - the first pixel's Blue channel (0-255)
 --- - G1 - the first pixel's Green channel (0-255)
---- - R1 - the first pixel's Red channel (0-255) ... You can connect a lot of APA102 ...
----A2, B2, G2, R2 are the next APA102s Intensity, Blue, Green and Red channel parameters
+--- - R1 - the first pixel's Red channel (0-255) ... You can connect a lot of APA102 ...\
+---A2, B2, G2, R2 are the next APA102s Intensity,\
+---Blue, Green and Red channel parameters
 ---@return nil
 function apa102.write(data_pin, clock_pin, str) end
 
@@ -701,7 +705,8 @@ function filter:reset() end
 ---@return number @The number of bits in the filter.
 ---@return number @The number of hash functions in use.
 ---@return number @The number of bits set in the filter.
----@return number @The approximate chance that the next check will return true when it should return false
+---@return number @The approximate chance that the next check
+---will return true when it should return false
 function filter:info() end
 
 --*** BME280 C module ***
@@ -757,7 +762,7 @@ function bme280.read(altitude) end
 function bme280.startreadout(delay, callback) end
 
 ---@deprecated
----Warning, deprecated API! bme280. It will be removed soon. Use bme280math and bme280 Lua module instead.
+---Warning, deprecated API! bme280. It will be removed soon. Use bme280math and bme280 Lua module instead.\
 ---Initializes the module. Initialization is mandatory before reading values.
 ---@param temp_oss? number @(optional) Controls oversampling of temperature data.
 ---@param press_oss? number @(optional) Controls oversampling of pressure data.
@@ -779,7 +784,8 @@ bme280 = {}
 ---@class bme280
 local sobj = {}
 
----Creates bme280sensor object and initializes the module. Initialization is mandatory before reading values. Note that there has to be a delay between some tens to hundreds of milliseconds between calling `setup()` and reading measurements.
+---Creates bme280sensor object and initializes the module. Initialization is mandatory before reading values.\
+---Note that there has to be a delay between some tens to hundreds of milliseconds between calling `setup()` and reading measurements.
 ---@param id number @I2C bus number
 ---@param address? number @(optional) BME280 sensor address. **1** for BME280_I2C_ADDRESS1 = 0x76, **2** for BME280_I2C_ADDRESS2 = 0x77. Default sensor address is BME280_I2C_ADDRESS1.
 ---@param temp_oss? number @(optional) Controls oversampling of temperature data. Default oversampling is 16x.
@@ -1124,13 +1130,15 @@ function crypto.decrypt(algo, key, cipher , iv) end
 ---Compute a cryptographic hash of a a file.
 ---@param algo string @the hash algorithm to use, case insensitive string
 ---@param filename string @the path to the file to hash
----@return any @A binary string containing the message digest. To obtain the textual version (ASCII hex characters), please use `encoder.toHex()`.
+---@return any @A binary string containing the message digest.
+---To obtain the textual version (ASCII hex characters), please use `encoder.toHex()`.
 function crypto.fhash(algo, filename)	end
 
 ---Compute a cryptographic hash of a Lua string.
 ---@param algo string @the hash algorithm to use, case insensitive string
 ---@param str string @to hash contents of
----@return any @A binary string containing the message digest. To obtain the textual version (ASCII hex characters), please use `encoder.toHex()`.
+---@return any @A binary string containing the message digest.
+---To obtain the textual version (ASCII hex characters), please use `encoder.toHex()`.
 function crypto.hash(algo, str) end
 
 ---Create a digest/hash object that can have any number of strings.\
@@ -1143,7 +1151,8 @@ function crypto.new_hash(algo) end
 ---@param algo string @hash algorithm to use, case insensitive string
 ---@param str string @data to calculate the hash for
 ---@param key any @key to use for signing, may be a binary string
----@return any @A binary string containing the HMAC signature. Use `encoder.toHex()` to obtain the textual version.
+---@return any @A binary string containing the HMAC signature.
+---Use `encoder.toHex()` to obtain the textual version.
 function crypto.hmac(algo, str, key) end
 
 ---Create a hmac object that can have any number of strings added to it.\
@@ -1156,7 +1165,8 @@ function crypto.new_hmac(algo, key) end
 ---Applies an XOR mask to a Lua string.
 ---@param message any @message to mask
 ---@param mask any @the mask to apply, repeated if shorter than the message
----@return any @The masked message, as a binary string. Use `encoder.toHex()` to get a textual representation of it.
+---@return any @The masked message, as a binary string.
+---Use `encoder.toHex()` to get a textual representation of it.
 function crypto.mask(message, mask) end
 
 --*** DCC ***
@@ -1196,8 +1206,8 @@ function dcc.close() end
 --*** DHT ***
 dht = {}
 
----Read all kinds of DHT sensors, including DHT11, 21, 22, 33, 44\
----humidity temperature combo sensor.
+---Read all kinds of DHT sensors, including\
+---DHT11, 21, 22, 33, 44 humidity temperature combo sensor.
 ---@param pin number @pin number of DHT sensor (can't be 0)
 ---@return integer status @as defined in Constants
 ---@return number temp @temperature
@@ -1291,8 +1301,9 @@ function file.chdir(dir) end
 ---@return boolean @`true` of the file exists (even if 0 bytes in size), and `false` if it does not exist
 function file.exists(filename) end
 
----Format the file system. Completely erases any existing file system\
----and writes a new one. Function is not supported for SD cards.
+---Format the file system. Completely erases\
+---any existing file system and writes a new one.\
+---Function is not supported for SD cards.
 ---@return nil
 function file.format() end
 
@@ -1320,9 +1331,8 @@ function file.getcontents(filename) end
 ---@return table @a Lua table which contains all *{file name: file size}* pairs, if no pattern given. If a pattern is given, only those file names matching the pattern will be included in the resulting table. `file.list` will throw any errors encountered during pattern matching.
 function file.list(pattern) end
 
----Mounts a FatFs volume on SD card. Function is only available\
----when FatFS support is compiled into the firmware\
----and it is not supported for internal flash.
+---Mounts a FatFs volume on SD card. Function is only available when FatFS\
+---support is compiled into the firmware and it is not supported for internal flash.
 ---@param ldrv string|'"/SD0"'|'"/SD1"' @name of the logical drive, /SD0, /SD1, etc.
 ---@param pin? integer @(optional) 1~12, IO index for SS/CS, defaults to 8 if omitted.
 ---@return any obj @Volume object
@@ -1346,7 +1356,8 @@ function file.on(event, callback) end
 ---@return file fileobject @if file opened ok. `nil` if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
----Remove a file from the file system. The file must not be currently open.
+---Remove a file from the file system.\
+---The file must not be currently open.
 ---@param filename string|'""' @file to remove
 ---@return nil
 function file.remove(filename) end
@@ -1393,8 +1404,8 @@ function fObj:close() end
 function file.flush() end
 
 ---Flushes any pending writes to the file system,\
----ensuring no data is lost on a restart.\
----Closing the open file using `file.close()/fd:close()`\
+---ensuring no data is lost on a restart. Closing\
+---the open file using `file.close()/fd:close()`\
 ---performs an implicit flush as well.
 ---@return nil
 function fObj:flush() end

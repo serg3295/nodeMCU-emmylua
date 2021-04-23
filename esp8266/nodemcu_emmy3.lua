@@ -22,8 +22,10 @@ local liquidcrystal = lc_meta()
 ---Loading I²C backend module returns initialization closure.\
 ---It configures I²C backend and returns backend object.
 ---@param tbl i2c4bitCfg @In most cases only **sda** and **scl** parameters are required
---- - **sda**: I²C data pin. If set to `nil`, I²C bus initialization step via `i2c.setup` will be skipped
---- - **scl**: I²C clock pin. If set to `nil`, I²C bus initialization step via `i2c.setup` will be skipped
+--- - **sda**: I²C data pin. If set to `nil`,\
+---I²C bus initialization step via `i2c.setup` will be skipped
+--- - **scl**: I²C clock pin. If set to `nil`,\
+---I²C bus initialization step via `i2c.setup` will be skipped
 --- - **busid**: I²C bus ID. Defaults to 0
 --- - **busad**: chip I²C address. Defaults to 0x27 (default PCF8574 address)
 --- - **speed**: I²C speed. Defaults to i2c.SLOW
@@ -52,9 +54,13 @@ function i2c4bit_meta(tbl) end
 ---It configures GPIO 4 bit backend and returns backend object.
 ---@param tbl gpio4bitCfg @>
 --- - **rs**: GPIO pin connected to RS pin. Defaults to 0
---- - **rw**: GPIO pin connected to RW pin. If set to `nil` then busy, position and readChar functions will not be available. Note that RW pin must be pulled to the ground if not connected to GPIO
+--- - **rw**: GPIO pin connected to RW pin. If set to `nil` then busy,\
+---position and readChar functions will not be available. Note that\
+---RW pin must be pulled to the ground if not connected to GPIO
 --- - **en**: GPIO pin connected to EN pin. Defaults to 1
---- - **bl**: GPIO pin controlling backlight. It is assumed, that high level turns backlight on, low level turns backlight off. If set to `nil` then backlight function will not be available
+--- - **bl**: GPIO pin controlling backlight. It is assumed, that high level\
+---turns backlight on, low level turns backlight off. If set to `nil`\
+---then backlight function will not be available
 --- - **d4**: GPIO pin connected to D4 pin. Defaults to 2
 --- - **d5**: GPIO pin connected to D5 pin. Defaults to 3
 --- - **d6**: GPIO pin connected to D6 pin. Defaults to 4
@@ -81,9 +87,13 @@ function gpio4bit_meta(tbl) end
 ---It configures GPIO 8 bit backend and returns backend object.
 ---@param tbl gpio8bitCfg @>
 --- - **rs**: GPIO pin connected to RS pin. Defaults to 0
---- - **rw**: GPIO pin connected to RW pin. If set to `nil` then busy, position and readChar functions will not be available. Note that RW pin must be pulled to the ground if not connected to GPIO
+--- - **rw**: GPIO pin connected to RW pin. If set to `nil` then busy,\
+---position and readChar functions will not be available.\
+---Note that RW pin must be pulled to the ground if not connected to GPIO
 --- - **en**: GPIO pin connected to EN pin. Defaults to 1
---- - **bl**: GPIO pin controlling backlight. It is assumed, that high level turns backlight on, low level turns backlight off. If set to `nil` then backlight function will not be available
+--- - **bl**: GPIO pin controlling backlight. It is assumed,\
+---that high level turns backlight on, low level turns backlight off.\
+---If set to `nil` then backlight function will not be available
 --- - **d0**: GPIO pin connected to D0 pin. Defaults to 2
 --- - **d1**: GPIO pin connected to D1 pin. Defaults to 3
 --- - **d2**: GPIO pin connected to D2 pin. Defaults to 4
@@ -184,7 +194,8 @@ function liquidcrystal:read() end
 ---Return custom char byte array. When using GPIO backend\
 --- without **rw** argument specification function returns zeros.
 ---@param index integer custom char index in range from 0 to 7
----@return table @table of size 8 in eight dot mode or 11 in ten dot mode. Each 8 bit number represents a character dot line
+---@return table @table of size 8 in eight dot mode or 11 in ten dot mode.
+---Each 8 bit number represents a character dot line
 function liquidcrystal:readCustom(index) end
 
 ---Print text right to left.
@@ -985,11 +996,15 @@ gossip = {}
 
 ---Sets the configuration for gossip.
 ---@param config GossipCfg @table. The available options are:
---- - **seedList**: the list of seeds gossip will start with; this will be updated as new nodes are discovered. Note that it's enough for all nodes to start with the same IP in the seedList, as once they have one seed in common, the data will propagate. Default: `nil`.
---- - **roundInterval**: interval in milliseconds at which gossip will pick a random node from the seed list and send a SYN request. Default: 10000 (10 seconds)
+--- - **seedList**: the list of seeds gossip will start with; this will be updated as new nodes are discovered.\
+---Note that it's enough for all nodes to start with the same IP in the seedList,\
+---as once they have one seed in common, the data will propagate. Default: `nil`.
+--- - **roundInterval**: interval in milliseconds at which gossip will pick a random node from the seed list\
+---and send a SYN request. Default: 10000 (10 seconds)
 --- - **comPort**: port for the listening UDP socket. Default: 5000.
 --- - **debug**: flag that will provide debugging messages. Default: false.
---- - **debugOutput**: if debug is set to true, then this method will be used as a callback with the debug message as the first parameter. Default: print
+--- - **debugOutput**: if debug is set to true, then this method will be used as a callback with\
+---the debug message as the first parameter. Default: print
 function gossip.setConfig(config) end
 
 ---Starts gossip, sets the started flag\

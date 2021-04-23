@@ -14,20 +14,28 @@ otaupgrade = {}
 --- - **idf_version** the IDF version
 function otaupgrade.info() end
 
----Wipes the spare application partition and prepares to receive the new application firmware.
----@return nil @`nil`. A Lua error may be raised if the OTA upgrade cannot be commenced for some reason (such as due to incorrect partition setup).
+---Wipes the spare application partition and prepares to receive\
+---the new application firmware.
+---@return nil @`nil`.
+---A Lua error may be raised if the OTA upgrade cannot be commenced\
+---for some reason (such as due to incorrect partition setup).
 function otaupgrade.commence() end
 
----Write a chunk of application firmware data to the correct partition and location.\
----Data must be streamed sequentially, the IDF does not support out-of-order data\
----as would be the case from e.g. bittorrent.
+---Write a chunk of application firmware data to the correct partition\
+---and location. Data must be streamed sequentially, the IDF does not \
+---support out-of-order data as would be the case from e.g. bittorrent.
 ---@param data string @a string of binary data
----@return nil @`nil`. A Lua error may be raised if the data can not be written, e.g. due to the data not being a valid OTA image (the IDF performs some checks in this regard).
+---@return nil
+---A Lua error may be raised if the data can not be written,\
+---e.g. due to the data not being a valid OTA image\
+---(the IDF performs some checks in this regard).
 function otaupgrade.write(data) end
 
 ---Finalises the upgrade, and optionally reboots into the new application firmware right away.
 ---@param reboot integer|nil @`1` to reboot into the new firmware immediately, `nil` to keep running
----@return nil @`nil`. A Lua error may be raised if the image does not pass validation, or no data has been written to the image at all.
+---@return nil
+---A Lua error may be raised if the image does not pass validation,\
+---or no data has been written to the image at all.
 function otaupgrade.complete(reboot) end
 
 ---When the installed boot loader is built with rollback support,\
@@ -92,7 +100,9 @@ function ow.read_bytes(pin, size) end
 
 ---Performs a 1-Wire reset cycle.
 ---@param pin integer @IO index
----@return integer @**1** if a device responds with a presence pulse; **0** if there is no device or the bus is shorted or otherwise held low for more than 250 µS
+---@return integer @**1** if a device responds with a presence pulse;
+---**0** if there is no device or the bus is shorted or\
+---otherwise held low for more than 250 µS
 function ow.reset(pin) end
 
 ---Clears the search state so that it will start from the beginning again.
@@ -102,7 +112,9 @@ function ow.reset_search(pin) end
 
 ---Looks for the next device.
 ---@param pin integer @IO index
----@return string|nil @**rom_code** string with length of 8 upon success. It contains the rom code of slave device. Returns `nil` if search was unsuccessful.
+---@return string|nil @**rom_code** string with length of 8 upon success.
+---It contains the rom code of slave device.\
+---Returns `nil` if search was unsuccessful.
 function ow.search(pin) end
 
 ---Issues a 1-Wire rom select command.\
@@ -130,16 +142,18 @@ function ow.skip(pin) end
 ---@return nil
 function ow.target_search(pin, family_code) end
 
----Writes a byte. If power is 1 then the wire is held high at the end for parasitically powered devices.\
----You are responsible for eventually depowering it by calling `ow.depower()` or doing another read or write.
+---Writes a byte. If power is 1 then the wire is held high at the end for parasitically\
+---powered devices. You are responsible for eventually depowering it by calling\
+---`ow.depower()` or doing another read or write.
 ---@param pin integer @IO index
 ---@param v integer @byte to be written to slave device
 ---@param power integer @1 for wire being held high for parasitically powered devices
 ---@return nil
 function ow.write(pin, v, power) end
 
----Writes multi bytes. If power is 1 then the wire is held high at the end for parasitically powered devices.\
----You are responsible for eventually depowering it by calling `ow.depower()` or doing another read or write.
+---Writes multi bytes. If power is 1 then the wire is held high at the end for parasitically\
+---powered devices. You are responsible for eventually depowering it by calling\
+---`ow.depower()` or doing another read or write.
 ---@param pin integer @IO index
 ---@param buf string @string to be written to slave device
 ---@param power integer @1 for wire being held high for parasitically powered devices
@@ -204,8 +218,12 @@ function pulsecntObj:chan1Config(pulse_gpio_num, ctrl_gpio_num, pos_mode, neg_mo
 ---@return nil
 function pulsecntObj:setThres(thr0, thr1) end
 
----Set a filter to ignore pulses on the pulse_gpio_num pin and the ctrl_gpio_num to avoid short glitches. Any pulses lasting shorter than this will be ignored.
----@param clkCycleCnt integer @0 to 1023 allowed. Any pulses lasting shorter than this will be ignored. A pulse needs to be high or low for longer than this filter clock cycle. Clock is 80Mhz APB clock, so one cycle is 1000/80,000,000 = 0.0000125 ms. The longest value of 1023 cycles = 0.0127875 ms.
+---Set a filter to ignore pulses on the pulse_gpio_num pin and the ctrl_gpio_num to avoid short glitches.\
+---Any pulses lasting shorter than this will be ignored.
+---@param clkCycleCnt integer @0 to 1023 allowed.
+---Any pulses lasting shorter than this will be ignored. A pulse needs to be high or low for longer\
+---than this filter clock cycle. Clock is 80Mhz APB clock, so one cycle is 1000/80,000,000 = 0.0000125 ms.\
+---The longest value of 1023 cycles = 0.0127875 ms.
 ---@return nil
 function pulsecntObj:setFilter(clkCycleCnt) end
 
@@ -230,20 +248,30 @@ qrcodegen = {}
 ---Generates a QR Code from a text string.
 ---@param text any @The text or URL to encode. Should be UTF-8 or ASCII.
 ---@param options? QRcodeCfg @An optional table, containing any of:
---- - **minver** the minimum version according to the QR Code Model 2 standard. If not specified, defaults to 1.
---- - **maxver** the maximum version according to the QR Code Model 2 standard. If not specified, defaults to 40. Specifying a lower maximum version reduces the amount of temporary memory the function requires, so it can be worthwhile to specify a smaller value if you know the text will fit in a lower-version QR Code.
---- - **ecl** the error correction level in a QR Code symbol. Higher error correction produces a larger QR Code. One of:
+--- - **minver** the minimum version according to the QR Code Model 2 standard.\
+---If not specified, defaults to 1.
+--- - **maxver** the maximum version according to the QR Code Model 2 standard.\
+---If not specified, defaults to 40. Specifying a lower maximum version reduces\
+---the amount of temporary memory the function requires, so it can be worthwhile\
+---to specify a smaller value if you know the text will fit in a lower-version QR Code.
+--- - **ecl** the error correction level in a QR Code symbol.\
+---Higher error correction produces a larger QR Code. One of:
 ---   - qrcodegen.LOW (default if not specified)
 ---   - qrcodegen.MEDIUM
 ---   - qrcodegen.QUARTILE
 ---   - qrcodegen.HIGH
---- - **mask** the mask pattern used in a QR Code symbol. An integer 0-7, or qrcodegen.AUTO (the default).
+--- - **mask** the mask pattern used in a QR Code symbol. An integer 0-7,\
+---or qrcodegen.AUTO (the default).
 --- - **boostecl** defaults to false.
----@return string|nil @The QR Code, encoded as a string. Use `qrcodegen.getSize()` and `qrcodegen.getPixel()` to extract data from the result. If the text cannot be represented within the given version range (for example it is too long) then `nil` is returned.
+---@return string|nil @The QR Code, encoded as a string.
+---Use `qrcodegen.getSize()` and `qrcodegen.getPixel()` to extract data\
+---from the result. If the text cannot be represented within the given version\
+---range (for example it is too long) then `nil` is returned.
 function qrcodegen.encodeText(text, options) end
 
 ---@param qrcode string @a QR Code string, as returned by `qrcodegen.encodeText()`.
----@return integer @Returns the side length in pixels of the given QR Code. The result is in the range [21, 177].
+---@return integer @Returns the side length in pixels of the given QR Code.
+---The result is in the range [21, 177].
 function qrcodegen.getSize(qrcode) end
 
 ---Get the color of the pixel at the given coordinates of the QR Code.\
@@ -276,7 +304,8 @@ local card = {}
 ---   - sdmmc.W1BIT
 ---   - sdmmc.W4BIT
 ---   - sdmmc.W8BIT, not supported yet
----@return sdmmc cardObj @Card object. Error is thrown for invalid parameters or if SDMMC hardware or card cannot be initialized.
+---@return sdmmc cardObj @Card object.
+---Error is thrown for invalid parameters or if SDMMC hardware or card cannot be initialized.
 function sdmmc.init(slot, cfg) end
 
 ---@class SDspiCfg
@@ -298,7 +327,8 @@ function sdmmc.init(slot, cfg) end
 --- - **cd_pin** card detect pin, none if omitted
 --- - **wp_pin** write-protcet pin, none if omitted
 --- - **fmax** maximum communication frequency, defaults to 20  if omitted
----@return sdmmc cardObj @Card object. Error is thrown for invalid parameters or if SDMMC hardware or card cannot be initialized.
+---@return sdmmc cardObj @Card object.
+---Error is thrown for invalid parameters or if SDMMC hardware or card cannot be initialized.
 function sdmmc.init(slot, cfg) end
 
 ---Retrieve information from the SD card.
@@ -334,17 +364,21 @@ function card:mount(ldrv, slot) end
 ---Read one or more sectors.
 ---@param start_sec integer @first sector to read from
 ---@param num_sec integer @number of sectors to read (>= 1)
----@return string @String containing the sector data. Error is thrown for invalid parameters or if sector(s) cannot be read.
+---@return string @String containing the sector data.
+---Error is thrown for invalid parameters or if sector(s) cannot be read.
 function card:read(start_sec, num_sec) end
 
 ---Unmount filesystem.
----@return nil @`nil`. Error is thrown if filesystem is not mounted or if it cannot be unmounted.
+---@return nil
+---Error is thrown if filesystem is not mounted\
+---or if it cannot be unmounted.
 function card:umount() end
 
 ---Write one or more sectors.
 ---@param start_sec integer @first sector to write to
 ---@param data any @string of data to write, must be multiple of sector size (512 bytes)
----@return nil @`nil`. Error is thrown for invalid parameters or if sector(s) cannot be written.
+---@return nil
+---Error is thrown for invalid parameters or if sector(s) cannot be written.
 function card:write(start_sec, data) end
 
 --*** SIGMA DELTA ***
@@ -407,7 +441,8 @@ function encoder:read(size) end
 ---Encode a Lua table to a JSON string.
 ---@param tbl table @data to encode
 ---@param opts? SjsonCfg1 @an optional table of options. The possible entries are:
---- - **depth** the maximum encoding depth needed to encode the table. The default is 20 which should be enough for nearly all situations.
+--- - **depth** the maximum encoding depth needed to encode the table.\
+---The default is 20 which should be enough for nearly all situations.
 --- - **null** the string value to treat as null.
 ---@return string @JSON string
 function sjson.encode(tbl, opts) end
@@ -424,7 +459,9 @@ function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
 ---@param str string @the next piece of JSON encoded data
----@return any|nil @The constructed Lua object or `nil` if the decode is not yet complete. If a parse error occurrs during this decode, then an error is thrown and the parse is aborted. The object cannot be used again.
+---@return any|nil @The constructed Lua object or `nil` if the decode is not yet complete.
+---If a parse error occurrs during this decode, then an error is thrown\
+---and the parse is aborted. The object cannot be used again.
 function decoder:write(str) end
 
 ---This gets the decoded Lua object,\
@@ -470,7 +507,9 @@ function sodium.crypto_box.keypair() end
 ---Encrypts a message using a public key.
 ---@param message string @the string to encrypt.
 ---@param public_key string @the public key to encrypt with.
----@return string|any @The encrypted message, as a string. Errors if public_key is not a valid public key as returned by sodium.crypto_box.keypair() or if the message could not be encrypted.
+---@return string|any @The encrypted message, as a string.
+---Errors if public_key is not a valid public key as returned by\
+---`sodium.crypto_box.keypair()` or if the message could not be encrypted.
 function sodium.crypto_box.seal(message, public_key) end
 
 ---Decrypts a message encrypted with `crypto_box.seal()`.
@@ -502,7 +541,8 @@ local device = {}
 ---@return spi @SPI bus master object
 function spi.master(host, config, dma) end
 
----Close the bus host. This fails if there are still devices registered on this bus.
+---Close the bus host.\
+---This fails if there are still devices registered on this bus.
 ---@return nil
 function busmaster:close() end
 
@@ -523,23 +563,33 @@ function busmaster:close() end
 ---@field halfduplex boolean
 ---@field clk_as_cs boolean
 
----Adds a device on the given master bus. Up to three devices per bus are supported.
+---Adds a device on the given master bus.\
+---Up to three devices per bus are supported.
 ---@param config table @table describing the device parameters:
 --- - **cs** GPIO connected to device's chip-select pin, optional
 --- - **mode** SPI mode used for this device (0-3), mandatory
 --- - **freq** clock frequency used for this device [Hz], mandatory
---- - **command_bits** amount of bits in command phase (0-16), defaults to 0 if omitted
---- - **address_bits** amount of bits in address phase (0-64), defaults to 0 if omitted
---- - **dummy_bits** amount of dummy bits to insert address and data phase, defaults to 0 if omitted
+--- - **command_bits** amount of bits in command phase (0-16),\
+---defaults to 0 if omitted
+--- - **address_bits** amount of bits in address phase (0-64),\
+---defaults to 0 if omitted
+--- - **dummy_bits** amount of dummy bits to insert address and data phase,\
+---defaults to 0 if omitted
 --- - **cs_ena_pretrans**, optional
 --- - **cs_ena_posttrans**, optional
 --- - **duty_cycle_pos**, optional
---- - **tx_lsb_first** transmit command/address/data LSB first if true, MSB first otherwise (or if omitted)
---- - **rx_lsb_first** receive data LSB first if true, MSB first otherwise (or if omitted)
---- - **wire3** use spiq for both transmit and receive if true, use mosi and miso otherwise (or if omitted)
---- - **positive_cs** chip-select is active high during a transaction if true, cs is active low otherwise (or if omitted)
---- - **halfduplex** transmit data before receiving data if true, transmit and receive simultaneously otherwise (or if omitted)
---- - **clk_as_cs** output clock on cs line when cs is active if true, defaults to false if omitted
+--- - **tx_lsb_first** transmit command/address/data LSB first if true,\
+---MSB first otherwise (or if omitted)
+--- - **rx_lsb_first** receive data LSB first if true,\
+---MSB first otherwise (or if omitted)
+--- - **wire3** use spiq for both transmit and receive if true,\
+---use mosi and miso otherwise (or if omitted)
+--- - **positive_cs** chip-select is active high during a transaction if true,\
+---cs is active low otherwise (or if omitted)
+--- - **halfduplex** transmit data before receiving data if true,\
+---transmit and receive simultaneously otherwise (or if omitted)
+--- - **clk_as_cs** output clock on cs line when cs is active if true,\
+---defaults to false if omitted
 ---@return spidev @SPI device object
 function busmaster:device(config) end
 
@@ -559,15 +609,18 @@ function device:remove() end
 ---*txdata* string of data to be sent to the device
 ---@overload fun(txdata:string):string
 ---@param trans SpiTransfer @table containing the elements of the transaction:
---- - **command** data for command phase, amount of bits was defined during device creation, optional
---- - **address** data for address phase, amount of bits was defined during device creation, optional
+--- - **command** data for command phase,\
+---amount of bits was defined during device creation, optional
+--- - **address** data for address phase,\
+---amount of bits was defined during device creation, optional
 --- - **txdata** string of data to be sent to the device, optional
 --- - **rxlen** number of bytes to be received, optional
 --- - **mode** optional, one of:
 ---   - sio transmit in SIO mode, default if omitted
 ---   - dio transmit in DIO mode
 ---   - qio transmit in QIO mode
---- - **addr_mode** transmit address also in selected mode if true, transmit address in SIO otherwise.
+--- - **addr_mode** transmit address also in selected mode if true,\
+---transmit address in SIO otherwise.
 ---@return string @String of rxlen length, or #txdata length if rxlen is omitted.
 function device:transfer(trans) end
 
@@ -752,8 +805,8 @@ local tp = {}
 ---@return touch @touch object
 function touch.create(tbl) end
 
----Read the touch sensor counter values\
----for all pads configured in touch.create() method.
+---Read the touch sensor counter values for all pads\
+---configured in touch.create() method.
 ---@return table raw @Lua table of touch sensor counter values per pad
 ---@return table
 function tp:read() end
@@ -1659,19 +1712,23 @@ function wifi.stop() end
 ---@field auto boolean
 ---@field bssid string
 
----Sets the WiFi station configuration. The WiFi mode must be set to *wifi.STATION* or *wifi.STATIONAP* before this function can be used.
+---Sets the WiFi station configuration.\
+---The WiFi mode must be set to *wifi.STATION* or *wifi.STATIONAP* before this function can be used.
 ---@param station_config StaConfig32 @table containing configuration data for station
 --- - **ssid** string which is less than 32 bytes.
 --- - **pwd** string which is 8-64 or 0 bytes. Empty string indicates an open WiFi access point.
 --- - **auto** defaults to true
----   - `true` to enable auto connect and connect to access point, hence with auto=true there's no need to call `wifi.sta.connect()`
+---   - `true` to enable auto connect and connect to access point,\
+---hence with auto=true there's no need to call `wifi.sta.connect()`
 ---   - `false` to disable auto connect and remain disconnected from access point
---- - **bssid** string that contains the MAC address of the access point (optional). You can set BSSID if you have multiple access points with the same SSID.
---- Note: if you set BSSID for a specific SSID and would like to configure station to connect to the same SSID only without the BSSID requirement, you MUST first configure to station to a different SSID first, then connect to the desired SSID
---- The following formats are valid:
---- "DE:C1:A5:51:F1:ED"
---- "AC-1D-1C-B1-0B-22"
---- "DE AD BE EF 7A C0"
+--- - **bssid** string that contains the MAC address of the access point (optional).\
+---You can set BSSID if you have multiple access points with the same SSID.\
+---Note: if you set BSSID for a specific SSID and would like to configure station to connect\
+---to the same SSID only without the BSSID requirement, you MUST first configure to station\
+---to a different SSID first, then connect to the desired SSID. The following formats are valid:\
+--- "DE:C1:A5:51:F1:ED"\
+--- "AC-1D-1C-B1-0B-22"\
+--- "DE AD BE EF 7A C0"\
 --- "AcDc0123c0DE"
 ---@param save boolean @Save station configuration to flash.
 ---|' true' #configuration will be retained through power cycle.
@@ -1699,11 +1756,11 @@ function wifi.sta.disconnect() end
 --- - **ssid**: the SSID of the network
 --- - **bssid**: the BSSID of the AP
 --- - **channel**: the primary channel of the network
---- - **auth** authentication method, one of wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK (default), wifi.WPA_WPA2_PSK
+--- - **auth** authentication method, one of wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK (default), wifi.WPA_WPA2_PSK\
 ---`"disconnected"`: information about the network/AP that was disconnected from:
 --- - **ssid**: the SSID of the network
 --- - **bssid**: the BSSID of the AP
---- - **reason**: an integer code for the reason (see table below for mapping)
+--- - **reason**: an integer code for the reason (see table below for mapping)\
 ---`"authmode_changed"`: authentication mode information:
 --- - **old_mode**: the previous auth mode used
 --- - **new_mode**: the new auth mode used
@@ -1775,7 +1832,8 @@ function wifi.sta.sethostname(hostname) end
 ---@param cfg APconfig @table to hold configuration:
 --- - **ssid** SSID chars 1-32
 --- - **pwd** password chars 8-64
---- - **auth** authentication method, one of *wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK* (default), *wifi.AUTH_WPA_WPA2_PSK*
+--- - **auth** authentication method, one of wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK (default),\
+---wifi.AUTH_WPA_WPA2_PSK
 --- - **channel** channel number 1-14 default = 11
 --- - **hidden** false = not hidden, true = hidden, default = false
 --- - **max** maximum number of connections 1-4 default=4
@@ -1789,22 +1847,25 @@ function wifi.ap.config(cfg, save) end
 ---Registers callbacks for WiFi AP events.
 ---@param event string|'"start"'|'"stop"'|'"sta_connected"'|'"sta_disconnected"'|'"probe_req"' @WiFi AP event you would like to set a callback for:
 ---@param callback function|' function(event, info) end' @`function(event, info)` to perform when event occurs, or nil to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
----Event information provided for each event is as follows:
---- `"start"`: no additional info
---- `"stop"`: no additional info
+---Event information provided for each event is as follows:\
+--- `"start"`: no additional info\
+--- `"stop"`: no additional info\
 --- `"sta_connected"`: information about the client that connected:
 --- - **mac**: the MAC address
 --- - **id**: assigned station id (AID)
+---
 ---`"disconnected"`: information about disconnecting client
 --- - **mac**: the MAC address
 --- - **id**: assigned station id (AID)
+---
 ---`"probe_req"`: information about the probing client
 --- - **from**: MAC address of the probing client
 --- - **rssi**: Received Signal Strength Indicator value
 function wifi.ap.on(event, callback) end
 
 ---Gets MAC address in access point mode.
----@return string MAC @address as string e.g. "18:fe:34:a2:d7:34"
+---@return string MAC @address as string
+---e.g. "18:fe:34:a2:d7:34"
 function wifi.ap.getmac() end
 
 ---Sets IP address, netmask, gateway, dns address in AccessPoint mode.
@@ -1812,12 +1873,14 @@ function wifi.ap.getmac() end
 --- - **ip** device ip address.
 --- - **netmask** network netmask.
 --- - **gateway** gateway address.
---- - **dns** name server address, which will be provided to clients over DHCP. (Optional)
+--- - **dns** name server address,\
+---which will be provided to clients over DHCP. (Optional)
 ---@return nil
 function wifi.ap.setip(cfg) end
 
 ---Sets AccessPoint hostname.
----@param hostname string @must only contain letters, numbers and hyphens('-') and be 32 characters or less with first and last character being alphanumeric
+---@param hostname string @must only contain letters, numbers and hyphens('-')
+---and be 32 characters or less with first and last character being alphanumeric
 ---@return boolean
 function wifi.ap.sethostname(hostname) end
 

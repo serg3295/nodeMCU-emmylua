@@ -165,7 +165,9 @@ function bthci.adv.setdata(advbytes, callback) end
 --- - **own_addr_type** own address type. Default 0 (public address).
 --- - **peer_addr_type** peer address type. Default 0 (public address).
 --- - **peer_addr** TODO, not yet implemented
---- - **channel_map** which channels to advertise on. The constants *bthci.adv.CHAN_37, bthci.adv.CHAN_38, bthci.adv.CHAN_39* or *bthci.adv.CHAN_ALL* may be used. Default is all channels.
+--- - **channel_map** which channels to advertise on.\
+---The constants *bthci.adv.CHAN_37, bthci.adv.CHAN_38, bthci.adv.CHAN_39*\
+---or *bthci.adv.CHAN_ALL* may be used. Default is all channels.
 --- - **filter_policy** filter policy, default 0 (no filtering).
 ---@param callback? function @(optional) function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
@@ -385,7 +387,8 @@ function eth.init(cfg) end
 
 ---Register or unregister callback functions for Ethernet events.
 ---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"got_ip"' @event
----@param callback function|' function(event, info) end' @callback function(event, info) to perform when event occurs, or nil to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.
+---@param callback function|' function(event, info) end' @callback function(event, info) to perform when event occurs,
+---or nil to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.\
 ---Event information provided for each event is as follows:
 --- - **start**: no additional info
 --- - **stop**: no additional info
@@ -416,7 +419,8 @@ function file.chdir(dir) end
 
 ---Determines whether the specified file exists.
 ---@param filename string|'""' @file to check
----@return boolean @`true` of the file exists (even if 0 bytes in size), and `false` if it does not exist
+---@return boolean @`true` of the file exists (even if 0 bytes in size),
+---and `false` if it does not exist
 function file.exists(filename) end
 
 ---Format the file system. Completely erases\
@@ -494,26 +498,38 @@ function fObj:flush() end
 
 ---Read content from the open file.
 ---@param n_or_char? integer @(optional):
---- - if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
---- - if passed a number n, then read up to n bytes or the entire file (whichever is smaller).
---- - if passed a string containing the single character char, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+--- - if nothing passed in, then read up to FILE_READ_CHUNK bytes\
+---or the entire file (whichever is smaller).
+--- - if passed a number n, then read up to n bytes or the entire file\
+---(whichever is smaller).
+--- - if passed a string containing the single character `char`,\
+---then read until char appears next in the file,\
+---FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil @File content as a string, or `nil` when EOF
 function file.read(n_or_char) end
 
 ---Read content from the open file.
 ---@param n_or_char? integer @(optional):
---- - if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
---- - if passed a number `n`, then read up to *n* bytes or the entire file (whichever is smaller).
---- - if passed a string containing the single character `char`, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+--- - if nothing passed in, then read up to FILE_READ_CHUNK bytes\
+---or the entire file (whichever is smaller).
+--- - if passed a number `n`, then read up to *n* bytes or the entire file\
+---(whichever is smaller).
+--- - if passed a string containing the single character `char`,\
+---then read until char appears next in the file,\
+---FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil @File content as a string, or `nil` when EOF
 function fObj:read(n_or_char) end
 
----Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.
----@return string|nil @File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
+---Read the next line from the open file. Lines are defined as zero\
+---or more bytes ending with a EOL ('\n') byte.
+---@return string|nil @File content in string, line by line, including EOL('\n').
+---Return `nil` when EOF.
 function file.readline() end
 
----Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.
----@return string|nil @File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
+---Read the next line from the open file. Lines are defined as zero\
+---or more bytes ending with a EOL ('\n') byte.
+---@return string|nil @File content in string, line by line, including EOL('\n').
+---Return `nil` when EOF.
 function fObj:readline() end
 
 ---@alias seekwhence32_f string
@@ -676,7 +692,10 @@ function http.createConnection(url, method, options) end
 function HTTP:on(event, callback) end
 
 ---Opens the connection to the server and issues the request.
----@return any|nil @In asynchronous mode, always returns `nil`. In synchronous mode, it returns 2 results, `status_code`, `connected` where connected is `true` if the connection is still open.
+---@return any|nil @In asynchronous mode, always returns `nil`.
+---In synchronous mode, it returns 2 results, `status_code`,\
+---`connected` where connected is `true`\
+---if the connection is still open.
 function HTTP:request() end
 
 ---Sets the connection method.
@@ -747,7 +766,8 @@ i2c = {}
 ---|>' true' #enable check for slave ACK
 ---|' false' #disable check for slave ACK
 ---@return boolean @>
---- - for interface `i2c.SW`: returns `true` if ack received, `false` if no ack received. This value should be checked to decide whether to continue communication.
+--- - for interface `i2c.SW`: returns `true` if ack received, `false` if no ack received.\
+---This value should be checked to decide whether to continue communication.
 --- - for interfaces `i2c.HW0` and `i2c.HW1`: always returns `true`.
 function i2c.address(id, device_addr, direction, ack_check_en) end
 
@@ -828,7 +848,9 @@ function i2c.slave.on(id, event, callback) end
 ---@return nil
 function i2c.slave.setup(id, slave_config) end
 
----Writes send data for the master into the transmit buffer. This function returns immediately if there's enough room left in the buffer. It blocks if the buffer is doesn't provide enough space.
+---Writes send data for the master into the transmit buffer.\
+---This function returns immediately if there's enough room left in the buffer.\
+---It blocks if the buffer is doesn't provide enough space.
 ---@param id integer|'i2c.HW0'|'i2c.HW1' @interface id
 ---@param data1 number|string|table @data can be numbers, string or lua table.
 ---@vararg number|string|table
@@ -870,7 +892,9 @@ function i2s.mute(i2s_num) end
 ---@param i2s_num integer|'0'|'1' @I2S peripheral
 ---@param size number @Bytes to read
 ---@param wait_ms? number @(optional) Millisecond to wait if data is not ready. Optional, defaults to 0 (not to wait) when omitted.
----@return any @Data read from data-in pin. If data is not ready in wait_ms millisecond, less than size bytes can be returned. An error is thrown in case of invalid parameters or if the i2s driver failed.
+---@return any @Data read from data-in pin.
+---If data is not ready in wait_ms millisecond, less than size bytes can be returned.\
+--- An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.read(i2s_num, size, wait_ms) end
 
 ---@class I2sCfg
@@ -971,7 +995,8 @@ local channel = {}
 --- - **channel** The timer source of channel
 ---   - ledc.CHANNEL_0  ...  ledc.CHANNEL_7
 --- - **frequency** Timer frequency(Hz)
---- - **duty** Channel duty, the duty range is [0, (2**bit_num) - 1]. Example: if `ledc.TIMER_13_BIT` is used maximum value is 4096 x 2 -1 = 8091
+--- - **duty** Channel duty, the duty range is [0, (2**bit_num) - 1].\
+---Example: if `ledc.TIMER_13_BIT` is used maximum value is 4096 x 2 -1 = 8091
 ---@return ledc @ledc.channel
 function ledc.newChannel(tbl) end
 
@@ -1060,13 +1085,15 @@ function MQTT32:close() end
 ---@param secure? boolean|table @(optional) either an interger with **0/1** for `false/true` (default 0), or a table with optional entries
 --- - **ca_cert CA** - certificate data in PEM format for server verify with SSL
 --- - **client_cert** - client certificate data in PEM format for SSL mutual authentication
---- - **client_key** - client private key data in PEM format for SSL mutual authentication. Note that both client_cert and client_key have to be provided for mutual authentication.
+--- - **client_key** - client private key data in PEM format for SSL mutual authentication.\
+---Note that both client_cert and client_key have to be provided for mutual authentication.
 ---@param conn_est? function|' function(client) end' @(optional) `function(client: any)` callback function for when the connection was established
 ---@param conn_notest? function|' function(client, reason) end' @(optional) `function(client: any, reason: number` callback function for when the connection could not be established. No further callbacks should be called.
 ---@return boolean
 function MQTT32:connect(host, port, secure, conn_est, conn_notest) end
 
----Setup Last Will and Testament. A broker will publish a message with qos = 0, retain = 0, data = "offline" to topic "/lwt" if client does not send keepalive packet.
+---Setup Last Will and Testament. A broker will publish a message with qos = 0, retain = 0, data = "offline"\
+---to topic "/lwt" if client does not send keepalive packet.
 ---@param topic string @the topic to publish to (string)
 ---@param message string @the message to publish, (buffer or string)
 ---@param qos? integer|' 0'|' 1'|' 2' @(optional) QoS level, default **0**
@@ -1076,7 +1103,8 @@ function MQTT32:lwt(topic, message, qos, retain) end
 
 ---Registers a callback function for an event.
 ---@param event string|'"connect"'|'"message"'|'"offline"' @can be "connect", "message" or "offline"
----@param callback function|' function(client, topic, message) end' @`function(client, topic?:string, message?:string)`. The first parameter is the client. If event is "message", the 2nd and 3rd param are received topic and message (strings).
+---@param callback function|' function(client, topic, message) end' @`function(client, topic?:string, message?:string)`.
+---The first parameter is the client. If event is "message", the 2nd and 3rd param are received topic and message (strings).
 ---@return nil
 function MQTT32:on(event, callback) end
 
@@ -1098,7 +1126,9 @@ function MQTT32:subscribe(topic, qos, callback) end
 
 ---Unsubscribes from one or several topics.
 ---@param topic string @a topic string
----@param callback? function|' function(client) end' @(optional) `function(client)` fired when unsubscription(s) succeeded. NOTE: When calling unsubscribe() more than once, the last callback function defined will be called for ALL unsubscribe commands.
+---@param callback? function|' function(client) end' @(optional) `function(client)` fired when unsubscription(s) succeeded.
+---NOTE: When calling unsubscribe() more than once, the last callback function defined will be called\
+---for ALL unsubscribe commands.
 ---@return boolean
 function MQTT32:unsubscribe(topic, callback) end
 
@@ -1186,18 +1216,20 @@ function NETSOCKET:getpeer() end
 ---@return string|nil @ip or `nil` if not connected
 function NETSOCKET:getaddr() end
 
----Throttle data reception by placing a request to block the TCP receive function. This request is not effective immediately, Espressif recommends to call it while reserving 5*1460 bytes of memory.
+---Throttle data reception by placing a request to block the TCP receive function.\
+---This request is not effective immediately, Espressif recommends to call it\
+---while reserving 5*1460 bytes of memory.
 ---@return nil
 function NETSOCKET:hold() end
 
 ---Register callback functions for specific events.
 ---@param event string|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' @event
 ---@param callback nil|function|' function(net.socket, string) end)' @`function(net.socket, string?)`. Can be `nil` to remove callback.
---The first parameter of callback is the socket.
---The seconf parameter:
+---The first parameter of callback is the socket.\
+---The seconf parameter:
 --- - If event is `"receive"`, the second parameter is the received data as string.
---- - If event is `"disconnection"` or `"reconnection"`, the second parameter is error code.
---If `"reconnection"` event is specified, disconnection receives only "normal close" events.
+--- - If event is `"disconnection"` or `"reconnection"`, the second parameter is error code.\
+--If `"reconnection"` event is specified, disconnection receives only "normal close" events.\
 --Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
 function NETSOCKET:on(event, callback) end
@@ -1228,8 +1260,9 @@ function UDPSOCKET:listen(port, ip) end
 ---@param callback nil|function|' function(net.socket, string) end)' @`function(net.socket, string?)`. Can be nil to remove callback.
 --- The first parameter of callback is the socket.
 --- The seconf parameter:
---- - If event is `"receive"`, the second parameter is the received data as string. The `receive` callback receives port and ip *after* the data argument.
---Otherwise, all connection errors (with normal close) passed to disconnection event.
+--- - If event is `"receive"`, the second parameter is the received data as string.\
+---The `receive` callback receives port and ip *after* the data argument.\
+---Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
 function UDPSOCKET:on(event, callback) end
 
@@ -1302,7 +1335,7 @@ node = {}
 --- - 20: RTCWDT_CPU_RESET       RTC Watch dog Reset CPU
 --- - 21: EXT_CPU_RESET          for APP CPU, reseted by PRO CPU
 --- - 22: RTCWDT_BROWN_OUT_RESET Reset when the vdd voltage is not stable
---- - 23: RTCWDT_RTC_RESET       RTC Watch dog reset digital core and rtc module
+--- - 23: RTCWDT_RTC_RESET       RTC Watch dog reset digital core and rtc module\
 --In general, the extended reset cause supercedes the raw code. The raw code is kept for backwards compatibility only. For new applications it is highly recommended to use the extended reset cause instead.
 --In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information. These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
 --In case of extended reset cause 19 (SW_CPU_RESET), an additional value is returned containing the number of consecutive Lua panics. If the reset was caused by a call to node.restart() this value is 0; after the first panic the value is 1; if a panic reoccurs the value increments upto 15.
@@ -1329,15 +1362,21 @@ function node.compile(filename) end
 
 ---Enters deep sleep mode.
 ---@overload fun(options:number)
---- For compatibility, a `number` parameter usecs can be supplied instead of an options table, which is equivalent to `node.dsleep({us = usecs})`.
+---For compatibility, a `number` parameter usecs can be supplied\
+---instead of an options table, which is equivalent to `node.dsleep({us = usecs})`.
 ---@param options DsleepCfg @a table containing some of:
 --- - **secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the us parameter.
 --- - **us**, a number of microseconds to sleep. If both secs and us are provided, the values are combined.
 --- - **gpio**, a single GPIO number or a list of GPIOs. These pins must all be RTC-capable otherwise an error is raised.
---- - **level**. Whether to trigger when *any* of the GPIOs are high (level=1, which is the default if not specified), or when *all* the GPIOs are low (level=0).
---- - **isolate**. A list of GPIOs to isolate. Isolating a GPIO disables input, output, pullup, pulldown, and enables hold feature for an RTC IO. Use this function if an RTC IO needs to be disconnected from internal circuits in deep sleep, to minimize leakage current.
---- - **pull**, boolean, whether to keep powering previously-configured internal pullup/pulldown resistors. Default is false if not specified.
---- - **touch**, boolean, whether to trigger wakeup from any previously-configured touchpads. Default is false if not specified.
+--- - **level**. Whether to trigger when *any* of the GPIOs are high (level=1, which is the default if not specified),\
+---or when *all* the GPIOs are low (level=0).
+--- - **isolate**. A list of GPIOs to isolate. Isolating a GPIO disables input, output, pullup, pulldown,\
+---and enables hold feature for an RTC IO. Use this function if an RTC IO needs to be disconnected from\
+---internal circuits in deep sleep, to minimize leakage current.
+--- - **pull**, boolean, whether to keep powering previously-configured internal pullup/pulldown resistors.\
+---Default is false if not specified.
+--- - **touch**, boolean, whether to trigger wakeup from any previously-configured touchpads.\
+---Default is false if not specified.
 function node.dsleep(options) end
 
 ---Returns the flash chip ID.
@@ -1402,7 +1441,9 @@ function node.readvdd33() end
 ---@return nil
 function node.restart() end
 
----Restores system configuration to defaults using the SDK function *system_restore()*, which doesn't document precisely what it erases/restores.
+---Restores system configuration to defaults using\
+---the SDK function *system_restore()*, which \
+---doesn't document precisely what it erases/restores.
 ---@return nil
 function node.restore() end
 
@@ -1419,16 +1460,21 @@ function node.setcpufreq(speed) end
 ---@field uart integer
 ---@field ulp boolean
 
----Enters light sleep mode, which saves power without losing state. The state of the CPU and peripherals\
----is preserved during light sleep and is resumed once the processor wakes up.\
+---Enters light sleep mode, which saves power without losing state. The state of the CPU and\
+---peripherals is preserved during light sleep and is resumed once the processor wakes up.\
 ---When the processor wakes back up depends on the supplied options.
 ---@param options SleepCfg @a table containing some of:
---- - **secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the **us** parameter.
---- - **us**, a number of microseconds to sleep. If both **secs** and **us** are provided, the values are combined.
+--- - **secs**, a number of seconds to sleep.\
+---This permits longer sleep periods compared to using the **us** parameter.
+--- - **us**, a number of microseconds to sleep.\
+---If both **secs** and **us** are provided, the values are combined.
 --- - **gpio**, a boolean, whether to allow wakeup by GPIOs. Default is `false` if not specified.
---- - **touch**, boolean, whether to trigger wakeup from any previously-configured touchpads. Default is `false` if not specified.
---- - **uart**, an integer or list of integers. Which UARTs should trigger wakeup. Default is the empty list if not specified.
---- - **ulp**, a boolean, whether to allow the ULP to trigger wakeup. Default is `false` if not specified.
+--- - **touch**, boolean, whether to trigger wakeup from any previously-configured touchpads.\
+---Default is `false` if not specified.
+--- - **uart**, an integer or list of integers. Which UARTs should trigger wakeup.\
+---Default is the empty list if not specified.
+--- - **ulp**, a boolean, whether to allow the ULP to trigger wakeup.\
+---Default is `false` if not specified.
 ---@return integer @One of the following values, depending on what triggered the wakeup.
 --- - node.wakeup.GPIO
 --- - node.wakeup.TIMER
