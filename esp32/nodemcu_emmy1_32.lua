@@ -52,7 +52,8 @@ function bit.arshift(value, shift) end
 ---@return integer @the bitwise *AND* of all the arguments
 function bit.band(val1, val2, ...) end
 
----Generate a number with a 1 bit (used for mask generation). Equivalent to `1 << position` in C
+---Generate a number with a 1 bit (used for mask generation).\
+---Equivalent to `1 << position` in C
 ---@param position integer @position of the bit that will be set to 1
 ---@return integer @a number with only one 1 bit at position (the rest are set to 0)
 function bit.bit(position) end
@@ -128,7 +129,8 @@ function bthci.rawhci(hcibytes, callback) end
 ---@return nil
 function bthci.reset(callback) end
 
----Enables or disables BlueTooth LE advertisements. Before enabling advertisements, both parameters and data should be set.
+---Enables or disables BlueTooth LE advertisements. Before enabling advertisements,\
+---both parameters and data should be set.
 ---@param onoff integer|'0'|'1' @**1** or **0** to enable or disable advertisements, respectively.
 ---@param callback? function @(optional) function to be invoked when the reset completes. Its only argument is the HCI error code, or `nil` on success.
 ---@return nil
@@ -252,14 +254,17 @@ function hashobj:finalize() end
 
 ---@alias crypto_algo string|'"MD5"'|'"SHA1"'|'"RIPEMD160"'|'"SHA224"'|'"SHA256"'|'"SHA384"'|'"SHA512"'
 
----Create a digest/hash object that can have any number of strings added to it.
----The returned object has `update(str)` and `finalize()` functions, for streaming data through the hash function, and for finalizing and returning the resulting digest.
+---Create a digest/hash object that can have any number of strings added to it.\
+---The returned object has `update(str)` and `finalize()` functions, for streaming data through the hash function,\
+---and for finalizing and returning the resulting digest.
 ---@param algo crypto_algo @the hash algorithm to use, case insensitive string
 ---@return hashobj @Hasher object with update and finalize functions available.
 function crypto.new_hash(algo) end
 
----Create an object for calculating a HMAC (Hashed Message Authentication Code, aka "signature"). A HMAC can be used to simultaneously verify both integrity and authenticity of data.
----The returned object has `update(str)` and `finalize()` functions, for streaming data through the hash function, and for finalizing and returning the resulting signature.
+---Create an object for calculating a HMAC (Hashed Message Authentication Code, aka "signature").\
+---A HMAC can be used to simultaneously verify both integrity and authenticity of data.\
+---The returned object has `update(str)` and `finalize()` functions, for streaming data through the hash function,\
+---and for finalizing and returning the resulting signature.
 ---@param algo crypto_algo @the hash algorithm to use, case insensitive string
 ---@param key any @the signing key (may be a binary string)
 ---@return hashobj @Hasher object with update and finalize functions available.
@@ -313,17 +318,22 @@ encoder = {}
 ---@return string @A Base64 encoded string.
 function encoder.toBase64(binary) end
 
----Decodes a Base64 representation of a (binary) Lua string back into the original string. An error is thrown if the string is not a valid base64 encoding.
+---Decodes a Base64 representation of a (binary) Lua string\
+---back into the original string. An error is thrown if the string\
+---is not a valid base64 encoding.
 ---@param b64 string @Base64 encoded input string
 ---@return string @The decoded Lua (binary) string.
 function encoder.fromBase64(b64) end
 
----Provides an ASCII hex representation of a (binary) Lua string. Each byte in the input string is represented as two hex characters in the output.
+---Provides an ASCII hex representation of a (binary) Lua string.\
+---Each byte in the input string is represented as two hex characters in the output.
 ---@param binary string @binary input string to get hex representation for
 ---@return string @An ASCII hex string.
 function encoder.toHex(binary) end
 
----Returns the Lua binary string decode of a ASCII hex string. Each byte in the output string is represented as two hex characters in the input. An error is thrown if the string is not a valid base64 encoding.
+---Returns the Lua binary string decode of a ASCII hex string.\
+---Each byte in the output string is represented as two hex characters in the input.\
+---An error is thrown if the string is not a valid base64 encoding.
 ---@param hexstr string @hexstr An ASCII hex string.
 ---@return string @Decoded string of hex representation.
 function encoder.fromHex(hexstr) end
@@ -398,7 +408,8 @@ file = {}
 ---@class file
 local fObj = {}
 
----Change current directory (and drive). This will be used when no drive/directory is prepended to filenames.
+---Change current directory (and drive).\
+---This will be used when no drive/directory is prepended to filenames.
 ---@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"' @directory name
 ---@return boolean
 function file.chdir(dir) end
@@ -408,16 +419,19 @@ function file.chdir(dir) end
 ---@return boolean @`true` of the file exists (even if 0 bytes in size), and `false` if it does not exist
 function file.exists(filename) end
 
----Format the file system. Completely erases any existing file system and writes a new one.
+---Format the file system. Completely erases\
+---any existing file system and writes a new one.
 ---@return nil
 function file.format() end
 
----Returns the flash address and physical size of the file system area, in bytes.
+---Returns the flash address and physical size\
+---of the file system area, in bytes.
 ---@return number flash_address
 ---@return number size
 function file.fscfg() end
 
----Return size information for the file system. The unit is Byte for SPIFFS and kByte for FatFS.
+---Return size information for the file system.\
+---The unit is Byte for SPIFFS and kByte for FatFS.
 ---@return number remaining
 ---@return number used
 ---@return number total
@@ -445,7 +459,8 @@ function file.on(event, callback) end
 ---@return file @file object if file opened ok. `nil` if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
----Remove a file from the file system. The file must not be currently open.
+---Remove a file from the file system.\
+---The file must not be currently open.
 ---@param filename string|'""' @file to remove
 ---@return nil
 function file.remove(filename) end
@@ -463,11 +478,17 @@ function file.close() end
 ---@return nil
 function fObj:close() end
 
----Flushes any pending writes to the file system, ensuring no data is lost on a restart. Closing the open file using `file.close() / fd:close()` performs an implicit flush as well.
+---Flushes any pending writes to the file system,\
+---ensuring no data is lost on a restart.\
+---Closing the open file using `file.close() / fd:close()`\
+---performs an implicit flush as well.
 ---@return nil
 function file.flush() end
 
----Flushes any pending writes to the file system, ensuring no data is lost on a restart. Closing the open file using `file.close() / fd:close()` performs an implicit flush as well.
+---Flushes any pending writes to the file system,\
+---ensuring no data is lost on a restart.\
+---Closing the open file using `file.close() / fd:close()`\
+---performs an implicit flush as well.
 ---@return nil
 function fObj:flush() end
 
@@ -500,13 +521,17 @@ function fObj:readline() end
 ---|>'"cur"' #Base is current position
 ---| '"end"' #Base is end of file
 
----Sets and gets the file position, measured from the beginning of the file, to the position given by offset plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
+---Sets and gets the file position, measured from the beginning of the file,\
+---to the position given by offset plus a base specified by the string whence.\
+---If no parameters are given, the function simply returns the current file offset.
 ---@param whence? seekwhence32_f @(optional) 'set' | 'cur' | 'end'
 ---@param offset? integer @(optional) default 0
 ---@return integer @the resulting file position, or `nil` on error
 function file.seek(whence, offset) end
 
----Sets and gets the file position, measured from the beginning of the file, to the position given by offset plus a base specified by the string whence. If no parameters are given, the function simply returns the current file offset.
+---Sets and gets the file position, measured from the beginning of the file,\
+---to the position given by offset plus a base specified by the string whence.\
+---If no parameters are given, the function simply returns the current file offset.
 ---@param whence? seekwhence32_f @(optional) 'set' | 'cur' | 'end'
 ---@param offset? integer @(optional) default 0
 ---@return integer @the resulting file position, or `nil` on error
@@ -571,7 +596,8 @@ function gpio.config(tbl, ...) end
 ---@return integer @0 = low, 1 = high
 function gpio.read(pin) end
 
----Set the drive strength of a given GPIO pin. The higher the drive strength, the more current can be sourced/sunk from the pin. The exact maximum depends on the power domain of the pin and how much current other pins in that domain are consuming.
+---Set the drive strength of a given GPIO pin. The higher the drive strength, the more current can be sourced/sunk from the pin.\
+---The exact maximum depends on the power domain of the pin and how much current other pins in that domain are consuming.
 ---@param pin integer @a valid GPIO pin number.
 ---@param strength number @the drive strength to set, one of
 ---|' gpio.DRIVE_0' #weakest drive strength
@@ -601,7 +627,7 @@ function gpio.trig(pin , type , callback) end
 ---@param pin integer @GPIO
 ---@param level number @wake-up level, one of
 ---|' gpio.INTR_NONE' #to disable wake-up
----|' gpio.INTR_LOW'  #for wake-up on low level
+---|' gpio.INTR_LOW' #for wake-up on low level
 ---|' gpio.INTR_HIGH' #for wake-up on high level
 ---@return nil
 function gpio.wakeup(pin, level) end
@@ -669,7 +695,8 @@ function HTTP:seturl(url) end
 ---@return nil
 function HTTP:setheader(name, value) end
 
----Sets the POST data to be used for this request. Also sets the method to http.POST if it isn't already.
+---Sets the POST data to be used for this request.\
+---Also sets the method to http.POST if it isn't already.
 ---@param data any|nil @The data to POST. Unless a custom Content-Type header has been set, this data should be in application/x-www-form-urlencoded format. Can be `nil` to unset what to post and the Content-Type header.
 ---@return nil
 function HTTP:setpostdata(data) end
@@ -1058,20 +1085,20 @@ function MQTT32:on(event, callback) end
 ---@param payload string @message the message to publish, (buffer or string)
 ---@param qos integer|' 0'|' 1'|' 2' @QoS level
 ---@param retain integer|' 0'|' 1' @retain flag
----@param callback? function|' function(client) end' @(optional) `function(client)` fired when PUBACK received. (optional) NOTE: When calling `publish()` more than once, the last callback function defined will be called for ALL publish commands.
+---@param callback? function|' function(client) end' @(optional) `function(client)` fired when PUBACK received. NOTE: When calling `publish()` more than once, the last callback function defined will be called for ALL publish commands.
 ---@return boolean
 function MQTT32:publish(topic, payload, qos, retain, callback) end
 
 ---Subscribes to one or several topics.
 ---@param topic string @a topic string
 ---@param qos integer|' 0'|' 1'|' 2' @QoS subscription level, default 0
----@param callback? function|' function(client) end' @(optional) `function(client)` fired when subscription(s) succeeded. (optional) NOTE: When calling `subscribe()` more than once, the last callback function defined will be called for ALL subscribe commands.
+---@param callback? function|' function(client) end' @(optional) `function(client)` fired when subscription(s) succeeded. NOTE: When calling `subscribe()` more than once, the last callback function defined will be called for ALL subscribe commands.
 ---@return boolean
 function MQTT32:subscribe(topic, qos, callback) end
 
 ---Unsubscribes from one or several topics.
 ---@param topic string @a topic string
----@param callback? function|' function(client) end' @(optional) `function(client)` fired when unsubscription(s) succeeded. (optional) NOTE: When calling unsubscribe() more than once, the last callback function defined will be called for ALL unsubscribe commands.
+---@param callback? function|' function(client) end' @(optional) `function(client)` fired when unsubscription(s) succeeded. NOTE: When calling unsubscribe() more than once, the last callback function defined will be called for ALL unsubscribe commands.
 ---@return boolean
 function MQTT32:unsubscribe(topic, callback) end
 
@@ -1181,7 +1208,8 @@ function NETSOCKET:on(event, callback) end
 ---@return nil
 function NETSOCKET:send(str, callback) end
 
----Unblock TCP receiving data by revocation of a preceding `hold()`.
+---Unblock TCP receiving data\
+---by revocation of a preceding `hold()`.
 ---@return nil
 function NETSOCKET:unhold() end
 
@@ -1332,20 +1360,24 @@ function node.heap() end
 function node.info() end
 
 ---@deprecated
----Defines action to take on button press (on the old devkit 0.9), button connected to GPIO 16. This function is only available if the firmware was compiled with DEVKIT_VERSION_0_9 defined.
+---Defines action to take on button press (on the old devkit 0.9), button connected to GPIO 16.\
+---This function is only available if the firmware was compiled with DEVKIT_VERSION_0_9 defined.
 ---@param type string @type is either string "long" or "short". long: press the key for 3 seconds, short: press shortly(less than 3 seconds)
 ---@param foo function @user defined function which is called when key is pressed. If nil, remove the user defined function. Default function: long: change LED blinking rate, short: reset chip
 ---@return nil
 function node.key(type, foo) end
 
 ---@deprecated
----Sets the on/off time for the LED (on the old devkit 0.9), with the LED connected to GPIO16, multiplexed with node.key(). This function is only available if the firmware was compiled with DEVKIT_VERSION_0_9 defined.
+---Sets the on/off time for the LED (on the old devkit 0.9), with the LED connected to GPIO16, multiplexed with node.key().\
+---This function is only available if the firmware was compiled with DEVKIT_VERSION_0_9 defined.
 ---@param low number @LED off time, LED keeps on when low=0. Unit: milliseconds, time resolution: 80~100ms
 ---@param high number @LED on time. Unit: milliseconds, time resolution: 80~100ms
 ---@return nil
 function node.led(low, high) end
 
----Submits a string to the Lua interpreter. Similar to pcall(loadstring(str)), but without the single-line limitation.
+---Submits a string to the Lua interpreter.\
+---Similar to pcall(loadstring(str)),\
+---but without the single-line limitation.
 ---@param str string @Lua chunk
 ---@return nil
 function node.input(str) end
@@ -1387,7 +1419,9 @@ function node.setcpufreq(speed) end
 ---@field uart integer
 ---@field ulp boolean
 
----Enters light sleep mode, which saves power without losing state. The state of the CPU and peripherals is preserved during light sleep and is resumed once the processor wakes up. When the processor wakes back up depends on the supplied options.
+---Enters light sleep mode, which saves power without losing state. The state of the CPU and peripherals\
+---is preserved during light sleep and is resumed once the processor wakes up.\
+---When the processor wakes back up depends on the supplied options.
 ---@param options SleepCfg @a table containing some of:
 --- - **secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the **us** parameter.
 --- - **us**, a number of microseconds to sleep. If both **secs** and **us** are provided, the values are combined.
@@ -1403,7 +1437,8 @@ function node.setcpufreq(speed) end
 --- - node.wakeup.ULP
 function node.sleep(options) end
 
----Controls the amount of debug information kept during node.compile(), and allows removal of debug information from already compiled Lua code.
+---Controls the amount of debug information kept during node.compile(),\
+---and allows removal of debug information from already compiled Lua code.
 ---@param level? number @(optional) 1 | 2 | 3
 ---|'1' #don't discard debug info
 ---|'2' #discard Local and Upvalue debug info
@@ -1418,7 +1453,8 @@ function node.stripdebug(level, callback) end
 ---|>'false' #to disable printing
 function node.osprint(enabled) end
 
----Returns the value of the system counter, which counts in microseconds starting at 0 when the device is booted.
+---Returns the value of the system counter,\
+---which counts in microseconds starting at 0 when the device is booted.
 ---@return number lowbits @the time in microseconds since boot or the last time the counter wrapped
 ---@return number highbits @the number of times the counter has wrapped
 function node.uptime() end

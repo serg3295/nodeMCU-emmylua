@@ -2,6 +2,7 @@
 -- Script converts a file from the sumneko format to the IDEA format
 -- The Unlicense
 --
+-- Script:
 -- removes the char '?' which denotes an optional parameter from --@param name? type
 -- converts
 --  @alias name type
@@ -10,13 +11,17 @@
 -- to @alias name 'par1'|'par2'
 -- comments and char '>' (it denotes default value) will be lost
 --
+-- removes '\' at the end of lines
 
 local lines
 
+---[[
 local files = {
   "nodemcu_emmy1_32.lua",
   "nodemcu_emmy2_32.lua",
 }
+--]]
+
 --[[
 local files = {
   "nodemcu_emmy1.lua",
@@ -24,7 +29,7 @@ local files = {
   "nodemcu_emmy3.lua",
   "nodemcu_emmy4.lua",
 }
-]]
+--]]
 
 local function main()
   for _, fileName in ipairs(files) do
@@ -46,6 +51,7 @@ local function main()
                             return  result .. '\n\n' .. tail
                             end)
                       : gsub("(%-%-%-@alias%s[%w_]+%s)[%a]+|", "%1")  -- delete type of alias
+                      : gsub("(%-%-%-.-)%\\r?\n", "%1\n")  -- delete '\'
 
     local fo  = assert(io.open(("i_" .. fileName), "w"))
     fo:write(content)

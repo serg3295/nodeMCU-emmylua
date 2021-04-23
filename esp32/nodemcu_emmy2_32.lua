@@ -18,7 +18,9 @@ function otaupgrade.info() end
 ---@return nil @`nil`. A Lua error may be raised if the OTA upgrade cannot be commenced for some reason (such as due to incorrect partition setup).
 function otaupgrade.commence() end
 
----Write a chunk of application firmware data to the correct partition and location. Data must be streamed sequentially, the IDF does not support out-of-order data as would be the case from e.g. bittorrent.
+---Write a chunk of application firmware data to the correct partition and location.\
+---Data must be streamed sequentially, the IDF does not support out-of-order data\
+---as would be the case from e.g. bittorrent.
 ---@param data string @a string of binary data
 ---@return nil @`nil`. A Lua error may be raised if the data can not be written, e.g. due to the data not being a valid OTA image (the IDF performs some checks in this regard).
 function otaupgrade.write(data) end
@@ -28,12 +30,22 @@ function otaupgrade.write(data) end
 ---@return nil @`nil`. A Lua error may be raised if the image does not pass validation, or no data has been written to the image at all.
 function otaupgrade.complete(reboot) end
 
----When the installed boot loader is built with rollback support, a new application image is by default only booted once. During this "test run" it can perform whatever checks is appropriate (like testing whether it can still reach the update server), and if satisfied can mark itself as valid. Without being marked valid, upon the next reboot the system would "roll back" to the previous version instead.
+---When the installed boot loader is built with rollback support,\
+---a new application image is by default only booted once.\
+---During this "test run" it can perform whatever checks is appropriate\
+---(like testing whether it can still reach the update server),\
+---and if satisfied can mark itself as valid.\
+---Without being marked valid, upon the next reboot the system\
+---would "roll back" to the previous version instead.
 ---@return nil
 function otaupgrade.accept() end
 
----A new firmware may decide that it is not performing as expected, and request an explicit rollback to the previous version. If the call to this function succeeds, the system will reboot without returning from the call.
----Note that it is also possible to roll back to a previous firmware version even after the new version has called `otaupgrade.accept()`.
+---A new firmware may decide that it is not performing as expected,\
+---and request an explicit rollback to the previous version.\
+---If the call to this function succeeds,\
+---the system will reboot without returning from the call.\
+---Note that it is also possible to roll back to a previous firmware version\
+---even after the new version has called `otaupgrade.accept()`.
 function otaupgrade.rollback() end
 
 --*** OW ***
@@ -53,12 +65,16 @@ function ow.check_crc16(buf, inverted_crc0, inverted_crc1, crc) end
 ---@return number @the CRC16 as defined by Dallas Semiconductor
 function ow.crc16(buf, crc) end
 
----Computes a Dallas Semiconductor 8 bit CRC, these are used in the ROM and scratchpad registers.
+---Computes a Dallas Semiconductor 8 bit CRC,\
+---these are used in the ROM and scratchpad registers.
 ---@param buf string @string value, data to be calculated check sum in string
 ---@return number @CRC result as byte
 function ow.crc8(buf) end
 
----Stops forcing power onto the bus. You only need to do this if you used the **power** flag to `ow.write()` or used a `ow.write_bytes()` and aren't about to do another read or write.
+---Stops forcing power onto the bus.\
+---You only need to do this if you used the **power** flag\
+---to `ow.write()` or used a `ow.write_bytes()`\
+---and aren't about to do another read or write.
 ---@param pin integer @IO index
 ---@return nil
 function ow.depower(pin) end
@@ -89,7 +105,8 @@ function ow.reset_search(pin) end
 ---@return string|nil @**rom_code** string with length of 8 upon success. It contains the rom code of slave device. Returns `nil` if search was unsuccessful.
 function ow.search(pin) end
 
----Issues a 1-Wire rom select command. Make sure you do the `ow.reset(pin)` first.
+---Issues a 1-Wire rom select command.\
+---Make sure you do the `ow.reset(pin)` first.
 ---@param pin integer @IO index
 ---@param rom string @string value, len 8, rom code of the slave device
 ---@return nil
@@ -100,25 +117,29 @@ function ow.select(pin, rom) end
 ---@return nil
 function ow.setup(pin) end
 
----Issues a 1-Wire rom skip command, to address all on bus.
+---Issues a 1-Wire rom skip command,\
+---to address all on bus.
 ---@param pin integer @IO index
 ---@return nil
 function ow.skip(pin) end
 
----Sets up the search to find the device type family_code. The search itself has to be initiated with a subsequent call to `ow.search()`.
+---Sets up the search to find the device type family_code.\
+---The search itself has to be initiated with a subsequent call to `ow.search()`.
 ---@param pin integer @IO index
 ---@param family_code integer @byte for family code
 ---@return nil
 function ow.target_search(pin, family_code) end
 
----Writes a byte. If power is 1 then the wire is held high at the end for parasitically powered devices. You are responsible for eventually depowering it by calling `ow.depower()` or doing another read or write.
+---Writes a byte. If power is 1 then the wire is held high at the end for parasitically powered devices.\
+---You are responsible for eventually depowering it by calling `ow.depower()` or doing another read or write.
 ---@param pin integer @IO index
 ---@param v integer @byte to be written to slave device
 ---@param power integer @1 for wire being held high for parasitically powered devices
 ---@return nil
 function ow.write(pin, v, power) end
 
----Writes multi bytes. If power is 1 then the wire is held high at the end for parasitically powered devices. You are responsible for eventually depowering it by calling `ow.depower()` or doing another read or write.
+---Writes multi bytes. If power is 1 then the wire is held high at the end for parasitically powered devices.\
+---You are responsible for eventually depowering it by calling `ow.depower()` or doing another read or write.
 ---@param pin integer @IO index
 ---@param buf string @string to be written to slave device
 ---@param power integer @1 for wire being held high for parasitically powered devices
@@ -225,7 +246,8 @@ function qrcodegen.encodeText(text, options) end
 ---@return integer @Returns the side length in pixels of the given QR Code. The result is in the range [21, 177].
 function qrcodegen.getSize(qrcode) end
 
----Get the color of the pixel at the given coordinates of the QR Code. `x` and `y` must be between 0 and the value returned by `qrcodegen.getSize()`.
+---Get the color of the pixel at the given coordinates of the QR Code.\
+---`x` and `y` must be between 0 and the value returned by `qrcodegen.getSize()`.
 ---@param qrcode string @a QR Code string, as returned by `qrcodegen.encodeText()`.
 ---@param x number @coordinate
 ---@param y number @coordinate
@@ -345,7 +367,8 @@ function sigma_delta.setprescale(channel, value) end
 ---@return nil
 function sigma_delta.setduty(channel, value) end
 
----Routes the sigma-delta channel to the specified pin. Target prescale and duty values should be applied prior to enabling the output with this command.
+---Routes the sigma-delta channel to the specified pin. Target prescale and\
+---duty values should be applied prior to enabling the output with this command.
 ---@param channel integer @0~7, sigma-delta channel index
 ---@param pin integer @IO index
 ---@return nil
@@ -389,7 +412,9 @@ function encoder:read(size) end
 ---@return string @JSON string
 function sjson.encode(tbl, opts) end
 
----This makes a decoder object that can parse a JSON encoded string into a Lua object. A metatable can be specified for all the newly created Lua tables. This allows you to handle each value as it is inserted into each table (by implementing the __newindex method).
+---This makes a decoder object that can parse a JSON encoded string into a Lua object.\
+---A metatable can be specified for all the newly created Lua tables. This allows you to handle\
+---each value as it is inserted into each table (by implementing the __newindex method).
 ---@param opts? SjsonCfg2 @an optional table of options. The possible entries are:
 --- - **depth** the maximum encoding depth needed to encode the table. The default is 20.
 --- - **null** the string value to treat as null.
@@ -402,7 +427,11 @@ function sjson.decoder(opts) end
 ---@return any|nil @The constructed Lua object or `nil` if the decode is not yet complete. If a parse error occurrs during this decode, then an error is thrown and the parse is aborted. The object cannot be used again.
 function decoder:write(str) end
 
----This gets the decoded Lua object, or raises an error if the decode is not yet complete. This can be called multiple times and will return the same object each time. If the decode is not complete, then an error is thrown.
+---This gets the decoded Lua object,\
+---or raises an error if the decode is not yet complete.\
+---This can be called multiple times and will return\
+---the same object each time.\
+---If the decode is not complete, then an error is thrown.
 function decoder:result() end
 
 ---Decode a JSON string to a Lua table.
@@ -426,12 +455,14 @@ function sodium.random.random() end
 ---@return integer @An integer *>= 0* and *< upper_bound*
 function sodium.random.uniform(upper_bound) end
 
----Generates *n* bytes of random data. Wifi must be started, by calling `wifi.start()`, before calling this function.
+---Generates *n* bytes of random data. Wifi must be started,\
+---by calling `wifi.start()`, before calling this function.
 ---@param n number @number of bytes to return.
 ---@return string @A string of *n* random bytes.
 function sodium.random.buf(n) end
 
----Generates a new keypair. Wifi must be started, by calling `wifi.start()`, before calling this function.
+---Generates a new keypair. Wifi must be started,\
+---by calling `wifi.start()`, before calling this function.
 ---@return string public_key
 ---@return string secret_key
 function sodium.crypto_box.keypair() end
@@ -546,21 +577,26 @@ function spi.slave() end
 --*** STRUCT ***
 struct = {}
 
----Returns a string containing the values `d1, d2`, etc. packed according to the format string `fmt`.
+---Returns a string containing the values `d1, d2`, etc.\
+---packed according to the format string `fmt`.
 ---@param fmt string @The format string
 ---@param d1 any @The first data item to be packed
 ---@param d2 any @The second data item to be packed etc.
 ---@return string @The packed string.
 function struct.pack (fmt, d1, d2, ...) end
 
----Returns the values packed in string s according to the format string `fmt`. An optional i marks where in s to start reading (default is 1). After the read values, this function also returns the index in `s` where it stopped reading, which is also where you should start to read the rest of the string.
+---Returns the values packed in string s according to the format string `fmt`.\
+---An optional i marks where in s to start reading (default is 1).\
+---After the read values, this function also returns the index in `s` where it stopped reading,\
+---which is also where you should start to read the rest of the string.
 ---@param fmt string @The format string
 ---@param s string @The string holding the data to be unpacked
 ---@param offset? integer @(optional) The position to start in the string (default is 1)
 ---@return any @All the unpacked data.
 function struct.unpack (fmt, s, offset) end
 
----Returns the size of a string formatted according to the format string `fmt`. The format string should contain neither the option `s` nor the option `c0`.
+---Returns the size of a string formatted according to the format string `fmt`.\
+---The format string should contain neither the option `s` nor the option `c0`.
 ---@param fmt string @The format string
 ---@return integer @The size of the string that would be output in a pack operation with this format string.
 function struct.size (fmt) end
@@ -604,12 +640,14 @@ function time.cal2epoch(calendar) end
 ---   - -1, (Unknown DST status)
 function time.epoch2cal(time) end
 
----Returns current system time in the Unix epoch (seconds from midnight 1970/01/01).
+---Returns current system time in the Unix epoch\
+---(seconds from midnight 1970/01/01).
 ---@return integer sec @seconds since the Unix epoch
 ---@return integer usec @the microseconds part
 function time.get() end
 
----Returns current system time adjusted for the locale in calendar format.
+---Returns current system time adjusted for\
+---the locale in calendar format.
 ---@return table @A table containing the fields:
 --- - **year** 1970 ~ 2038
 --- - **mon** month 1 ~ 12 in current year
@@ -638,7 +676,8 @@ function time.ntpenabled() end
 ---@return nil
 function time.ntpstop() end
 
----Sets system time to a given timestamp in the Unix epoch (seconds from midnight 1970/01/01).
+---Sets system time to a given timestamp in the Unix epoch\
+---(seconds from midnight 1970/01/01).
 ---@param time integer @number of seconds since the Epoch
 ---@return nil
 function time.set(time) end
@@ -691,11 +730,14 @@ function tObj:start() end
 ---@return integer|nil @and its mode. If the timer is not registered, `nil` is returned.
 function tObj:state() end
 
----Stops a running timer, but does not unregister it. A stopped timer can be restarted with `tmr.obj:start()`.
+---Stops a running timer, but does not unregister it.\
+---A stopped timer can be restarted with `tmr.obj:start()`.
 ---@return boolean
 function tObj:stop() end
 
----Stops the timer (if running) and unregisters the associated callback. This isn't necessary for one-shot timers (*tmr.ALARM_SINGLE*), as those automatically unregister themselves when fired.
+---Stops the timer (if running) and unregisters the associated callback.\
+---This isn't necessary for one-shot timers (*tmr.ALARM_SINGLE*),\
+---as those automatically unregister themselves when fired.
 ---@return nil
 function tObj:unregister() end
 
@@ -710,7 +752,8 @@ local tp = {}
 ---@return touch @touch object
 function touch.create(tbl) end
 
----Read the touch sensor counter values for all pads configured in touch.create() method.
+---Read the touch sensor counter values\
+---for all pads configured in touch.create() method.
 ---@return table raw @Lua table of touch sensor counter values per pad
 ---@return table
 function tp:read() end
@@ -899,7 +942,8 @@ function u8g2.u8g2DisplayTypeSPI(bus, cs, dc, res, cb_fn) end
 ---Clears all pixel in the memory frame buffer.
 function u8g2DispObj:clearBuffer() end
 
----Draw a box (filled frame), starting at `x/y` position (upper left edge). The box has width `w` and height `h`.
+---Draw a box (filled frame), starting at `x/y` position (upper left edge).\
+---The box has width `w` and height `h`.
 ---@param x integer @X-position of upper left edge.
 ---@param y integer @Y-position of upper left edge.
 ---@param w integer @Width of the box.
@@ -936,7 +980,8 @@ function u8g2DispObj:drawEllipse(x0, y0, rx, ry, opt) end
 ---@param opt integer|' u8g2.DRAW_ALL'|' u8g2.DRAW_UPPER_RIGHT'|' u8g2.DRAW_UPPER_LEFT'|' u8g2.DRAW_LOWER_LEFT'|' u8g2.DRAW_LOWER_RIGHT' @is optional and defaults to u8g2.DRAW_ALL if omitted.
 function u8g2DispObj:drawFilledEllipse(x0, y0, rx, ry, opt) end
 
----Draw a frame (empty box), starting at `x/y` position (upper left edge). The box has width `w` and height `h`.
+---Draw a frame (empty box), starting at `x/y` position (upper left edge).\
+---The box has width `w` and height `h`.
 ---@param x integer @X-position of upper left edge.
 ---@param y integer @Y-position of upper left edge.
 ---@param w integer @Width of the frame.
@@ -949,7 +994,8 @@ function u8g2DispObj:drawFrame(x, y, w, h) end
 ---@param encoding integer @Unicode value of the character.
 function u8g2DispObj:drawGlyph(x, y, encoding) end
 
----Draw a horizontal line, starting at `x/y` position (left edge). The width (length) of the line is `w` pixel.
+---Draw a horizontal line, starting at `x/y` position (left edge).\
+---The width (length) of the line is `w` pixel.
 ---@param x integer @X-position
 ---@param y integer @Y-position
 ---@param w integer @Length of the horizontal line.
@@ -967,7 +1013,9 @@ function u8g2DispObj:drawLine(x0, y0, x1, y1) end
 ---@param y integer @Position of pixel.
 function u8g2DispObj:drawPixel(x, y) end
 
----Draw a box with round edges, starting at `x/y` position (upper left edge). The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries. Edges have radius `r`. It is required that w >= 2*(r+1) and h >= 2*(r+1).
+---Draw a box with round edges, starting at `x/y` position (upper left edge).\
+---The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries.\
+---Edges have radius `r`. It is required that w >= 2*(r+1) and h >= 2*(r+1).
 ---@param x integer @Position of upper left edge.
 ---@param y integer @Position of upper left edge.
 ---@param w integer @Width of the box.
@@ -975,7 +1023,9 @@ function u8g2DispObj:drawPixel(x, y) end
 ---@param r integer @Radius for the four edges.
 function u8g2DispObj:drawRBox(x, y, w, h, r) end
 
----Draw a frame with round edges, starting at `x/y` position (upper left edge). The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries. Edges have radius `r`. It is required that w >= 2*(r+1) and h >= 2*(r+1).
+---Draw a frame with round edges, starting at `x/y` position (upper left edge).\
+---The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries.\
+---Edges have radius `r`. It is required that w >= 2*(r+1) and h >= 2*(r+1).
 ---@param x integer @Position of upper left edge.
 ---@param y integer @Position of upper left edge.
 ---@param w integer @Width of the frame.
@@ -1006,13 +1056,15 @@ function u8g2DispObj:drawTriangle(x0, y0, x1, y1, x2, y2) end
 ---@return number @The width of the string.
 function u8g2DispObj:drawUTF8(x, y, s) end
 
----Draw a vertical line, starting at `x/y` position (upper end). The height (length) of the line is `h` pixel.
+---Draw a vertical line, starting at `x/y` position (upper end).\
+---The height (length) of the line is `h` pixel.
 ---@param x integer @Top position of the line.
 ---@param y integer @Top position of the line.
 ---@param h integer @The height (length) of the vertical line.
 function u8g2DispObj:drawVLine(x, y, h) end
 
----Draw a XBM Bitmap. Position (`x,y`) is the upper left corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.
+---Draw a XBM Bitmap. Position (`x,y`) is the upper left corner of the bitmap.\
+---XBM contains monochrome, 1-bit bitmaps.
 ---@param x integer @X-position.
 ---@param y integer @Y-position.
 ---@param w integer @Width of the bitmap.
@@ -1020,11 +1072,13 @@ function u8g2DispObj:drawVLine(x, y, h) end
 ---@param bitmap string bitmap string.char()
 function u8g2DispObj:drawXBM(x, y, w, h, bitmap) end
 
----Returns the reference height of the glyphs above the baseline (ascent).
+---Returns the reference height of the glyphs\
+---above the baseline (ascent).
 ---@return number @The ascent of the current font.
 function u8g2DispObj:getAscent() end
 
----Returns the reference height of the glyphs below the baseline (descent).
+---Returns the reference height of the glyphs\
+---below the baseline (descent).
 ---@return number @The descent of the current font.
 function u8g2DispObj:getDescent() end
 
@@ -1041,7 +1095,9 @@ function u8g2DispObj:getUTF8Width(s) end
 ---Send the content of the memory frame buffer to the display.
 function u8g2DispObj:sendBuffer() end
 
----Defines, whether the bitmap functions will write the background color (mode 0/solid, `is_transparent` = 0) or not (mode 1/transparent, `is_transparent` = 1). Default mode is 0 (solid mode).
+---Defines, whether the bitmap functions will write the background color\
+---(mode 0/solid, `is_transparent` = 0) or not (mode 1/transparent, `is_transparent` = 1).\
+---Default mode is 0 (solid mode).
 ---@param is_transparent integer @Enable (1) or disable (0) transparent mode.
 function u8g2DispObj:setBitmapMode(is_transparent) end
 
@@ -1066,7 +1122,8 @@ function u8g2DispObj:setDrawColor(color) end
 ---@param is_enable integer @Enable (1) or disable (0) 180 degree rotation of the display
 function u8g2DispObj:setFlipMode(is_enable) end
 
----Define a u8g2 font for the glyph and string drawing functions. They can be supplied as strings or compiled into the firmware image.
+---Define a u8g2 font for the glyph and string drawing functions.\
+---They can be supplied as strings or compiled into the firmware image.
 ---@param font number|'u8g2.font_6x10_tf'|'u8g2.font_unifont_t_symbols'
 function u8g2DispObj:setFont(font) end
 
@@ -1078,7 +1135,9 @@ function u8g2DispObj:setFont(font) end
 ---|'3' #270 degree Down to top
 function u8g2DispObj:setFontDirection(dir) end
 
----Defines, whether the glyph and string drawing functions will write the background color (mode 0/solid, 'is_transparent' = 0) or not (mode 1/transparent, 'is_transparent' = 1). Default mode is 0 (background color of the characters is overwritten).
+---Defines, whether the glyph and string drawing functions will write the background color\
+---(mode 0/solid, 'is_transparent' = 0) or not (mode 1/transparent, 'is_transparent' = 1).\
+---Default mode is 0 (background color of the characters is overwritten).
 ---@param is_transparent integer @Enable (1) or disable (0) transparent mode.
 function u8g2DispObj:setFontMode(is_transparent) end
 
@@ -1176,12 +1235,14 @@ function uart.setup(id, baud, databits, parity, stopbits, echo_or_pins) end
 ---@return integer stopbits
 function uart.getconfig(id) end
 
----Start the UART. You do not need to call `start()` on the console uart.
+---Start the UART. You do not need to call `start()`\
+---on the console uart.
 ---@param id integer @uart id, except console uart
 ---@return boolean @`true` if uart is started.
 function uart.start(id) end
 
----Stop the UART. You should not call `stop()` on the console uart.
+---Stop the UART. You should not call `stop()`\
+---on the console uart.
 ---@param id integer @uart id, except console uart
 ---@return nil
 function uart.stop(id) end
@@ -1197,12 +1258,16 @@ function uart.stop(id) end
 ---@return nil
 function uart.setmode(id, mode) end
 
----Wait for any data currently in the UART transmit buffers to be written out. It can be useful to call this immediately before a call to `node.sleep()` because otherwise data might not get written until after wakeup.
+---Wait for any data currently in the UART transmit buffers to be written out.\
+---It can be useful to call this immediately before a call to `node.sleep()`\
+---because otherwise data might not get written until after wakeup.
 ---@param id number @uart id
 ---@return nil
 function uart.txflush(id) end
 
----Configure the light sleep wakeup threshold. This is the number of positive edges that must be seen on the UART RX pin before a light sleep wakeup will be triggered.
+---Configure the light sleep wakeup threshold.\
+---This is the number of positive edges that must be seen on the UART RX pin\
+---before a light sleep wakeup will be triggered.
 ---@param id integer @uart id
 ---@param val number @the new value. The minimum value is 3. The default value is undefined.
 ---@return nil
@@ -1273,35 +1338,40 @@ function ucgDispObj:clearScreen() end
 ---@param col_idx integer
 function ucgDispObj:draw90Line(x, y, len, dir, col_idx) end
 
----Draw a filled box. Use current color from index 0. The top-left pixel is at `x`, `y`. The box has width of `w` and the height is `h` pixel.
+---Draw a filled box. Use current color from index 0. The top-left pixel is at `x`, `y`.\
+---The box has width of `w` and the height is `h` pixel.
 ---@param x integer @Top-left position of the box.
 ---@param y integer @Top-left position of the box.
 ---@param w integer @Width of the box.
 ---@param h integer @Height of the box.
 function ucgDispObj:drawBox(x, y, w, h) end
 
----Draw a full circle or a quarter of a circle. Use current color from index 0. The center of the circle is at `x0`, `y0`. The circle has a diameter of `2*rad+1` pixel.
+---Draw a full circle or a quarter of a circle. Use current color from index 0.\
+---The center of the circle is at `x0`, `y0`. The circle has a diameter of `2*rad+1` pixel.
 ---@param x0 integer @Center of the circle.
 ---@param y0 integer @Center of the circle.
 ---@param rad integer @Radius of the circle.
 ---@param option integer|' ucg.DRAW_ALL'|' ucg.DRAW_UPPER_RIGHT'|' ucg.DRAW_UPPER_LEFT'|' ucg.DRAW_LOWER_LEFT'|' ucg.DRAW_LOWER_RIGHT' @One of the following constants:
 function ucgDispObj:drawCircle(x0, y0, rad, option) end
 
----Draw a filled full circle or a quarter of a filled circle. Use current color from index 0. The center of the filled circle is at `x0`, `y0`. The filled circle has a diameter of `2*rad+1` pixel.
+---Draw a filled full circle or a quarter of a filled circle. Use current color from index 0.\
+---The center of the filled circle is at `x0`, `y0`. The filled circle has a diameter of `2*rad+1` pixel.
 ---@param x0 integer @Center of the filled circle.
 ---@param y0 integer @Center of the filled circle.
 ---@param rad integer @Radius of the filled circle.
 ---@param option integer|' ucg.DRAW_ALL'|' ucg.DRAW_UPPER_RIGHT'|' ucg.DRAW_UPPER_LEFT'|' ucg.DRAW_LOWER_LEFT'|' ucg.DRAW_LOWER_RIGHT' @One of the following constants:
 function ucgDispObj:drawDisc(x0, y0, rad, option) end
 
----Draw a rectangle. Use current color from index 0. The top-left pixel is at `x`, `y`. The rectangle has width of `w` and the height is `h` pixel.
+---Draw a rectangle. Use current color from index 0. The top-left pixel is at `x`, `y`.\
+---The rectangle has width of `w` and the height is `h` pixel.
 ---@param x integer @Top-left position of the rectangle.
 ---@param y integer @Top-left position of the rectangle.
 ---@param w integer @Width of the rectangle.
 ---@param h integer @Height of the rectangle.
 function ucgDispObj:drawFrame(x, y, w, h) end
 
----Draw a single character. Use current color from index 0. If the *setFontMode* is `ucg.FONT_MODE_SOLID`, then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`).
+---Draw a single character. Use current color from index 0. If the *setFontMode* is `ucg.FONT_MODE_SOLID`,\
+---then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`).
 ---@param x integer @Reference position of the character.
 ---@param y integer @Reference position of the character.
 ---@param dir integer @One of the values **0** (left to right), **1** (top down), **2** (right left) or **3** (bottom up)
@@ -1309,21 +1379,25 @@ function ucgDispObj:drawFrame(x, y, w, h) end
 ---@return number @Width of the gylph.
 function ucgDispObj:drawGlyph(x, y, dir, encoding) end
 
----Draw a filled box. The upper left position is at `x`, `y`. Dimensions of the box are `w` (width) and `h` (height) pixel. The pixel at the upper left will have the color from index 0, upper right pixel has color from index 1, lower left from index 2 and lower right from index 3. The remaining colors will be interpolated between the four colors.
+---Draw a filled box. The upper left position is at `x`, `y`. Dimensions of the box are `w` (width) and `h` (height) pixel.\
+---The pixel at the upper left will have the color from index 0, upper right pixel has color from index 1,\
+---lower left from index 2 and lower right from index 3. The remaining colors will be interpolated between the four colors.
 ---@param x integer @Start position of the line.
 ---@param y integer @Start position of the line.
 ---@param w integer @Width of the box.
 ---@param h integer @Height of the box.
 function ucgDispObj:drawGradientBox(x, y, w, h) end
 
----Draw a horizontal or vertical line. The line will start at `x`, `y` and has a total of `len` pixel. The pixel at `x`, `y` will have the color from index 0. The color will be changed until it matches the color of index 1.
+---Draw a horizontal or vertical line. The line will start at `x`, `y` and has a total of `len` pixel.\
+---The pixel at `x`, `y` will have the color from index 0. The color will be changed until it matches the color of index 1.
 ---@param x integer @Start position of the line.
 ---@param y integer @Start position of the line.
 ---@param len integer @Length of the line.
 ---@param dir integer @One of the values **0** (left to right), **1** (top down), **2** (right left) or **3** (bottom up)
 function ucgDispObj:drawGradientLine(x, y, len, dir) end
 
----Draw a horizontal line. Use current color from index 0. The leftmost pixel is at `x`, `y` and the rightmost pixel is at `x+len-1`, `y`
+---Draw a horizontal line. Use current color from index 0. The leftmost pixel is at `x`, `y`\
+---and the rightmost pixel is at `x+len-1`, `y`
 ---@param x integer @Left position of the horizontal line.
 ---@param y integer @Left position of the horizontal line.
 ---@param len integer @Length of the line.
@@ -1341,7 +1415,10 @@ function ucgDispObj:drawLine(x1, y1, x2, y2) end
 ---@param y integer @Position of pixel.
 function ucgDispObj:drawPixel(x, y) end
 
----Draw a box/frame with round edges, starting at x/y position (upper left edge). The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries. Edges have radius `r`. It is required that `w >= 2*(r+1)` and `h >= 2*(r+1)`. This condition is not checked. Behavior is undefined if `w` or `h` is smaller than `2*(r+1)`. Use current color from index 0.
+---Draw a box/frame with round edges, starting at x/y position (upper left edge).\
+---The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries.\
+---Edges have radius `r`. It is required that `w >= 2*(r+1)` and `h >= 2*(r+1)`. This condition is not checked.\
+---Behavior is undefined if `w` or `h` is smaller than `2*(r+1)`. Use current color from index 0.
 ---@param x integer @Position of upper left edge.
 ---@param y integer @Position of upper left edge.
 ---@param w integer @Width of the box.
@@ -1349,7 +1426,10 @@ function ucgDispObj:drawPixel(x, y) end
 ---@param r integer @Radius for the four edges.
 function ucgDispObj:drawRBox(x, y, w, h, r) end
 
----Draw a box/frame with round edges, starting at x/y position (upper left edge). The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries. Edges have radius `r`. It is required that `w >= 2*(r+1)` and `h >= 2*(r+1)`. This condition is not checked. Behavior is undefined if `w` or `h` is smaller than `2*(r+1)`. Use current color from index 0.
+---Draw a box/frame with round edges, starting at x/y position (upper left edge).\
+---The box/frame has width `w` and height `h`. Parts of the box can be outside of the display boundaries.\
+---Edges have radius `r`. It is required that `w >= 2*(r+1)` and `h >= 2*(r+1)`. This condition is not checked.\
+---Behavior is undefined if `w` or `h` is smaller than `2*(r+1)`. Use current color from index 0.
 ---@param x integer @Position of upper left edge.
 ---@param y integer @Position of upper left edge.
 ---@param w integer @Width of the frame.
@@ -1357,7 +1437,8 @@ function ucgDispObj:drawRBox(x, y, w, h, r) end
 ---@param r integer @Radius for the four edges.
 function ucgDispObj:drawRFrame(x, y, w, h, r) end
 
----Draw a string. Use current color from index 0. If the *setFontMode* is `ucg.FONT_MODE_SOLID`, then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`).
+---Draw a string. Use current color from index 0. If the *setFontMode* is `ucg.FONT_MODE_SOLID`,\
+---then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`).
 ---@param x integer @Reference position of the string.
 ---@param y integer @Reference position of the string.
 ---@param dir integer @One of the values **0** (left to right), **1** (top down), **2** (right left) or **3** (bottom up)
@@ -1365,7 +1446,7 @@ function ucgDispObj:drawRFrame(x, y, w, h, r) end
 ---@return number @The width of the string.
 function ucgDispObj:drawString(x, y, dir, str) end
 
----Draw a filled tetragon (a shape with four corners), defined by four edge points. Use current color from index 0.
+---Draw a filled tetragon (a shape with four corners), defined by four edge points. Use current color from index 0.\
 ---This procedure will only draw "simple"/convex tetragons. The result will be undefined, if the tetragon is not convex.
 ---@param x0 integer @Point 0 of the tetragon.
 ---@param y0 integer @Point 0 of the tetragon.
@@ -1386,17 +1467,23 @@ function ucgDispObj:drawTetragon(x0, y0, x1, y1, x2, y2, x3, y3) end
 ---@param y2 integer @Point 2 of the triangle.
 function ucgDispObj:drawTriangle(x0, y0, x1, y1, x2, y2) end
 
----Draw a vertical line. Use current color from index 0. The topmost pixel is at `x`, `y`. The bottom pixel is at `x,y+len-1`
+---Draw a vertical line. Use current color from index 0.\
+---The topmost pixel is at `x`, `y`. The bottom pixel is at `x,y+len-1`
 ---@param x integer @Top position of the vertical line.
 ---@param y integer @Top position of the vertical line.
 ---@param len integer @Length of the vertical line.
 function ucgDispObj:drawVLine(x, y, len) end
 
----Returns the height of the character 'A' or the number '1' above the baseline. For the font in the example below, getFontAscent returns the value 24.
+---Returns the height of the character 'A' or the number '1' above the baseline.\
+---For the font in the example below, getFontAscent returns the value 24.
 ---@return number @The height of the font.
 function ucgDispObj:getFontAscent() end
 
----Some glphys of a font might are extended below the baseline ('g' or ')'). This procedure returns the extension of these characters above baseline. If the extension is below the baseline (which is usually the case) then a negative number is returned. In the example below, the returned descent value is "-7".
+---Some glphys of a font might are extended below the baseline ('g' or ')').\
+---This procedure returns the extension of these characters above baseline.\
+---If the extension is below the baseline (which is usually the case)\
+---then a negative number is returned.\
+---In the example below, the returned descent value is "-7".
 ---@return number @The extension of the characters below the baseline.
 function ucgDispObj:getFontDescent() end
 
@@ -1404,7 +1491,9 @@ function ucgDispObj:getFontDescent() end
 ---@return number @The height of the display.
 function ucgDispObj:getHeight() end
 
----Returns the number of pixels, required for the text in `*s` with the current font settings. Some extra pixels are added in front and after the text as defined in the current font.
+---Returns the number of pixels, required for the text in `*s`\
+---with the current font settings. Some extra pixels are added\
+---in front and after the text as defined in the current font.
 ---@param str string string
 ---@return number @Width of the text in pixel.
 function ucgDispObj:getStrWidth(str) end
@@ -1413,26 +1502,36 @@ function ucgDispObj:getStrWidth(str) end
 ---@return number @The width of the display.
 function ucgDispObj:getWidth() end
 
----Print text or values. The position of the output is defined by `setPrintPos()`, the writing direction is defined by `setPrintDir()`. Values and text will have the current color from index 0. If the setFontMode is `ucg.FONT_MODE_SOLID`, then the background color is defined by color index 1 (`ucg.setColor(1, r, g, b)`). For best results use `h`, `m` or `8` fonts with `ucg.FONT_MODE_SOLID`
+---Print text or values. The position of the output is defined by `setPrintPos()`,\
+---the writing direction is defined by `setPrintDir()`.\
+---Values and text will have the current color from index 0.\
+---If the setFontMode is `ucg.FONT_MODE_SOLID`, then the background color\
+---is defined by color index 1 (`ucg.setColor(1, r, g, b)`).\
+---For best results use `h`, `m` or `8` fonts with `ucg.FONT_MODE_SOLID`
 ---@param str string @string
 ---@return number @Number of characters.
 function ucgDispObj:print(str) end
 
---- Defines the drawing area for all other commands. Graphics commands are "clipped" against this area. By default this is the complete visible area of the screen.
+--- Defines the drawing area for all other commands.\
+---Graphics commands are "clipped" against this area.\
+---By default this is the complete visible area of the screen.
 ---@param x integer @Upper left position of the drawing area.
 ---@param y integer @Upper left position of the drawing area.
 ---@param w integer @Width of the drawing area. Behavior is undefined for w=0 or h=0.
 ---@param h integer @Height of the drawing area.
 function ucgDispObj:setClipRange(x, y, w, h) end
 
----Defines up to four different colors for the graphics primitives. Most commands will use the color at index position 0. If the index (first argument) is skipped, then the color is stored as index 0.
+---Defines up to four different colors for the graphics primitives.\
+---Most commands will use the color at index position 0.\
+---If the index (first argument) is skipped, then the color is stored as index 0.
 ---@param idx integer @The index of the color being set. See each drawing function to determine the index to use. (Default: 0)
 ---@param r integer @Red,
 ---@param g integer @green, and
 ---@param b integer @blue component of the color. Color range is always from 0 to 255 for each of the color components.
 function ucgDispObj:setColor(idx, r, g, b) end
 
----Define a ucg font for the glyph and string drawing functions. They are available as `ucg.<font_name>` in Lua.
+---Define a ucg font for the glyph and string drawing functions.\
+---They are available as `ucg.<font_name>` in Lua.
 ---@param font integer|'ucg.font_7x13B_tr'|'ucg.font_helvB08_hr'|'ucg.font_helvB10_hr'|'ucg.font_helvB12_hr'|'ucg.font_helvB18_hr'|'ucg.font_ncenB24_tr'|'ucg.font_ncenR12_tr'|'ucg.font_ncenR14_hr' @constant to identify pre-compiled font
 ---@return nil
 function ucgDispObj:setFont(font) end
@@ -1442,19 +1541,24 @@ function ucgDispObj:setFont(font) end
 ---@return number @0, if the init procedure fails.
 function ucgDispObj:setFontMode(fontmode) end
 
----Change the reference position for the character output procedures *print*, *drawString* and *drawGlyph*.
+---Change the reference position for the character output procedures\
+---*print*, *drawString* and *drawGlyph*.
 function ucgDispObj:setFontPosBaseline() end
 
----Change the reference position for the character output procedures *print*, *drawString* and *drawGlyph*.
+---Change the reference position for the character output procedures\
+---*print*, *drawString* and *drawGlyph*.
 function ucgDispObj:setFontPosBottom() end
 
----Change the reference position for the character output procedures *print*, *drawString* and *drawGlyph*.
+---Change the reference position for the character output procedures\
+---*print*, *drawString* and *drawGlyph*.
 function ucgDispObj:setFontPosCenter() end
 
----Change the reference position for the character output procedures *print*, *drawString* and *drawGlyph*.
+---Change the reference position for the character output procedures\
+---*print*, *drawString* and *drawGlyph*.
 function ucgDispObj:setFontPosTop() end
 
----This command will reset the clip area to the full display size. It will undo any settings from *setClipRange*.
+---This command will reset the clip area to the full display size.\
+---It will undo any settings from *setClipRange*.
 function ucgDispObj:setMaxClipRange() end
 
 --- This command will set the print direction for the following "print" commands.
@@ -1466,19 +1570,28 @@ function ucgDispObj:setPrintDir(dir) end
 ---@param y integer @Reference position for the characters of the next print command.
 function ucgDispObj:setPrintPos(x, y) end
 
----Rotate the screen by 90 degree. Depending on the aspect ratio of the display, this will put the display in portrait or landscape mode.
+---Rotate the screen by 90 degree.\
+---Depending on the aspect ratio of the display,\
+---this will put the display in portrait or landscape mode.
 function ucgDispObj:setRotate90() end
 
----Rotate the screen by 180 degree. Depending on the aspect ratio of the display, this will put the display in portrait or landscape mode.
+---Rotate the screen by 180 degree.\
+---Depending on the aspect ratio of the display,\
+---this will put the display in portrait or landscape mode.
 function ucgDispObj:setRotate180() end
 
----Rotate the screen by 270 degree. Depending on the aspect ratio of the display, this will put the display in portrait or landscape mode.
+---Rotate the screen by 270 degree.\
+---Depending on the aspect ratio of the display,\
+---this will put the display in portrait or landscape mode.
 function ucgDispObj:setRotate270() end
 
----Scale everything by 2. This includes position values, lines, fonts, circles, etc. As long as scaling is active, the screen rotation commands must not be used.
+---Scale everything by 2. This includes position values,\
+---lines, fonts, circles, etc. As long as scaling is active,\
+---the screen rotation commands must not be used.
 function ucgDispObj:setScale2x2() end
 
----Removes the clip window. All graphics commands can now write to the entire screen.
+---Removes the clip window.\
+---All graphics commands can now write to the entire screen.
 function ucgDispObj:undoClipRange() end
 
 ---Restore the original display orientation.
@@ -1566,7 +1679,9 @@ function wifi.stop() end
 ---@return nil
 function wifi.sta.config(station_config, save) end
 
----Connects to the configured AP in station mode. You only ever need to call this if auto-connect was disabled in wifi.sta.config().
+---Connects to the configured AP in station mode.\
+---You only ever need to call this if auto-connect\
+---was disabled in `wifi.sta.config()`.
 ---@return nil
 function wifi.sta.connect() end
 
@@ -1631,7 +1746,8 @@ function wifi.sta.scan(cfg, callback) end
 ---@field gateway string
 ---@field dns string
 
----Sets IP address, netmask, gateway, dns address in station mode.
+---Sets IP address, netmask, gateway, dns address\
+---in station mode.
 ---@param cfg Setip32 @table to hold configuration:
 --- - **ip** device ip address.
 --- - **netmask** network netmask.
@@ -1640,7 +1756,8 @@ function wifi.sta.scan(cfg, callback) end
 ---@return nil
 function wifi.sta.setip(cfg) end
 
----Sets station hostname. Must be called before wifi.sta.connect(). Options set by this function are not saved to flash.
+---Sets station hostname. Must be called before wifi.sta.connect().\
+---Options set by this function are not saved to flash.
 ---@param hostname string @hostname must only contain letters, numbers and hyphens('-') and be 32 characters or less with first and last character being alphanumeric
 ---@return boolean
 function wifi.sta.sethostname(hostname) end
@@ -1714,7 +1831,8 @@ local buffer =  {}
 ---@field pin integer
 ---@field data any
 
----Send data to up to 8 led strip using its native format which is generally Green,Red,Blue for RGB strips and Green,Red,Blue,White for RGBW strips.
+---Send data to up to 8 led strip using its native format which is generally\
+---Green,Red,Blue for RGB strips and Green,Red,Blue,White for RGBW strips.
 ---@param tbl WS2812write @Variable number of tables, each describing a single strip. Required elements are:
 --- - **pin** IO index
 --- - **data** payload to be sent to one or more WS2812 like leds through GPIO2. Payload type could be:
@@ -1747,16 +1865,19 @@ function buffer:set(index, color) end
 ---@return integer
 function buffer:size() end
 
----Fill the buffer with the given color. The number of given bytes must match the number of *bytesPerLed* of the buffer
+---Fill the buffer with the given color.\
+---The number of given bytes must match the number of *bytesPerLed* of the buffer
 ---@param color number @bytes of the color, you should pass as many arguments as *bytesPerLed*
 ---@return nil
 function buffer:fill(color) end
 
----Returns the contents of the buffer (the pixel values) as a string. This can then be saved to a file or sent over a network.
+---Returns the contents of the buffer (the pixel values) as a string.\
+---This can then be saved to a file or sent over a network.
 ---@return string @A string containing the pixel values.
 function buffer:dump() end
 
----Inserts a string (or a buffer) into another buffer with an offset.  The buffer must have the same number of colors per led or an error will be thrown.
+---Inserts a string (or a buffer) into another buffer with an offset.\
+---The buffer must have the same number of colors per led or an error will be thrown.
 ---@param source string|any @the pixel values to be set into the buffer. This is either a string or a buffer.
 ---@param offset? integer @(optional) the offset where the source is to be placed in the buffer. Default is 1. Negative values can be used.
 ---@return nil
@@ -1772,7 +1893,8 @@ function buffer:mix(factor1, buffer1, ...) end
 ---@return integer @An integer which is the sum of all the pixel values.
 function buffer:power() end
 
----Fade in or out. Defaults to out. Multiply or divide each byte of each led with/by the given value. Useful for a fading effect.
+---Fade in or out. Defaults to out. Multiply or divide each byte of each led with/by the given value.\
+---Useful for a fading effect.
 ---@param value number @value by which to divide or multiply each byte
 ---@param direction? integer|' ws2812.FADE_IN'|' ws2812.FADE_OUT' @(optional) direction
 ---@return nil
@@ -1788,7 +1910,8 @@ function buffer:fade(value, direction) end
 ---@return nil
 function buffer:shift(value, mode, i, j) end
 
----This implements the extraction function like string.sub. The indexes are in leds and all the same rules apply.
+---This implements the extraction function like string.sub.\
+---The indexes are in leds and all the same rules apply.
 ---@param i integer @This is the start of the extracted data. Negative values can be used.
 ---@param j? integer @(optional) this is the end of the extracted data. Negative values can be used. The default is -1.
 ---@return any @A buffer containing the extracted piece.
