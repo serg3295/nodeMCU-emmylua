@@ -105,7 +105,8 @@ function ow.read_bytes(pin, size) end
 ---otherwise held low for more than 250 µS
 function ow.reset(pin) end
 
----Clears the search state so that it will start from the beginning again.
+---Clears the search state so that it will start\
+---from the beginning again.
 ---@param pin integer @IO index
 ---@return nil
 function ow.reset_search(pin) end
@@ -218,11 +219,14 @@ function pulsecntObj:chan1Config(pulse_gpio_num, ctrl_gpio_num, pos_mode, neg_mo
 ---@return nil
 function pulsecntObj:setThres(thr0, thr1) end
 
----Set a filter to ignore pulses on the pulse_gpio_num pin and the ctrl_gpio_num to avoid short glitches.\
----Any pulses lasting shorter than this will be ignored.
+---Set a filter to ignore pulses on the pulse_gpio_num pin and\
+---the ctrl_gpio_num to avoid short glitches. Any pulses \
+---lasting shorter than this will be ignored.
 ---@param clkCycleCnt integer @0 to 1023 allowed.
----Any pulses lasting shorter than this will be ignored. A pulse needs to be high or low for longer\
----than this filter clock cycle. Clock is 80Mhz APB clock, so one cycle is 1000/80,000,000 = 0.0000125 ms.\
+---Any pulses lasting shorter than this will be ignored.\
+---A pulse needs to be high or low for longer\
+---than this filter clock cycle. Clock is 80Mhz APB clock,\
+---so one cycle is 1000/80,000,000 = 0.0000125 ms.\
 ---The longest value of 1023 cycles = 0.0127875 ms.
 ---@return nil
 function pulsecntObj:setFilter(clkCycleCnt) end
@@ -425,10 +429,12 @@ local decoder = {}
 ---@field null string
 ---@field metatable table
 
----This creates an encoder object that can convert a Lua object into a JSON encoded string.
+---This creates an encoder object that can convert a Lua object\
+---into a JSON encoded string.
 ---@param tbl table @data to encode
 ---@param opts? SjsonCfg1 @an optional table of options. The possible entries are:
---- - **depth** the maximum encoding depth needed to encode the table. The default is 20.
+--- - **depth** the maximum encoding depth needed to encode the table.\
+---The default is 20.
 --- - **null** the string value to treat as null.
 ---@return sjsonenc @A sjson.encoder object.
 function sjson.encoder(tbl, opts) end
@@ -474,10 +480,13 @@ function decoder:result() end
 ---Decode a JSON string to a Lua table.
 ---@param str string @JSON string to decode
 ---@param opts? SjsonCfg2 @an optional table of options. The possible entries are:
---- - **depth** the maximum encoding depth needed to encode the table. The default is 20.
+--- - **depth** the maximum encoding depth needed to encode the table.\
+---The default is 20.
 --- - **null** the string value to treat as null.
---- - **metatable** a table to use as the metatable for all the new tables in the returned object.
----@return table @Lua table representation of the JSON data. If the string is not valid JSON, then an error is thrown.
+--- - **metatable** a table to use as the metatable\
+---for all the new tables in the returned object.
+---@return table @Lua table representation of the JSON data.
+---If the string is not valid JSON, then an error is thrown.
 function sjson.decode(str, opts) end
 
 --*** SODIUM ***
@@ -516,7 +525,8 @@ function sodium.crypto_box.seal(message, public_key) end
 ---@param ciphertext any @the encrypted message.
 ---@param public_key string @the public key the message was encrypted with.
 ---@param secret_key string @the secret key corresponding to the specified public key.
----@return any|nil @The decrypted plain text of the message. Returns `nil` if the *ciphertext* could not be decrypted.
+---@return any|nil @The decrypted plain text of the message.
+---Returns `nil` if the *ciphertext* could not be decrypted.
 function sodium.crypto_box.seal_open(ciphertext, public_key, secret_key) end
 
 --*** SPI ***
@@ -573,8 +583,8 @@ function busmaster:close() end
 ---defaults to 0 if omitted
 --- - **address_bits** amount of bits in address phase (0-64),\
 ---defaults to 0 if omitted
---- - **dummy_bits** amount of dummy bits to insert address and data phase,\
----defaults to 0 if omitted
+--- - **dummy_bits** amount of dummy bits to insert address\
+--- and data phase, defaults to 0 if omitted
 --- - **cs_ena_pretrans**, optional
 --- - **cs_ena_posttrans**, optional
 --- - **duty_cycle_pos**, optional
@@ -1061,7 +1071,8 @@ function u8g2DispObj:drawHLine(x, y, w) end
 ---@param y1 integer @Y-position of the second point.
 function u8g2DispObj:drawLine(x0, y0, x1, y1) end
 
----Draw a pixel at the specified `x/y` position. Position (0,0) is at the upper left corner of the display.
+---Draw a pixel at the specified `x/y` position.\
+---Position (0,0) is at the upper left corner of the display.
 ---@param x integer @Position of pixel.
 ---@param y integer @Position of pixel.
 function u8g2DispObj:drawPixel(x, y) end
@@ -1149,8 +1160,8 @@ function u8g2DispObj:getUTF8Width(s) end
 function u8g2DispObj:sendBuffer() end
 
 ---Defines, whether the bitmap functions will write the background color\
----(mode 0/solid, `is_transparent` = 0) or not (mode 1/transparent, `is_transparent` = 1).\
----Default mode is 0 (solid mode).
+---(mode 0/solid, `is_transparent` = 0) or not (mode 1/transparent,\
+---`is_transparent` = 1). Default mode is 0 (solid mode).
 ---@param is_transparent integer @Enable (1) or disable (0) transparent mode.
 function u8g2DispObj:setBitmapMode(is_transparent) end
 
@@ -1194,16 +1205,20 @@ function u8g2DispObj:setFontDirection(dir) end
 ---@param is_transparent integer @Enable (1) or disable (0) transparent mode.
 function u8g2DispObj:setFontMode(is_transparent) end
 
----Change the reference position for the glyph and string draw functions to "baseline".
+---Change the reference position for the glyph and\
+---string draw functions to "baseline".
 function u8g2DispObj:setFontPosBaseline() end
 
----Change the reference position for the glyph and string draw functions to "bottom".
+---Change the reference position for the glyph and\
+---string draw functions to "bottom".
 function u8g2DispObj:setFontPosBottom() end
 
----Change the reference position for the glyph and string draw functions to "top".
+---Change the reference position for the glyph and\
+---string draw functions to "top".
 function u8g2DispObj:setFontPosTop() end
 
----Change the reference position for the glyph and string draw functions to "center".
+---Change the reference position for the glyph and\
+---string draw functions to "center".
 function u8g2DispObj:setFontPosCenter() end
 
 ---Set ascent and descent calculation mode to "highest and lowest glyph".
@@ -1318,9 +1333,9 @@ function uart.setmode(id, mode) end
 ---@return nil
 function uart.txflush(id) end
 
----Configure the light sleep wakeup threshold.\
----This is the number of positive edges that must be seen on the UART RX pin\
----before a light sleep wakeup will be triggered.
+---Configure the light sleep wakeup threshold. This is the number of \
+---positive edges that must be seen on the UART RX pin before\
+---a light sleep wakeup will be triggered.
 ---@param id integer @uart id
 ---@param val number @the new value. The minimum value is 3. The default value is undefined.
 ---@return nil
@@ -1433,16 +1448,16 @@ function ucgDispObj:drawFrame(x, y, w, h) end
 function ucgDispObj:drawGlyph(x, y, dir, encoding) end
 
 ---Draw a filled box. The upper left position is at `x`, `y`. Dimensions of the box are `w` (width) and `h` (height) pixel.\
----The pixel at the upper left will have the color from index 0, upper right pixel has color from index 1,\
----lower left from index 2 and lower right from index 3. The remaining colors will be interpolated between the four colors.
+---The pixel at the upper left will have the color from index 0, upper right pixel has color from index 1, lower left\
+---from index 2 and lower right from index 3. The remaining colors will be interpolated between the four colors.
 ---@param x integer @Start position of the line.
 ---@param y integer @Start position of the line.
 ---@param w integer @Width of the box.
 ---@param h integer @Height of the box.
 function ucgDispObj:drawGradientBox(x, y, w, h) end
 
----Draw a horizontal or vertical line. The line will start at `x`, `y` and has a total of `len` pixel.\
----The pixel at `x`, `y` will have the color from index 0. The color will be changed until it matches the color of index 1.
+---Draw a horizontal or vertical line. The line will start at `x`, `y` and has a total of `len` pixel. The pixel at `x`, `y`\
+---will have the color from index 0. The color will be changed until it matches the color of index 1.
 ---@param x integer @Start position of the line.
 ---@param y integer @Start position of the line.
 ---@param len integer @Length of the line.
@@ -1643,8 +1658,8 @@ function ucgDispObj:setRotate270() end
 ---the screen rotation commands must not be used.
 function ucgDispObj:setScale2x2() end
 
----Removes the clip window.\
----All graphics commands can now write to the entire screen.
+---Removes the clip window. All graphics commands\
+---can now write to the entire screen.
 function ucgDispObj:undoClipRange() end
 
 ---Restore the original display orientation.
@@ -1828,12 +1843,13 @@ function wifi.sta.sethostname(hostname) end
 ---@field max integer
 ---@field beacon integer
 
----Configures the AP. The WiFi mode must be set to wifi.SOFTAP or wifi.STATIONAP before this function can be used.
+---Configures the AP. The WiFi mode must be set to wifi.SOFTAP or wifi.STATIONAP\
+---before this function can be used.
 ---@param cfg APconfig @table to hold configuration:
 --- - **ssid** SSID chars 1-32
 --- - **pwd** password chars 8-64
---- - **auth** authentication method, one of wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK (default),\
----wifi.AUTH_WPA_WPA2_PSK
+--- - **auth** authentication method, one of wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK,\
+---wifi.AUTH_WPA2_PSK (default), wifi.AUTH_WPA_WPA2_PSK
 --- - **channel** channel number 1-14 default = 11
 --- - **hidden** false = not hidden, true = hidden, default = false
 --- - **max** maximum number of connections 1-4 default=4
@@ -1918,7 +1934,8 @@ function buffer:get(index) end
 ---Set the value at the given position
 ---@param index integer @position in the buffer (1 for the first led)
 ---@param color number|any @payload of the color
---- - **number, number, ...** you should pass as many arguments as *bytesPerLed*
+--- - **number, number, ...** you should pass\
+---as many arguments as *bytesPerLed*
 --- - **table** should contains *bytesPerLed* numbers
 --- - **string** should contains *bytesPerLed* bytes
 ---@return nil

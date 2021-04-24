@@ -1328,7 +1328,9 @@ function file.getcontents(filename) end
 
 ---Lists all files in the file system.
 ---@param pattern string @interpreted as a traditional Lua pattern, not, say, a UNIX shell glob
----@return table @a Lua table which contains all *{file name: file size}* pairs, if no pattern given. If a pattern is given, only those file names matching the pattern will be included in the resulting table. `file.list` will throw any errors encountered during pattern matching.
+---@return table @a Lua table which contains all *{file name: file size}* pairs, if no pattern given.
+---If a pattern is given, only those file names matching the pattern will be included in\
+---the resulting table. `file.list` will throw any errors encountered during pattern matching.
 function file.list(pattern) end
 
 ---Mounts a FatFs volume on SD card. Function is only available when FatFS\
@@ -1379,7 +1381,8 @@ function file.rename(oldname, newname) end
 ---@return table @table containing file attributes. Elements of the table are:
 --- - **size** - file size in bytes
 --- - **name** - file name
---- - **time** - table with time stamp information. Default is 1970-01-01 00:00:00 in case time stamps are not supported (on SPIFFS).
+--- - **time** - table with time stamp information. Default is\
+---1970-01-01 00:00:00 in case time stamps are not supported (on SPIFFS).
 ---   -    year mon day hour min sec
 --- - **is_dir** - flag true if item is a directory, otherwise false
 --- - **is_rdonly** - flag true if item is read-only, otherwise false
@@ -1412,17 +1415,25 @@ function fObj:flush() end
 
 ---Read content from the open file.
 ---@param n_or_char? integer @(optional) >
---- - if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
---- - if passed a number **n**, then read up to **n** bytes or the entire file (whichever is smaller).
---- - if passed a string containing the single character **char**, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+--- - if nothing passed in, then read up to FILE_READ_CHUNK bytes\
+---or the entire file (whichever is smaller).
+--- - if passed a number **n**, then read up to **n** bytes\
+---or the entire file (whichever is smaller).
+--- - if passed a string containing the single character **char**,\
+---then read until char appears next in the file,\
+---FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil
 function file.read(n_or_char) end
 
 ---Read content from the open file.
 ---@param n_or_char integer @>
---- - if nothing passed in, then read up to FILE_READ_CHUNK bytes or the entire file (whichever is smaller).
---- - if passed a number **n**, then read up to **n** bytes or the entire file (whichever is smaller).
---- - if passed a string containing the single character **char**, then read until char appears next in the file, FILE_READ_CHUNK bytes have been read, or EOF is reached.
+--- - if nothing passed in, then read up to FILE_READ_CHUNK bytes\
+---or the entire file (whichever is smaller).
+--- - if passed a number **n**, then read up to **n** bytes\
+---or the entire file (whichever is smaller).
+--- - if passed a string containing the single character **char**,\
+---then read until char appears next in the file,\
+---FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil @File content as a string, or `nil` when EOF
 function fObj:read(n_or_char) end
 

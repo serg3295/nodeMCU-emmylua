@@ -142,10 +142,12 @@ local encoder = {}
 ---@class sjsondec
 local decoder = {}
 
----This creates an encoder object that can convert a Lua object into a JSON encoded string.
+---This creates an encoder object that can convert a Lua object\
+---into a JSON encoded string.
 ---@param tbl table @data to encode
 ---@param opts? table @an optional table of options. The possible entries are:
---- - **depth** - the maximum encoding depth needed to encode the table. The default is 20.
+--- - **depth** - the maximum encoding depth needed to encode the table.\
+---The default is 20.
 --- - **null** - the string value to treat as null.
 ---@return sjsonenc @A `sjson.encoder` object.
 function sjson.encoder(tbl, opts) end
@@ -158,7 +160,8 @@ function encoder:read(size) end
 ---Encode a Lua table to a JSON string.
 ---@param tbl table @data to encode
 ---@param opts? table @an optional table of options. The possible entries are:
---- - **depth** - the maximum encoding depth needed to encode the table. The default is 20.
+--- - **depth** - the maximum encoding depth needed to encode the table.\
+---The default is 20.
 --- - **null** - the string value to treat as null.
 ---@return string @JSON string
 function sjson.encode(tbl, opts) end
@@ -183,9 +186,11 @@ function decoder:result() end
 ---Decode a JSON string to a Lua table.
 ---@param str string @JSON string to decode
 ---@param opts? table @n optional table of options. The possible entries are:
---- - **depth** - the maximum encoding depth needed to encode the table. The default is 20.
+--- - **depth** - the maximum encoding depth needed to encode the table.\
+---The default is 20.
 --- - **null** - the string value to treat as null.
---- - **metatable** - a table to use as the metatable for all the new tables in the returned object.
+--- - **metatable** - a table to use as the metatable\
+---for all the new tables in the returned object.
 ---@return table @Lua table representation of the JSON data
 function sjson.decode(str, opts) end
 
@@ -796,8 +801,10 @@ function wifi.getchannel() end
 ---  - **country** Country code, 2 character string.
 ---  - **start_ch** Starting channel.
 ---  - **end_ch** Ending channel.
----  - **policy** The policy parameter determines which country info configuration to use, country info given to station by AP or local configuration.
----    - **0** - Country policy is auto, NodeMCU will use the country info provided by AP that the station is connected to.
+---  - **policy** The policy parameter determines which country info configuration to use,\
+---country info given to station by AP or local configuration.
+---    - **0** - Country policy is auto, NodeMCU will use the country info provided by AP\
+---that the station is connected to.
 ---    - **1** - Country policy is manual, NodeMCU will use locally configured country info.
 function wifi.getcountry() end
 
@@ -813,14 +820,16 @@ function wifi.getmode() end
 ---@return integer @**wifi.PHYMODE_B, wifi.PHYMODE_G** or **wifi.PHYMODE_N**.
 function wifi.getphymode() end
 
----Configures whether or not WiFi automatically goes to sleep in *NULL_MODE*.\
----Enabled by default.
+---Configures whether or not WiFi automatically goes to sleep\
+---in *NULL_MODE*. Enabled by default.
 ---@param enable? boolean @(optional) WiFi auto sleep in NULL_MODE
 ---|>'true' #Enable WiFi auto sleep in NULL_MODE.
 ---|'false' #Disable WiFi auto sleep in NULL_MODE.
 ---@return any @sleep_enabled Current/New *NULL_MODE* sleep setting.
---- - If `wifi.nullmodesleep()` is called with no arguments, current setting is returned.
---- - If `wifi.nullmodesleep()` is called with enable argument, confirmation of new setting is returned.
+--- - If `wifi.nullmodesleep()` is called with no arguments,\
+---current setting is returned.
+--- - If `wifi.nullmodesleep()` is called with enable argument,\
+---confirmation of new setting is returned.
 function wifi.nullmodesleep(enable) end
 
 ---Wake up WiFi from suspended state or cancel pending wifi suspension.
@@ -835,13 +844,18 @@ function wifi.resume(resume_cb) end
 ---@field policy integer
 
 ---Set the current country info.
----@param country_info SetCountry @This table contains the country info configuration. (If a blank table is passed to this function, default values will be configured.)
+---@param country_info SetCountry @This table contains the country info configuration.
+---(If a blank table is passed to this function, default values will be configured.)
 ---  - **country** Country code, 2 character string containing the country code. (Default:"CN")
 ---  - **start_ch** Starting channel (range:1-14). (Default:1)
 ---  - **end_ch** Ending channel, must not be less than starting channel (range:1-14). (Default:13)
----  - **policy** The policy parameter determines which country info configuration to use, country info given to station by AP or local configuration. (default: *wifi.COUNTRY_AUTO*)
----    - wifi.COUNTRY_AUTO - Country policy is auto, NodeMCU will use the country info provided by AP that the station is connected to. While in stationAP mode, beacon/probe respose will reflect the country info of the AP that the station is connected to.
----    - wifi.COUNTRY_MANUAL - Country policy is manual, NodeMCU will use locally configured country info.
+---  - **policy** The policy parameter determines which country info configuration to use,\
+---country info given to station by AP or local configuration. (default: *wifi.COUNTRY_AUTO*)
+---    - wifi.COUNTRY_AUTO - Country policy is auto, NodeMCU will use the country info\
+---provided by AP that the station is connected to. While in stationAP mode, beacon/probe\
+---response will reflect the country info of the AP that the station is connected to.
+---    - wifi.COUNTRY_MANUAL - Country policy is manual,\
+---NodeMCU will use locally configured country info.
 ---@return boolean @`true` if configuration was sucessful.
 function wifi.setcountry(country_info) end
 
@@ -894,10 +908,13 @@ function wifi.stopsmart() end
 --- - **suspend_cb?** function Callback to execute when WiFi is suspended.
 --- - **resume_cb?** function Callback to execute when WiFi wakes from suspension.
 --- - **preserve_mode?** boolean preserve current WiFi mode through node sleep.
----   - If `true`, Station and StationAP modes will automatically reconnect to previously configured Access Point when NodeMCU resumes.
----   - If `false`, discard WiFi mode and leave NodeMCU in *wifi.NULL_MODE*. WiFi mode will be restored to original mode on restart.
+---   - If `true`, Station and StationAP modes will automatically reconnect\
+---to previously configured Access Point when NodeMCU resumes.
+---   - If `false`, discard WiFi mode and leave NodeMCU in *wifi.NULL_MODE*.\
+---WiFi mode will be restored to original mode on restart.
 ---@return integer suspend_state @>
---- - **suspend_state** if no parameters are provided, current WiFi suspension state will be returned. States:
+--- - **suspend_state** if no parameters are provided,\
+---current WiFi suspension state will be returned. States:
 ---   - 0 - WiFi is awake.
 ---   - 1 - WiFi suspension is pending. (Waiting for idle task)
 ---   - 2 - WiFi is suspended.
@@ -937,28 +954,35 @@ function wifi.sta.clearconfig() end
 --- - **ssid** string which is less than 32 bytes.
 --- - **pwd** string which is 0-64. Empty string indicates an open WiFi access point.
 --- - **auto**
----   - `true` (default) to enable auto connect and connect to access point, hence with auto=true there's no need to call `wifi.sta.connect()`
+---   - `true` (default) to enable auto connect and connect to access point,\
+---hence with auto=true there's no need to call `wifi.sta.connect()`
 ---   - `false` to disable auto connect and remain disconnected from access point
---- - **bssid** string that contains the MAC address of the access point (optional). The following formats are valid:
+--- - **bssid** string that contains the MAC address of the access point (optional).\
+---The following formats are valid:
 ---   - "DE:C1:A5:51:F1:ED"
 ---   - "AC-1D-1C-B1-0B-22"
 ---   - "DE AD BE EF 7A C0"
 --- - **save** Save station configuration to flash.
 ---   - `true` configuration will be retained through power cycle. (Default).
 ---   - `false` configuration will not be retained through power cycle.
---- - **Event callbacks** will only be available if WIFI_SDK_EVENT_MONITOR_ENABLE is uncommented in user_config.h:
----   - *connect_cb*: Callback to execute when station is connected to an access point. (Optional). Items returned in table:
+--- - **Event callbacks** will only be available if WIFI_SDK_EVENT_MONITOR_ENABLE\
+---is uncommented in user_config.h:
+---   - *connect_cb*: Callback to execute when station is connected to an access point.\
+---(Optional). Items returned in table:
 ---     - SSID: SSID of access point. (format: string)
 ---     - BSSID: BSSID of access point. (format: string)
 ---     - channel: The channel the access point is on. (format: number)
---- - *disconnect_cb*: Callback to execute when station is disconnected from an access point. (Optional) Items returned in table:
+--- - *disconnect_cb*: Callback to execute when station is disconnected from an access point.\
+---(Optional) Items returned in table:
 ---   - SSID: SSID of access point. (format: string)
 ---   - BSSID: BSSID of access point. (format: string)
 ---   - reason: See wifi.eventmon.reason. (format: number)
---- - *authmode_change_cb*: Callback to execute when the access point has changed authorization mode. (Optional) Items returned in tabl:
+--- - *authmode_change_cb*: Callback to execute when the access point has changed authorization mode.\
+---(Optional) Items returned in tabl:
 ---   - old_auth_mode: Old wifi authorization mode. (format: number)
 ---   - new_auth_mode: New wifi authorization mode. (format: number)
---- - *got_ip_cb*: Callback to execute when the station received an IP address from the access point. (Optional) Items returned in table:
+--- - *got_ip_cb*: Callback to execute when the station received an IP address from the access point.\
+---(Optional) Items returned in table:
 ---   - IP: The IP address assigned to the station. (format: string)
 ---   - netmask: Subnet mask. (format: string)
 ---   - gateway: The IP address of the access point the station is connected to. (format: string)
@@ -1010,14 +1034,17 @@ function wifi.sta.getapindex() end
 ---Get information of APs cached by ESP8266 station.
 ---@return table @table `ap_info`:
 --- - **qty** quantity of APs returned
---- - **1-5** index of AP. (the index corresponds to index used by `wifi.sta.changeap()` and `wifi.sta.getapindex()`)
+--- - **1-5** index of AP. (the index corresponds to index used by\
+---`wifi.sta.changeap()` and `wifi.sta.getapindex()`)
 --- - **ssid** ssid of Access Point
 --- - **pwd** password for Access Point, nil if no password was configured
---- - **bssid** MAC address of Access Point. `nil` will be returned if no MAC address was configured during station configuration.
+--- - **bssid** MAC address of Access Point. `nil` will be returned\
+---if no MAC address was configured during station configuration.
 function wifi.sta.getapinfo() end
 
 ---Gets the broadcast address in station mode.
----@return string|nil @broadcast address as string, for example "192.168.0.255",
+---@return string|nil @broadcast address as string,
+---for example "192.168.0.255",\
 ---returns `nil` if IP address = "0.0.0.0".
 function wifi.sta.getbroadcast() end
 
@@ -1027,8 +1054,11 @@ function wifi.sta.getbroadcast() end
 --- - If `return_table` is true -> *config_table*:
 ---   - **ssid** ssid of Access Point.
 ---   - **pwd** password to Access Point, nil if no password was configured
----   - **bssid_set** will return true if the station was configured specifically to connect to the AP with the matching bssid.
----   - **bssid** If a connection has been made to the configured AP this field will contain the AP's MAC address. Otherwise "ff:ff:ff:ff:ff:ff" will be returned.
+---   - **bssid_set** will return true if the station was configured specifically to connect\
+---to the AP with the matching bssid.
+---   - **bssid** If a connection has been made to the configured AP this field will contain\
+---the AP's MAC address.\
+---Otherwise "ff:ff:ff:ff:ff:ff" will be returned.
 --- - If `return_table` is false:
 ---   - **ssid, password, bssid_set, bssid**, if bssid_set is equal to 0 then bssid is irrelevant
 function wifi.sta.getconfig(return_table) end
@@ -1039,8 +1069,11 @@ function wifi.sta.getconfig(return_table) end
 --- - If `return_table` is true -> *config_table*:
 ---   - **ssid** - ssid of Access Point.
 ---   - **pwd** - password to Access Point, nil if no password was configured
----   - **bssid_set** - will return true if the station was configured specifically to connect to the AP with the matching bssid.
----   - **bssid** - If a connection has been made to the configured AP this field will contain the AP's MAC address. Otherwise "ff:ff:ff:ff:ff:ff" will be returned.
+---   - **bssid_set** - will return true if the station was configured specifically to connect\
+---to the AP with the matching bssid.
+---   - **bssid** - If a connection has been made to the configured AP this field will contain\
+---the AP's MAC address.\
+---Otherwise "ff:ff:ff:ff:ff:ff" will be returned.
 --- - If `return_table` is false:
 ---   - **ssid, password, bssid_set, bssid**, if bssid_set is equal to 0 then bssid is irrelevant
 function wifi.sta.getdefaultconfig(return_table) end
@@ -1189,7 +1222,8 @@ function wifi.ap.getconfig(return_table) end
 ---@return table|string @>
 --- - If `return_table` is `true` -> *config_table*
 ---   - **ssid** - Network name
----   - **pwd** - Password, `nil` if no password was configured - auth Authentication Method (wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK or wifi.WPA_WPA2_PSK)
+---   - **pwd** - Password, `nil` if no password was configured - auth Authentication Method\
+---(wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK or wifi.WPA_WPA2_PSK)
 ---   - **channel** - Channel number
 ---   - **hidden** - `false` = not hidden, `true` = hidden
 ---   - **max** - Maximum number of client connections
@@ -1199,7 +1233,8 @@ function wifi.ap.getconfig(return_table) end
 function wifi.ap.getdefaultconfig(return_table) end
 
 ---Gets IP address, netmask and gateway in AP mode.
----@return string @IP address, netmask, gateway address as string, for example "192.168.0.111", returns `nil` if IP address = "0.0.0.0".
+---@return string @IP address, netmask, gateway address as string,
+---for example "192.168.0.111", returns `nil` if IP address = "0.0.0.0".
 function wifi.ap.getip() end
 
 ---Gets MAC address in AP mode.

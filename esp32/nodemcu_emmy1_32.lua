@@ -32,7 +32,8 @@ function adc.setup(adc_number, channel, atten) end
 ---@return number @the sampled value
 function adc.read(adc_number, channel) end
 
----Read Hall sensor (GPIO36, GPIO39). We recommend using 12-bits width on ADC1.
+---Read Hall sensor (GPIO36, GPIO39).\
+---We recommend using 12-bits width on ADC1.
 ---@return number @the sampled value
 function adc.read_hall_sensor() end
 
@@ -58,7 +59,7 @@ function bit.band(val1, val2, ...) end
 ---@return integer @a number with only one 1 bit at position (the rest are set to 0)
 function bit.bit(position) end
 
----Bitwise negation, equivalent to `~value in C.
+---Bitwise negation, equivalent to `~value` in C.
 ---@param value integer @the number to negate
 ---@return integer @the bitwise negated value of the number
 function bit.bnot(value) end
@@ -102,7 +103,8 @@ function bit.isset(value, position) end
 ---@return integer @the number shifted left
 function bit.lshift(value, shift) end
 
----Logical right shift a number, equivalent to `( unsigned )value >> shift` in C.
+---Logical right shift a number, quivalent to\
+---`( unsigned )value >> shift` in C.
 ---@param value integer @the value to shift.
 ---@param shift integer @positions to shift.
 ---@return integer @the number shifted right (logically)
@@ -257,7 +259,8 @@ function hashobj:finalize() end
 ---@alias crypto_algo string|'"MD5"'|'"SHA1"'|'"RIPEMD160"'|'"SHA224"'|'"SHA256"'|'"SHA384"'|'"SHA512"'
 
 ---Create a digest/hash object that can have any number of strings added to it.\
----The returned object has `update(str)` and `finalize()` functions, for streaming data through the hash function,\
+---The returned object has `update(str)` and `finalize()` functions,\
+---for streaming data through the hash function,\
 ---and for finalizing and returning the resulting digest.
 ---@param algo crypto_algo @the hash algorithm to use, case insensitive string
 ---@return hashobj @Hasher object with update and finalize functions available.
@@ -265,7 +268,8 @@ function crypto.new_hash(algo) end
 
 ---Create an object for calculating a HMAC (Hashed Message Authentication Code, aka "signature").\
 ---A HMAC can be used to simultaneously verify both integrity and authenticity of data.\
----The returned object has `update(str)` and `finalize()` functions, for streaming data through the hash function,\
+---The returned object has `update(str)` and `finalize()` functions,\
+---for streaming data through the hash function,\
 ---and for finalizing and returning the resulting signature.
 ---@param algo crypto_algo @the hash algorithm to use, case insensitive string
 ---@param key any @the signing key (may be a binary string)
@@ -303,7 +307,8 @@ dht = {}
 ---@return number humi_dec @humidity decimal (always 0)
 function dht.read11(pin) end
 
----Read DHT21/22/33/43 and AM2301/2302/2303 humidity temperature combo sensors.
+---Read DHT21/22/33/43 and AM2301/2302/2303\
+---humidity temperature combo sensors.
 ---@param pin integer @IO index
 ---@return integer status @as defined in Constants
 ---@return number temp @temperature
@@ -327,14 +332,14 @@ function encoder.toBase64(binary) end
 ---@return string @The decoded Lua (binary) string.
 function encoder.fromBase64(b64) end
 
----Provides an ASCII hex representation of a (binary) Lua string.\
----Each byte in the input string is represented as two hex characters in the output.
+---Provides an ASCII hex representation of a (binary) Lua string. Each byte\
+---in the input string is represented as two hex characters in the output.
 ---@param binary string @binary input string to get hex representation for
 ---@return string @An ASCII hex string.
 function encoder.toHex(binary) end
 
----Returns the Lua binary string decode of a ASCII hex string.\
----Each byte in the output string is represented as two hex characters in the input.\
+---Returns the Lua binary string decode of a ASCII hex string. Each byte\
+---in the output string is represented as two hex characters in the input.\
 ---An error is thrown if the string is not a valid base64 encoding.
 ---@param hexstr string @hexstr An ASCII hex string.
 ---@return string @Decoded string of hex representation.
@@ -352,7 +357,8 @@ function encoder.fromHex(hexstr) end
 eth = {}
 
 ---Get MAC address.
----@return string @MAC address as string "aa:bb:cc:dd:ee:dd".
+---@return string @MAC address as string
+---"aa:bb:cc:dd:ee:dd".
 function eth.get_mac() end
 
 ---Get Ethernet connection speed.
@@ -388,7 +394,8 @@ function eth.init(cfg) end
 ---Register or unregister callback functions for Ethernet events.
 ---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"got_ip"' @event
 ---@param callback function|' function(event, info) end' @callback function(event, info) to perform when event occurs,
----or nil to unregister the callback for the event. The info argument given to the callback is a table containing additional information about the event.\
+---or nil to unregister the callback for the event. The info argument given to the callback\
+---is a table containing additional information about the event.\
 ---Event information provided for each event is as follows:
 --- - **start**: no additional info
 --- - **stop**: no additional info
@@ -451,7 +458,8 @@ function file.list() end
 ---@return nil
 function file.on(event, callback) end
 
----Opens a file for access, potentially creating it (for write modes). When done with the file, it must be closed using `file.close()`.
+---Opens a file for access, potentially creating it (for write modes).\
+---When done with the file, it must be closed using `file.close()`.
 ---@param filename string|'""' @file to be opened, directories are not supported
 ---@param mode string @mode
 ---|>' "r"' #read mode
@@ -483,15 +491,15 @@ function file.close() end
 function fObj:close() end
 
 ---Flushes any pending writes to the file system,\
----ensuring no data is lost on a restart.\
----Closing the open file using `file.close() / fd:close()`\
+---ensuring no data is lost on a restart. Closing\
+---the open file using `file.close() / fd:close()`\
 ---performs an implicit flush as well.
 ---@return nil
 function file.flush() end
 
 ---Flushes any pending writes to the file system,\
----ensuring no data is lost on a restart.\
----Closing the open file using `file.close() / fd:close()`\
+---ensuring no data is lost on a restart. Closing\
+---the open file using `file.close() / fd:close()`\
 ---performs an implicit flush as well.
 ---@return nil
 function fObj:flush() end
@@ -720,7 +728,8 @@ function HTTP:setheader(name, value) end
 ---@return nil
 function HTTP:setpostdata(data) end
 
----Completes a callback that was previously delayed by returning http.DELAYACK.
+---Completes a callback that was previously delayed\
+---by returning http.DELAYACK.
 ---@return nil
 function HTTP:ack() end
 
@@ -756,7 +765,8 @@ function http.post(url, options, body, callback) end
 --*** I2C ***
 i2c = {}
 
----Perform (SW) or enqueue (HWx) an I²C address operation, defining data transfer direction for the next operation (read or write).
+---Perform (SW) or enqueue (HWx) an I²C address operation,\
+---defining data transfer direction for the next operation (read or write).
 ---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' @interface id
 ---@param device_addr number @I²C device address
 ---@param direction integer @transmitter | receiver
@@ -842,14 +852,15 @@ function i2c.slave.on(id, event, callback) end
 --- - **sda** IO index
 --- - **scl** IO index
 --- - **addr** slave address (7bit or 10bit)
---- - **10bit** enable 10bit addressing with true, use 7bit with false (optional, defaults to false is omitted)
+--- - **10bit** enable 10bit addressing with true, use 7bit with false\
+---(optional, defaults to false is omitted)
 --- - **rxbuf_len** length of receive buffer (optional, defaults to 128 if omitted)
 --- - **txbuf_len** length of transmit buffer (optional, defaults to 128 if omitted)
 ---@return nil
 function i2c.slave.setup(id, slave_config) end
 
----Writes send data for the master into the transmit buffer.\
----This function returns immediately if there's enough room left in the buffer.\
+---Writes send data for the master into the transmit buffer. This function\
+---returns immediately if there's enough room left in the buffer.\
 ---It blocks if the buffer is doesn't provide enough space.
 ---@param id integer|'i2c.HW0'|'i2c.HW1' @interface id
 ---@param data1 number|string|table @data can be numbers, string or lua table.
@@ -986,7 +997,8 @@ local channel = {}
 ---Configures a PIN to be controlled by the LEDC system.
 ---@param tbl LedcNew @List of configuration tables:
 --- - **gpio** one or more (given as list) pins, see GPIO Overview
---- - **bits** Channel duty depth. Defaults to ledc.TIMER_13_BIT. Otherwise one of
+--- - **bits** Channel duty depth. Defaults to ledc.TIMER_13_BIT.\
+---Otherwise one of
 ---   - ledc.TIMER_10_BIT  ...   ledc.TIMER_15_BIT
 --- - **mode** High-speed mode or low-speed mode
 ---   - ledc.HIGH_SPEED or ledc.LOW_SPEED
@@ -996,7 +1008,8 @@ local channel = {}
 ---   - ledc.CHANNEL_0  ...  ledc.CHANNEL_7
 --- - **frequency** Timer frequency(Hz)
 --- - **duty** Channel duty, the duty range is [0, (2**bit_num) - 1].\
----Example: if `ledc.TIMER_13_BIT` is used maximum value is 4096 x 2 -1 = 8091
+---Example: if `ledc.TIMER_13_BIT` is used maximum\
+---value is 4096 x 2 -1 = 8091
 ---@return ledc @ledc.channel
 function ledc.newChannel(tbl) end
 
@@ -1104,7 +1117,8 @@ function MQTT32:lwt(topic, message, qos, retain) end
 ---Registers a callback function for an event.
 ---@param event string|'"connect"'|'"message"'|'"offline"' @can be "connect", "message" or "offline"
 ---@param callback function|' function(client, topic, message) end' @`function(client, topic?:string, message?:string)`.
----The first parameter is the client. If event is "message", the 2nd and 3rd param are received topic and message (strings).
+---The first parameter is the client. If event is "message",\
+---the 2nd and 3rd param are received topic and message (strings).
 ---@return nil
 function MQTT32:on(event, callback) end
 
@@ -1202,7 +1216,8 @@ function NETSOCKET:connect(port, ip_or_domain) end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string @domain name
----@param callback function|' function(net.socket, ip) end' @`function(net.socket, ip)`. The first parameter is the socket, the second parameter is the IP address as a string.
+---@param callback function|' function(net.socket, ip) end' @`function(net.socket, ip)`.
+---The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
 function NETSOCKET:dns(domain, callback) end
 
@@ -1275,7 +1290,8 @@ function UDPSOCKET:send(port, ip, data) end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string @domain name
----@param callback function|' function(net.socket, ip) end' @`function(net.socket, ip)`. The first parameter is the socket, the second parameter is the IP address as a string.
+---@param callback function|' function(net.socket, ip) end' @`function(net.socket, ip)`.
+---The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
 function UDPSOCKET:dns(domain, callback) end
 
@@ -1336,10 +1352,13 @@ node = {}
 --- - 21: EXT_CPU_RESET          for APP CPU, reseted by PRO CPU
 --- - 22: RTCWDT_BROWN_OUT_RESET Reset when the vdd voltage is not stable
 --- - 23: RTCWDT_RTC_RESET       RTC Watch dog reset digital core and rtc module\
---In general, the extended reset cause supercedes the raw code. The raw code is kept for backwards compatibility only. For new applications it is highly recommended to use the extended reset cause instead.
---In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information. These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
---In case of extended reset cause 19 (SW_CPU_RESET), an additional value is returned containing the number of consecutive Lua panics. If the reset was caused by a call to node.restart() this value is 0; after the first panic the value is 1; if a panic reoccurs the value increments upto 15.
----@return any @ [` exccause, epc1, epc2, epc3, excvaddr, depc `]
+---In general, the extended reset cause supercedes the raw code. The raw code is kept for backwards compatibility only.\
+---For new applications it is highly recommended to use the extended reset cause instead. In case of extended reset\
+---cause 3 (exception reset), additional values are returned containing the crash information.\
+---These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC. extended reset cause 19 (SW_CPU_RESET),\
+---an additional value is returned containing the number of consecutive Lua panics. If the reset was caused by a call to\
+---node.restart() this value is 0; after the first panic the value is 1; if a panic reoccurs the value increments upto 15.
+---@return any @ [`exccause, epc1, epc2, epc3, excvaddr, depc`]
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
@@ -1365,16 +1384,21 @@ function node.compile(filename) end
 ---For compatibility, a `number` parameter usecs can be supplied\
 ---instead of an options table, which is equivalent to `node.dsleep({us = usecs})`.
 ---@param options DsleepCfg @a table containing some of:
---- - **secs**, a number of seconds to sleep. This permits longer sleep periods compared to using the us parameter.
---- - **us**, a number of microseconds to sleep. If both secs and us are provided, the values are combined.
---- - **gpio**, a single GPIO number or a list of GPIOs. These pins must all be RTC-capable otherwise an error is raised.
---- - **level**. Whether to trigger when *any* of the GPIOs are high (level=1, which is the default if not specified),\
+--- - **secs**, a number of seconds to sleep.\
+---This permits longer sleep periods compared to using the us parameter.
+--- - **us**, a number of microseconds to sleep.\
+---If both secs and us are provided, the values are combined.
+--- - **gpio**, a single GPIO number or a list of GPIOs.\
+---These pins must all be RTC-capable otherwise an error is raised.
+--- - **level**. Whether to trigger when *any* of the GPIOs are high (level=1,\
+---which is the default if not specified),\
 ---or when *all* the GPIOs are low (level=0).
---- - **isolate**. A list of GPIOs to isolate. Isolating a GPIO disables input, output, pullup, pulldown,\
----and enables hold feature for an RTC IO. Use this function if an RTC IO needs to be disconnected from\
+--- - **isolate**. A list of GPIOs to isolate.\
+---Isolating a GPIO disables input, output, pullup, pulldown, and enables hold feature\
+--- for an RTC IO. Use this function if an RTC IO needs to be disconnected from\
 ---internal circuits in deep sleep, to minimize leakage current.
---- - **pull**, boolean, whether to keep powering previously-configured internal pullup/pulldown resistors.\
----Default is false if not specified.
+--- - **pull**, boolean, whether to keep powering previously-configured\
+---internal pullup/pulldown resistors. Default is false if not specified.
 --- - **touch**, boolean, whether to trigger wakeup from any previously-configured touchpads.\
 ---Default is false if not specified.
 function node.dsleep(options) end

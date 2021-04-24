@@ -320,7 +320,8 @@ function mcp4725.read(tbl) end
 ---output pulled to ground via 100K restistor.
 ---   - mcp4725.PWRDN_500K MCP4725 - output disabled,\
 ---output pulled to ground via 500K restistor.
---- - **save** Save pwrdn and dac values to EEPROM. (Values are loaded on power-up or during reset.)
+--- - **save** Save pwrdn and dac values to EEPROM. (Values are loaded on power-up\
+---or during reset.)
 ---   - `true` Save configuration to EEPROM.
 ---   - `false` Do not save configuration to EEPROM. (Default)
 ---@return nil
@@ -507,9 +508,9 @@ function NETSOCKET:hold() end
 ---Register callback functions for specific events.
 ---@param event string|' "connection"'|' "reconnection"'|' "disconnection"'|' "receive"'|'  "sent"' @event
 ---@param callback nil|function|' function(net.socket, string?) end)' @callback function. Can be `nil` to remove callback. The first parameter of callback is the socket.
---- - If event is `"receive"`, the second parameter is the received data as string.
---- - If event is `"disconnection"` or `"reconnection"`, the second parameter is error code.
----If reconnection event is specified, disconnection receives only "normal close" events.
+--- - If event is `"receive"`, the second parameter is the received data as string.\
+--- - If event is `"disconnection"` or `"reconnection"`, the second parameter is error code.\
+---If reconnection event is specified, disconnection receives only "normal close" events.\
 ---Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
 function NETSOCKET:on(event, callback) end
@@ -679,7 +680,8 @@ function node.getcpufreq() end
 ---Get the current LFS and SPIFFS partition information.
 ---@return table @An array containing entries for
 ---**lfs_addr, lfs_size, spiffs_addr** and **spiffs_size**.\
----The address values are offsets relative to the start of the Flash memory.
+---The address values are offsets relative to the start of\
+---the Flash memory.
 function node.getpartitiontable() end
 
 ---Returns the current available heap size in bytes.
@@ -974,16 +976,16 @@ function ow.skip(pin) end
 ---@return nil
 function ow.target_search(pin, family_code) end
 
----Writes a byte. If power is 1 then the wire is held high\
----at the end for parasitically powered devices.
+---Writes a byte. If power is 1 then the wire is held high at the end\
+---for parasitically powered devices.
 ---@param pin integer @1~12, I/O index
 ---@param v integer @byte to be written to slave device
 ---@param power integer @1 for wire being held high for parasitically powered devices
 ---@return nil
 function ow.write(pin, v, power) end
 
----Writes multi bytes. If power is 1 then the wire is held high\
----at the end for parasitically powered devices.
+---Writes multi bytes. If power is 1 then the wire is held high at the end\
+---for parasitically powered devices.
 ---@param pin integer @1~12, I/O index
 ---@param buf string @string to be written to slave device
 ---@param power integer @1 for wire being held high for parasitically powered devices

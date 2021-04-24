@@ -810,8 +810,7 @@ function ucgDispObj:drawString(x, y, dir, str) end
 ---@param y3 integer @Point 3 of the tetragon.
 function ucgDispObj:drawTetragon(x0, y0, x1, y1, x2, y2, x3, y3) end
 
----Draw a filled triangle, defined by three edge points.\
----Use current color from index 0.
+---Draw a filled triangle, defined by three edge points. Use current color from index 0.
 ---@param x0 integer @Point 0 of the triangle.
 ---@param y0 integer @Point 0 of the triangle.
 ---@param x1 integer @Point 1 of the triangle.
@@ -874,9 +873,8 @@ function ucgDispObj:print(str) end
 ---@param h integer @Height of the drawing area.
 function ucgDispObj:setClipRange(x, y, w, h) end
 
----Defines up to four different colors for the graphics primitives.\
----Most commands will use the color at index position 0.\
----If the index (first argument) is skipped, then the color is stored as index 0.
+---Defines up to four different colors for the graphics primitives. Most commands will use the color\
+---at index position 0. If the index (first argument) is skipped, then the color is stored as index 0.
 ---@param idx integer The index of the color being set. See each drawing function to determine the index to use. (Default: 0)
 ---@param r integer @Red,
 ---@param g integer @green, and
@@ -977,7 +975,8 @@ local fifo = (require "fifo").new()
 ---@return boolean @`true` if the queue contained at least one non-phantom entry, `false` otherwise.
 function fifo:dequeue(k) end
 
----Enqueue the element `a` onto the fifo. If `k` is not `nil` and the fifo is in "immediate dequeue" mode (whence it starts),\
+---Enqueue the element `a` onto the fifo. If `k` is not `nil`\
+---and the fifo is in "immediate dequeue" mode (whence it starts),\
 ---immediately pass the first element of the fifo (usually, but not necessarily, `a`) to `k`,\
 ---as if `fifo:dequeue(k)` had been called, and exit "immediate dequeue" mode.
 ---@param a any
@@ -996,15 +995,20 @@ gossip = {}
 
 ---Sets the configuration for gossip.
 ---@param config GossipCfg @table. The available options are:
---- - **seedList**: the list of seeds gossip will start with; this will be updated as new nodes are discovered.\
----Note that it's enough for all nodes to start with the same IP in the seedList,\
----as once they have one seed in common, the data will propagate. Default: `nil`.
---- - **roundInterval**: interval in milliseconds at which gossip will pick a random node from the seed list\
+--- - **seedList**: the list of seeds gossip will start with;\
+---this will be updated as new nodes are discovered.\
+---Note that it's enough for all nodes to start with the same IP\
+---in the seedList, as once they have one seed in common,\
+--- the data will propagate. Default: `nil`.\
+--- - **roundInterval**: interval in milliseconds at which gossip\
+---will pick a random node from the seed list\
 ---and send a SYN request. Default: 10000 (10 seconds)
 --- - **comPort**: port for the listening UDP socket. Default: 5000.
---- - **debug**: flag that will provide debugging messages. Default: false.
---- - **debugOutput**: if debug is set to true, then this method will be used as a callback with\
----the debug message as the first parameter. Default: print
+--- - **debug**: flag that will provide debugging messages.\
+---Default: false.
+--- - **debugOutput**: if debug is set to true,then this method\
+--- will be used as a callback with the debug message \
+---as the first parameter. Default: print
 function gossip.setConfig(config) end
 
 ---Starts gossip, sets the started flag\
@@ -1027,8 +1031,8 @@ function gossip.callbackFunction() end
 ---@param ip? string @The IP is optional and if none given, it will pick a random node.
 function gossip.pushGossip(data, ip) end
 
----The only scenario when rev should be set manually is when a new node is added\
----to the network and has the same IP. Having a smaller revision than the previous node\
+---The only scenario when rev should be set manually is when a new node is added to\
+---the network and has the same IP. Having a smaller revision than the previous node\
 ---with the same IP would make gossip think the data it received is old, thus ignoring it.
 function gossip.setRevFileValue(number) end
 
@@ -1061,8 +1065,8 @@ function gdbstub.gdboutput(enable) end
 
 --*** DEBUG ***
 
----Returns a sorted array of the strings returned\
----from the `lua_getstrings` function.
+---Returns a sorted array of the strings returned from\
+---the `lua_getstrings` function.
 ---@param type string|'RAM'|'ROM'
 ---@return table
 function debug.getstrings(type) end
