@@ -54,6 +54,7 @@ local function fileParse(arg)
                   : gsub("##%s%w-%s", "")       -- remove lines like ## Timer Object Methods
                   : gsub("## gpio.pulse\n", "") -- ambigous headers
                   : gsub("## node.LFS\n", "")
+                  : gsub("## wifi.eventmon.reason", "")
                   : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n") -- duplicate headers
                   : gsub("##%s.-%(%)", "", 1)   -- and remove first header ##
 
@@ -137,7 +138,7 @@ end
 ---@param cont string
 ---@return string
 function getRet(cont)
-  local buff, isObj, clObj, t
+  local buff, clObj, t
 
   buff = cont:match("####Returns\n\n?(.-)\n##")
   if not buff then
@@ -154,11 +155,13 @@ function getRet(cont)
         end
 
         t[k] =  v:match("^[%-%*]%s") and
-                v:gsub ("^([%-%*]%s?.-)", "---@return any \n--- %1") or
+                v:gsub ("^([%-%*]%s?.-)", "---@return any @>\n--- %1") or
                 v:match("^`nil`") and
                 v:gsub ("^`nil`", "---@return nil") or
                 clObj and
                 v:gsub ("^(.+)","---@return " .. clObj .. " @%1") or
+               (v:match("`true`") and v:match("`false`")) and
+                v:gsub ("^(.+)","---@return boolean @%1") or
                 v:gsub ("^(.+)", "---@return any @%1")
       else
         t[k] = string.gsub(v, "(.+)", "--- %1")
@@ -272,7 +275,7 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  arg = "bloom.md"
+  arg = "wifi.md"
   fileParse(arg)
 --]]
 
