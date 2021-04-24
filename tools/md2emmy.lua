@@ -23,8 +23,13 @@
 -- -|* `text1` comment 1
 --    -|* `text2` comment 2
 -- text
---
---
+-- If word "O|object" is given in line, the first `word` will be treated as obj type.
+-- e.g. `tObj` Timer Object -> @class tObj; local tobj = {}
+-- "A `filter` object." in bloom module
+-- #### Returns
+-- `UDPSOCKET` Object
+-- [net.udpsocket sub module](#netudpsocket-module)
+-- etc.
 --------------------------------------------------------------------------------
 --#region beforeParser
 local readFile, saveFile, lines
@@ -49,7 +54,7 @@ local function fileParse(arg)
                   : gsub("##%s%w-%s", "")       -- remove lines like ## Timer Object Methods
                   : gsub("## gpio.pulse\n", "") -- ambigous headers
                   : gsub("## node.LFS\n", "")
-                  : gsub("(##%s%w-[:%._].-)\n", "%1\n%1") -- duplicate headers
+                  : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n") -- duplicate headers
                   : gsub("##%s.-%(%)", "", 1)   -- and remove first header ##
 
   mdFile = mdFile .. "\n## EOF()" -- end of file
@@ -81,7 +86,7 @@ local function fileParse(arg)
 end
 --#endregion beforeParser
 
--- Get "Descriptions"
+-- Get "Description"
 ---@param cont string
 ---@return string
 function getDescr(cont)
@@ -132,18 +137,29 @@ end
 ---@param cont string
 ---@return string
 function getRet(cont)
-  local buff = cont:match("####Returns\n\n?(.-)\n##")
+  local buff, isObj, clObj, t
+
+  buff = cont:match("####Returns\n\n?(.-)\n##")
   if not buff then
     error("#### Returns section is missed in: " .. func)
   else
-    local t = lines(buff)
+    ---@type table <number, string>
+    t = lines(buff)
     for k, v in pairs (t) do
       if k == 1 then
-        t[k] =  string.match(v, "^[%-%*]%s") and
-                string.gsub(v, "^([%-%*]%s?.-)", "---@return any \n--- %1") or
-                string.match(v,"^`nil`" ) and
-                string.gsub(v, "^`nil`", "---@return nil") or
-                string.gsub(v, "^(.+)", "---@return any @%1")
+        -- try catch object :-\
+        if v:match("[Oo]bject") then  -- 'oObject' word is given in line
+          clObj = string.match(v, "`([%w_]+)`")
+          dataOut = dataOut .. string.format("---@class %s\nlocal %s = {}\n\n", clObj, clObj)
+        end
+
+        t[k] =  v:match("^[%-%*]%s") and
+                v:gsub ("^([%-%*]%s?.-)", "---@return any \n--- %1") or
+                v:match("^`nil`") and
+                v:gsub ("^`nil`", "---@return nil") or
+                clObj and
+                v:gsub ("^(.+)","---@return " .. clObj .. " @%1") or
+                v:gsub ("^(.+)", "---@return any @%1")
       else
         t[k] = string.gsub(v, "(.+)", "--- %1")
       end
@@ -256,7 +272,7 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  arg = "node.md"
+  arg = "bloom.md"
   fileParse(arg)
 --]]
 
