@@ -253,7 +253,7 @@ somfy = {}
 ---@param command integer|' somfy.SOMFY_UP'|' somfy.SOMFY_DOWN'|' somfy.SOMFY_PROG'|' somfy.SOMFY_STOP' @somfy command
 ---@param rolling_code number @The rolling code is increased every time a button is pressed.
 ---@param repeat_count integer @how many times the command is repeated
----@param callback function @to be called after the command is transmitted.
+---@param callback function @a function to be called after the command is transmitted. Allows chaining commands to set the blinds to a defined position.
 ---@return nil
 function somfy.sendcommand(pin, remote_address, command, rolling_code, repeat_count, callback) end
 
@@ -261,9 +261,11 @@ function somfy.sendcommand(pin, remote_address, command, rolling_code, repeat_co
 ---@param pin integer @GPIO pin the RF receiver is connected to.
 ---@param callback function|' function(address, command, rc, frame) end' @`function(address, command, rc, frame)` a function called when a Somfy command is identified. Use `nil` to stop listening.
 --- - **address** - of the remote controller sending the command
---- - **command** -  sent by the remote controller. A number between *0* and *0xf*. Can be somfy.SOMFY_UP, somfy.SOMFY_DOWN, somfy.SOMFY_PROG, somfy.SOMFY_STOP.
+--- - **command** - sent by the remote controller. A number between *0* and *0xf*.\
+---Can be somfy.SOMFY_UP, somfy.SOMFY_DOWN, somfy.SOMFY_PROG, somfy.SOMFY_STOP.
 --- - **rc** - rolling code
 --- - **frame** - String of 10 characters with the full captured data frame.
+---@return nil
 function somfy.listen(pin, callback) end
 
 --*** SPI ***
@@ -516,6 +518,8 @@ tm1829 = {}
 
 ---Send data to a led strip using native chip format.
 ---@param str string @payload to be sent to one or more TM1829 leds.
+---It is either a 3-channel `pixbuf` (e.g., `pixbuf.TYPE_RGB`) or\
+---a string of raw byte values to be sent.
 ---@return nil
 function tm1829.write(str) end
 
@@ -1309,7 +1313,7 @@ function wifi.ap.dhcp.stop() end
 function wifi.eventmon.register(Event, callback) end
 
 ---Unregister callbacks for WiFi event monitor
----@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'|'wifi.eventmon.WIFI_MODE_CHANGED' @WiFi event you would like to set a callback for.
+---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'|'wifi.eventmon.WIFI_MODE_CHANGED' @WiFi event you would like to remove the callback for.
 ---@return nil
 function wifi.eventmon.unregister(Event) end
 
@@ -1425,6 +1429,12 @@ function ws2812.init(mode) end
 ---for RGB strips and Green,Red,Blue,White for RGBW strips.
 ---@param data1 string|nil @payload to be sent to one or more WS2812 like leds through GPIO2
 ---@param data2? string|nil @(optional) payload to be sent to one or more WS2812 like leds through TXD0 (ws2812.MODE_DUAL mode required)
+---
+--- Payload type could be:
+---
+--- - `nil` any @nothing is done
+--- - `string` any @representing bytes to send
+--- - a `pixbuf` object containing the bytes to send. The pixbuf's type is not checked!
 ---@return nil
 function ws2812.write(data1, data2) end
 
@@ -1619,7 +1629,8 @@ function pixbuffer:get(index) end
 ---@param color number|any @payload of the color. Payload could be:
 --- - **number, number, ...** passing as many colors as required by the array type
 --- - **table** should contain one value per color required by the array type
---- - **string** with a natural multiple of the colors required by the array type. **string** inputs may be used to set multiple consecutive pixels!
+--- - **string** with a natural multiple of the colors required by the array type.
+---**string** inputs may be used to set multiple consecutive pixels!
 ---@return nil
 function pixbuffer:set(index, color) end
 
@@ -1635,7 +1646,7 @@ function pixbuffer:channels() end
 ---The number of given bytes must match\
 ---the channel count of the buffer.
 ---@param color any @bytes for each channel
----@return nil
+---@return any @The buffer
 function pixbuffer:fill(color) end
 
 ---Returns the contents of the buffer\
