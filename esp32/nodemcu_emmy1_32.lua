@@ -647,12 +647,12 @@ function gpio.set_drive(pin, strength) end
 ---@return nil
 function gpio.trig(pin , type , callback) end
 
----Configuring wake-from-sleep-on-GPIO-level.
+---Configure whether the given pin should trigger wake up from light sleep initiated by node.sleep().
 ---@param pin integer @GPIO
 ---@param level number @wake-up level, one of
----|' gpio.INTR_NONE' #to disable wake-up
----|' gpio.INTR_LOW' #for wake-up on low level
----|' gpio.INTR_HIGH' #for wake-up on high level
+---|' gpio.INTR_NONE' #changes to the level of this pin will not trigger wake from light sleep
+---|' gpio.INTR_LOW' #if this pin is low it should trigger wake from light sleep
+---|' gpio.INTR_HIGH' #if this pin is high it should trigger wake from light sleep
 ---@return nil
 function gpio.wakeup(pin, level) end
 
@@ -770,14 +770,14 @@ i2c = {}
 ---@param id integer|'i2c.SW'|'i2c.HW0'|'i2c.HW1' @interface id
 ---@param device_addr number @I²C device address
 ---@param direction integer @transmitter | receiver
----|' i2c.TRANSMITTER' #for writing mode
----|' i2c.RECEIVER' #for reading mode
+---|' i2c.TRANSMITTER' #for write mode
+---|' i2c.RECEIVER' #for read mode
 ---@param ack_check_en? boolean @(optional) check for slave ACK
 ---|>' true' #enable check for slave ACK
 ---|' false' #disable check for slave ACK
 ---@return boolean @>
---- - for interface `i2c.SW`: returns `true` if ack received, `false` if no ack received.\
----This value should be checked to decide whether to continue communication.
+--- - for interface `i2c.SW`: returns `true` if ack received, `false` if no ack received. This value should be checked to decide whether to continue\
+---communication.
 --- - for interfaces `i2c.HW0` and `i2c.HW1`: always returns `true`.
 function i2c.address(id, device_addr, direction, ack_check_en) end
 
@@ -895,17 +895,18 @@ function i2c.slave.send(id, data1, ...) end
 i2s ={}
 
 ---Mute the I2S channel. The hardware buffer is instantly filled with silence.
----@param i2s_num integer|'0'|'1' @I2S peripheral
----@return nil @An error is thrown in case of invalid parameters or if the i2s driver failed.
+---@param i2s_num integer|'0'|'1' @I2S peripheral 0 or 1
+---@return nil
+---An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.mute(i2s_num) end
 
 ---Read data from I2S receive buffer.
----@param i2s_num integer|'0'|'1' @I2S peripheral
+---@param i2s_num integer|'0'|'1' @I2S peripheral 0 or 1
 ---@param size number @Bytes to read
 ---@param wait_ms? number @(optional) Millisecond to wait if data is not ready. Optional, defaults to 0 (not to wait) when omitted.
 ---@return any @Data read from data-in pin.
----If data is not ready in wait_ms millisecond, less than size bytes can be returned.\
---- An error is thrown in case of invalid parameters or if the i2s driver failed.
+---If data is not ready in `wait_ms` millisecond, less than `size` bytes can be returned.\
+---An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.read(i2s_num, size, wait_ms) end
 
 ---@class I2sCfg
@@ -926,7 +927,8 @@ function i2s.read(i2s_num, size, wait_ms) end
 ---Configuration and start I2S bus.
 ---@param i2s_num integer|'0'|'1' @I2S peripheral
 ---@param cfg I2sCfg @table containing configuration data:
---- - **mode** I2S work mode. Optional, defaults to i2s.MODE_MASTER + i2s.MODE_TX when omitted.
+--- - **mode** I2S work mode. Optional,\
+---defaults to `i2s.MODE_MASTER + i2s.MODE_TX` when omitted.
 ---   - i2s.MODE_MASTER
 ---   - i2s.MODE_SLAVE
 ---   - i2s.MODE_TX
@@ -936,13 +938,15 @@ function i2s.read(i2s_num, size, wait_ms) end
 ---   - i2s.MODE_PDM
 --- - **rate** audio sample rate. Optional, defauls to 44100 when omitted.
 --- - **bits** bits per sample. Optional, defaults to 16 when omitted.
---- - **channel** channel format of I2S stream. Optional, defaults to i2s.CHANNEL_RIGHT_LEFT when omitted.
+--- - **channel** channel format of I2S stream. Optional,\
+---defaults to `i2s.CHANNEL_RIGHT_LEFT` when omitted.
 ---   - i2s.CHANNEL_RIGHT_LEFT
 ---   - i2s.CHANNEL_ALL_LEFT
 ---   - i2s.CHANNEL_ONLY_LEFT
 ---   - i2s.CHANNEL_ALL_RIGHT
 ---   - i2s.CHANNEL_ONLY_RIGHT
---- - **format** communication format. Optional, defaults to i2s.FORMAT_I2S + i2s.FORMAT_I2S_MSB when omitted.
+--- - **format** communication format. Optional,\
+---defaults to `i2s.FORMAT_I2S + i2s.FORMAT_I2S_MSB` when omitted.
 ---   - i2s.FORMAT_I2S
 ---   - i2s.FORMAT_I2S_MSB
 ---   - i2s.FORMAT_I2S_LSB
@@ -955,28 +959,34 @@ function i2s.read(i2s_num, size, wait_ms) end
 --- - **ws_pin** WS pin, optional
 --- - **data_out_pin** data output pin, optional
 --- - **data_in_pin** data input pin, optional
---- - **dac_mode** DAC mode configuration. Optional, defaults to i2s.
---- - i2s.DAC_CHANNEL_DISABLE (DAC_CHANNEL_DISABLE) when omitted.
+--- - **dac_mode** DAC mode configuration. Optional,\
+---defaults to `i2s.DAC_CHANNEL_DISABLE` when omitted.
+---   - i2s.DAC_CHANNEL_DISABLE
 ---   - i2s.DAC_CHANNEL_RIGHT
 ---   - i2s.DAC_CHANNEL_LEFT
 ---   - i2s.DAC_CHANNEL_BOTH
 --- - **adc1_channel** ADC1 channel number 0..7. Optional, defaults to off when omitted.
----@param cb function @function called when transmit data is requested or received data is available. The function is called with parameters **i2s_num** and
---- - **dir**
----   - "tx", for TX data request. Function shall call i2s.write().
----   - "rx", for RX data available. Function shall call i2s.read().
+---@param cb function @function called when transmit data is requested or received data is available.
+--- - the function is called with parameters **i2s_num** and **dir**
+---   - **dir** "tx", for TX data request. Function shall call `i2s.write()`.
+---   - **dir** "rx", for RX data available. Function shall call `i2s.read()`.\
+---An error is thrown in case of invalid parameters or if the i2s driver failed.
 ---@return nil
 function i2s.start(i2s_num, cfg, cb) end
 
 ---Stop I2S bus.
 ---@param i2s_num integer|'0'|'1' @I2S peripheral
 ---@return nil
+---An error is thrown in case of invalid parameters\
+---or if the i2s driver failed.
 function i2s.stop(i2s_num) end
 
 ---Write to I2S transmit buffer.
 ---@param i2s_num integer|'0'|'1' @I2S peripheral
 ---@param data string @string containing I2S stream data
 ---@return nil
+---An error is thrown in case of invalid parameters\
+---or if the channel failed.
 function i2s.write(i2s_num, data) end
 
 --*** LEDC ***
@@ -1395,7 +1405,7 @@ function node.compile(filename) end
 ---or when *all* the GPIOs are low (level=0).
 --- - **isolate**. A list of GPIOs to isolate.\
 ---Isolating a GPIO disables input, output, pullup, pulldown, and enables hold feature\
---- for an RTC IO. Use this function if an RTC IO needs to be disconnected from\
+--- for an RTC IO. Use this option if an RTC IO needs to be disconnected from\
 ---internal circuits in deep sleep, to minimize leakage current.
 --- - **pull**, boolean, whether to keep powering previously-configured\
 ---internal pullup/pulldown resistors. Default is false if not specified.
