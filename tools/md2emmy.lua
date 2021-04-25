@@ -56,7 +56,14 @@ local function fileParse(arg)
                   : gsub("## node.LFS\n", "")
                   : gsub("## wifi.eventmon.reason", "")
                   : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n") -- duplicate headers
-                  : gsub("##%s.-%(%)", "", 1)   -- and remove first header ##
+                  : gsub("##%s.-%(%)", "", 1)  -- and remove first header ##
+                  : gsub("%[(`.-`)%]%b()", "%1") -- handle links
+                  : gsub("(%b[])[ \t]*%(http.-%)",  function (h)
+                                                      return string.sub(h, 2, -2)
+                                                    end)
+                  : gsub("(%b[])[ \t]*%(#.-%)",     function (h)
+                                                      return string.sub(h, 2, -2)
+                                                    end)
 
   mdFile = mdFile .. "\n## EOF()" -- end of file
 
@@ -187,18 +194,19 @@ function getParams(cont)
   local function parsePar(t, k, v)
     if (v:match("^[ \t]+[%-%*]")) then  -- 2-nd level of params
       t[k] =  string.gsub(v, "^(.-)", "--- %1")
-        if k == #t then -- the last string is 2-nd level param
+        if k == #t then -- the last string of 2-nd level params
           t[k] = t[k] .. "\n"
         end
     else
-      t[k] =  string.match(v, "^[%-%*]?[ \t]*`([%(%)%w%s_/,]+)`") and
-              string.gsub(v, "^(.-)`([%(%)%w%s_/,]+)`[ :%.]?\r?\n?(.*)", "---@param %2 any @%3") or
+      t[k] =  string.match(v, "^[%-%*]?[ \t]*`([%(%)%[%]%w%s_/,%.]+)`") and
+              string.gsub(v, "^(.-)`([%(%)%[%]%w%s_/,%.]+)`[ :%.]?\r?\n?(.*)", "---@param %2 any @%3") or
               string.gsub(v, "^(.-)", "--- %1")
 
       -- remove "()" in parameter name - this is a "function" type
-      t[k] =  string.gsub(t[k], "^%-%-%-@param (([%w_]+)%(.+%)) any", "---@param %2 function %1")
-      -- change function -> foo. 'function' can't be a parameter's name
-      t[k] =  string.gsub(t[k], "^%-%-%-@param function (.+)", "---@param foo %1")
+      t[k] =  string.gsub(t[k], "^%-%-%-@param (([%w_]+)%(.+%)) any @", "---@param %2 function @%1 ")
+      -- change function -> foo. 'function' is a reserved word
+      t[k] =  string.gsub(t[k], "^%-%-%-@param function (.+)", "---@param foo %1 ")
+
       -- change \ or | -> _or_
       t[k] =  string.gsub(t[k], "^%-%-%-@param ([%w_]+)/([%w_]+) (.+)", "---@param %1_or_%2 %3")
       -- vararg
