@@ -16,7 +16,7 @@ If you use VSCode or Neovim, then you have to first install **[sumneko lua-langu
 Then create directories and put files from this repository into them as shown in the example below.<br>
 Note. Files for esp32 and for esp8266 must be located in different directories.
 
-This is an example of a directory structure:
+Here is an example of a directory structure:
 ```
 nodeMCU
 | plugin.lua  # script
