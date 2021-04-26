@@ -204,7 +204,7 @@ function getParams(cont)
               string.gsub(v, "^(.-)", "--- %1")
 
       -- remove "()" in parameter name - this is a "function" type
-      t[k] =  string.gsub(t[k], "^%-%-%-@param (([%w_]+)%(.+%)) any @", "---@param %2 function @%1 ")
+      t[k] =  string.gsub(t[k], "^%-%-%-@param (([%w_]+)%(.*%)) any @", "---@param %2 function @%1 ")
       -- change function -> foo. 'function' is a reserved word
       t[k] =  string.gsub(t[k], "^%-%-%-@param function (.+)", "---@param foo %1 ")
 
@@ -284,7 +284,7 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  arg = "http.md"
+  arg = "net.md"
   fileParse(arg)
 --]]
 
