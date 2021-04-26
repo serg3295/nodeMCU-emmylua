@@ -49,6 +49,7 @@ local function fileParse(arg)
                   : gsub("###%s*See", "####See")
                   : gsub("####%s*Return", "####Return")
                   : gsub("####%s?(.-)", "####%1")
+                  : gsub("\n#[ \t]*(%a)", "\n####%1") -- set # header as a border ####text
                   : gsub("##%s[%a]+\n", "")     -- remove lines like ## Constructor
                   : gsub("### ([%a]+)", "## %1" ) -- e.g. for tmr:...
                   : gsub("##%s%w-%s", "")       -- remove lines like ## Timer Object Methods
@@ -283,7 +284,7 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  arg = "wifi.md"
+  arg = "http.md"
   fileParse(arg)
 --]]
 
