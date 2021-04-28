@@ -31,8 +31,10 @@
 -- [net.udpsocket sub module](#netudpsocket-module)
 -- etc.
 --------------------------------------------------------------------------------
+
 --#region beforeParser
-local readFile, saveFile, lines
+
+local readFile, saveFile, lines, detab, sub4spTo2  -- functions
 local dataOut, mdFile, allFunc, getDescr, getSyntax, getParams, getRet
 local description, parameters, returns, syntax, content
 local func
@@ -58,13 +60,9 @@ local function fileParse(arg)
                   : gsub("## wifi.eventmon.reason", "")
                   : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n") -- duplicate headers
                   : gsub("##%s.-%(%)", "", 1)  -- and remove first header ##
-                  : gsub("%[(`.-`)%]%b()", "%1") -- handle links
-                  : gsub("(%b[])[ \t]*%(http.-%)",  function (h)
-                                                      return string.sub(h, 2, -2)
-                                                    end)
-                  : gsub("(%b[])[ \t]*%(#.-%)",     function (h)
-                                                      return string.sub(h, 2, -2)
-                                                    end)
+                  : gsub("(%b[])%b()",  function (h)  -- handle links
+                                          return string.sub(h, 2, -2)
+                                        end)
 
   mdFile = mdFile .. "\n## EOF()" -- end of file
 
@@ -193,13 +191,18 @@ function getParams(cont)
   ---@param v string
   ---@return table
   local function parsePar(t, k, v)
-    if (v:match("^[ \t]+[%-%*]")) then  -- 2-nd level of params
-      t[k] =  string.gsub(v, "^(.-)", "--- %1")
-        if k == #t then -- the last string of 2-nd level params
-          t[k] = t[k] .. "\n"
-        end
+
+    v = detab(v)
+    if (v:find("^%s+[%-%*]")) then  -- indent ==> not 1-st level param
+      t[k] = sub4spTo2(v)
+      t[k] = string.gsub(t[k], "^(.-)", "---%1")
+
+      if k == #t then
+        t[k] = t[k] .. "\n"
+      end
+
     else
-      t[k] =  string.match(v, "^[%-%*]?[ \t]*`([%(%)%[%]%w%s_/,%.]+)`") and
+      t[k] =  string.match(v, "^[%-%*]?%s*`([%(%)%[%]%w%s_/,%.]+)`") and
               string.gsub(v, "^(.-)`([%(%)%[%]%w%s_/,%.]+)`[ :%.]?\r?\n?(.*)", "---@param %2 any @%3") or
               string.gsub(v, "^(.-)", "--- %1")
 
@@ -211,7 +214,7 @@ function getParams(cont)
       -- change \ or | -> _or_
       t[k] =  string.gsub(t[k], "^%-%-%-@param ([%w_]+)/([%w_]+) (.+)", "---@param %1_or_%2 %3")
       -- vararg
-      t[k] =  string.gsub(t[k], "^%-%-%-[\t ]+%-[\t ]+(`%.%.%.[%w]+`)", "---@vararg any %1")
+      t[k] =  string.gsub(t[k], "^%-%-%-%s+%-%s+(`%.%.%.[%w]+`)", "---@vararg any %1")
 
       if k == #t then -- the last string
         t[k] = t[k] .. "\n"
@@ -241,6 +244,18 @@ function getParams(cont)
   return buff
 end
 
+--#region Utility functions
+
+---Remove redundant spaces in indented lines
+---@param str string
+---@return string
+sub4spTo2 = function (str)
+  str = str :gsub("....", "%0\1")
+            :gsub(" +\1", "  ")
+            :gsub("\1", "")
+  return str
+end
+
 -- Load contents of the given file
 ---@param  fname string file name
 ---@return string @data from file
@@ -262,7 +277,7 @@ saveFile = function(fname, data)
   file:close()
 end
 
--- from http://lua-users.org/wiki/SplitJoin
+-- from http://lua-users.org/wiki/SplitJoin \
 ---split string into lines
 ---@param str string
 ---@return table
@@ -276,6 +291,23 @@ function lines(str)
   return t
 end
 
+---from https://github.com/mpeterv/markdown/ \
+--- Converts tabs to spaces
+---@param text string
+---@return string
+function detab(text)
+  local tab_width = 4
+  local function rep(match)
+     local spaces = -match:len()
+     while spaces<1 do spaces = spaces + tab_width end
+     return match .. string.rep(" ", spaces)
+  end
+  text = text:gsub("([^\n]-)\t", rep)
+  return text
+end
+
+--#endregion Utility functions
+
 local function main()
 --[[ -- all files
   for i = 1, #arg do
@@ -284,7 +316,7 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  arg = "net.md"
+  arg = "dht.md"
   fileParse(arg)
 --]]
 
