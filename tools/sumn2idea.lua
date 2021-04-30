@@ -12,32 +12,52 @@
 -- comments and char '>' (it denotes default value) will be lost
 --
 -- removes '\' at the end of lines
+--
+-- Usage:
+-- | sumn2idea.lua  # script
+-- |
+-- |___esp32
+-- |   | *.lua      # files for esp32
+-- |
+-- |___esp8266
+--     | *.lua      # files for esp8266
+--
+-- If no argument is given, script uses ./esp8266 directory
+-- lua sumn2idea.lua
+--
+-- otherwise the argument is directory's name
+-- lua sumn2idea.lua esp32
+--
 
-local lines
+local lfs    = require("lfs")
+local format = string.format
 
----[[
-local files = {
-  "nodemcu_emmy1_32.lua",
-  "nodemcu_emmy2_32.lua",
-}
---]]
+local lines, readFile, saveFile, getFilenames
+local files = {}
 
---[[
-local files = {
-  "nodemcu_emmy1.lua",
-  "nodemcu_emmy2.lua",
-  "nodemcu_emmy3.lua",
-  "nodemcu_emmy4.lua",
-}
---]]
+local srcDir = arg[1] and ("./"   .. arg[1])  or "./esp8266"
+local outDir = arg[1] and ("./i_" .. arg[1])  or "./i_esp8266"
 
 local function main()
+
+  if lfs.attributes(srcDir) then
+    if lfs.attributes(srcDir).mode == "directory" then
+      getFilenames (srcDir, files)
+    end
+  else
+    error(format("Cannot open directory, %s", srcDir))
+  end
+
+  -- Create output directory
+  if not lfs.attributes(outDir) then
+    if not lfs.mkdir(outDir) then
+      error(format("Cannot create dir %s", outDir))
+    end
+  end
+
   for _, fileName in ipairs(files) do
 
-    local fInp    = assert(io.open(fileName, "r"))
-    local content = fInp:read("*a")  ---@type string
-    fInp:close()
-
+    local content = readFile(srcDir .. '/' .. fileName)
     content = content : gsub("(%-%-%-@param%s[%w_]+)%?", "%1") -- delete '?'
                       : gsub("(alias%s[%w_]+%s[%a]+\n.-)(%-%-%-[^|])", function (alias, tail)
                             ---@type table<integer, string>
@@ -53,14 +73,47 @@ local function main()
                       : gsub("(%-%-%-@alias%s[%w_]+%s)[%a]+|", "%1")  -- delete type of alias
                       : gsub("(%-%-%-.-)%\\r?\n", "%1\n")  -- delete '\'
 
-    local fo  = assert(io.open(("i_" .. fileName), "w"))
-    fo:write(content)
-    fo:close()
+    saveFile(outDir .. "/" .. fileName, content)
+  end
+
+  print(format("\n\tThe files were successfully written to the directory %s.\n", outDir))
+end
+
+--#region Utility functions
+
+--- Get file names from src directory
+---@param path string
+getFilenames = function (path, tbl)
+  for file in lfs.dir(path) do
+    if file ~= "." and file ~= ".." then
+      table.insert(tbl, file)
+    end
   end
 end
 
--- from http://lua-users.org/wiki/SplitJoin
----split string into lines
+-- Load contents of the given file
+---@param  fname string file name
+---@return string @data from file
+readFile = function(fname)
+  local file = io.open(fname, "r")
+  if not file then error(format("Can't open file %s", fname)) end
+  local data = file:read("*a")
+  file:close()
+  return data
+end
+
+-- Save contents to the given file
+---@param fname string file name
+---@param data  string data for save
+---@return nil
+saveFile = function(fname, data)
+  local file = io.open(fname, "w")
+  file:write(data)
+  file:close()
+end
+
+-- from http://lua-users.org/wiki/SplitJoin \
+---Split string into lines
 ---@param str string
 ---@return table
 function lines(str)
@@ -72,5 +125,7 @@ function lines(str)
   helper((str:gsub("(.-)\r?\n", helper)))
   return t
 end
+
+--#endregion Utility functions
 
 main()
