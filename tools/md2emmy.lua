@@ -34,7 +34,7 @@
 
 --#region beforeParser
 
-local readFile, saveFile, lines, detab, sub4spTo2  -- functions
+local readFile, saveFile, lines, detab, sub4spTo2
 local dataOut, mdFile, allFunc, getDescr, getSyntax, getParams, getRet
 local description, parameters, returns, syntax, content
 local func
@@ -156,7 +156,7 @@ function getRet(cont)
       if k == 1 then
         -- try catch object :-\
         if v:match("[Oo]bject") then  -- 'oObject' word is given in line
-          clObj = string.match(v, "`([%w_]+)`")
+          clObj = string.match(v, "`([%w_]+)`") or "Object"
           dataOut = dataOut .. string.format("---@class %s\nlocal %s = {}\n\n", clObj, clObj)
         end
 
@@ -316,7 +316,7 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  arg = "dht.md"
+  arg = "http.md"
   fileParse(arg)
 --]]
 
