@@ -6,5 +6,6 @@
     "Lua.runtime.version": "Lua 5.1",
     "Lua.workspace.library": [
       "c:\\Users\\Lua\\nodeMCU\\nodeMCU-emmy\\esp8266\\"
-    ]
+    ],
+    "Lua.hover.enumsLimit": 1
 }
