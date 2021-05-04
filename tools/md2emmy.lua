@@ -214,7 +214,9 @@ function getParams(cont)
       -- change \ or | -> _or_
       t[k] =  string.gsub(t[k], "^%-%-%-@param ([%w_]+)/([%w_]+) (.+)", "---@param %1_or_%2 %3")
       -- vararg
-      t[k] =  string.gsub(t[k], "^%-%-%-%s+%-%s+(`%.%.%.[%w]+`)", "---@vararg any %1")
+      t[k] =  string.gsub(t[k], "^%-%-%-@param%s%.%.%.[%w%s_]+.+@([%w]*)", "---@vararg any @%1")
+      t[k] =  string.gsub(t[k], "^%-%-%-@param%s[%w%s_]+%.%.%..+@([%w]*)", "---@vararg any @%1")
+
 
       if k == #t then -- the last string
         t[k] = t[k] .. "\n"
