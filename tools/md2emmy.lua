@@ -34,10 +34,13 @@
 
 --#region beforeParser
 
-local readFile, saveFile, lines, detab, sub4spTo2
+local readFile, saveFile, lines, detab, sub4spTo2, rmHeaders
 local dataOut, mdFile, allFunc, getDescr, getSyntax, getParams, getRet
 local description, parameters, returns, syntax, content
-local func
+local funcName
+
+---@type table <number, string>
+local optparam = {}  -- optional parameter names
 
 local function fileParse(arg)
   local fn       = string.sub(arg, 1, -4)
@@ -55,18 +58,15 @@ local function fileParse(arg)
                   : gsub("##%s[%a]+\n", "")     -- remove lines like ## Constructor
                   : gsub("### ([%a]+)", "## %1" ) -- e.g. for tmr:...
                   : gsub("##%s%w-%s", "")       -- remove lines like ## Timer Object Methods
-                  : gsub("## gpio.pulse\n", "") -- ambigous headers
-                  : gsub("## node.LFS\n", "")
-                  : gsub("## wifi.eventmon.reason", "")
-                  : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n") -- duplicate headers
-                  : gsub("##%s.-%(%)", "", 1)  -- and remove first header ##
                   : gsub("(%b[])%b()",  function (h)  -- handle links
                                           return string.sub(h, 2, -2)
                                         end)
+  mdFile = rmHeaders(mdFile) -- remove ambigous headers
+  mdFile = mdFile   : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n") -- duplicate headers
+                  : gsub("##%s.-%(%)", "", 1)  -- and remove first header ##
 
   mdFile = mdFile .. "\n## EOF()" -- end of file
 
-  -- print(mdFile)
   dataOut = "--=== ".. string.upper(fn) .. " ===\n" .. fn .." = {}\n\n"   -- make title
 
   allFunc = {}
@@ -93,19 +93,39 @@ local function fileParse(arg)
 end
 --#endregion beforeParser
 
+---remove ## headers that are not function descriptions
+---@param str string
+---@return string
+function rmHeaders(str)
+
+  local headers2ndlvl = {
+    "## `resource.lua` file\n",
+    "## `make_resource.lua` script\n",
+    "## gpio.pulse\n",
+    "## node.LFS\n",
+    "## wifi.eventmon.reason\n",
+    }
+
+  for _, header2 in pairs(headers2ndlvl) do
+    str = str:gsub(header2, "")
+  end
+
+  return str
+end
+
 -- Get "Description"
 ---@param cont string
 ---@return string
 function getDescr(cont)
-  func = cont:match("## ([%w_:%.]+%(%)).-\n")
-  if not func then
-    func = cont:match("##%s?([%w_:%.]+).-\n")
-    error("Probably missing parentheses in the function declaration. ## " .. func)
+  funcName = cont:match("## ([%w_:%.]+%(%)).-\n")
+  if not funcName then
+    funcName = cont:match("##%s?([%w_:%.]+).-\n")
+    error("Probably missing parentheses in the function declaration. ## " .. funcName)
   end
 
   local buff = cont:match("##%s.-\n\n?(.-)\n?#####?[%w]+\n")
   if not buff then
-    error("Description = nil in: " .. func)
+    error("Description = nil in: " .. funcName)
   else
     local t = lines(buff)
     for k, v in pairs (t) do
@@ -122,12 +142,28 @@ end
 ---@param cont string
 ---@return string
 function getSyntax(cont)
+
+  --- Fill 'optparam' table with optional parameter names
+  ---@param str string Syntax
+  local function getOptParam(str)
+    for i = 1, #optparam do optparam[i] = nil end
+    local allop = string.match(str, "(%[.+%])") or ""
+    if allop then
+      allop = string.gsub(allop, ",", "%[")
+      for op in string.gmatch(allop, "[%[%s]+([%w_]+)%s*[%[%]]") do
+        optparam[#optparam+1] = op
+      end
+    end
+  end
+
   -- local buff = cont:match("####Syntax\n?\n`(.-)`\n?\n####[%w]+\n")  -- TODO multiple functions -> @overload
   local buff = cont:match("####Syntax\n?\n`([^\n]-)`\n?\n")  -- one line only
   if not buff then
-    error("#### Syntax section or '`' is missed in: " .. func)
+    error("#### Syntax section or '`' is missed in: " .. funcName)
   else
-    buff = buff:gsub("[%[%]]", "")  -- TODO  add "?" in parameter's field
+    getOptParam(buff)
+
+    buff = buff:gsub("[%[%]]", "")
     buff = buff:gsub("({.+})", "tbl")
     buff = buff:gsub("^(.+%()(.+)%(.*(%))$", "%1%2%3")  -- remove nested "()"
     buff = buff:gsub("^([^%(]+%(.*)(function)(.*%))", "%1foo%3")
@@ -148,7 +184,7 @@ function getRet(cont)
 
   buff = cont:match("####Returns\n\n?(.-)\n##")
   if not buff then
-    error("#### Returns section is missed in: " .. func)
+    error("#### Returns section is missed in: " .. funcName)
   else
     ---@type table <number, string>
     t = lines(buff)
@@ -185,6 +221,17 @@ end
 ---@return string
 function getParams(cont)
 
+  local function subOptParam(str)
+    for _, opName in ipairs(optparam) do
+      if string.find(str, "%-%-%-@param%s" .. opName) then
+        str = str : gsub("%-%-%-@param%s" .. (opName), "%1?")
+                  : gsub("(%-%-%-@param%s.+@)", "%1(optional) ")
+      end
+    end
+
+    return str
+  end
+
   ---one parameter parse
   ---@param t table
   ---@param k integer
@@ -200,7 +247,7 @@ function getParams(cont)
       if k == #t then
         t[k] = t[k] .. "\n"
       end
-
+    -- 1-st level parameter
     else
       t[k] =  string.match(v, "^[%-%*]?%s*`([%(%)%[%]%w%s_/,%.]+)`") and
               string.gsub(v, "^(.-)`([%(%)%[%]%w%s_/,%.]+)`[ :%.]?\r?\n?(.*)", "---@param %2 any @%3") or
@@ -213,10 +260,13 @@ function getParams(cont)
 
       -- change \ or | -> _or_
       t[k] =  string.gsub(t[k], "^%-%-%-@param ([%w_]+)/([%w_]+) (.+)", "---@param %1_or_%2 %3")
+
       -- vararg
       t[k] =  string.gsub(t[k], "^%-%-%-@param%s%.%.%.[%w%s_]+.+@([%w]*)", "---@vararg any @%1")
       t[k] =  string.gsub(t[k], "^%-%-%-@param%s[%w%s_]+%.%.%..+@([%w]*)", "---@vararg any @%1")
 
+      -- optional parameters
+      t[k] = subOptParam(t[k])
 
       if k == #t then -- the last string
         t[k] = t[k] .. "\n"
@@ -228,7 +278,7 @@ function getParams(cont)
 
   local buff = cont:match("####Parameters\n(.-)\n\n?#####?%s?[%w]+\n")
   if not buff then
-    error("#### Parameters or Returns section is missed in: " .. func)
+    error("#### Parameters or Returns section is missed in: " .. funcName)
   else
     local t = lines(buff)
 
@@ -318,7 +368,7 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  arg = "http.md"
+  arg = "file_lfs.md"
   fileParse(arg)
 --]]
 
