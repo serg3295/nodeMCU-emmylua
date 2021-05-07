@@ -34,7 +34,7 @@
 
 --#region beforeParser
 
-local readFile, saveFile, lines, detab, sub4spTo2, rmHeaders
+local readFile, saveFile, lines, detab, sub4spTo2, rmHeaders, makeBold
 local dataOut, mdFile, allFunc, getDescr, getSyntax, getParams, getRet
 local description, parameters, returns, syntax, content
 local funcName
@@ -62,9 +62,8 @@ local function fileParse(arg)
                                           return string.sub(h, 2, -2)
                                         end)
   mdFile = rmHeaders(mdFile) -- remove ambigous headers
-  mdFile = mdFile   : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n") -- duplicate headers
+  mdFile = mdFile : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n") -- duplicate headers
                   : gsub("##%s.-%(%)", "", 1)  -- and remove first header ##
-
   mdFile = mdFile .. "\n## EOF()" -- end of file
 
   dataOut = "--=== ".. string.upper(fn) .. " ===\n" .. fn .." = {}\n\n"   -- make title
@@ -91,7 +90,6 @@ local function fileParse(arg)
   saveFile(fout, dataOut)
 
 end
---#endregion beforeParser
 
 ---remove ## headers that are not function descriptions
 ---@param str string
@@ -104,7 +102,7 @@ function rmHeaders(str)
     "## gpio.pulse\n",
     "## node.LFS\n",
     "## wifi.eventmon.reason\n",
-    }
+  }
 
   for _, header2 in pairs(headers2ndlvl) do
     str = str:gsub(header2, "")
@@ -112,6 +110,7 @@ function rmHeaders(str)
 
   return str
 end
+--#endregion beforeParser
 
 -- Get "Description"
 ---@param cont string
@@ -129,7 +128,8 @@ function getDescr(cont)
   else
     local t = lines(buff)
     for k, v in pairs (t) do
-      t[k] = string.gsub(v, "(.+)", "---%1")
+      t[k] = makeBold(v)
+      t[k] = string.gsub(t[k], "(.+)", "--- %1")
     end
     buff = table.concat(t, "\n")
     buff = buff:gsub("\n\n\n?", "\n") -- remove blank lines
@@ -185,33 +185,45 @@ function getRet(cont)
   buff = cont:match("####Returns\n\n?(.-)\n##")
   if not buff then
     error("#### Returns section is missed in: " .. funcName)
-  else
-    ---@type table <number, string>
-    t = lines(buff)
-    for k, v in pairs (t) do
-      if k == 1 then
-        -- try catch object :-\
-        if v:match("[Oo]bject") then  -- 'oObject' word is given in line
-          clObj = string.match(v, "`([%w_]+)`") or "Object"
-          dataOut = dataOut .. string.format("---@class %s\nlocal %s = {}\n\n", clObj, clObj)
-        end
+  end
 
-        t[k] =  v:match("^[%-%*]%s") and
-                v:gsub ("^([%-%*]%s?.-)", "---@return any @>\n--- %1") or
-                v:match("^`nil`") and
+  ---@type table <number, string>
+  t = lines(buff)
+  for k, v in pairs (t) do
+    v = detab(v)
+    v = sub4spTo2(v)
+    if k == 1 then
+      -- try catch object :-\
+      if v:find("[Oo]bject") then  -- 'oObject' word is given in line
+        clObj = string.match(v, "`([%w_]+)`") or "Object"
+        dataOut = dataOut .. string.format("---@class %s\nlocal %s = {}\n\n", clObj, clObj)
+      end
+
+      if v:match("^[%-%*]%s`") then
+        t[k] = v:gsub ("^[%-%*]%s?`(.-)`%s?(.-)", "---@return any %1 @%2")
+
+      elseif v:match("^[%-%*]%s") then
+        t[k] = v:gsub ("^(.-)", "---@return any @\n--- %1")
+      else
+
+        t[k] =  v:match("^`nil`") and
                 v:gsub ("^`nil`", "---@return nil") or
                 clObj and
                 v:gsub ("^(.+)","---@return " .. clObj .. " @%1") or
-               (v:match("`true`") and v:match("`false`")) and
+              (v:match("`true`") and v:match("`false`")) and
                 v:gsub ("^(.+)","---@return boolean @%1") or
                 v:gsub ("^(.+)", "---@return any @%1")
-      else
-        t[k] = string.gsub(v, "(.+)", "--- %1")
       end
+    else
+      t[k] =  v:match("^[%-%*]%s`") and
+              v:gsub ("^[%-%*]%s?`(.-)`%s?(.-)", "---@return any %1 @%2") or
+              v:gsub("(.+)", "--- %1")
+      t[k] = makeBold(t[k])
+
     end
-    buff = table.concat(t, "\n")
-    buff = buff:gsub("\n\n", "\n") -- remove blank lines
   end
+  buff = table.concat(t, "\n")
+  buff = buff:gsub("\n\n", "\n") -- remove blank lines
 
   return buff
 end
@@ -221,6 +233,9 @@ end
 ---@return string
 function getParams(cont)
 
+  --- Add '?' and @(optional) if parameter is optional
+  ---@param str string
+  ---@return string
   local function subOptParam(str)
     for _, opName in ipairs(optparam) do
       if string.find(str, "%-%-%-@param%s" .. opName) then
@@ -242,6 +257,7 @@ function getParams(cont)
     v = detab(v)
     if (v:find("^%s+[%-%*]")) then  -- indent ==> not 1-st level param
       t[k] = sub4spTo2(v)
+      t[k] = makeBold(t[k])
       t[k] = string.gsub(t[k], "^(.-)", "---%1")
 
       if k == #t then
@@ -305,6 +321,15 @@ sub4spTo2 = function (str)
   str = str :gsub("....", "%0\1")
             :gsub(" +\1", "  ")
             :gsub("\1", "")
+  return str
+end
+
+---Replace the first `text` with bold **text** to improve\
+---text readability in IntelliJ IDEA
+---@param str string
+---@return string
+makeBold = function (str)
+  str = string.gsub(str, "%-%s+`(.-)`", "- **%1**", 1)
   return str
 end
 
