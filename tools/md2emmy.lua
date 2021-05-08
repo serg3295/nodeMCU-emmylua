@@ -38,8 +38,10 @@
 
 local readFile, saveFile, lines, detab, rmSpaces, rmHeaders, makeBold
 local dataOut, mdFile, allFunc, getDescr, getSyntax, getParams, getRet
+local addLineBr
 local description, parameters, returns, syntax, content
 local funcName
+local format = string.format
 
 ---@type table <number, string>
 local optparam = {}  -- optional parameter names
@@ -129,14 +131,15 @@ function getDescr(cont)
      error("Description = nil in: " .. funcName)
   end
 
+  buff = addLineBr(buff, true)
   local t = lines(buff)
   for k, v in pairs (t) do
     t[k] = makeBold(v)
     t[k] = string.gsub(t[k], "(.+)", "--- %1")
   end
-
   buff = table.concat(t, "\n")
   buff = buff:gsub("\n\n\n?", "\n") -- remove blank lines
+
   return buff
 end
 
@@ -188,6 +191,7 @@ function getRet(cont)
     error("#### Returns section is missed in: " .. funcName)
   end
 
+  buff = addLineBr(buff)
   ---@type table <number, string>
   t = lines(buff)
   for k, v in pairs (t) do
@@ -300,6 +304,7 @@ function getParams(cont)
   if not buff then
     error("#### Parameters or Returns section is missed in: " .. funcName)
   end
+  buff = addLineBr(buff)
 
   local t = lines(buff)
 
@@ -318,12 +323,33 @@ end
 
 --#region Utility functions
 
+---Add line breaks - 'backslash'
+---@param blk string
+---@param isDescr boolean for exclude 1-st entry
+---@return string
+addLineBr = function (blk, isDescr)
+  local isLine1 = true
+  blk = string.gsub(blk, "\r*\n+([^%-%s%d\t])", function (s)
+        if isDescr then
+          return format("\\\n%s", s)
+        else
+          if isLine1 then
+            isLine1 = false
+            return format("\n%s", s)
+          else
+            return format("\\\n%s", s)
+          end
+        end
+      end)
+  return blk
+end
+
 ---Remove redundant spaces in indented lines
 ---@param str string
 ---@return string
 rmSpaces = function (str)
   str = str :gsub("....", "%0\1")
-            :gsub(" +\1", "  ")
+            :gsub("    \1", "  ")
             :gsub("\1", "")
   return str
 end
