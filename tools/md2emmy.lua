@@ -1,3 +1,4 @@
+--#region Header
 --------------------------------------------------------------------------------
 -- A script to generate NodeMCU API autocomplete files in EmmyLua format
 -- ver. 0.1.1
@@ -31,10 +32,11 @@
 -- [net.udpsocket sub module](#netudpsocket-module)
 -- etc.
 --------------------------------------------------------------------------------
+--#endregion Header
 
 --#region beforeParser
 
-local readFile, saveFile, lines, detab, sub4spTo2, rmHeaders, makeBold
+local readFile, saveFile, lines, detab, rmSpaces, rmHeaders, makeBold
 local dataOut, mdFile, allFunc, getDescr, getSyntax, getParams, getRet
 local description, parameters, returns, syntax, content
 local funcName
@@ -124,17 +126,17 @@ function getDescr(cont)
 
   local buff = cont:match("##%s.-\n\n?(.-)\n?#####?[%w]+\n")
   if not buff then
-    error("Description = nil in: " .. funcName)
-  else
-    local t = lines(buff)
-    for k, v in pairs (t) do
-      t[k] = makeBold(v)
-      t[k] = string.gsub(t[k], "(.+)", "--- %1")
-    end
-    buff = table.concat(t, "\n")
-    buff = buff:gsub("\n\n\n?", "\n") -- remove blank lines
+     error("Description = nil in: " .. funcName)
   end
 
+  local t = lines(buff)
+  for k, v in pairs (t) do
+    t[k] = makeBold(v)
+    t[k] = string.gsub(t[k], "(.+)", "--- %1")
+  end
+
+  buff = table.concat(t, "\n")
+  buff = buff:gsub("\n\n\n?", "\n") -- remove blank lines
   return buff
 end
 
@@ -160,18 +162,17 @@ function getSyntax(cont)
   local buff = cont:match("####Syntax\n?\n`([^\n]-)`\n?\n")  -- one line only
   if not buff then
     error("#### Syntax section or '`' is missed in: " .. funcName)
-  else
-    getOptParam(buff)
-
-    buff = buff:gsub("[%[%]]", "")
-    buff = buff:gsub("({.+})", "tbl")
-    buff = buff:gsub("^(.+%()(.+)%(.*(%))$", "%1%2%3")  -- remove nested "()"
-    buff = buff:gsub("^([^%(]+%(.*)(function)(.*%))", "%1foo%3")
-    buff = buff:gsub("(%.%.%.%s?)([%w]+)", "%1")  -- vararg
-    buff = buff:gsub("^(.+=%s?)", "")
-    buff = buff:gsub("^(.+)[/|](.+)", "%1_or_%2")   -- change / | -> _or_
-    buff = "function " .. buff .. " end\n\n"
   end
+  getOptParam(buff)
+
+  buff = buff:gsub("[%[%]]", "")
+  buff = buff:gsub("({.+})", "tbl")
+  buff = buff:gsub("^(.+%()(.+)%(.*(%))$", "%1%2%3")  -- remove nested "()"
+  buff = buff:gsub("^([^%(]+%(.*)(function)(.*%))", "%1foo%3")
+  buff = buff:gsub("(%.%.%.%s?)([%w]+)", "%1")  -- vararg
+  buff = buff:gsub("^(.+=%s?)", "")
+  buff = buff:gsub("^(.+)[/|](.+)", "%1_or_%2")   -- change / | -> _or_
+  buff = "function " .. buff .. " end\n\n"
 
   return buff
 end
@@ -191,7 +192,8 @@ function getRet(cont)
   t = lines(buff)
   for k, v in pairs (t) do
     v = detab(v)
-    v = sub4spTo2(v)
+    v = rmSpaces(v)
+
     if k == 1 then
       -- try catch object :-\
       if v:find("[Oo]bject") then  -- 'oObject' word is given in line
@@ -204,8 +206,8 @@ function getRet(cont)
 
       elseif v:match("^[%-%*]%s") then
         t[k] = v:gsub ("^(.-)", "---@return any @\n--- %1")
-      else
 
+      else
         t[k] =  v:match("^`nil`") and
                 v:gsub ("^`nil`", "---@return nil") or
                 clObj and
@@ -214,17 +216,18 @@ function getRet(cont)
                 v:gsub ("^(.+)","---@return boolean @%1") or
                 v:gsub ("^(.+)", "---@return any @%1")
       end
+
     else
       t[k] =  v:match("^[%-%*]%s`") and
               v:gsub ("^[%-%*]%s?`(.-)`%s?(.-)", "---@return any %1 @%2") or
               v:gsub("(.+)", "--- %1")
       t[k] = makeBold(t[k])
-
     end
+
   end
+
   buff = table.concat(t, "\n")
   buff = buff:gsub("\n\n", "\n") -- remove blank lines
-
   return buff
 end
 
@@ -243,7 +246,6 @@ function getParams(cont)
                   : gsub("(%-%-%-@param%s.+@)", "%1(optional) ")
       end
     end
-
     return str
   end
 
@@ -256,13 +258,14 @@ function getParams(cont)
 
     v = detab(v)
     if (v:find("^%s+[%-%*]")) then  -- indent ==> not 1-st level param
-      t[k] = sub4spTo2(v)
+      t[k] = rmSpaces(v)
       t[k] = makeBold(t[k])
       t[k] = string.gsub(t[k], "^(.-)", "---%1")
 
       if k == #t then
         t[k] = t[k] .. "\n"
       end
+
     -- 1-st level parameter
     else
       t[k] =  string.match(v, "^[%-%*]?%s*`([%(%)%[%]%w%s_/,%.]+)`") and
@@ -287,6 +290,7 @@ function getParams(cont)
       if k == #t then -- the last string
         t[k] = t[k] .. "\n"
       end
+
     end
 
     return t[k]
@@ -295,19 +299,19 @@ function getParams(cont)
   local buff = cont:match("####Parameters\n(.-)\n\n?#####?%s?[%w]+\n")
   if not buff then
     error("#### Parameters or Returns section is missed in: " .. funcName)
-  else
-    local t = lines(buff)
-
-    for k, v in pairs (t) do
-      if k == 1 then
-        t[k] =  string.match(v, "^[`Nn][on][ni][el][`\n]*") and "" or parsePar(t, k, v)
-      else
-        t[k] = parsePar(t, k, v)
-      end
-    end
-    buff = table.concat(t, "\n")
-    buff = buff:gsub("\n\n", "\n") -- remove blank lines
   end
+
+  local t = lines(buff)
+
+  for k, v in pairs (t) do
+    if k == 1 then
+      t[k] =  string.match(v, "^[`Nn][on][ni][el][`\n]*") and "" or parsePar(t, k, v)
+    else
+      t[k] = parsePar(t, k, v)
+    end
+  end
+  buff = table.concat(t, "\n")
+  buff = buff:gsub("\n\n", "\n") -- remove blank lines
 
   return buff
 end
@@ -317,7 +321,7 @@ end
 ---Remove redundant spaces in indented lines
 ---@param str string
 ---@return string
-sub4spTo2 = function (str)
+rmSpaces = function (str)
   str = str :gsub("....", "%0\1")
             :gsub(" +\1", "  ")
             :gsub("\1", "")
