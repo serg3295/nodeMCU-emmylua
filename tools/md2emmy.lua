@@ -67,7 +67,7 @@ local function fileParse(arg)
                                         end)
   mdFile = rmHeaders(mdFile) -- remove ambigous headers
   mdFile = mdFile : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n") -- duplicate headers
-                  : gsub("##%s.-%(%)", "", 1)  -- and remove first header ##
+                  : gsub("##%s.-%(.-%)", "", 1)  -- and remove first header ##
   mdFile = mdFile .. "\n## EOF()" -- end of file
 
   dataOut = "--=== ".. string.upper(fn) .. " ===\n" .. fn .." = {}\n\n"   -- make title
@@ -120,7 +120,7 @@ end
 ---@param cont string
 ---@return string
 function getDescr(cont)
-  funcName = cont:match("## ([%w_:%.]+%(%)).-\n")
+  funcName = cont:match("## ([%w_:%.]+%(.-%)).-\n")
   if not funcName then
     funcName = cont:match("##%s?([%w_:%.]+).-\n")
     error("Probably missing parentheses in the function declaration. ## " .. funcName)
@@ -161,14 +161,23 @@ function getSyntax(cont)
     end
   end
 
-  -- local buff = cont:match("####Syntax\n?\n`(.-)`\n?\n####[%w]+\n")  -- TODO multiple functions -> @overload
-  local buff = cont:match("####Syntax\n?\n`([^\n]-)`\n?\n")  -- one line only
+  local buff = cont:match("####Syntax\n?\n(.-)\n?\n####[%w]+\n")
   if not buff then
-    error("#### Syntax section or '`' is missed in: " .. funcName)
+    error("#### Syntax section is missed in: " .. funcName)
   end
+
+  buff =  string.find(buff, "^```lua\r?\n") and
+          string.match(buff, "^```lua\r?\n(.-)\r?\n```") or
+          cont:match("####Syntax\n?\n`([^\n]-)`\n?\n")
+          -- TODO multiple functions -> @overload
+
+  if not buff then
+    error("#### Syntax is invalid or '`' is missed in function: " .. funcName)
+  end
+
   getOptParam(buff)
 
-  buff = buff:gsub("[%[%]]", "")
+  buff = buff:gsub("%s?[%[%]]", "")
   buff = buff:gsub("({.+})", "tbl")
   buff = buff:gsub("^(.+%()(.+)%(.*(%))$", "%1%2%3")  -- remove nested "()"
   buff = buff:gsub("^([^%(]+%(.*)(function)(.*%))", "%1foo%3")
@@ -188,7 +197,8 @@ function getRet(cont)
 
   buff = cont:match("####Returns\n\n?(.-)\n##")
   if not buff then
-    error("#### Returns section is missed in: " .. funcName)
+    buff = "Warning! 'Returns' section was missed in source file\n"
+    print("\nWarning! #### Returns section is missed in: " .. funcName .. "\n")
   end
 
   buff = addLineBr(buff)
@@ -272,7 +282,7 @@ function getParams(cont)
 
     -- 1-st level parameter
     else
-      t[k] =  string.match(v, "^[%-%*]?%s*`([%(%)%[%]%w%s_/,%.]+)`") and
+      t[k] =  string.match(v, "^[%-%*]?%s?`([%(%)%[%]%w%s_/,%.]+)`") and
               string.gsub(v, "^(.-)`([%(%)%[%]%w%s_/,%.]+)`[ :%.]?\r?\n?(.*)", "---@param %2 any @%3") or
               string.gsub(v, "^(.-)", "--- %1")
 
@@ -423,7 +433,7 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  arg = "file_lfs.md"
+  arg = "uart.md" or arg[1]
   fileParse(arg)
 --]]
 
