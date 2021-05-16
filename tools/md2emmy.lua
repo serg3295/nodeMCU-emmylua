@@ -318,6 +318,14 @@ function getParams(cont)
                     end, 1)
       end
 
+      -- remove double "optional"
+      t[k] = t[k]:gsub("^(.+%(optional%))%soptional", "%1", 1)
+
+      -- set 'function' type if parameter's name is 'calback'
+      if t[k]:match("%-%-%-@param callback") then
+        t[k] = t[k]:gsub("%sany%s@", " function @")
+      end
+
       -- change \ or | -> _or_
       t[k] =  string.gsub(t[k], "^%-%-%-@param ([%w_]+)/([%w_]+) (.+)", "---@param %1_or_%2 %3")
 
