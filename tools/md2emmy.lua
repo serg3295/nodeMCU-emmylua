@@ -38,7 +38,7 @@
 
 local readFile, saveFile, lines, detab, rmSpaces, rmHeaders, makeBold
 local dataOut, mdFile, allFunc, getDescr, getSyntax, getParams, getRet
-local addLineBr
+local addLineBr, escapeMagic
 local description, parameters, returns, syntax, content
 local funcName
 local format = string.format
@@ -46,8 +46,8 @@ local format = string.format
 ---@type table <number, string>
 local optparam = {}  -- optional parameter names
 
-local function fileParse(arg)
-  local fn       = string.sub(arg, 1, -4)
+local function fileParse(argf)
+  local fn       = string.sub(argf, 1, -4)
   if type(fn)   ~= "string" then error("Wrong argument") end
   local fileName = fn .. ".md"
   local fout     = fn .. ".lua"
@@ -154,9 +154,23 @@ function getSyntax(cont)
     for i = 1, #optparam do optparam[i] = nil end
     local allop = string.match(str, "(%[.+%])") or ""
     if allop then
-      allop = string.gsub(allop, ",", "%[")
-      for op in string.gmatch(allop, "[%[%s]+([%w_]+)%s*[%[%]]") do
-        optparam[#optparam+1] = op
+      allop = string.gsub(allop, "%b()", function (args)
+                    return  args:gsub( ",", "\1")
+                                :gsub("%[", "\2")
+                                :gsub("%]", "\3")
+                                :gsub("%(", "\4")
+                                :gsub("%)", "\5")
+                                :gsub("%.", "\6")
+                    end)
+      allop = string.gsub(allop, ",", "[")
+      for op in string.gmatch(allop, "[%[%s]+([%s%w_\1\2\3\4\5\6]+)[%[%]]") do
+        optparam[#optparam + 1]  = op :gsub("\1", ",")
+                                      :gsub("\2", "[")
+                                      :gsub("\3", "]")
+                                      :gsub("\4", "(")
+                                      :gsub("\5", ")")
+                                      :gsub("\6", ".")
+                                      :gsub("%s+$", "", 1)
       end
     end
   end
@@ -166,10 +180,10 @@ function getSyntax(cont)
     error("#### Syntax section is missed in: " .. funcName)
   end
 
-  buff =  string.find(buff, "^```lua\r?\n") and
-          string.match(buff, "^```lua\r?\n(.-)\r?\n```") or
+  buff =  buff:find("^```lua\r?\n") and
+          buff:match("^```lua\r?\n(.-)\r?\n```") or
           cont:match("####Syntax\n?\n`([^\n]-)`\n?\n")
-          -- TODO multiple functions -> @overload
+  -- TODO multiple functions -> @overload
 
   if not buff then
     error("#### Syntax is invalid or '`' is missed in function: " .. funcName)
@@ -179,8 +193,10 @@ function getSyntax(cont)
 
   buff = buff:gsub("%s?[%[%]]", "")
   buff = buff:gsub("({.+})", "tbl")
-  buff = buff:gsub("^(.+%()(.+)%(.*(%))$", "%1%2%3")  -- remove nested "()"
-  buff = buff:gsub("^([^%(]+%(.*)(function)(.*%))", "%1foo%3")
+  buff = buff:gsub("function%(.-%)", function(s)
+    return s:gsub("[%(,%s%.]", "_"):gsub("%)", ""):gsub("__", "_")
+  end)
+  buff = buff:gsub("^(.-%()(.-)%(.*(%))$", "%1%2%3")  -- remove nested "()"
   buff = buff:gsub("(%.%.%.%s?)([%w]+)", "%1")  -- vararg
   buff = buff:gsub("^(.+=%s?)", "")
   buff = buff:gsub("^(.+)[/|](.+)", "%1_or_%2")   -- change / | -> _or_
@@ -254,10 +270,12 @@ function getParams(cont)
   ---@param str string
   ---@return string
   local function subOptParam(str)
+
     for _, opName in ipairs(optparam) do
+      opName = escapeMagic(opName)
       if string.find(str, "%-%-%-@param%s" .. opName) then
-        str = str : gsub("%-%-%-@param%s" .. (opName), "%1?")
-                  : gsub("(%-%-%-@param%s.+@)", "%1(optional) ")
+        str = str : gsub("(%-%-%-@param%s.+@)", "%1(optional) ")
+                  : gsub("%-%-%-@param%s" .. (opName), "%1?")
       end
     end
     return str
@@ -280,16 +298,25 @@ function getParams(cont)
         t[k] = t[k] .. "\n"
       end
 
-    -- 1-st level parameter
-    else
+    else   -- 1-st level parameter
       t[k] =  string.match(v, "^[%-%*]?%s?`([%(%)%[%]%w%s_/,%.]+)`") and
               string.gsub(v, "^(.-)`([%(%)%[%]%w%s_/,%.]+)`[ :%.]?\r?\n?(.*)", "---@param %2 any @%3") or
               string.gsub(v, "^(.-)", "--- %1")
 
-      -- remove "()" in parameter name - this is a "function" type
-      t[k] =  string.gsub(t[k], "^%-%-%-@param (([%w_]+)%(.*%)) any @", "---@param %2 function @%1 ")
-      -- change function -> foo. 'function' is a reserved word
-      t[k] =  string.gsub(t[k], "^%-%-%-@param function (.+)", "---@param foo %1 ")
+      t[k] = subOptParam(t[k])  -- optional parameters
+
+      if t[k]:find("^.+[%(%)].+any @") then  --this is a "function" type
+        local opFunc = t[k]:match("^%-%-%-@param (.-)%?? any @")
+        local oFwoBr = opFunc:gsub("[%[%]]", "")  -- remove brackets []
+
+        t[k] = t[k]:gsub("^.-%(optional%)", "%0 `" .. opFunc .. "`", 1)
+        t[k] = t[k]:gsub("^(.-) any @", "%1 function|'" .. oFwoBr .. " end' @")
+
+        t[k] = t[k]:gsub("function%(.-%)", function(s)
+                        s = s:gsub("[%(,%.]", "_"):gsub("[%)%]%s%[]", "")
+                        return s
+                    end, 1)
+      end
 
       -- change \ or | -> _or_
       t[k] =  string.gsub(t[k], "^%-%-%-@param ([%w_]+)/([%w_]+) (.+)", "---@param %1_or_%2 %3")
@@ -297,9 +324,6 @@ function getParams(cont)
       -- vararg
       t[k] =  string.gsub(t[k], "^%-%-%-@param%s%.%.%.[%w%s_]+.+@([%w]*)", "---@vararg any @%1")
       t[k] =  string.gsub(t[k], "^%-%-%-@param%s[%w%s_]+%.%.%..+@([%w]*)", "---@vararg any @%1")
-
-      -- optional parameters
-      t[k] = subOptParam(t[k])
 
       if k == #t then -- the last string
         t[k] = t[k] .. "\n"
@@ -310,28 +334,36 @@ function getParams(cont)
     return t[k]
   end
 
+
   local buff = cont:match("####Parameters\n(.-)\n\n?#####?%s?[%w]+\n")
   if not buff then
     error("#### Parameters or Returns section is missed in: " .. funcName)
   end
-  buff = addLineBr(buff)
 
+  buff = addLineBr(buff)
   local t = lines(buff)
 
   for k, v in pairs (t) do
     if k == 1 then
-      t[k] =  string.match(v, "^[`Nn][on][ni][el][`\n]*") and "" or parsePar(t, k, v)
+      t[k] = string.match(v, "^[`Nn][on][ni][el][`\n]*") and "" or parsePar(t, k, v)
     else
       t[k] = parsePar(t, k, v)
     end
   end
+
   buff = table.concat(t, "\n")
   buff = buff:gsub("\n\n", "\n") -- remove blank lines
-
   return buff
 end
 
 --#region Utility functions
+
+--- Escape magic characters
+---@param str string
+---@return string
+escapeMagic = function (str)
+  return string.gsub(str, "[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%1")
+end
 
 ---Add line breaks - 'backslash'
 ---@param blk string
@@ -433,8 +465,8 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  arg = "uart.md" or arg[1]
-  fileParse(arg)
+  local argf = arg[1] or "func.md"
+  fileParse(argf)
 --]]
 
 end
