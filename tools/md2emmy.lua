@@ -36,76 +36,26 @@
 
 --#region beforeParser
 
-local readFile, saveFile, lines, detab, rmSpaces, rmHeaders, makeBold
-local dataOut, mdFile, allFunc, getDescr, getSyntax, getParams, getRet
+local readFile, saveFile, lines, detab, rmSpaces, makeBold
+local getDescr, getSyntax, getParams, getRet
 local addLineBr, escapeMagic
-local description, parameters, returns, syntax, content
-local funcName
+local funcName, dataOut
 local format = string.format
 
 ---@type table <number, string>
 local optparam = {}  -- optional parameter names
 
 local function fileParse(argf)
-  local fn       = string.sub(argf, 1, -4)
-  if type(fn)   ~= "string" then error("Wrong argument") end
-  local fileName = fn .. ".md"
-  local fout     = fn .. ".lua"
-  mdFile = readFile(fileName)
 
-  -- file preprocessing
-  mdFile = mdFile : gsub("###%s*Example", "####Example")
-                  : gsub("###%s*See", "####See")
-                  : gsub("####%s*Return", "####Return")
-                  : gsub("####%s?(.-)", "####%1")
-                  : gsub("\n#[ \t]*(%a)", "\n####%1") -- set # header as a border ####text
-                  : gsub("##%s[%a]+\n", "")     -- remove lines like ## Constructor
-                  : gsub("### ([%a]+)", "## %1" ) -- e.g. for tmr:...
-                  : gsub("##%s%w-%s", "")       -- remove lines like ## Timer Object Methods
-                  : gsub("(%b[])%b()",  function (h)  -- handle links
-                                          return string.sub(h, 2, -2)
-                                        end)
-  mdFile = rmHeaders(mdFile) -- remove ambigous headers
-  mdFile = mdFile : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n") -- duplicate headers
-                  : gsub("##%s.-%(.-%)", "", 1)  -- and remove first header ##
-  mdFile = mdFile .. "\n## EOF()" -- end of file
-
-  dataOut = "--=== ".. string.upper(fn) .. " ===\n" .. fn .." = {}\n\n"   -- make title
-
-  allFunc = {}
-  -- split on blocks
-  for oneFunc in string.gmatch(mdFile, "(##%s.-)##%s") do
-    oneFunc = oneFunc .. "####end\n" -- end marker
-    table.insert(allFunc, oneFunc)
-  end
-
-  for i = 1, #allFunc do
-    content = allFunc[i]
-
-    description = getDescr(content)
-    syntax      = getSyntax(content)
-    parameters  = getParams(content)
-    returns     = getRet(content)
-
-    dataOut = dataOut .. description .. parameters .. returns .. syntax
-
-  end
-
-  saveFile(fout, dataOut)
-
-end
-
----remove ## headers that are not function descriptions
----@param str string
----@return string
-function rmHeaders(str)
-
-  local headers2ndlvl = {
-    "## `resource.lua` file\n",
-    "## `make_resource.lua` script\n",
-    "## gpio.pulse\n",
-    "## node.LFS\n",
-    "## wifi.eventmon.reason\n",
+  --- remove ## headers that are not function descriptions
+  ---@param str string
+  ---@return string
+  local function rmHeaders(str)
+    local headers2ndlvl = {
+    "## gpio%.pulse\n",
+    "## node%.LFS\n",
+    "## wifi%.eventmon%.reason\n",
+    "## spi%.slave%(%)\n"
   }
 
   for _, header2 in pairs(headers2ndlvl) do
@@ -113,7 +63,56 @@ function rmHeaders(str)
   end
 
   return str
+  end
+
+  local fn       = string.sub(argf, 1, -4)
+  if type(fn)   ~= "string" then error("Wrong argument") end
+  local fileName = fn .. ".md"
+  local fout     = fn .. ".lua"
+  local mdFile = readFile(fileName)
+
+  -- file preprocessing
+  mdFile = mdFile : gsub("###%s*Example", "####Example")
+                  : gsub("###%s*See", "####See")
+                  : gsub("\n#[ \t]*(%a)", "\n####%1") -- ignore # header
+                  : gsub("\n### ([%a]+)", "## %1" ) -- e.g. for tmr:...
+                  : gsub("(%b[])%b()",  function (h)  -- remove links
+                                          return string.sub(h, 2, -2)
+                                        end)
+  mdFile = rmHeaders(mdFile) -- remove ambigous headers
+  mdFile = mdFile : gsub("(##%s%w-[:%._].-)\n", "%1\n%1\n")   -- duplicate headers
+                  : gsub("##%s%w-[:%._].-\n", "", 1)    -- and remove the first header ##
+  mdFile = mdFile .. "\n## eof.EOF()\n"   -- end of file
+
+  dataOut = format("--=== %s ===\n%s = {}\n\n", string.upper(fn), fn)   -- make title
+
+  local allFunc = {}
+  -- split on blocks
+  for oneFunc in string.gmatch(mdFile, "(##%s%w-[:%._].-\n.-)##%s%w-[:%._].-\n") do
+    oneFunc = oneFunc .. "####end\n" -- end marker
+    table.insert(allFunc, oneFunc)
+  end
+
+  for i = 1, #allFunc do
+    local content     = allFunc[i]
+
+    local description = getDescr(content)
+    local syntax, sx2 = getSyntax(content)
+    local parameters  = getParams(content)
+    local returns     = getRet(content)
+
+    dataOut = dataOut .. description .. parameters .. returns .. syntax
+
+    if sx2 then  -- object model
+      dataOut = dataOut .. description .. parameters .. returns .. sx2
+    end
+
+  end
+
+  saveFile(fout, dataOut)
+
 end
+
 --#endregion beforeParser
 
 -- Get "Description"
@@ -123,12 +122,12 @@ function getDescr(cont)
   funcName = cont:match("## ([%w_:%.]+%(.-%)).-\n")
   if not funcName then
     funcName = cont:match("##%s?([%w_:%.]+).-\n")
-    error("Probably missing parentheses in the function declaration. ## " .. funcName)
+    error(format("Probably missing parentheses in the function declaration. ## %s", funcName))
   end
 
-  local buff = cont:match("##%s.-\n\n?(.-)\n?#####?[%w]+\n")
+  local buff = cont:match("##%s.-\n\n?(.-)\n?#####?%s?[%w]+\n")
   if not buff then
-     error("Description = nil in: " .. funcName)
+     error(format("Description = nil in: %s", funcName))
   end
 
   buff = addLineBr(buff, true)
@@ -175,34 +174,47 @@ function getSyntax(cont)
     end
   end
 
-  local buff = cont:match("####Syntax\n?\n(.-)\n?\n####[%w]+\n")
+  local buff = cont:match("####%s?Syntax\n?\n(.-)\n?\n####%s?[%w]+\n")
   if not buff then
-    error("#### Syntax section is missed in: " .. funcName)
+    error(format("#### Syntax section is missed in: %s", funcName))
   end
 
   buff =  buff:find("^```lua\r?\n") and
           buff:match("^```lua\r?\n(.-)\r?\n```") or
-          cont:match("####Syntax\n?\n`([^\n]-)`\n?\n")
-  -- TODO multiple functions -> @overload
-
+          cont:match("####%s?Syntax\n?\n`([^\n]-)`\n?\n")
   if not buff then
-    error("#### Syntax is invalid or '`' is missed in function: " .. funcName)
+    error(format("#### Syntax is invalid or '`' is missed in function: %s", funcName))
   end
 
+  local firstFunc = buff:match("(.+%))")
   getOptParam(buff)
 
   buff = buff:gsub("%s?[%[%]]", "")
   buff = buff:gsub("({.+})", "tbl")
   buff = buff:gsub("function%(.-%)", function(s)
-    return s:gsub("[%(,%s%.]", "_"):gsub("%)", ""):gsub("__", "_")
-  end)
+                return s:gsub("[%(,%s%.]", "_"):gsub("%)", ""):gsub("__", "_")
+              end)
   buff = buff:gsub("^(.-%()(.-)%(.*(%))$", "%1%2%3")  -- remove nested "()"
   buff = buff:gsub("(%.%.%.%s?)([%w]+)", "%1")  -- vararg
   buff = buff:gsub("^(.+=%s?)", "")
   buff = buff:gsub("^(.+)[/|](.+)", "%1_or_%2")   -- change / | -> _or_
-  buff = "function " .. buff .. " end\n\n"
 
-  return buff
+  -- multiple functions
+  local secondBuff = nil
+  local secondFunc = cont:match("####%s?Syntax\n?\n`[^\n]-`\n\n?`([^\n]-)`\n?\n")
+
+  if secondFunc then
+    firstFunc   = escapeMagic(firstFunc)
+    secondFunc  = escapeMagic(secondFunc)
+    local sub1, f1 = string.match(firstFunc, "(.+%.)(.+%))")
+    local sub2, f2 = string.match(secondFunc, "(.+:)(.+%))")
+    if f1 == f2 then
+      secondBuff = "function " .. buff:gsub(sub1, sub2) .. " end\n\n"
+    end
+  end
+
+  buff = "function " .. buff .. " end\n\n"
+  return buff, secondBuff
 end
 
 -- Get "Returns"
@@ -211,10 +223,10 @@ end
 function getRet(cont)
   local buff, clObj, t
 
-  buff = cont:match("####Returns\n\n?(.-)\n##")
+  buff = cont:match("####%s?Returns\n\n?(.-)\n##")
   if not buff then
     buff = "Warning! 'Returns' section was missed in source file\n"
-    print("\nWarning! #### Returns section is missed in: " .. funcName .. "\n")
+    print(format("\nWarning! #### Returns section is missed in: %s\n", funcName))
   end
 
   buff = addLineBr(buff)
@@ -316,10 +328,11 @@ function getParams(cont)
                         s = s:gsub("[%(,%.]", "_"):gsub("[%)%]%s%[]", "")
                         return s
                     end, 1)
+        t[k] = t[k]:gsub("(%-%-%-@param%s[%w_]-)%s-%(.-%)", "%1")
       end
 
       -- remove double "optional"
-      t[k] = t[k]:gsub("^(.+%(optional%))%soptional", "%1", 1)
+      t[k] = t[k]:gsub("^(.+%(optional%))%s[oO]ptional", "%1", 1)
 
       -- set 'function' type if parameter's name is 'calback'
       if t[k]:match("%-%-%-@param callback") then
@@ -333,7 +346,7 @@ function getParams(cont)
       t[k] =  string.gsub(t[k], "^%-%-%-@param%s%.%.%.[%w%s_]+.+@([%w]*)", "---@vararg any @%1")
       t[k] =  string.gsub(t[k], "^%-%-%-@param%s[%w%s_]+%.%.%..+@([%w]*)", "---@vararg any @%1")
 
-      if k == #t then -- the last string
+      if k == #t then -- last string
         t[k] = t[k] .. "\n"
       end
 
@@ -343,9 +356,9 @@ function getParams(cont)
   end
 
 
-  local buff = cont:match("####Parameters\n(.-)\n\n?#####?%s?[%w]+\n")
+  local buff = cont:match("####%s?Parameters\n(.-)\n\n?#####?%s?[%w]+\n")
   if not buff then
-    error("#### Parameters or Returns section is missed in: " .. funcName)
+    error(format("#### Parameters or Returns section is missed in: %s", funcName))
   end
 
   buff = addLineBr(buff)
