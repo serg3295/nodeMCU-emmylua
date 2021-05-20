@@ -9,7 +9,7 @@
 --- | 'par1' #comment 1
 --- |>'par2' #comment 2
 -- to @alias name 'par1'|'par2'
--- comments and char '>' (it denotes default value) will be lost
+-- a comments and char '>' (it denotes default value) will be lost
 --
 -- removes '\' at the end of lines
 --

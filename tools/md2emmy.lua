@@ -55,7 +55,8 @@ local function fileParse(argf)
     "## gpio%.pulse\n",
     "## node%.LFS\n",
     "## wifi%.eventmon%.reason\n",
-    "## spi%.slave%(%)\n"
+    "## spi%.slave%(%)\n",
+    "## node%.readvdd33%(%)"
   }
 
   for _, header2 in pairs(headers2ndlvl) do
@@ -75,7 +76,7 @@ local function fileParse(argf)
   mdFile = mdFile : gsub("###%s*Example", "####Example")
                   : gsub("###%s*See", "####See")
                   : gsub("\n#[ \t]*(%a)", "\n####%1") -- ignore # header
-                  : gsub("\n### ([%a]+)", "## %1" ) -- e.g. for tmr:...
+                  : gsub("\n### ([%a]+)", "## %1" )   -- e.g. for tmr:...
                   : gsub("(%b[])%b()",  function (h)  -- remove links
                                           return string.sub(h, 2, -2)
                                         end)
@@ -112,7 +113,6 @@ local function fileParse(argf)
   saveFile(fout, dataOut)
 
 end
-
 --#endregion beforeParser
 
 -- Get "Description"
@@ -122,12 +122,12 @@ function getDescr(cont)
   funcName = cont:match("## ([%w_:%.]+%(.-%)).-\n")
   if not funcName then
     funcName = cont:match("##%s?([%w_:%.]+).-\n")
-    error(format("Probably missing parentheses in the function declaration. ## %s", funcName))
+    error(format("\nProbably missing parentheses in the function declaration. ## %s\n", funcName))
   end
 
   local buff = cont:match("##%s.-\n\n?(.-)\n?#####?%s?[%w]+\n")
   if not buff then
-     error(format("Description = nil in: %s", funcName))
+     error(format("\nDescription = nil in: %s\n", funcName))
   end
 
   buff = addLineBr(buff, true)
@@ -176,28 +176,28 @@ function getSyntax(cont)
 
   local buff = cont:match("####%s?Syntax\n?\n(.-)\n?\n####%s?[%w]+\n")
   if not buff then
-    error(format("#### Syntax section is missed in: %s", funcName))
+    error(format("\n#### Syntax section is missed in: %s\n", funcName))
   end
 
   buff =  buff:find("^```lua\r?\n") and
           buff:match("^```lua\r?\n(.-)\r?\n```") or
           cont:match("####%s?Syntax\n?\n`([^\n]-)`\n?\n")
   if not buff then
-    error(format("#### Syntax is invalid or '`' is missed in function: %s", funcName))
+    error(format("\n#### Syntax is invalid or '`' is missed in function: %s\n", funcName))
   end
 
   local firstFunc = buff:match("(.+%))")
   getOptParam(buff)
 
   buff = buff:gsub("%s?[%[%]]", "")
-  buff = buff:gsub("({.+})", "tbl")
-  buff = buff:gsub("function%(.-%)", function(s)
-                return s:gsub("[%(,%s%.]", "_"):gsub("%)", ""):gsub("__", "_")
+             :gsub("({.+})", "tbl")
+             :gsub("function%(.-%)", function(s)
+                return s:gsub("[%(,%s%.]", "_"):gsub("%)", ""):gsub("__", "_"):gsub("_-$", "")
               end)
-  buff = buff:gsub("^(.-%()(.-)%(.*(%))$", "%1%2%3")  -- remove nested "()"
-  buff = buff:gsub("(%.%.%.%s?)([%w]+)", "%1")  -- vararg
-  buff = buff:gsub("^(.+=%s?)", "")
-  buff = buff:gsub("^(.+)[/|](.+)", "%1_or_%2")   -- change / | -> _or_
+             :gsub("^(.-%()(.-)%(.*(%))$", "%1%2%3")  -- remove nested "()"
+             :gsub("(%.%.%.%s?)([%w]+)", "%1")  -- vararg
+             :gsub("^(.+=%s?)", "")
+             :gsub("^(.+)[/|](.+)", "%1_or_%2")   -- change / | -> _or_
 
   -- multiple functions
   local secondBuff = nil
@@ -240,7 +240,7 @@ function getRet(cont)
       -- try catch object :-\
       if v:find("[Oo]bject") then  -- 'oObject' word is given in line
         clObj = string.match(v, "`([%w_]+)`") or "Object"
-        dataOut = dataOut .. string.format("---@class %s\nlocal %s = {}\n\n", clObj, clObj)
+        dataOut = dataOut .. format("---@class %s\nlocal %s = {}\n\n", clObj, clObj)
       end
 
       if v:match("^[%-%*]%s`") then
@@ -254,7 +254,7 @@ function getRet(cont)
                 v:gsub ("^`nil`", "---@return nil") or
                 clObj and
                 v:gsub ("^(.+)","---@return " .. clObj .. " @%1") or
-              (v:match("`true`") and v:match("`false`")) and
+               (v:match("`true`") and v:match("`false`")) and
                 v:gsub ("^(.+)","---@return boolean @%1") or
                 v:gsub ("^(.+)", "---@return any @%1")
       end
@@ -325,7 +325,7 @@ function getParams(cont)
         t[k] = t[k]:gsub("^(.-) any @", "%1 function|'" .. oFwoBr .. " end' @")
 
         t[k] = t[k]:gsub("function%(.-%)", function(s)
-                        s = s:gsub("[%(,%.]", "_"):gsub("[%)%]%s%[]", "")
+                        s = s:gsub("[%(,%.%s]", "_"):gsub("[%)%]%[]", ""):gsub("__", "_"):gsub("_-$", "")
                         return s
                     end, 1)
         t[k] = t[k]:gsub("(%-%-%-@param%s[%w_]-)%s-%(.-%)", "%1")
@@ -334,7 +334,7 @@ function getParams(cont)
       -- remove double "optional"
       t[k] = t[k]:gsub("^(.+%(optional%))%s[oO]ptional", "%1", 1)
 
-      -- set 'function' type if parameter's name is 'calback'
+      -- set 'function' type if parameter's name is 'callback'
       if t[k]:match("%-%-%-@param callback") then
         t[k] = t[k]:gsub("%sany%s@", " function @")
       end
@@ -358,7 +358,7 @@ function getParams(cont)
 
   local buff = cont:match("####%s?Parameters\n(.-)\n\n?#####?%s?[%w]+\n")
   if not buff then
-    error(format("#### Parameters or Returns section is missed in: %s", funcName))
+    error(format("\n#### Parameters or Returns section is missed in: %s\n", funcName))
   end
 
   buff = addLineBr(buff)
