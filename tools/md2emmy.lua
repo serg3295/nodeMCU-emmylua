@@ -85,7 +85,7 @@ local function fileParse(argf)
                   : gsub("##%s%w-[:%._].-\n", "", 1)    -- and remove the first header ##
   mdFile = mdFile .. "\n## eof.EOF()\n"   -- end of file
 
-  dataOut = format("--=== %s ===\n%s = {}\n\n", string.upper(fn), fn)   -- make title
+  dataOut = format("--=== %s ===\n%s = {}\n\n", string.upper(fn), string.lower(fn))   -- make title
 
   local allFunc = {}
   -- split on blocks
@@ -192,7 +192,9 @@ function getSyntax(cont)
   buff = buff:gsub("%s?[%[%]]", "")
              :gsub("({.+})", "tbl")
              :gsub("function%(.-%)", function(s)
-                return s:gsub("[%(,%s%.]", "_"):gsub("%)", ""):gsub("__", "_"):gsub("_-$", "")
+                s = s:gsub("[%(%.%s,]", "_"):gsub("%)", ""):gsub("__", "_"):gsub("_-$", "")
+                if not s:find("function_") then s = s:gsub("function", "func", 1) end
+                return s
               end)
              :gsub("^(.-%()(.-)%(.*(%))$", "%1%2%3")  -- remove nested "()"
              :gsub("(%.%.%.%s?)([%w]+)", "%1")  -- vararg
@@ -325,7 +327,8 @@ function getParams(cont)
         t[k] = t[k]:gsub("^(.-) any @", "%1 function|'" .. oFwoBr .. " end' @")
 
         t[k] = t[k]:gsub("function%(.-%)", function(s)
-                        s = s:gsub("[%(,%.%s]", "_"):gsub("[%)%]%[]", ""):gsub("__", "_"):gsub("_-$", "")
+                        s = s:gsub("[%(%.%s,]", "_"):gsub("[%)%]%[]", ""):gsub("__", "_"):gsub("_-$", "")
+                        if not s:find("function_") then s = s:gsub("function", "func", 1) end
                         return s
                     end, 1)
         t[k] = t[k]:gsub("(%-%-%-@param%s[%w_]-)%s-%(.-%)", "%1")
