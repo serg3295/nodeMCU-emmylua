@@ -1,7 +1,7 @@
 --#region Header
 --------------------------------------------------------------------------------
 -- A script to generate NodeMCU API autocomplete files in EmmyLua format
--- ver. 0.1.1
+-- ver. 0.1.2
 -- Written by serg3295
 -- This script converts nodeMCU module.md file to module.lua in emmyLua format
 -- Expected structure is following:
@@ -31,19 +31,26 @@
 -- `UDPSOCKET` Object
 -- [net.udpsocket sub module](#netudpsocket-module)
 -- etc.
+--
+-- Limitations
+--  - only handles two levels of class hierarchy (as in node.egc.*)
 --------------------------------------------------------------------------------
 --#endregion Header
 
 --#region beforeParser
 
 local readFile, saveFile, lines, detab, rmSpaces, makeBold
-local getDescr, getSyntax, getParams, getRet
-local addLineBr, escapeMagic
+local getDescr, getSyntax, getParams, getRet, getConst
+local addLineBr, escapeMagic, insClassField
 local funcName, dataOut
 local format = string.format
 
 ---@type table <number, string>
 local optparam = {}  -- optional parameter names
+---@type table<string, string>
+local tconst   = {}  -- constants
+---@type table<string, string>
+local tclass   = {}  -- classes
 
 local function fileParse(argf)
 
@@ -85,7 +92,9 @@ local function fileParse(argf)
                   : gsub("##%s%w-[:%._].-\n", "", 1)    -- and remove the first header ##
   mdFile = mdFile .. "\n## eof.EOF()\n"   -- end of file
 
-  dataOut = format("--=== %s ===\n%s = {}\n\n", string.upper(fn), string.lower(fn))   -- make title
+  for i = 1, #tclass do tclass[i] = nil end
+  getConst(fn, mdFile)
+  dataOut = ""
 
   local allFunc = {}
   -- split on blocks
@@ -110,10 +119,54 @@ local function fileParse(argf)
 
   end
 
+  dataOut = insClassField(fn, dataOut)
   saveFile(fout, dataOut)
 
 end
 --#endregion beforeParser
+
+-- Get constants
+---@param fn string file name
+---@param cont string entire file
+function getConst(fn, cont)
+  for i = 1, #tconst do tconst[i] = nil end
+  for prefix, cnst_or_class, cnst in string.gmatch(cont, "`(%a[%w_]+)%.([%w_]+)%.?([%w_]*)`") do
+    if prefix == fn then
+      if cnst == "" then
+        tconst[cnst_or_class] = prefix
+      else
+        tconst[cnst] = cnst_or_class
+      end
+    end
+  end
+end
+
+-- Make text: -@class \n -@field const any \n [parent.]classname = {}
+---@param cont string
+---@param fn string file name
+---@return string   @final file
+function insClassField(fn, cont)
+  local buff = format("--=== %s ===\n\n", fn)
+  buff = buff .. format("---@class %s\n", fn)
+  for c, cla in pairs(tconst) do
+    if cla == fn then
+      buff = buff .. format("---@field %s integer\n", c)
+    end
+  end
+  buff = buff .. fn .. " = {}\n\n"
+
+  for className, parent in pairs(tclass) do
+    buff = buff .. format("---@class %s\n", className)
+    for c, cla in pairs(tconst) do
+      if cla == className then
+        buff = buff .. format("---@field %s integer\n", c)
+      end
+    end
+    buff = buff .. format("%s.%s = {}\n\n", parent, className)
+  end
+
+  return buff .. cont
+end
 
 -- Get "Description"
 ---@param cont string
@@ -214,6 +267,9 @@ function getSyntax(cont)
       secondBuff = "function " .. buff:gsub(sub1, sub2) .. " end\n\n"
     end
   end
+
+  local parent, cl = string.match(buff, "([%w_]+)%.([%w_]+)%.[%w_]")  -- is class?
+  if cl then tclass[cl] = parent end  -- fill classes table
 
   buff = "function " .. buff .. " end\n\n"
   return buff, secondBuff
