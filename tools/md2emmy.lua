@@ -1,4 +1,4 @@
---#region Header
+--#region Overview
 --------------------------------------------------------------------------------
 -- A script to generate NodeMCU API autocomplete files in EmmyLua format
 -- ver. 0.1.2
@@ -32,10 +32,8 @@
 -- [net.udpsocket sub module](#netudpsocket-module)
 -- etc.
 --
--- Limitations
---  - only handles two levels of class hierarchy (as in node.egc.*)
 --------------------------------------------------------------------------------
---#endregion Header
+--#endregion Overview
 
 --#region beforeParser
 
@@ -141,15 +139,20 @@ function getConst(fn, cont)
   end
 end
 
--- Make text: -@class \n -@field const any \n [parent.]classname = {}
+-- Make text: -@class \n -@field const integer \n [parent.]classname = {}
 ---@param cont string
 ---@param fn string file name
 ---@return string   @final file
 function insClassField(fn, cont)
+
+  local function isConst(const)
+    return string.match(const, "[A-Z_0-9]+")
+  end
+
   local buff = format("--=== %s ===\n\n", fn)
   buff = buff .. format("---@class %s\n", fn)
   for c, cla in pairs(tconst) do
-    if cla == fn then
+    if cla == fn and isConst(c) then
       buff = buff .. format("---@field %s integer\n", c)
     end
   end
@@ -158,11 +161,12 @@ function insClassField(fn, cont)
   for className, parent in pairs(tclass) do
     buff = buff .. format("---@class %s\n", className)
     for c, cla in pairs(tconst) do
-      if cla == className then
+      if cla == className and isConst(c) then
         buff = buff .. format("---@field %s integer\n", c)
       end
     end
-    buff = buff .. format("%s.%s = {}\n\n", parent, className)
+    buff = parent ~= fn and buff .. format("%s.%s.%s = {}\n\n", fn, parent, className)
+                        or  buff .. format("%s.%s = {}\n\n", parent, className)
   end
 
   return buff .. cont
@@ -268,7 +272,7 @@ function getSyntax(cont)
     end
   end
 
-  local parent, cl = string.match(buff, "([%w_]+)%.([%w_]+)%.[%w_]")  -- is class?
+  local parent, cl = string.match(buff, "([%w_]+)%.([%w_]+)%.[%w_]*%(.+%)$")  -- is class?
   if cl then tclass[cl] = parent end  -- fill classes table
 
   buff = "function " .. buff .. " end\n\n"
