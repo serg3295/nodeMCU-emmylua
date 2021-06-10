@@ -1,8 +1,9 @@
 --#region Overview
---------------------------------------------------------------------------------
--- A script to generate NodeMCU API autocomplete files in EmmyLua format
+--------------------------------------------------------------------------------------
+-- The following script is used to generate NodeMCU API descriptions in EmmyLua format
 -- ver. 0.1.2
 -- Written by serg3295
+--
 -- This script converts nodeMCU module.md file to module.lua in emmyLua format
 -- Expected structure is following:
 --
@@ -32,7 +33,7 @@
 -- [net.udpsocket sub module](#netudpsocket-module)
 -- etc.
 --
---------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
 --#endregion Overview
 
 --#region beforeParser
@@ -368,10 +369,6 @@ function getParams(cont)
       t[k] = makeBold(t[k])
       t[k] = string.gsub(t[k], "^(.-)", "---%1")
 
-      if k == #t then
-        t[k] = t[k] .. "\n"
-      end
-
     else   -- 1-st level parameter
       t[k] =  string.match(v, "^[%-%*]?%s?`([%(%)%[%]%w%s_/,%.]+)`") and
               string.gsub(v, "^(.-)`([%(%)%[%]%w%s_/,%.]+)`[ :%.]?\r?\n?(.*)", "---@param %2 any @%3") or
@@ -408,13 +405,9 @@ function getParams(cont)
       -- vararg
       t[k] =  string.gsub(t[k], "^%-%-%-@param%s%.%.%.[%w%s_]+.+@([%w]*)", "---@vararg any @%1")
       t[k] =  string.gsub(t[k], "^%-%-%-@param%s[%w%s_]+%.%.%..+@([%w]*)", "---@vararg any @%1")
-
-      if k == #t then -- last string
-        t[k] = t[k] .. "\n"
-      end
-
     end
 
+    if k == #t then t[k] = t[k] .. "\n" end
     return t[k]
   end
 
