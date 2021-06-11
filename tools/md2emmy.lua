@@ -381,7 +381,7 @@ function getParams(cont)
         local oFwoBr = opFunc:gsub("[%[%]]", "")  -- remove brackets []
 
         t[k] = t[k]:gsub("^.-%(optional%)", "%0 `" .. opFunc .. "`", 1)
-        t[k] = t[k]:gsub("^(.-) any @", "%1 function|'" .. oFwoBr .. " end' @")
+                   :gsub("^(.-) any @", "%1 function|'" .. oFwoBr .. " end' @")
 
         t[k] = t[k]:gsub("function%(.-%)", function(s)
                         s = s:gsub("[%(%.%s,]", "_"):gsub("[%)%]%[]", ""):gsub("__", "_"):gsub("_-$", "")
@@ -399,12 +399,9 @@ function getParams(cont)
         t[k] = t[k]:gsub("%sany%s@", " function @")
       end
 
-      -- change \ or | -> _or_
-      t[k] =  string.gsub(t[k], "^%-%-%-@param ([%w_]+)/([%w_]+) (.+)", "---@param %1_or_%2 %3")
-
-      -- vararg
-      t[k] =  string.gsub(t[k], "^%-%-%-@param%s%.%.%.[%w%s_]+.+@([%w]*)", "---@vararg any @%1")
-      t[k] =  string.gsub(t[k], "^%-%-%-@param%s[%w%s_]+%.%.%..+@([%w]*)", "---@vararg any @%1")
+      t[k] = t[k]:gsub("^%-%-%-@param ([%w_]+)/([%w_]+) (.+)", "---@param %1_or_%2 %3") -- change \ or | -> _or_
+                 :gsub("^%-%-%-@param%s%.%.%.[%w%s_]+.+@([%w]*)", "---@vararg any @%1") -- vararg
+                 :gsub("^%-%-%-@param%s[%w%s_]+%.%.%..+@([%w]*)", "---@vararg any @%1")
     end
 
     if k == #t then t[k] = t[k] .. "\n" end
