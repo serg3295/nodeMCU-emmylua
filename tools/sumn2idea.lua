@@ -69,9 +69,12 @@ local function main()
                             local   result = table.concat(tbl)
                                     result = result:sub(1, -2)  -- delete the last '|'
                             return  result .. '\n\n' .. tail
-                            end)
+                          end)
                       : gsub("(%-%-%-@alias%s[%w_]+%s)[%a]+|", "%1")  -- delete type of alias
-                      : gsub("(%-%-%-.-)%\\r?\n", "%1\n")  -- delete '\'
+                      : gsub("(%-%-%-.-)%\\r?\n", "%1\n")             -- delete trailing '\'
+                      : gsub("(%-%-%-@.-@)\"(.-)\"", function (h, s)  -- delete \n in @"line1 \n line2"
+                            return h .. s:gsub("%s%s\\n%s", " ")
+                          end)
 
     saveFile(outDir .. "/" .. fileName, content)
   end
