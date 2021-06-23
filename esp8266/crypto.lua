@@ -60,3 +60,11 @@ function crypto.new_hmac(algo, key) end
 ---@return any @The masked message, as a binary string.
 ---Use `encoder.toHex()` to get a textual representation of it.
 function crypto.mask(message, mask) end
+
+---@deprecated
+---See encoder.toHex
+function crypto.toHex() end
+
+---@deprecated
+---See encoder.toBase64
+function crypto.toBase64() end
