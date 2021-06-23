@@ -2,9 +2,11 @@
 
 ---@class spi
 ---@field MASTER integer
----@field LAVE integer
+---@field SLAVE integer
 ---@field CPOL_LOW integer
 ---@field CPOL_HIGH integer
+---@field CPHA_LOW integer
+---@field CPHA_HIGH integer
 ---@field HALFDUPLEX integer
 ---@field FULLDUPLEX integer
 spi = {}
