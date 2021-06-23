@@ -1,10 +1,10 @@
 --=== somfy ===
 
 ---@class somfy
----@field SOMFY_UP integer
----@field SOMFY_DOWN integer
----@field SOMFY_PROG integer
----@field SOMFY_STOP integer
+---@field UP integer
+---@field DOWN integer
+---@field PROG integer
+---@field STOP integer
 somfy = {}
 
 ---Builds an frame defined by Somfy protocol and sends it to the RF transmitter.

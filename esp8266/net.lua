@@ -103,7 +103,7 @@ function netsocket:getpeer() end
 function netsocket:hold() end
 
 ---Register callback functions for specific events.
----@param event string|' "connection"'|' "reconnection"'|' "disconnection"'|' "receive"'|'  "sent"' @event
+---@param event string|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' @event
 ---@param callback function|nil|'function(net.socket, string?) end)' @"callback function. Can be `nil` to remove callback.  \n The first parameter of callback is the socket."
 --- - If event is `"receive"`, the second parameter is the received data as string.\
 --- - If event is `"disconnection"` or `"reconnection"`, the second parameter is error code.\
@@ -150,7 +150,7 @@ function udpsocket:getaddr() end
 function udpsocket:listen(port, ip) end
 
 ---Register callback functions for specific events.
----@param event string|' "receive"'|' "sent"'|' "dns"' @event
+---@param event string|'"receive"'|'"sent"'|'"dns"' @event
 ---@param callback nil|function|'function(net.socket, string) end)' @`function(net.socket, string?)`. Can be `nil` to remove callback.
 ---The first parameter of callback is the socket.
 --- - If event is `"receive"`, the second parameter is the received data as string.\

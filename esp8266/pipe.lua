@@ -47,3 +47,11 @@ function pobj:unread(s) end
 ---Note that with all Lua strings, these may contain \
 ---all character values including '\0'.
 function pobj:write(s) end
+
+---Return the number of internal records in the pipe. Each\
+---record ranges from 1 to 256 bytes in length, with full\
+---chunks being the most common case. As extracting from \
+---a pipe only to unread if too few bytes are available,\
+---it may be useful to have a quickly estimated upper\
+---bound on the length of the string that would be returned.
+function pobj:nrec() end
