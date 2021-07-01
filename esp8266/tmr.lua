@@ -59,7 +59,7 @@ function tmr.create() end
 ---This is a convenience function combining `tobj:register()` and `tobj:start()` into a single call.
 ---@param interval number @timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m @timer mode
----@param callback function|" function(t) end" @function which is invoked with the timer object as an argument
+---@param callback function|"function(t) end" @function which is invoked with the timer object as an argument
 ---@return boolean @`true` if the timer was (re)started, `false` on error
 function tObj:alarm(interval, mode, callback) end
 
@@ -72,7 +72,7 @@ function tObj:interval(interval_ms) end
 ---Note that registering does not start the alarm.
 ---@param interval_ms integer @new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m @timer mode
----@param callback function|" function() end" @function which is invoked with the timer object as an argument
+---@param callback function|"function() end" @function which is invoked with the timer object as an argument
 ---@return nil
 function tObj:register(interval_ms, mode, callback) end
 

@@ -79,7 +79,7 @@ function i2c.write(id, dataN, ack_check_en) end
 
 ---Registers or unregisters an event callback handler.
 ---@param id integer|'i2c.HW0'|'i2c.HW1' @interface id
----@param event integer|' "receive"' @data received from master
+---@param event integer|'"receive"' @data received from master
 ---@param callback? function|'function(err, data) end' @"(optional) `function(err, data)` to be called when data was received from the master.  \n Unregisters previous callback for event when omitted."
 ---@return nil
 function i2c.slave.on(id, event, callback) end
