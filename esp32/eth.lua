@@ -50,7 +50,7 @@ function eth.init(cfg) end
 
 ---Register or unregister callback functions for Ethernet events.
 ---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"got_ip"' @event
----@param callback function|'function(event, info) end' @"`function(event, info)` to perform when event occurs, or `nil`  \n to unregister the callback for the event. The info argument given to the callback  \n is a table containing additional information about the event. Event information  \n provided for each event is as follows:"
+---@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister  \n the callback for the event. The info argument given to the callback is a table containing additional  \n information about the event. Event information provided for each event is as follows:"
 --- - **start**: no additional info
 --- - **stop**: no additional info
 --- - **connected**: no additional info

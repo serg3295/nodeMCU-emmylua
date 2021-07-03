@@ -21,7 +21,7 @@ function tmr.create() end
 ---This is a convenience function combining `tmr.obj:register()` and `tmr.obj:start()` into a single call.
 ---@param interval integer @timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode t32 @timer mode
----@param callback function|" function(t) end" @function which is invoked with the timer object as an argument
+---@param callback fun(t:tObj) @function which is invoked with the timer object as an argument
 ---@return boolean
 function tObj:alarm(interval, mode, callback) end
 
@@ -33,7 +33,7 @@ function tObj:interval(interval) end
 ---Configures a timer and registers the callback function to call on expiry.
 ---@param interval integer @timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode t32 @timer mode
----@param callback function|" function() end" @function which is invoked with the timer object as an argument
+---@param callback fun(t:tObj) @function which is invoked with the timer object as an argument
 ---@return nil
 function tObj:register(interval, mode, callback) end
 

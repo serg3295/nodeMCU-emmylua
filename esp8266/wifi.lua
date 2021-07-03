@@ -98,7 +98,7 @@ function wifi.getphymode() end
 function wifi.nullmodesleep(enable) end
 
 ---Wake up WiFi from suspended state or cancel pending wifi suspension.
----@param resume_cb? function|'function() end' @"(optional) Callback to execute when WiFi wakes  \n from suspension. Any previously provided callbacks will be replaced!"
+---@param resume_cb? fun() @"(optional) Callback to execute when WiFi wakes  \n from suspension. Any previously provided callbacks will be replaced!"
 ---@return nil
 function wifi.resume(resume_cb) end
 
@@ -152,7 +152,7 @@ function wifi.setmaxtxpower(max_tpw) end
 ---Starts to auto configuration, if success set up SSID and password automatically.\
 ---Only usable in *wifi.STATION* mode.
 ---@param type integer @**0** for ESP_TOUCH, **1** for AIR_KISS
----@param callback function|'function() end' @"a callback function of the form `function(ssid, password)`  \n end which gets called after configuration."
+---@param callback fun() @"a callback function of the form `function(ssid, password)`  \n end which gets called after configuration."
 ---@return nil
 function wifi.startsmart(type, callback) end
 

@@ -38,8 +38,8 @@ function Mqtt:close() end
 --- - **client_cert** - client certificate data in PEM format for SSL mutual authentication
 --- - **client_key** - client private key data in PEM format for SSL mutual authentication.\
 ---Note that both client_cert and client_key have to be provided for mutual authentication.
----@param conn_est? function|'function(client) end' @(optional) `function(client: any)` callback function for when the connection was established
----@param conn_notest? function|'function(client, reason) end' @(optional) `function(client: any, reason: number` callback function for when the connection could not be established. No further callbacks should be called.
+---@param conn_est? fun(client:Mqtt) @(optional) `function(client)` callback function for when the connection was established
+---@param conn_notest? fun(client:Mqtt, reason:mqtt) @(optional) `function(client, reason)` callback function for when the connection could not be established. No further callbacks should be called.
 ---@return boolean
 function Mqtt:connect(host, port, secure, conn_est, conn_notest) end
 
@@ -54,7 +54,7 @@ function Mqtt:lwt(topic, message, qos, retain) end
 
 ---Registers a callback function for an event.
 ---@param event string|'"connect"'|'"message"'|'"offline"' @can be "connect", "message" or "offline"
----@param callback function|'function(client, topic, message) end' @`function(client, topic?:string, message?:string)`.
+---@param callback fun(client:Mqtt, topic:string, message:string) @`function(client, topic?:string, message?:string)`.
 ---The first parameter is the client. If event is "message",\
 ---the 2nd and 3rd param are received topic and message (strings).
 ---@return nil
@@ -65,7 +65,7 @@ function Mqtt:on(event, callback) end
 ---@param payload string @message the message to publish, (buffer or string)
 ---@param qos integer|'0'|'1'|'2' @QoS level
 ---@param retain integer|'0'|'1' @retain flag
----@param callback? function|'function(client) end' @(optional) `function(client)` fired when PUBACK received.
+---@param callback? fun(client:Mqtt) @(optional) `function(client)` fired when PUBACK received.
 ---NOTE: When calling `publish()` more than once, the last callback function defined\
 ---will be called for ALL publish commands.
 ---@return boolean
@@ -74,7 +74,7 @@ function Mqtt:publish(topic, payload, qos, retain, callback) end
 ---Subscribes to one or several topics.
 ---@param topic string @a topic string
 ---@param qos integer|'0'|'1'|'2' @QoS subscription level, default 0
----@param callback? function|'function(client) end' @(optional) `function(client)` fired when subscription(s) succeeded.
+---@param callback? fun(client:Mqtt) @(optional) `function(client)` fired when subscription(s) succeeded.
 ---NOTE: When calling `subscribe()` more than once, the last callback function defined\
 ---will be called for ALL subscribe commands.
 ---@return boolean
@@ -82,7 +82,7 @@ function Mqtt:subscribe(topic, qos, callback) end
 
 ---Unsubscribes from one or several topics.
 ---@param topic string @a topic string
----@param callback? function|'function(client) end' @(optional) `function(client)` fired when unsubscription(s) succeeded.
+---@param callback? fun(client:Mqtt) @(optional) `function(client)` fired when unsubscription(s) succeeded.
 ---NOTE: When calling unsubscribe() more than once, the last callback function defined\
 ---will be called for ALL unsubscribe commands.
 ---@return boolean

@@ -41,7 +41,7 @@ function http.createConnection(url, method, options) end
 ---|'"headers"' #Called once the HTTP headers from the remote end have been received. Callback is called as callback(status_code, headers_table).
 ---|'"data"' #Can be called multiple times, each time more (non-headers) data is received. Callback is called as callback(status_code, data).
 ---|'"complete"' #Called once all data has been received. Callback is called as callback status_code, connected) where connected is true if the connection is still open.
----@param callback? function|nil|'function() end' @"(optional) a function to be called when the given event occurs.  \n Can be `nil` to remove a previously configured callback."
+---@param callback? fun() @"(optional) a function to be called when the given event occurs.  \n Can be `nil` to remove a previously configured callback."
 ---@return nil
 function connection:on(event, callback) end
 
@@ -88,7 +88,7 @@ function connection:close() end
 --- - **headers** Table of headers to add to the request.
 --- - **max_redirects** Maximum number of 30x redirects to follow before giving up. If not specified, the default is 10. Specify 0 to disable following redirects entirely.
 --- - **timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
----@param callback? function|nil|'function(code, data) end' @(optional)
+---@param callback? fun(code:number, data:any) @(optional) or `nil`
 ---@return any|nil @In synchronous mode, returns 3 results `status_code, body, headers` once the request has completed. In asynchronous mode, returns `nil` immediately.
 function http.get(url, options, callback) end
 
@@ -104,6 +104,6 @@ function http.get(url, options, callback) end
 ---Specify 0 to disable following redirects entirely.
 --- - **timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
 ---@param body any @The body to post. Required and must already be encoded in the appropriate format, but may be empty.
----@param callback? function|'function(code, data) end' @(optional) Should be `nil` or omitted to specify synchronous behaviour, otherwise a callback function to be invoked when the response has been received or an error occurred, which is called with the arguments **status_code**, **body** and **headers**. In case of an error **status_code** will be a negative number.
+---@param callback? fun(code:number, data:any) @(optional) Should be `nil` or omitted to specify synchronous behaviour, otherwise a callback function to be invoked when the response has been received or an error occurred, which is called with the arguments **status_code**, **body** and **headers**. In case of an error **status_code** will be a negative number.
 ---@return any|nil @"In synchronous mode, returns 3 results **status_code, body, headers** once the request has completed.  \n In asynchronous mode, returns `nil` immediately."
 function http.post(url, options, body, callback) end

@@ -35,7 +35,7 @@ function TLS:hold() end
 
 ---Register callback functions for specific events.
 ---@param event string|'"dns"'|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' @event
----@param callback function|'function(tls.socket, string?) end' @function. The first parameter is the socket.
+---@param callback fun(tls.socket:TLS, str:string) @function. The first parameter is the socket.
 --- - If event is *"receive"*, the second parameter is the received data as string.
 --- - If event is *"reconnection"*, the second parameter is the reason of connection error (string).
 --- - If event is *"dns"*, the second parameter will be either `nil` or a string rendering of\

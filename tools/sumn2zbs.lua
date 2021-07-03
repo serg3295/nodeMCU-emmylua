@@ -98,7 +98,7 @@ local function startswith(s, piece)
   return string.sub(s, 1, string.len(piece)) == piece
 end
 
----Check if not sumneco's type
+---Check if not sumneko's type
 ---@param r string
 ---@return  boolean
 local function isUserType(r)
@@ -110,6 +110,7 @@ local function isUserType(r)
     and r ~= 'integer'
     and r ~= 'function'
     and r ~= 'nil'
+    and r ~= 'fun'
     and r ~= 'any')
 end
 

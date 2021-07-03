@@ -35,8 +35,8 @@ function MQTT:close() end
 ---@param host string @host, domain or IP
 ---@param port? integer @(optional) broker port (number), default 1883
 ---@param secure? boolean @(optional) if `true`, use TLS.
----@param conn_est? function|'function(client) end' @(optional) `function(client)` callback function for when the connection was established
----@param conn_not_est? function|'function(client, reason) end' @"(optional) `function(client, reason)` callback function for when the connection could not be established.  \n No further callbacks should be called."
+---@param conn_est? fun(client: MQTT) @(optional) `function(client)` callback function for when the connection was established
+---@param conn_not_est? fun(client: MQTT, reason:mqtt) @"(optional) `function(client, reason)` callback function for when the connection could not be established.  \n No further callbacks should be called."
 ---@return nil
 function MQTT:connect(host, port, secure, conn_est, conn_not_est) end
 
@@ -50,7 +50,7 @@ function MQTT:lwt(topic, message, qos, retain) end
 
 ---Registers a callback function for an event.
 ---@param event string|'"connect"'|'"connfail"'|'"suback"'|'"unsuback"'|'"puback"'|'"message"'|'"overflow"'|'"offline"' @event
----@param callback function|'function(client, topic, message) end' @"`function(client[, topic[, message]])`. The first parameter is always the client object itself.  \n Any remaining parameters passed differ by event:"
+---@param callback fun(client:MQTT, topic:string, message:string) @"`function(client[, topic[, message]])`. The first parameter is always the client object itself.  \n Any remaining parameters passed differ by event:"
 --- - If event is `"message"`, the 2nd and 3rd parameters are received topic and message, respectively, as Lua strings.
 --- - If the event is `"overflow"`, the parameters are as with `"message"``,\
 ---save that the message string is truncated to the maximum message size.
@@ -64,19 +64,19 @@ function MQTT:on(event, callback) end
 ---@param payload string @the message to publish, (buffer or string)
 ---@param qos integer|'0'|'1'|'2' @QoS level
 ---@param retain integer|'0'|'1' @retain flag
----@param callback? function|'function(client) end' @(optional) `function(client)` fired when PUBACK received (for QoS 1 or 2) or when message sent (for QoS 0).
+---@param callback? fun(client:MQTT) @(optional) `function(client)` fired when PUBACK received (for QoS 1 or 2) or when message sent (for QoS 0).
 ---@return boolean
 function MQTT:publish(topic, payload, qos, retain, callback) end
 
 ---Subscribes to one or several topics.
 ---@param topic string|table @a topic string, or table array of `topic, qos` pairs to subscribe to.
 ---@param qos integer|'0'|'1'|'2' @QoS subscription level, default 0
----@param callback? function|'function(client) end' @(optional) `function(client)` fired when subscription(s) succeeded.
+---@param callback? fun(client:MQTT) @(optional) `function(client)` fired when subscription(s) succeeded.
 ---@return boolean
 function MQTT:subscribe(topic, qos, callback) end
 
 ---Unsubscribes from one or several topics.
 ---@param topic string|table @a topic string, or table array of `topic, anything` pairs to unsubscribe from.
----@param callback? function|'function(client) end' @(optional) `function(client)` fired when unsubscription(s) succeeded.
+---@param callback? fun(client:MQTT) @(optional) `function(client)` fired when unsubscription(s) succeeded.
 ---@return boolean
 function MQTT:unsubscribe(topic, callback) end

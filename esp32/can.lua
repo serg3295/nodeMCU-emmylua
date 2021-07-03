@@ -26,10 +26,9 @@ function can.send(format, msg_id, data) end
 --- - **tx** Pin num for TX.
 --- - **rx** Pin num for RX.
 --- - **dual_filter** `true` dual filter mode, `false` single filter mode (default)
---- - **code** 4-bytes integer. Use this with mask to filter CAN frame.\
----Default: 0. See SJA1000
+--- - **code** 4-bytes integer. Use this with mask to filter CAN frame. Default: 0. See SJA1000
 --- - **mask** 4-bytes integer. Default: 0xffffffff
----@param callback function|'function(format, msg_id, data) end' @function to be called when CAN data received.
+---@param callback fun(format:number, msg_id:number, data:any) @function to be called when CAN data received.
 --- - **format** Frame format. can.STANDARD_FRAME or can.EXTENDED_FRAME
 --- - **msg_id** CAN Messge ID
 --- - **data** CAN data, up to 8 bytes

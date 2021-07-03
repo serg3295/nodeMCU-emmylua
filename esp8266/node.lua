@@ -159,7 +159,7 @@ function node.LFS.reload(imageName) end
 
 ---Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)\
 ---and resets output to normal otherwise. Optionally also prints to the serial console.
----@param foo function|'function(pipe) end' @"`output_fn(pipe)` a function accept every output as str,  \n and can send the output to a socket (or maybe a file)."
+---@param foo fun(pipe:any) end' @"`output_fn(pipe)` a function accept every output as str,  \n and can send the output to a socket (or maybe a file)."
 ---Note that this function must conform to the rules for a pipe reader callback.
 ---@param serial_debug integer @**1** - output also show in serial. **0** - no serial output.
 ---@return nil
@@ -220,7 +220,7 @@ function node.setpartitiontable(partition_info) end
 ---| 'node.INT_BOTH' #Both edges
 ---|>'node.INT_LOW'  #Low level
 ---| 'node.INT_HIGH' #High level
----@param resume_cb? function|'function() end' @(optional) Callback to execute when WiFi wakes from suspension.
+---@param resume_cb? fun() @(optional) Callback to execute when WiFi wakes from suspension.
 ---@param preserve_mode? boolean @(optional) preserve current WiFi mode through node sleep.
 ---|'true' #Station and StationAP modes will automatically reconnect to previously configured Access Point when NodeMCU resumes.
 ---|'false' #discard WiFi mode and leave NodeMCU in wifi.NULL_MODE. WiFi mode will be restored to original mode on restart.
@@ -308,6 +308,6 @@ function node.egc.meminfo() end
 ---| 'node.task.LOW_PRIORITY' #=0
 ---|>'node.task.MEDIUM_PRIORITY' #=1
 ---| 'node.task.HIGH_PRIORITY' #=2
----@param callback function|'function() end' @function to be executed when the task is run.
+---@param callback fun() @function to be executed when the task is run.
 ---@return nil
 function node.task.post(task_priority, callback) end

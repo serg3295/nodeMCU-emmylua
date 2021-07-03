@@ -19,7 +19,7 @@ function somfy.sendcommand(pin, remote_address, command, rolling_code, repeat_co
 
 ---Using RF receiver listens to Somfy commands and triggers a callback when command is identified.
 ---@param pin integer @GPIO pin the RF receiver is connected to.
----@param callback function|'function(address, command, rc, frame) end' @"`function(address, command, rc, frame)` a function called when a Somfy  \n command is identified. Use `nil` to stop listening."
+---@param callback fun(address:number, command:number, rc:number, frame:string) @"`function(address, command, rc, frame)` a function called when a Somfy command is identified.  \n Use `nil` to stop listening."
 --- - **address** - of the remote controller sending the command
 --- - **command** - sent by the remote controller. A number between *0* and *0xf*.\
 ---Can be somfy.SOMFY_UP, somfy.SOMFY_DOWN, somfy.SOMFY_PROG, somfy.SOMFY_STOP.

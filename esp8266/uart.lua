@@ -24,7 +24,7 @@ function uart.alt(on) end
 --- - **number** if n=0, will receive every char in buffer
 --- - **number** if n<255, the callback is called when n chars are received
 --- - **end_char** if one char "c", the callback will be called when "c" is encountered, or max n=255 received
----@param callback? function|'function(data) end' @(optional) function, event `"data"` has a callback like this: `function(data) end`
+---@param callback? fun(data:any) @(optional) function, event `"data"` has a callback like this: `function(data) end`
 ---@param run_input? integer @(optional) 0 or 1.
 --- - **0** input from UART will not go into Lua interpreter, and this can accept binary data.
 --- - **1** input from UART is treated as a text stream with the `DEL`, `BS`, `CR` and `LF` characters processed as normal.\

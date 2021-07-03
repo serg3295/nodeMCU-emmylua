@@ -122,6 +122,6 @@ function ads1x15:setting(GAIN, SAMPLES, CHANNEL, MODE, CONVERSION_RDY, COMPARATO
 
 ---Starts the ADC reading for single-shot mode and after the conversion is done it will invoke\
 ---an optional callback function in which the ADC conversion result can be obtained.
----@param callback function|'function(volt, volt_dec, adc, sign) end' @function which will be invoked after the adc conversion is done
+---@param callback fun(volt:number, volt_dec:number, adc:number, sign:number) @function which will be invoked after the adc conversion is done
 ---@return nil
 function ads1x15:startread(callback) end

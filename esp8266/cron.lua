@@ -8,7 +8,7 @@ local CRON = {}
 
 ---Creates a new schedule entry.
 ---@param mask string|'"* * * * *"' @crontab-like string mask for schedule
----@param callback function|'function(e) end' @`function(entry)` that is executed at the scheduled time
+---@param callback fun(entry:CRON) @`function(entry)` that is executed at the scheduled time
 ---@return CRON cron.entry @sub module
 function cron.schedule(mask, callback) end
 
@@ -17,7 +17,7 @@ function cron.schedule(mask, callback) end
 function cron.reset() end
 
 ---Sets a new handler for entry.
----@param callback function|'function(e) end' @`function(entry)` that is executed at the scheduled time
+---@param callback fun(entry:CRON) @"`function(entry)` that is executed at  \n the scheduled time"
 ---@return nil
 function CRON:handler(callback) end
 

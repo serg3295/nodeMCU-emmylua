@@ -51,19 +51,19 @@ function net.multicastLeave(if_ip, multicast_ip) end
 
 ---Closes the server.
 ---@return nil
-function netsrv.close() end
+function netsrv:close() end
 
 ---Listen on port from IP address.
 ---@param port? integer @(optional) number, can be omitted (random port will be chosen)
 ---@param ip? string @(optional) IP address string, can be omitted
----@param callback function|'function(net.socket) end' @"`function(net.socket)`, pass to caller function as param if  \n a connection is created successfully"
+---@param callback fun(net.socket:netsocket) @"`function(net.socket)`, pass to caller function as param if  \n a connection is created successfully"
 ---@return nil
-function netsrv.listen(port, ip, callback) end
+function netsrv:listen(port, ip, callback) end
 
 ---Returns server local address/port.
 ---@return integer|nil @port or `nil` if not listening
 ---@return string|nil @ip or `nil` if not listening
-function netsrv.getaddr() end
+function netsrv:getaddr() end
 
 ---Closes socket.
 ---@return nil
@@ -77,7 +77,7 @@ function netsocket:connect(port, ip_or_domain) end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string @domain name
----@param callback function|'function(net.socket, ip) end' @`function(net.socket, ip)`.
+---@param callback fun(net.socket:netsocket, ip:string) @`function(net.socket, ip)`.
 ---The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
 function netsocket:dns(domain, callback) end
@@ -100,7 +100,7 @@ function netsocket:hold() end
 
 ---Register callback functions for specific events.
 ---@param event string|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' @event
----@param callback function|nil|'function(net.socket, string) end)' @`function(net.socket[, string])`. Can be `nil` to remove callback.
+---@param callback fun(net.socket:netsocket, str:string) @`function(net.socket[, string])`. Can be `nil` to remove callback.
 ---The first parameter of callback is the socket.
 --- - If event is `"receive"`, the second parameter is the received data as string.
 --- - If event is `"disconnection"` or `"reconnection"`, the second parameter is error code.\
@@ -111,7 +111,7 @@ function netsocket:on(event, callback) end
 
 ---Sends data to remote peer.
 ---@param str string @data in string which will be sent to server
----@param callback? function|'function(sent) end' @(optional) `function(sent)` for sending string
+---@param callback? fun(sent:string) @(optional) `function(sent)` for sending string
 ---@return nil
 function netsocket:send(str, callback) end
 
@@ -132,7 +132,7 @@ function udpsocket:listen(port, ip) end
 
 ---Register callback functions for specific events.
 ---@param event string|'"receive"'|'"sent"'|'"dns"' @receive | sent | dns
----@param callback function|nil|'function(net.socket, string) end)' @`function(net.socket, string?)`. Can be `nil` to remove callback.
+---@param callback fun(net.socket:netsocket, str:string) @`function(net.socket[, string])`. Can be `nil` to remove callback.
 ---The first parameter of callback is the socket.
 --- - If event is `"receive"`, the second parameter is the received data as string.\
 ---The `receive` callback receives port and ip *after* the data argument.\
@@ -149,7 +149,7 @@ function udpsocket:send(port, ip, data) end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string @domain name
----@param callback function|'function(net.socket, ip) end' @`function(net.socket, ip)`.
+---@param callback fun(net.socket:netsocket, ip:string) @`function(net.socket, ip)`.
 ---The first parameter is the socket, the second parameter is the IP address as a string.
 ---@return nil
 function udpsocket:dns(domain, callback) end
@@ -166,7 +166,7 @@ function net.dns.getdnsserver(dns_index) end
 
 ---Resolve a hostname to an IP address. Doesn't require a socket like `net.socket.dns()`.
 ---@param host string @hostname to resolve
----@param callback function|'function(sk, ip) end' @`function(sk, ip)` called when the name was resolved. **sk** is always `nil`
+---@param callback fun(sk:nil, ip:string) @`function(sk, ip)` called when the name was resolved. **sk** is always `nil`
 ---@return nil
 function net.dns.resolve(host, callback) end
 

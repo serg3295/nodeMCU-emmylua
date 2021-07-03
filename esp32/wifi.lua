@@ -98,7 +98,7 @@ function wifi.sta.disconnect() end
 
 ---Registers callbacks for WiFi station status events.
 ---@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"authmode_changed"'|'"got_ip"' @WiFi station event you would like to set a callback for:
----@param callback function|'function(event, info) end' @"`function(event, info)` to perform when event occurs, or `nil`  \n to unregister the callback for the event. The info argument given to the callback  \n is a table containing additional information about the event."
+---@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister the callback for  \n the event. The info argument given to the callback is a table containing additional information about the event."
 ---Event information provided for each event is as follows:\
 ---`"start"`: no additional info\
 ---`"stop"`: no additional info\
@@ -106,7 +106,7 @@ function wifi.sta.disconnect() end
 --- - **ssid**: the SSID of the network
 --- - **bssid**: the BSSID of the AP
 --- - **channel**: the primary channel of the network
---- - **auth** authentication method, one of wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK (default), wifi.WPA_WPA2_PSK\
+--- - **auth** authentication method, one of wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK (default), wifi.WPA_WPA2_PSK
 ---
 ---`"disconnected"`: information about the network/AP that was disconnected from:
 --- - **ssid**: the SSID of the network
@@ -140,7 +140,7 @@ function wifi.sta.getmac() end
 --- - **bssid** BSSID == `nil`, don't filter BSSID
 --- - **channel** channel == 0, scan all channels, otherwise scan set channel (default is 0)
 --- - **hidden** hidden == 1, get info for router with hidden SSID (default is 0)
----@param callback function|'function(ap_list) end' @"`function(ap_list)` to receive the list of APs when the scan is done.  \n Each entry in the returned array follows the format used for `wifi.sta.config()`,  \n with some additional fields. The following fields are provided for each scanned AP:"
+---@param callback fun(ap_list:table) @"`function(ap_list)` to receive the list of APs when the scan is done.  \n Each entry in the returned array follows the format used for `wifi.sta.config()`,  \n with some additional fields. The following fields are provided for each scanned AP:"
 --- - **ssid**: the network SSID
 --- - **bssid**: the BSSID of the AP
 --- - **channel**: primary WiFi channel of the AP
@@ -200,7 +200,7 @@ function wifi.ap.config(cfg, save) end
 
 ---Registers callbacks for WiFi AP events.
 ---@param event string|'"start"'|'"stop"'|'"sta_connected"'|'"sta_disconnected"'|'"probe_req"' @WiFi AP event you would like to set a callback for:
----@param callback function|'function(event, info) end' @"`function(event, info)` to perform when event occurs,  \n or `nil` to unregister the callback for the event.The info argument given to  \n the callback is a table containing additional information about the event."
+---@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister  \n the callback for the event.The info argument given to the callback is a table containing additional  \n information about the event."
 ---Event information provided for each event is as follows:\
 ---`"start"`: no additional info\
 ---`"stop"`: no additional info\

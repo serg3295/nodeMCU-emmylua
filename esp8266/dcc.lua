@@ -25,7 +25,7 @@ dcc = {}
 ---Initializes the dcc module and links callback functions.
 ---@param Pin integer @the GPIO pin number connected to the DCC detector (must be interrupt capable pin).
 ---@param AckPin? integer @(optional) the GPIO pin number connected to the ACK mechanism. Will be set HIGH to signal an ACK.
----@param DCC_command function|'DCC_command(cmd, params) end' @`DCC_command?(cmd, params)` calllback function that is called when a DCC command is decoded. `cmd` parameters is one of the following values. `params` contains a collection of parameters specific to given command.
+---@param DCC_command fun(cmd:number, params:any) @`DCC_command(cmd, params)` calllback function that is called when a DCC command is decoded. `cmd` parameters is one of the following values. `params` contains a collection of parameters specific to given command.
 ---  - **dcc.DCC_RESET** no additional parameters, `params` is `nil`.
 ---  - **dcc.DCC_IDLE** no additional parameters, `params` is `nil`.
 ---  - **dcc.DCC_SPEED** parameters collection members are `Addr`, `AddrType`, `Speed`, `Dir`, `SpeedSteps`.
@@ -44,7 +44,7 @@ dcc = {}
 ---  - **dcc.FLAGS_AUTO_FACTORY_DEFAULT**  Call DCC command callback with `dcc.CV_RESET` command if CV 7 & 8 == 255.
 ---@param OpsModeAddressBaseCV? integer @(optional)  Ops Mode base address. Set it to 0?
 ---@param CV_table? table @(optional)  The CV values will be directly accessed from this table. metamethods will be invoked if needed. Any errors thrown will cause the CV to be considered invalid. Using this option will prevent `CV_VALID`, `CV_READ`, `CV_WRITE` and `CV_ACK_COMPLETE` from happening.
----@param CV_callback? function|'CV_callback(operation, param) end' @(optional) `CV_callback(operation, param)` callback function that is called when any manipulation with CV (Configuarion Variable) is requested.
+---@param CV_callback? fun(operation:any, param:any) @(optional) `CV_callback(operation, param)` callback function that is called when any manipulation with CV (Configuarion Variable) is requested.
 ---  - **dcc.CV_VALID** to determine if a given CV is valid and (possibly) writable. This callback must determine if a CV is readable or writable and return the appropriate value(0/1/true/false). The `param` collection has members `CV` and `Writable`.
 ---  - **dcc.CV_READ** to read a CV. This callback must return the value of the CV. The `param` collection has one member `CV` determing the CV number to be read.
 ---  - **dcc.CV_WRITE** to write a value to a CV. This callback must write the Value to the CV and return the value of the CV. The `param` collection has members `CV` and `Value`. Ideally, the final value should be returned -- this may differ from the requested value.

@@ -37,19 +37,19 @@ function gpio.read(pin) end
 ---@param start_level integer|'gpio.HIGH'|'gpio.LOW' @level to start on
 ---@param delay_times table @an array of delay times in µs between each toggle of the gpio pin.
 ---@param cycle_num? integer @an optional number of times to run through the sequence. (default is 1)
----@param callback? function|'function() end' @(optional) function or `number`, if present the function returns immediately and goes asynchronous. (optional)
+---@param callback? fun() @(optional) function or `number`, if present the function returns immediately and goes asynchronous.
 ---@return nil
 function gpio.serout(pin, start_level, delay_times , cycle_num, callback) end
 
 ---Establish or clear a callback function to run on interrupt for a pin.
 ---@param pin integer @1-12, pin to trigger on, IO index.
----@param type? string @"(optional) If the type is 'none' or omitted then the callback function is removed and  \n the interrupt is disabled."
+---@param type? string @(optional) If the type is 'none' or omitted then the callback function is removed and the interrupt is disabled.
 ---|'"up"'   #rising edge
 ---|'"down"' #falling edge
 ---|'"both"' #both edges
 ---|'"low"'  #low level
 ---|'"high"' #high level
----@param callback? function|'function(level, when, eventcount)' @(optional) `function(level, when, eventcount)` when trigger occurs. The parameters are:
+---@param callback? fun(level:number, when:number, eventcount:number)' @(optional) `function(level, when, eventcount)` when trigger occurs. The parameters are:
 --- - level - The level of the specified pin at the interrupt
 --- - when - timestamp of the event
 --- - eventcount - is the number of interrupts that were elided for this callback.
@@ -82,7 +82,7 @@ function gpio.pulse.build(tbl, ...) end
 
 ---This starts the output operations.
 ---@param adjust? number @(optional) This is the number of microseconds to add to the next adjustable period.
----@param callback function|'function(position, steps, offset, now) end' @"This callback is executed when the pulses are complete. The callback is invoked  \n with the same four parameters that are described as the return values of `gpio.pulse:getstate`."
+---@param callback fun(position:number, steps:number, offset:number, now:number) @"This callback is executed when the pulses are complete. The callback is invoked  \n with the same four parameters that are described as the return values of `gpio.pulse:getstate`."
 ---@return nil
 function pulser:start(adjust,  callback) end
 
@@ -95,8 +95,8 @@ function pulser:start(adjust,  callback) end
 function pulser:getstate() end
 
 ---This stops the output operation at some future time.
----@param position? integer @"(optional) is the index to stop at. The stopping happens  \n on entry to this state. If not specified, then stops on the next state transition."
----@param callback? function|'function(position, steps, offset, now) end' @"(optional) is invoked (with the same arguments  \n as are returned by `:getstate`) when the operation has been stopped."
+---@param position? integer @"(optional) is the index to stop at. The stopping happens on entry to this state.  \n If not specified, then stops on the next state transition."
+---@param callback? fun(position:number, steps:number, offset:number, now:number) @(optional) is invoked (with the same arguments as are returned by `:getstate`) when the operation has been stopped.
 ---@return boolean
 function pulser:stop(position , callback) end
 

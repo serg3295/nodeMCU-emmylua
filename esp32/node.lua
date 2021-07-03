@@ -251,6 +251,6 @@ function node.egc.setmode(mode, level) end
 ---|'node.task.LOW_PRIORITY' #= 0
 ---|>'node.task.MEDIUM_PRIORITY' #= 1
 ---|'node.task.HIGH_PRIORITY''0' #= 2
----@param callback function|'function() end' @function to be executed when the task is run.
+---@param callback fun() @function to be executed when the task is run.
 ---@return nil
 function node.task.post(task_priority, callback) end

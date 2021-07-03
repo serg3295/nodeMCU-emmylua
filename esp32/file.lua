@@ -41,7 +41,7 @@ function file.list() end
 
 ---Registers callback functions.
 ---@param event string|'"rtc"' @"Trigger events are: **rtc** deliver current date & time to the file system.  \n Function is expected to return a table containing the fields **year, mon, day, hour, min, sec**  \n of current date and time. Not supported for internal flash."
----@param callback function|'function() end' @function. Unregisters the callback if function() is omitted.
+---@param callback fun() @function. Unregisters the callback if function() is omitted.
 ---@return nil
 function file.on(event, callback) end
 
