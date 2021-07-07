@@ -345,7 +345,6 @@ function getParams(cont)
   ---@param str string
   ---@return string
   local function subOptParam(str)
-
     for _, opName in ipairs(optparam) do
       opName = escapeMagic(opName)
       if string.find(str, "%-%-%-@param%s" .. opName) then
@@ -354,6 +353,24 @@ function getParams(cont)
       end
     end
     return str
+  end
+
+  ---Add ':any' to callback function parameters
+  ---@param str string @parameters of callback function
+  ---@return string    @parameters with type 'any'
+  local function cbFun(str)
+
+    local function addType(s)
+      s = s:gsub("([%w_]+)", function (p)
+        p = p:gsub("[%w_]+", "%1: any")
+        return p
+      end)
+      return s
+    end
+
+    local funParams  = str:gsub("[%[%]]", "")  -- remove brackets []
+                          :match("function%((.+)%)")  -- get all parameters
+    return funParams and str:gsub("function%(.+%)", "fun(" .. addType(funParams) ..")") or "fun()"
   end
 
   ---one parameter parse
@@ -377,18 +394,19 @@ function getParams(cont)
       t[k] = subOptParam(t[k])  -- optional parameters
 
       if t[k]:find("^.+[%(%)].+any @") then  --this is a "function" type
-        local opFunc = t[k]:match("^%-%-%-@param (.-)%?? any @")
-        local oFwoBr = opFunc:gsub("[%[%]]", "")  -- remove brackets []
+        local funSignature = t[k]:match("^%-%-%-@param (.-)%?? any @")
 
-        t[k] = t[k]:gsub("^.-%(optional%)", "%0 `" .. opFunc .. "`", 1)
-                   :gsub("^(.-) any @", "%1 function|'" .. oFwoBr .. " end' @")
+        t[k] = t[k]:find("@(optional)", 1, true) and
+               t[k]:gsub("^.-%(optional%)", "%0 `" .. funSignature .. "`", 1) or
+               t[k]:gsub("^.+@", "%0`" .. funSignature .. "`", 1)
 
-        t[k] = t[k]:gsub("function%(.-%)", function(s)
+        t[k] = t[k]:gsub("^(.-) any @", "%1 " .. cbFun(funSignature) .. " @")
+                   :gsub("function%(.-%)", function(s)
                         s = s:gsub("[%(%.%s,]", "_"):gsub("[%)%]%[]", ""):gsub("__", "_"):gsub("_-$", "")
                         if not s:find("function_") then s = s:gsub("function", "func", 1) end
                         return s
                     end, 1)
-        t[k] = t[k]:gsub("(%-%-%-@param%s[%w_]-)%s-%(.-%)", "%1")
+                   :gsub("(%-%-%-@param%s[%w_]-)%s-%(.-%)", "%1")
       end
 
       -- remove double "optional"
