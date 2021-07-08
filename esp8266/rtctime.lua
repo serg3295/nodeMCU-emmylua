@@ -16,7 +16,7 @@ function rtctime.dsleep_aligned(aligned_us, minsleep_us, option) end
 
 ---Converts a Unix timestamp to calendar format.
 ---@param timestamp integer
----@return table rtctbl @containing the fields:
+---@return { year:number, mon:number, day:number, hour:number, min:number, sec:number, yday:number, wday:number } rtctbl @containing the fields:
 --- - **year** 1970 ~ 2038
 --- - **mon** month 1 ~ 12 in current year
 --- - **day** day 1 ~ 31 in current month

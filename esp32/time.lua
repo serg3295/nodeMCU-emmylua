@@ -24,7 +24,7 @@ function time.cal2epoch(calendar) end
 
 ---Converts timestamp in Unix epoch to calendar format
 ---@param time integer @number of seconds since the Epoch
----@return table @A table containing the fields:
+---@return { year:number, mon:number, day:number, hour:number, min:number, sec:number, yday:number, wday:number, dst:number } @A table containing the fields:
 --- - **year** 1970 ~ 2038
 --- - **mon** month 1 ~ 12 in current year
 --- - **day** day 1 ~ 31 in current month
@@ -47,7 +47,7 @@ function time.get() end
 
 ---Returns current system time adjusted for\
 ---the locale in calendar format.
----@return table @A table containing the fields:
+---@return { year:number, mon:number, day:number, hour:number, min:number, sec:number, yday:number, wday:number, dst:number } @A table containing the fields:
 --- - **year** 1970 ~ 2038
 --- - **mon** month 1 ~ 12 in current year
 --- - **day** day 1 ~ 31 in current month

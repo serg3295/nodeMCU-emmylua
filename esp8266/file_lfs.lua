@@ -64,7 +64,7 @@ function file_lfs.seek(whence, offset) end
 
 ---Get attribtues of a file or directory in a table.
 ---@param filename string @file name
----@return table @table containing file attributes. Elements of the table are:
+---@return { size:number, name:string, time:table, is_dir:boolean, is_rdonly:boolean, is_hidden:boolean, is_sys:boolean, is_arch:boolean, is_LFS:boolean } @table containing file attributes. Elements of the table are:
 --- - **size** file size in bytes
 --- - **name** file name
 --- - **time** table with time stamp information. Default is\

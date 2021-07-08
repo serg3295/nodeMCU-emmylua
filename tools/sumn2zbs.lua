@@ -231,7 +231,8 @@ for _, fileName in pairs(files) do
         if child.returns == "" then child.returns = "()" end
 
       elseif startswith(tstr, "---@return") then
-        local ret = match(tstr, "@return%s([%w%|_]+)%f[%W]")
+      -- replace { literal table } by "table" and get ---return 'type'
+        local ret = find(tstr, "@return%s%b{}") and 'table' or match(tstr, "@return%s([%w%|_]+)%f[%W]")
         if ret and ret ~= "" and isUserType(ret) and (not find(ret, "|")) then
           child.valuetype = ret
           child.returns   = '(' .. ret .. ')'

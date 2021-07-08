@@ -100,7 +100,7 @@ function node.flashsize() end
 function node.getcpufreq() end
 
 ---Get the current LFS and SPIFFS partition information.
----@return table @"An array containing entries for **lfs_addr, lfs_size,  \n spiffs_addr** and **spiffs_size**. The address values are offsets  \n relative to the start of the Flash memory."
+---@return { lfs_addr:number, lfs_size:number, spiffs_addr:number, spiffs_size:number } @"An array containing entries for **lfs_addr, lfs_size,  \n spiffs_addr** and **spiffs_size**. The address values are offsets  \n relative to the start of the Flash memory."
 function node.getpartitiontable() end
 
 ---Returns the current available heap size in bytes.

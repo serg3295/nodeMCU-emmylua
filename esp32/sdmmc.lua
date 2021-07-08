@@ -59,7 +59,7 @@ function sdmmc.init(slot, cfg) end
 function sdmmc.init(slot, cfg) end
 
 ---Retrieve information from the SD card.
----@return table @Table containing the card's OCR, CID, CSD, SCR, and RCA with elements:
+---@return { ocr:number, cid:table, csd:table, scr:table, rca:number } @Table containing the card's OCR, CID, CSD, SCR, and RCA with elements:
 --- - **ocr** Operation Conditions Register
 --- - **cid** Card IDentification:
 ---   - date - manufacturing date

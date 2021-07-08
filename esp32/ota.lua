@@ -6,7 +6,7 @@ otaupgrade = {}
 ---The boot info and application state and version info can be queried with this function.
 ---@return string @the name of the partition of the running application
 ---@return string @the name of the partition currently marked for boot next
----@return table @"a table whose keys are the names of OTA partitions and  \n corresponding values are tables containing:"
+---@return { state:string, name:string, date:string, time:string, version:string, secure_version:string, idf_version:string } @"a table whose keys are the names of OTA partitions and  \n corresponding values are tables containing:"
 --- - **state** one of *new, testing, valid, invalid, aborted* or possibly *undefined*
 --- - **name** the application name, typically "NodeMCU"
 --- - **date** the build date

@@ -51,7 +51,7 @@ wifi.eventmon = {}
 function wifi.getchannel() end
 
 ---Get the current country info.
----@return table @`country_info` this table contains the current country info configuration
+---@return { country:string, start_ch:number, end_ch:number, policy:number } @`country_info` this table contains the current country info configuration
 ---  - **country** Country code, 2 character string.
 ---  - **start_ch** Starting channel.
 ---  - **end_ch** Ending channel.
@@ -295,7 +295,7 @@ function wifi.sta.getap(cfg, format, callback) end
 function wifi.sta.getapindex() end
 
 ---Get information of APs cached by ESP8266 station.
----@return table @table `ap_info`:
+---@return { qty:number, ssid:string, pwd:string, bssid:string} @table `ap_info`:
 --- - **qty** quantity of APs returned
 --- - **1-5** index of AP. (the index corresponds to index used by\
 ---`wifi.sta.changeap()` and `wifi.sta.getapindex()`)
@@ -348,7 +348,7 @@ function wifi.sta.gethostname() end
 ---Gets IP address, netmask, and gateway address in station mode.
 ---@return string IP_address @"as string, for example '192.168.0.111'.  \n Returns `nil` if IP = '0.0.0.0'."
 ---@return string netmask
----@return string gateway_address Returns `nil` if IP = '0.0.0.0'.
+---@return string gateway_address @Returns `nil` if IP = '0.0.0.0'.
 function wifi.sta.getip() end
 
 ---Gets MAC address in station mode.
