@@ -159,7 +159,7 @@ function node.LFS.reload(imageName) end
 
 ---Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)\
 ---and resets output to normal otherwise. Optionally also prints to the serial console.
----@param foo fun(pipe:any) end' @"`output_fn(pipe)` a function accept every output as str,  \n and can send the output to a socket (or maybe a file)."
+---@param foo fun(pipe:any) @"`output_fn(pipe)` a function accept every output as str,  \n and can send the output to a socket (or maybe a file)."
 ---Note that this function must conform to the rules for a pipe reader callback.
 ---@param serial_debug integer @**1** - output also show in serial. **0** - no serial output.
 ---@return nil
