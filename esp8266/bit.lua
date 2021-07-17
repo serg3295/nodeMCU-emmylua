@@ -39,7 +39,7 @@ function bit.bor(val1, val2, ...) end
 ---@param val2 integer @second *XOR* argument
 ---@vararg integer
 ---@return integer @the bitwise *XOR* of all the arguments
-function bit.xor(val1, val2, ...) end
+function bit.bxor(val1, val2, ...) end
 
 ---Clear bits in a number.
 ---@param value integer @the base number
