@@ -3,7 +3,7 @@
 ---@class tls
 tls = {}
 
----@class cert
+---@class tls.cert
 tls.cert = {}
 
 ---@class TLS

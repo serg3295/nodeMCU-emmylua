@@ -8,7 +8,7 @@
 ---@field HW1 integer
 i2c = {}
 
----@class slave
+---@class i2c.slave
 i2c.slave = {}
 
 ---Perform (SW) or enqueue (HWx) an I²C address operation,\

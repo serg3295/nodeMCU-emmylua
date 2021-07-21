@@ -3,10 +3,10 @@
 ---@class sodium
 sodium = {}
 
----@class random
+---@class sodium.random
 sodium.random = {}
 
----@class crypto_box
+---@class sodium.crypto_box
 sodium.crypto_box = {}
 
 ---Returns a random integer between\

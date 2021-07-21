@@ -25,16 +25,16 @@
 ---@field WPA_WPA2_PSK integer
 wifi = {}
 
----@class sta
+---@class wifi.sta
 wifi.sta = {}
 
----@class ap
+---@class wifi.ap
 wifi.ap = {}
 
----@class dhcp
+---@class wifi.ap.dhcp
 wifi.ap.dhcp = {}
 
----@class eventmon
+---@class wifi.eventmon
 ---@field STA_CONNECTED integer
 ---@field STA_DISCONNECTED integer
 ---@field STA_AUTHMODE_CHANGE integer

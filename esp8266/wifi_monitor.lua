@@ -1,6 +1,6 @@
 --=== wifi_monitor ===
 
----@class monitor
+---@class wifi.monitor
 wifi.monitor = {}
 
 ---wifi.packet object. This object provides access to the raw packet data and also many methods to extract data from the packet in a simple way.

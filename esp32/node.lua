@@ -10,14 +10,14 @@
 ---@field wakeup_ULP integer
 node = {}
 
----@class egc
+---@class node.egc
 ---@field NOT_ACTIVE integer
 ---@field ON_ALLOC_FAILURE integer
 ---@field ON_MEM_LIMIT integer
 ---@field ALWAYS integer
 node.egc = {}
 
----@class task
+---@class node.task
 ---@field LOW_PRIORITY integer
 ---@field MEDIUM_PRIORITY integer
 ---@field HIGH_PRIORITY integer

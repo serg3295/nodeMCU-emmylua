@@ -14,10 +14,10 @@
 ---@field AUTH_WPA_WPA2_PSK integer
 wifi = {}
 
----@class sta
+---@class wifi.sta
 wifi.sta = {}
 
----@class ap
+---@class wifi.ap
 wifi.ap = {}
 
 ---Gets the current WiFi channel.

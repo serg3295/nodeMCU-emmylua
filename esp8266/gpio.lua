@@ -11,7 +11,7 @@
 ---@field LOW integer
 gpio = {}
 
----@class pulse
+---@class gpio.pulse
 gpio.pulse = {}
 
 ---@class pulser

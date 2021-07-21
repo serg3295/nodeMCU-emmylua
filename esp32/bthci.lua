@@ -3,7 +3,7 @@
 ---@class bthci
 bthci = {}
 
----@class adv
+---@class bthci.adv
 ---@field CONN_UNDIR integer
 ---@field CONN_DIR_HI integer
 ---@field SCAN_UNDIR integer
@@ -15,7 +15,7 @@ bthci = {}
 ---@field CHAN_39 integer
 bthci.adv = {}
 
----@class scan
+---@class bthci.scan
 bthci.scan = {}
 
 ---Sends a raw HCI command to the BlueTooth controller.

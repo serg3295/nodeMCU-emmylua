@@ -5,7 +5,7 @@
 ---@field UDP integer
 net = {}
 
----@class dns
+---@class net.dns
 net.dns = {}
 
 ---@class netsocket
