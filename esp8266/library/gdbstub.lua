@@ -1,3 +1,5 @@
+---@meta
+
 --=== gdbstub ===
 
 ---@class gdbstub

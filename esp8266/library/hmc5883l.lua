@@ -1,3 +1,5 @@
+---@meta
+
 --=== hmc5883l ===
 
 ---@class hmc5883l

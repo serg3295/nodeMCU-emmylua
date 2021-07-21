@@ -1,3 +1,5 @@
+---@meta
+
 --=== pcm ===
 
 ---@class pcm

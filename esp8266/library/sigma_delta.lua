@@ -1,3 +1,5 @@
+---@meta
+
 --=== sigma_delta ===
 
 ---@class sigma_delta

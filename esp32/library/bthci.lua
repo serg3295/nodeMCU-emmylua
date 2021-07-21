@@ -1,3 +1,5 @@
+---@meta
+
 --=== bthci ===
 
 ---@class bthci

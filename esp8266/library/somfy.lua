@@ -1,3 +1,5 @@
+---@meta
+
 --=== somfy ===
 
 ---@class somfy

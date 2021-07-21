@@ -1,3 +1,5 @@
+---@meta
+
 --=== tmr ===
 
 ---@class tmr

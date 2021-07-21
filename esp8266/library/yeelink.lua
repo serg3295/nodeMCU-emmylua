@@ -1,3 +1,5 @@
+---@meta
+
 --=== yeelink ===
 
 ---@class yeelink

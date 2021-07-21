@@ -1,3 +1,5 @@
+---@meta
+
 --=== rtcmem ===
 
 ---@class rtcmem

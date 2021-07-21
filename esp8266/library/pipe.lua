@@ -1,3 +1,5 @@
+---@meta
+
 --=== pipe ===
 
 ---@class pipe

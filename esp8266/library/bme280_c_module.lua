@@ -1,3 +1,5 @@
+---@meta
+
 --=== bme280_c_module ===
 
 ---For given air pressure and sea level air pressure returns the altitude\

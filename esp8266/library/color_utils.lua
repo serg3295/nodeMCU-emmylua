@@ -1,3 +1,5 @@
+---@meta
+
 --=== color_utils ===
 
 ---@class color_utils

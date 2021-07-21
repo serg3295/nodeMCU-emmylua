@@ -1,3 +1,5 @@
+---@meta
+
 --=== tls ===
 
 ---@class tls

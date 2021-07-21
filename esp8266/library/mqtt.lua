@@ -1,3 +1,5 @@
+---@meta
+
 --=== mqtt ===
 
 ---@class mqtt

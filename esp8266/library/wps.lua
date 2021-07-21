@@ -1,3 +1,5 @@
+---@meta
+
 --=== wps ===
 
 ---@class wps

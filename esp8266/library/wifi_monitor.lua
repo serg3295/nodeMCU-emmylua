@@ -1,3 +1,5 @@
+---@meta
+
 --=== wifi_monitor ===
 
 ---@class wifi.monitor

@@ -1,3 +1,5 @@
+---@meta
+
 --=== coap ===
 
 ---@class coap

@@ -1,3 +1,5 @@
+---@meta
+
 --=== liquidcrystal ===
 
 ---@class lc

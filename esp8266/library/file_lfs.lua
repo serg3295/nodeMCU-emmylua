@@ -1,3 +1,5 @@
+---@meta
+
 --=== file_lfs ===
 
 ---@class file_lfs : file

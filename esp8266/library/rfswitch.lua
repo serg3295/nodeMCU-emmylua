@@ -1,3 +1,5 @@
+---@meta
+
 --=== rfswitch ===
 
 ---@class rfswitch

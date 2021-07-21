@@ -17,17 +17,19 @@
 -- | sumn2idea.lua  # script
 -- |
 -- |___esp32
--- |   | *.lua      # files for esp32
+-- |       |___library
+-- |                 | *.lua  # files for esp32
 -- |
 -- |___esp8266
---     | *.lua      # files for esp8266
+--         |___library
+--                   | *.lua  # files for esp8266
 --
--- If no argument is given, script uses ./esp8266 directory
--- lua sumn2idea.lua
+-- If no argument is given, script uses ./esp8266/library directory
+-- # lua sumn2idea.lua
 --
 -- otherwise the argument is directory's name
--- lua sumn2idea.lua esp32
---
+-- # lua sumn2idea.lua esp32
+-- the script will add '/library' itself
 
 local lfs    = require("lfs")
 local format = string.format
@@ -35,7 +37,7 @@ local format = string.format
 local lines, readFile, saveFile, getFilenames
 local files = {}
 
-local srcDir = arg[1] and ("./"   .. arg[1])  or "./esp8266"
+local srcDir = arg[1] and ("./"   .. arg[1] .. "/library")  or "./esp8266/library"
 local outDir = arg[1] and ("./i_" .. arg[1])  or "./i_esp8266"
 
 local function main()
@@ -75,6 +77,7 @@ local function main()
                       : gsub("(%-%-%-@.-@)\"(.-)\"", function (h, s)  -- delete \n in @"line1 \n line2"
                             return h .. s:gsub("%s%s\\n%s", " ")
                           end)
+    content = content:sub(11) -- delete ---@meta
 
     saveFile(outDir .. "/" .. fileName, content)
   end

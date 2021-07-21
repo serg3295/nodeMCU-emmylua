@@ -1,3 +1,5 @@
+---@meta
+
 --=== touch ===
 
 ---@class touch

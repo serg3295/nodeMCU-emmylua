@@ -1,3 +1,5 @@
+---@meta
+
 --=== encoder ===
 
 ---@class encoder

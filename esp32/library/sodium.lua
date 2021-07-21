@@ -1,3 +1,5 @@
+---@meta
+
 --=== sodium ===
 
 ---@class sodium

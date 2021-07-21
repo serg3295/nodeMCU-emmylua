@@ -1,3 +1,5 @@
+---@meta
+
 --=== gpio ===
 
 ---@class gpio

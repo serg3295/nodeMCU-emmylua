@@ -1,3 +1,5 @@
+---@meta
+
 --=== bme280_math ===
 
 ---@class bme280_math

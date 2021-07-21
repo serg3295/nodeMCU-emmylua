@@ -1,3 +1,5 @@
+---@meta
+
 --=== rtcfifo ===
 
 ---@class rtcfifo

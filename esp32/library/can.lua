@@ -1,3 +1,5 @@
+---@meta
+
 --=== can ===
 
 ---@class can

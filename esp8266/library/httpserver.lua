@@ -1,3 +1,5 @@
+---@meta
+
 --=== httpserver ===
 
 ---@class httpserver

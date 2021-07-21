@@ -1,3 +1,5 @@
+---@meta
+
 --=== telnet ===
 
 ---@class telnet

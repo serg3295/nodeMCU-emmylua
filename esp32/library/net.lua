@@ -1,3 +1,5 @@
+---@meta
+
 --=== net ===
 
 ---@class net

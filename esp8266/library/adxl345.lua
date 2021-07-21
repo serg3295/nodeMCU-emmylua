@@ -1,3 +1,5 @@
+---@meta
+
 --=== adxl345 ===
 
 ---@class adxl345

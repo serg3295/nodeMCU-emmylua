@@ -1,3 +1,5 @@
+---@meta
+
 --=== ws2812_effects ===
 
 ---@class ws2812_effects

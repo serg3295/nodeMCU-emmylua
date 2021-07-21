@@ -1,3 +1,5 @@
+---@meta
+
 --=== node ===
 
 ---@class node

@@ -1,3 +1,5 @@
+---@meta
+
 --=== spi ===
 
 ---@class spi

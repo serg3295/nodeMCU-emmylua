@@ -1,3 +1,5 @@
+---@meta
+
 --=== rtctime ===
 
 ---@class rtctime

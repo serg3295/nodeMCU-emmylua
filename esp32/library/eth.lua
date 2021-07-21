@@ -1,3 +1,5 @@
+---@meta
+
 --=== eth ===
 
 ---@class eth

@@ -1,3 +1,5 @@
+---@meta
+
 --=== time ===
 
 ---@class time

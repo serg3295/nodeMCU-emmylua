@@ -1,3 +1,5 @@
+---@meta
+
 --=== enduser_setup ===
 
 ---@class enduser_setup

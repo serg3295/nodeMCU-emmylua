@@ -1,3 +1,5 @@
+---@meta
+
 --=== pulsecnt ===
 
 ---@class pulsecnt

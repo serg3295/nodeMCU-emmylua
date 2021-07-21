@@ -1,3 +1,5 @@
+---@meta
+
 --=== adc ===
 
 ---@class adc

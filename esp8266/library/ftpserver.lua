@@ -1,3 +1,5 @@
+---@meta
+
 --=== ftpserver ===
 
 ---@class FTP

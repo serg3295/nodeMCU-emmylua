@@ -1,3 +1,5 @@
+---@meta
+
 --=== sdmmc ===
 
 ---@class sdmmc

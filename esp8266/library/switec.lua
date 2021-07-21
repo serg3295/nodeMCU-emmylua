@@ -1,3 +1,5 @@
+---@meta
+
 --=== switec ===
 
 ---@class switec

@@ -1,3 +1,5 @@
+---@meta
+
 --=== uart ===
 
 ---@class uart

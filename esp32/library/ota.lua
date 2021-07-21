@@ -1,3 +1,5 @@
+---@meta
+
 --=== ota ===
 
 ---@class otaupgrade

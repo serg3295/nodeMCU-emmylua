@@ -1,3 +1,5 @@
+---@meta
+
 --=== bit ===
 
 ---@class bit

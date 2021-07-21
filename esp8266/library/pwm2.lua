@@ -1,3 +1,5 @@
+---@meta
+
 --=== pwm2 ===
 
 ---@class pwm2

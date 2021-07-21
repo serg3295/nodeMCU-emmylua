@@ -1,3 +1,5 @@
+---@meta
+
 --=== debug ===
 
 ---@class debug

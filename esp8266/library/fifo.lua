@@ -1,3 +1,5 @@
+---@meta
+
 --=== fifo ===
 
 ---@class FIFO

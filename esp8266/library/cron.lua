@@ -1,3 +1,5 @@
+---@meta
+
 --=== cron ===
 
 ---@class cron

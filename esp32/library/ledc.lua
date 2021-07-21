@@ -1,3 +1,5 @@
+---@meta
+
 --=== ledc ===
 
 ---@class ledc

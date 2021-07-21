@@ -1,3 +1,5 @@
+---@meta
+
 --=== gossip ===
 
 ---@class gossip

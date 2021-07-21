@@ -1,3 +1,5 @@
+---@meta
+
 --=== imap ===
 
 ---@class imap

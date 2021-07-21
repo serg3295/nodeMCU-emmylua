@@ -1,3 +1,5 @@
+---@meta
+
 --=== sjson ===
 
 ---@class sjson

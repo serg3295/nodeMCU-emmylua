@@ -1,3 +1,5 @@
+---@meta
+
 --=== file ===
 
 ---@class file

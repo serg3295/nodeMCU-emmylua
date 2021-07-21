@@ -1,3 +1,5 @@
+---@meta
+
 --=== sntp ===
 
 ---@class sntp

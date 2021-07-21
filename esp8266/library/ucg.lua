@@ -1,3 +1,5 @@
+---@meta
+
 --=== ucg ===
 
 ---@class ucg

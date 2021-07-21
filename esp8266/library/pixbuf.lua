@@ -1,3 +1,5 @@
+---@meta
+
 --=== pixbuf ===
 
 ---@class pixbuf

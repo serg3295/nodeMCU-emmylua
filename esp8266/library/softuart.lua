@@ -1,3 +1,5 @@
+---@meta
+
 --=== softuart ===
 
 ---@class softuart
