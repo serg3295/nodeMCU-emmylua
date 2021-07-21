@@ -1,4 +1,4 @@
-# Emmy Lua annotations for NodeMCU ESP8266 & ESP32.
+# Emmy Lua annotations for NodeMCU ESP8266 & ESP32
 
 NodeMCU function annotations for autocomplete in
 - Visual Studio Code
@@ -10,51 +10,83 @@ NodeMCU function annotations for autocomplete in
 
 <img src="./images/nodemcu_emmy2.gif" style="max-width:100%;">
 
-## Install
+## VS Code and Neovim
 
-### VS Code and Neovim
+If you use VSCode or Neovim, then you have to install **[sumneko lua-language-server](https://github.com/sumneko/lua-language-server)** extension first.
 
-If you use VSCode or Neovim, then you have to first install **[sumneko lua-language-server](https://github.com/sumneko/lua-language-server)** extension.
+### Automatic including of API definition files
 
-Then create directories and copy files from this repository into them as shown in the example below.<br>
+Since version 2.3.1 of **sumneko.lua** extension you can use new feature *Automatic adapt to the project environment*.
+
+The extension will try to determine the runtime environment by keywords from *config.lua* and set the appropriate settings in *settings.json*.
+
+#### Install
+
+Copy API definition files, *config.lua* and *plugin.lua* to the directories as shown in example below.<br>
+Note: `config.lua`, `plugin.lua` and `library` are predefined names.
+```
+nodeMCU-emmy
+|
+|___esp32
+|   | config.lua  # settings for esp32 environment
+|   | plugin.lua
+|   |___library
+|       | *.lua   # files with functions definitions for esp32
+|
+|___esp8266
+    | config.lua  # settings for esp8266 environment
+    | plugin.lua
+    |___library
+        | *.lua   # files with functions definitions for esp8266
+```
+
+Then set path to the directories in the setting `User -> Lua.workspace.userThirdParty`. For example:
+
+```json
+    "Lua.workspace.userThirdParty": [
+      "/home/user/nodeMCU-emmy"
+    ]
+```
+
+Hint! When starting new project you can type in *new_file.lua* short keyword `---esp32` or `---esp8266` and environment will trigger automatically.
+
+### Installing API definition files manually
+
+Create directories and copy files from this repository into them as shown in the example below.<br>
 *Note*. Files for esp32 and for esp8266 must be located in different directories.
 
-Here is an example of a directory structure:
+Here is example of the directories structure:
 ```
 nodeMCU
 | plugin.lua  # script
 |
 |___esp32
-|   | *.lua   # files with functions definitions for esp32 (e.g. nodemcu_emmy_32.lua)
+|   | *.lua   # files with functions definitions for esp32
 |
 |___esp8266
-    | *.lua   # files with functions definitions for esp8266  (e.g. nodemcu_emmy.lua)
+    | *.lua   # files with functions definitions for esp8266
 ```
 
 The **sumneko.Lua** extension provides a number of parameters that are stored in .vscode/settings.json.
 
-Now you have to set the path to the files with functions definitions for esp32 **OR** for esp8266 in the setting ```"Lua.workspace.library"```.
+Now you have to set path to the files with functions definitions for esp32 **OR** for esp8266 in the setting ```"Lua.workspace.library"```.
 ```json
 "Lua.workspace.library": [
       "path"
     ]
 ```
-
-To perform the autocomplete of the ucg and u8g2 functions, place the **plugin.lua** file in any directory
- and specify the path to this file in the setting:
+To perform the autocomplete some functions copy the script **plugin.lua** in any directory and specify the path to this file in the setting:
 ```json
  "Lua.runtime.plugin": "PATH/plugin.lua"
 ```
 
-The script **plugin.lua** is common for both projects.
-
-### IntelliJ IDEA
+## IntelliJ IDEA
 
 You have to install the **[IntelliJ-EmmyLua ](https://github.com/EmmyLua/IntelliJ-EmmyLua)** plugin. The auto-completion capabilities of this plugin differ from those of the sumneko extension. Therefore, some of the advanced features will not be supported.
 
 You will need to convert files from the sumneko format to the IDEA format by running **sumn2idea.lua** script from the `tools` directory.
 
-### ZeroBrane Studio
+## ZeroBrane Studio
 
 To get auto-complete functions in **[ZeroBrane Studio](https://studio.zerobrane.com/)** you have to convert the NodeMCU API descriptions to ZeroBrane Studio format by running **sumn2zbs.lua** script.
 
