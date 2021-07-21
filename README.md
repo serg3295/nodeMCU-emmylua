@@ -48,7 +48,7 @@ Then set path to the directories in the setting `User -> Lua.workspace.userThird
     ]
 ```
 
-Hint! When starting new project you can type in *new_file.lua* short keyword `---esp32` or `---esp8266` and environment will trigger automatically.
+Hint! When starting new project you can type in short keyword `---esp32` or `---esp8266` into *new_file.lua* and environment will set up automatically.
 
 ### Installing API definition files manually
 
