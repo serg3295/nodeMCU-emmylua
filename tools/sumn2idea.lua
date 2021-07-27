@@ -77,6 +77,7 @@ local function main()
                       : gsub("(%-%-%-@.-@)\"(.-)\"", function (h, s)  -- delete \n in @"line1 \n line2"
                             return h .. s:gsub("%s%s\\n%s", " ")
                           end)
+                      : gsub("%-%-%-@version%s.-%-", "-")
     content = content:sub(11) -- delete ---@meta
 
     saveFile(outDir .. "/" .. fileName, content)
