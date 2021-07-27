@@ -34,7 +34,7 @@ function Mqtt:close() end
 
 ---Connects to the broker specified by the given host, port, and secure options.
 ---@param host string @host, domain or IP (string)
----@param port? integer @(optional) broker port (number), default 1883
+---@param port? integer|'1883' @(optional) broker port (number), default 1883
 ---@param secure? boolean|table @(optional) either an interger with **0/1** for `false/true` (default 0), or a table with optional entries
 --- - **ca_cert CA** - certificate data in PEM format for server verify with SSL
 --- - **client_cert** - client certificate data in PEM format for SSL mutual authentication

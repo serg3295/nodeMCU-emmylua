@@ -35,7 +35,7 @@ function MQTT:close() end
 
 ---Connects to the broker specified by the given host, port, and secure options.
 ---@param host string @host, domain or IP
----@param port? integer @(optional) broker port (number), default 1883
+---@param port? integer|'1883' @(optional) broker port (number), default 1883
 ---@param secure? boolean @(optional) if `true`, use TLS.
 ---@param conn_est? fun(client: MQTT) @(optional) `function(client)` callback function for when the connection was established
 ---@param conn_not_est? fun(client: MQTT, reason:mqtt) @"(optional) `function(client, reason)` callback function for when the connection could not be established.  \n No further callbacks should be called."

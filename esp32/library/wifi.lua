@@ -73,7 +73,7 @@ function wifi.stop() end
 ---   - `true` to enable auto connect and connect to access point,\
 ---hence with auto=true there's no need to call `wifi.sta.connect()`
 ---   - `false` to disable auto connect and remain disconnected from access point
---- - **bssid** string that contains the MAC address of the access point (optional).\
+--- - **bssid** (optional) string that contains the MAC address of the access point.\
 ---You can set BSSID if you have multiple access points with the same SSID.\
 ---Note: if you set BSSID for a specific SSID and would like to configure station to connect\
 ---to the same SSID only without the BSSID requirement, you MUST first configure to station\
