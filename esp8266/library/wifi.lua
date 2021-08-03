@@ -46,6 +46,7 @@ wifi.ap.dhcp = {}
 ---@field AP_STADISCONNECTED integer
 ---@field AP_PROBEREQRECVED integer
 ---@field WIFI_MODE_CHANGED integer
+---@field reason table
 wifi.eventmon = {}
 
 ---Gets the current WiFi channel.
