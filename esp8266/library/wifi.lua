@@ -536,9 +536,22 @@ function wifi.ap.dhcp.start() end
 ---@return boolean @boolean indicating success
 function wifi.ap.dhcp.stop() end
 
+---@class EventmonRegTbl
+---@field SSID string
+---@field BSSID string
+---@field channel integer
+---@field reason integer
+---@field old_auth_mode integer
+---@field new_auth_mode integer
+---@field IP string
+---@field netmask string
+---@field gateway string
+---@field MAC string
+---@field AID string
+
 ---Register callbacks for WiFi event monitor.
 ---@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'|'wifi.eventmon.WIFI_MODE_CHANGE' @WiFi event you would like to set a callback for.
----@param callback? function @(optional) function(T)
+---@param callback? fun(T:EventmonRegTbl):table @(optional) function(T)
 ---@return nil
 ---Callback: T: Table returned by event.
 --- - *wifi.eventmon.STA_CONNECTED* Station is connected to access point.
