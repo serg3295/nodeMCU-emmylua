@@ -69,3 +69,13 @@ function eth.on(event, callback) end
 ---An error is thrown in case of invalid parameters or\
 ---if the ethernet driver failed.
 function eth.set_mac(mac) end
+
+---Sets IP address, netmask, gateway, dns address of the ethernet.\
+---Options set by this function are not saved to flash.
+---@param cfg table @table to hold configuration:
+--- - **ip** device ip address.
+--- - **netmask** network netmask.
+--- - **gateway** gateway address.
+--- - **dns** name server address.
+---@return nil
+function eth.set_ip(cfg) end
