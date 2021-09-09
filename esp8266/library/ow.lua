@@ -54,8 +54,9 @@ function ow.reset_search(pin) end
 
 ---Looks for the next device.
 ---@param pin integer @1~12, I/O index
+---@param alarm_search? integer @"(optional) 1 / 0,  \n if 0 a regular 0xF0 search is performed(default if parameter is absent),  \nif 1 a 0xEC ALARM SEARCH is performed."
 ---@return string|nil @"string with length of 8 upon success.  \n It contains the rom code of slave device.  \n Returns `nil` if search was unsuccessful."
-function ow.search(pin) end
+function ow.search(pin,alarm_search) end
 
 ---Issues a 1-Wire rom select command.\
 ---Make sure you do the `ow.reset(pin)` first.
@@ -97,3 +98,19 @@ function ow.write(pin, v, power) end
 ---@param power integer @"**1** for wire being held high for parasitically  \n powered devices"
 ---@return nil
 function ow.write_bytes(pin, buf, power) end
+
+---Tweak different bit timing parameters.
+---Each parameter specifies number of microseconds to delay at different stages in the 1-wire bit-banging process.
+---A `nil` value will leave the value unmodified.
+---@param reset_tx integer @pull bus low during reset (default 480)
+---@param reset_wait integer @wait for presence pulse after reset (default 70)
+---@param reset_rx integer @delay after presence pulse have been checked (default 410)
+---@param w1_low integer @pull bus low during write 1 slot (default 5)
+---@param w1_high integer @leave bus high during write 1 slot (default 52)
+---@param w0_low integer @pull bus low during write 1 slot (default 65)
+---@param w0_high integer @leave bus high during write 1 slot (default 5)
+---@param r_low integer @pull bus low during read slot (default 5)
+---@param r_wait integer @wait before reading bus level during read slot  (default 8)
+---@param r_delay integer @delay after reading bus level (default 52)
+---@return nil
+function ow.set_timings(reset_tx, reset_wait, reset_rx, w1_low, w1_high, w0_low, w0_high, r_low, r_wait, r_delay) end
