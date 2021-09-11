@@ -25,6 +25,9 @@ node.egc = {}
 ---@field HIGH_PRIORITY integer
 node.task = {}
 
+---@class node.LFS
+node.LFS = {}
+
 ---Returns the boot reason and extended reset info.
 ---@return integer rawcode @"The first value returned is the raw code, not the new  \n 'reset info' code which was introduced in recent SDKs. Values are:"
 --- - 1, power-on
@@ -112,6 +115,20 @@ function node.dsleep(options) end
 ---@return number flashID @flash ID
 function node.flashid() end
 
+---@deprecated
+---Deprecated synonym for `node.LFS.get()` to return an LFS\
+---function reference.
+---@param modulename string @@The name of the module to be loaded.
+---@return function|nil @"If the LFS is loaded and the modulename is a string  \n that is the name of a valid module in the LFS, then the function  \n is returned in the same way the `load()` and the other Lua load  \n functions do. Otherwise `nil` is returned."
+function node.flashindex(modulename) end
+
+---@deprecated
+---Deprecated synonym for `node.LFS.reload()`.\
+---Reload LFS (Lua Flash Store) with the flash image provided.
+---@param imageName string @"The name of a image file in the filesystem  \nto be loaded into the LFS."
+---@return any|nil @"In the case when the imagename is a valid LFS image,  \n this is expanded and loaded into flash, and the ESP is then  \n immediately rebooted, *so control is not returned to the calling  \n Lua application* in the case of a successful reload.
+function node.flashreload(imageName) end
+
 ---Returns the current available heap size in bytes.
 ---@return number heap @system heap size left in bytes
 function node.heap() end
@@ -127,6 +144,35 @@ function node.heap() end
 ---@return number flashmode
 ---@return number flashspeed
 function node.info() end
+
+---Returns the function reference for a function in LFS.\
+---Note that unused `node.LFS` properties map onto the equialent `get()` call\
+---so for example: `node.LFS.mySub1` is a synonym for `node.LFS.get('mySub1')`.
+---@param modulename string @ The name of the module to be loaded.
+---@return table|nil @
+--- - If the LFS is loaded and the `modulename` is a string that is the name of\
+---a valid module in the LFS, then the function is returned in the same way\
+---the `load()` and the other Lua load functions do
+--- - Otherwise `nil` is returned.
+function node.LFS.get(modulename) end
+
+--- List the modules in LFS.
+---@return table|nil @
+--- - If no LFS image IS LOADED then `nil` is returned.
+--- - Otherwise an sorted array of the name of modules in LFS is returned.
+function node.LFS.list() end
+
+---Reload LFS with the flash image provided. Flash images can be generated\
+---on the host machine using the `luac.cross`command.
+---@param imageName string @The name of a image file in the filesystem to be loaded into the LFS.
+---@return any @
+--- - In the case when the `imagename` is a valid LFS image, this is expanded and loaded into flash,\
+---and the ESP is then immediately rebooted, *so control is not returned to the calling Lua application*\
+---in the case of a successful reload.
+--- - The reload process internally makes multiple passes through the LFS image file.\
+---The first pass validates the file and header formats and detects many errors.\
+---If any is detected then an error string is returned.
+function node.LFS.reload(imageName) end
 
 ---@deprecated
 ---Defines action to take on button press (on the old devkit 0.9), button connected to GPIO 16.\
@@ -184,6 +230,17 @@ function node.restore() end
 ---@param speed integer|'node.CPU80MHZ'|'node.CPU160MHZ' @constant
 ---@return number @target CPU frequency
 function node.setcpufreq(speed) end
+
+
+---Overrides the default crash handling which always restarts the system.\
+---It can be used to e.g. write an error to a logfile or to secure connected hardware before restarting.
+---
+---**!!! attention**\
+---It is strongly advised to ensure that the callback ends with a restart. Something has gone quite wrong\
+---and it is probably not safe to just wait for the next ---event (e.g., timer tick) and hope everything works out.
+---@param callback function @"a callback function to be executed when an error occurs, gets the error string  \nas an argument, remember to **trigger a restart** at the end of the callback"
+---@return nil
+function node.setonerror(callback) end
 
 ---@class SleepCfg
 ---@field secs number

@@ -94,9 +94,8 @@ function netsocket:getpeer() end
 ---@return string|nil @ip or `nil` if not connected
 function netsocket:getaddr() end
 
----Throttle data reception by placing a request to block the TCP receive function.\
----This request is not effective immediately, Espressif recommends to call it\
----while reserving 5*1460 bytes of memory.
+---@deprecated
+---This call is no longer available, as the underlying functionality was removed upstream.
 ---@return nil
 function netsocket:hold() end
 
@@ -117,8 +116,8 @@ function netsocket:on(event, callback) end
 ---@return nil
 function netsocket:send(str, callback) end
 
----Unblock TCP receiving data by\
----revocation of a preceding `hold()`.
+---@deprecated
+---This call is no longer available, as the underlying functionality was removed upstream.
 ---@return nil
 function netsocket:unhold() end
 

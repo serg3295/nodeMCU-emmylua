@@ -3,13 +3,12 @@
 --=== eth ===
 
 ---@class eth
----@field CLOCK_GPIO0_IN integer
----@field CLOCK_GPIO0_OUT integer
----@field CLOCK_GPIO16_OUT integer
----@field CLOCK_GPIO17_OUT integer
+---@field PHY_DP83848 integer
 ---@field PHY_IP101 integer
+---@field PHY_KSZ8041 integer
+---@field PHY_KSZ8081 integer
 ---@field PHY_LAN8720 integer
----@field PHY_TLK110 integer
+---@field PHY_RTL8201  integer
 eth = {}
 
 ---Get MAC address.
@@ -26,28 +25,30 @@ function eth.get_speed() end
 
 ---@class EthInit
 ---@field addr integer
----@field clock_mode integer
 ---@field mdc integer
 ---@field mdio integer
 ---@field phy integer
 ---@field power integer
 
----Initialize the PHY chip and set up its tcpip adapter.
----@param cfg EthInit @"table containing configuration data.  \n All entries are mandatory:"
---- - **addr** PHY address, 0 to 31
---- - **clock_mode** external/internal clock mode selection, one of
----   - eth.CLOCK_GPIO0_IN
----   - eth.CLOCK_GPIO0_OUT
----   - eth.CLOCK_GPIO16_OUT
----   - eth.CLOCK_GPIO17_OUT
+---Initialize the internal ethernet interface by configuring the MAC and PHY\
+---and starting the interface. Note that while the PHY model and some GPIO pins\
+---are configured at runtime, the clock configuration has been moved into\
+---the menuconfig and is no longer available at runtime.\
+---Please refer to the settings available under\
+---`Component config -> Ethernet -> Support ESP32 internal EMAC controller`.
+---@param cfg EthInit @"table containing configuration data.  \nUnless otherwise noted, the entries are mandatory:"
+--- - **addr** PHY address, 0 to 31, optional (default will attempt auto-detect)
 --- - **mdc** MDC pin number
 --- - **mdio** MDIO pin number
 --- - **phy** PHY chip model, one of
+---   - eth.PHY_DP83848
 ---   - eth.PHY_IP101
+---   - eth.PHY_KSZ8041
+---   - eth.PHY_KSZ8081
 ---   - eth.PHY_LAN8720
----   - eth.PHY_TLK110
+---   - eth.PHY_RTL8201
 --- - **power** power enable pin, optional
----@return nil
+---@return nil @"`nil`; An error is thrown in case of invalid parameters,  \nMAC/PHY setup errors, or if the ethernet interface  \nhas already been successfully configured."
 function eth.init(cfg) end
 
 ---Register or unregister callback functions for Ethernet events.
@@ -79,3 +80,17 @@ function eth.set_mac(mac) end
 --- - **dns** name server address.
 ---@return nil
 function eth.set_ip(cfg) end
+
+---Configures a static IPv4 address on the ethernet interface.\
+---Calling this function does three things:
+--- - disables the DHCP client for the ethernet interface
+--- - sets the IP address, netmask and gateway
+--- - set the DNS server to use\
+---Note that these settings are not persisted to flash.
+---@param cfg_opts any @- table with the following fields:
+--- - **ip** static IPv4 address to set
+--- - **netmask** the network netmask
+--- - **gateway** default gateway to use
+--- - **dns** DNS server
+---@return nil @"`nil`; An error is thrown in case of invalid  \nparameters or if any of the options can not be set."
+function eth.set_ip(cfg_opts) end

@@ -17,6 +17,9 @@
 wifi = {}
 
 ---@class wifi.sta
+---@field PMF_OFF integer
+---@field PMF_AVAILABLE integer
+---@field PMF_REQUIRED integer
 wifi.sta = {}
 
 ---@class wifi.ap
@@ -63,16 +66,13 @@ function wifi.stop() end
 ---@field pwd string
 ---@field auto boolean
 ---@field bssid string
+---@field pmf number
 
 ---Sets the WiFi station configuration. The WiFi mode must be set to\
 --- *wifi.STATION* or *wifi.STATIONAP* before this function can be used.
 ---@param station_config StaConfig32 @table containing configuration data for station
 --- - **ssid** string which is less than 32 bytes.
 --- - **pwd** string which is 8-64 or 0 bytes. Empty string indicates an open WiFi access point.
---- - **auto** defaults to true
----   - `true` to enable auto connect and connect to access point,\
----hence with auto=true there's no need to call `wifi.sta.connect()`
----   - `false` to disable auto connect and remain disconnected from access point
 --- - **bssid** (optional) string that contains the MAC address of the access point.\
 ---You can set BSSID if you have multiple access points with the same SSID.\
 ---Note: if you set BSSID for a specific SSID and would like to configure station to connect\
@@ -82,15 +82,21 @@ function wifi.stop() end
 --- "AC-1D-1C-B1-0B-22"\
 --- "DE AD BE EF 7A C0"\
 --- "AcDc0123c0DE"
+--- - **pmf** an optional setting to control whether Protected Management Frames\
+---are supported and/or required. One of:
+---   - `wifi.sta.PMF_OFF`
+---   - `wifi.sta.PMF_AVAILABLE` Defaults to `wifi.sta.PMF_AVAILABLE`.
+---   - `wifi.sta.PMF_REQUIRED`.\
+---PMF is required when joining to WPA3-Personal access points.
 ---@param save boolean @Save station configuration to flash.
 ---|'true' #configuration will be retained through power cycle.
 ---|>'false' #configuration will not be retained through power cycle.
 ---@return nil
 function wifi.sta.config(station_config, save) end
 
----Connects to the configured AP in station mode.\
----You only ever need to call this if auto-connect\
----was disabled in `wifi.sta.config()`.
+---Connects to the configured AP in station mode. You will want to call this\
+---on start-up after `wifi.start()`, and quite possibly also in response to\
+---`disconnected` events.
 ---@return nil
 function wifi.sta.connect() end
 
@@ -108,12 +114,13 @@ function wifi.sta.disconnect() end
 --- - **ssid**: the SSID of the network
 --- - **bssid**: the BSSID of the AP
 --- - **channel**: the primary channel of the network
---- - **auth** authentication method, one of wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK (default), wifi.WPA_WPA2_PSK
+--- - **auth** authentication method, one of wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK,\
+---wifi.AUTH_WPA2_PSK (default), wifi.AUTH_WPA_WPA2_PSK
 ---
 ---`"disconnected"`: information about the network/AP that was disconnected from:
 --- - **ssid**: the SSID of the network
 --- - **bssid**: the BSSID of the AP
---- - **reason**: an integer code for the reason (see table below for mapping)
+--- - **reason**: an integer code for the reason
 ---
 ---`"authmode_changed"`: authentication mode information:
 --- - **old_mode**: the previous auth mode used
@@ -147,7 +154,7 @@ function wifi.sta.getmac() end
 --- - **bssid**: the BSSID of the AP
 --- - **channel**: primary WiFi channel of the AP
 --- - **rssi**: Received Signal Strength Indicator value
---- - **auth** authentication method, one of *wifi.OPEN, wifi.WPA_PSK, wifi.WPA2_PSK* (default), *wifi.WPA_WPA2_PSK*
+--- - **auth** authentication method, one of *wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK* (default), *wifi.AUTH_WPA_WPA2_PSK*
 --- - **bandwidth**: one of the following constants: *wifi.HT20, wifi.HT40_ABOVE, wifi.HT40_BELOW*
 ---@return nil
 function wifi.sta.scan(cfg, callback) end
