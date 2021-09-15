@@ -3,6 +3,7 @@
 --=== sjson ===
 
 ---@class sjson
+---@field NULL userdata
 sjson = {}
 
 ---@class encoder
