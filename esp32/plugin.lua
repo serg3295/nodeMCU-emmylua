@@ -44,6 +44,10 @@ function OnSetText(uri, text)
     end
   end
 
+  if #diffs == 0 then
+    return nil
+  end
+
   return diffs
 
 end
