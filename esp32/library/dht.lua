@@ -3,6 +3,9 @@
 --=== dht ===
 
 ---@class dht
+---@field OK integer
+---@field ERROR_CHECKSUM integer
+---@field ERROR_TIMEOUT integer
 dht = {}
 
 ---Read DHT11 humidity temperature combo sensor.
