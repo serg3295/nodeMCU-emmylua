@@ -257,7 +257,7 @@ function wifi.sta.clearconfig() end
 ---@return boolean
 function wifi.sta.config(station_config) end
 
----Connects to the configured AP in station mode.Y ou only ever\
+---Connects to the configured AP in station mode. You only ever\
 ---need to call this if auto-connect was disabled in `wifi.sta.config()`.
 ---@param connected_cb? function @"(optional) Callback to execute when station  \n is connected to an access point. Items returned in table:"
 --- - **SSID**: SSID of access point. (format: string)
