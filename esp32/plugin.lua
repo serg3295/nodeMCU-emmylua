@@ -1,7 +1,7 @@
 ---@param  uri  string # The uri of file
 ---@param  text string # The content of file
 ---@diagnostic disable-next-line: undefined-doc-name
----@return diff[]
+---@return nil | diff[]
 function OnSetText(uri, text)
   local diffs = {}
 
