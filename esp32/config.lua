@@ -1,5 +1,5 @@
 name    = 'ESP32'
-words   = {'%-%-%-esp32', 'wifi%.start', 'wifi%.sta%.on', 'wifi%.ap%.on', 'gpio%.config'}
+words   = {'%-%-%-esp32\r?\n'}
 configs = {
   {
     key    = 'Lua.runtime.version',

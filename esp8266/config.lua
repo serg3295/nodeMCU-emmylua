@@ -1,5 +1,5 @@
 name    = 'ESP8266'
-words   = {'%-%-%-esp8266', 'wifi%.sta%.status', 'wifi%.sta%.getip', 'gpio%.mode'}
+words   = {'%-%-%-esp8266\r?\n', 'wifi%.sta%.status', 'wifi%.sta%.getip', 'gpio%.mode'}
 configs = {
   {
     key    = 'Lua.runtime.version',
