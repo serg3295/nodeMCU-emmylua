@@ -116,7 +116,7 @@ end
 
 ---Check if parameter is alias type
 ---@param s string
----@return  string|nil @alias type or nil
+---@return  string @alias type or nil
 local function alias(s)
   local at = nil
   for aName, aType in pairs(tAlias) do
@@ -127,7 +127,7 @@ end
 
 ---remove redundant characters from description
 ---@param d string
----@return  string
+---@return  string, number
 local function cleanDescr(d)
   return d:sub(4)
           :gsub("\\$", "", 1)  -- remove trailing backslash
@@ -248,6 +248,7 @@ for _, fileName in pairs(files) do
         descr = descr .. "\n"
 
       elseif startswith(tstr, "---@param") then
+        ---@type string, string
         local param, paramType = match(tstr, "^%-%-%-@param%s([%w_?]+)%s([%w_]+)%f[%W]")
         if alias(paramType) then paramType = alias(paramType) end
         if isUserType(paramType) then paramType = "table" end

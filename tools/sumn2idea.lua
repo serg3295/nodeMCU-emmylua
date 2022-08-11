@@ -115,8 +115,8 @@ end
 ---@return nil
 saveFile = function(fname, data)
   local file = io.open(fname, "w")
-  file:write(data)
-  file:close()
+  file:write(data)  ---@diagnostic disable-line: need-check-nil
+  file:close()      ---@diagnostic disable-line: need-check-nil
 end
 
 -- from http://lua-users.org/wiki/SplitJoin \

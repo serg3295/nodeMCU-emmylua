@@ -202,7 +202,7 @@ end
 
 -- Get "Syntax"
 ---@param cont string
----@return string
+---@return string, string
 function getSyntax(cont)
 
   --- Fill 'optparam' table with optional parameter names
@@ -292,7 +292,7 @@ function getRet(cont)
     print(format("\nWarning! #### Returns section is missed in: %s\n", funcName))
   end
 
-  buff = addLineBr(buff)
+  buff = addLineBr(buff, false)
   ---@type table <number, string>
   t = lines(buff)
   for k, v in pairs (t) do
@@ -432,7 +432,7 @@ function getParams(cont)
     error(format("\n#### Parameters or Returns section is missed in: %s\n", funcName))
   end
 
-  buff = addLineBr(buff)
+  buff = addLineBr(buff, false)
   local t = lines(buff)
 
   for k, v in pairs (t) do
@@ -454,7 +454,7 @@ end
 ---@param str string
 ---@return string
 escapeMagic = function (str)
-  return string.gsub(str, "[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%1")
+  return (string.gsub(str, "[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%1"))
 end
 
 ---Add line breaks - 'backslash'
@@ -514,8 +514,8 @@ end
 ---@return nil
 saveFile = function(fname, data)
   local file = io.open(fname, "w")
-  file:write(data)
-  file:close()
+  file:write(data)  ---@diagnostic disable-line: need-check-nil
+  file:close()      ---@diagnostic disable-line: need-check-nil
 end
 
 -- from http://lua-users.org/wiki/SplitJoin \
