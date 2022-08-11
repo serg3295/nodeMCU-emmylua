@@ -186,7 +186,7 @@ function node.setcpufreq(speed) end
 ---before restarting.\
 --- **!!! attention** It is strongly advised to ensure that the callback ends with a restart.\
 ---Something has gone quite wrong and it is probably not safe to just wait for\
----the next event (e.g., timer tick) and hope everything works out.\
+---the next event (e.g., timer tick) and hope everything works out.
 ---```lua
 --- node.setonerror(function(s)
 ---     print("Error: "..s)

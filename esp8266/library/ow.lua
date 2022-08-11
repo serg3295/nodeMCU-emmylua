@@ -56,7 +56,7 @@ function ow.reset_search(pin) end
 ---@param pin integer @1~12, I/O index
 ---@param alarm_search? integer @"(optional) 1 / 0,  \n if 0 a regular 0xF0 search is performed(default if parameter is absent),  \nif 1 a 0xEC ALARM SEARCH is performed."
 ---@return string|nil @"string with length of 8 upon success.  \n It contains the rom code of slave device.  \n Returns `nil` if search was unsuccessful."
-function ow.search(pin,alarm_search) end
+function ow.search(pin, alarm_search) end
 
 ---Issues a 1-Wire rom select command.\
 ---Make sure you do the `ow.reset(pin)` first.
