@@ -22,7 +22,7 @@ function eromfs.mount(volname, mountpt) end
 ---@param mountpt string @the current mount point of the volume.
 ---@return nil @`nil` if:
 --- - the volume was successfully unmounted; or
---- - the volume was not currently mounted at the given mount point
+--- - the volume was not currently mounted at the given mount point\
 ---*Raises an error if:*
 --- - the unmounting fails for some reason; or
 --- - a different EROMFS volume is mounted on the given mount point

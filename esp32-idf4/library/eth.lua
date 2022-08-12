@@ -87,7 +87,7 @@ function eth.set_ip(cfg) end
 --- - sets the IP address, netmask and gateway
 --- - set the DNS server to use\
 ---Note that these settings are not persisted to flash.
----@param cfg_opts any @- table with the following fields:
+---@param cfg_opts table @table with the following fields:
 --- - **ip** static IPv4 address to set
 --- - **netmask** the network netmask
 --- - **gateway** default gateway to use
