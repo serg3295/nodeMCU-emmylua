@@ -25,7 +25,13 @@ The extension will try to determine the runtime environment by keywords from *co
 Copy API definition files, *config.lua* and *plugin.lua* to the directories as shown in example below.<br>
 Note: `config.lua`, `plugin.lua` and `library` are predefined names.
 ```
-nodeMCU-emmy
+nodeMCU-emmylua
+|
+|___esp32-idf4
+|   | config.lua  # settings for esp32-idf4 environment
+|   | plugin.lua
+|   |___library
+|       | *.lua   # files with functions definitions for esp32-idf4
 |
 |___esp32
 |   | config.lua  # settings for esp32 environment
@@ -44,11 +50,11 @@ Then set path to the directories in the setting `User -> Lua.workspace.userThird
 
 ```json
     "Lua.workspace.userThirdParty": [
-      "/home/user/nodeMCU-emmy"
+      "/home/user/nodeMCU-emmylua"
     ]
 ```
 
-Hint! When starting new project you can type in short keyword `---esp32` or `---esp8266` into *new_file.lua* and environment will set up automatically.
+Hint! When starting new project you can type in short keyword `---esp32-idf4` or `---esp32` or `---esp8266` followed by `Enter` into *new_file.lua* and environment will set up automatically.
 
 ### Installing API definition files manually
 
@@ -69,7 +75,7 @@ nodeMCU
 
 The **sumneko.Lua** extension provides a number of parameters that are stored in .vscode/settings.json.
 
-Now you have to set path to the files with functions definitions for esp32 **OR** for esp8266 in the setting ```"Lua.workspace.library"```.
+Now you have to set path to the files with functions definitions for esp32-idf4 **OR** esp32 **OR** for esp8266 in the setting ```"Lua.workspace.library"```.
 ```json
 "Lua.workspace.library": [
       "path"
