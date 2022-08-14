@@ -37,7 +37,8 @@ local format, find, match = string.format, string.find, string.match
 local DIR_SEP = '/'
 local API     = {}
 local files   = {}
-local tAlias  = {}
+---@type table<string, string>
+local tAlias  = {}  -- <aliasName> <aliasType>
 local srcDir  = arg[1] and ("." .. DIR_SEP .. arg[1])  or ("." .. DIR_SEP .. "esp8266")
 
 --#region Utility functions
@@ -98,10 +99,11 @@ local function startswith(s, piece)
   return string.sub(s, 1, string.len(piece)) == piece
 end
 
----Check if not sumneko's type
+--- `true` if it's user's class,\
+--- `false` if it's Sumneko's type
 ---@param r string
 ---@return  boolean
-local function isUserType(r)
+local function isSpecialType(r)
   return (r
     and r ~= 'string'
     and r ~= 'boolean'
@@ -114,28 +116,17 @@ local function isUserType(r)
     and r ~= 'any')
 end
 
----Check if parameter is alias type
----@param s string
----@return  string @alias type or nil
-local function alias(s)
-  local at = nil
-  for aName, aType in pairs(tAlias) do
-    if s == aName then at = aType break end
-  end
-  return at
-end
-
 ---remove redundant characters from description
 ---@param d string
----@return  string, number
+---@return  string
 local function cleanDescr(d)
-  return d:sub(4)
+  return (d:sub(4)
           :gsub("\\$", "", 1)  -- remove trailing backslash
           :gsub("%*", "")
           :gsub("`", "'")
           :gsub("(%b[])%b()", function (h)  -- remove links
                 return string.sub(h, 2, -2)
-            end)
+            end))
 end
 
 --#endregion Utility functions
@@ -150,7 +141,7 @@ end
 
 for _, fileName in pairs(files) do
   local content          = readFile(srcDir .. DIR_SEP .. fileName)
-  local base, cla1, cla2 = nil, nil, nil  ---@type string
+  local base, cla1, cla2 = nil, nil, nil  ---@type string, string, string
 
   for i = 1, #tAlias do tAlias[i] = nil end
   -- classes find ( Limitation max 2 level -> base.class1.class2.* )
@@ -208,7 +199,7 @@ for _, fileName in pairs(files) do
       elseif startswith(tstr, "function") then
         if find(tstr, "^function [%w_]-%..+%(") then
           child.type = "function"
-      ---@type string
+          ---@type string, string, string
           local l1, l2, l3 = match(tstr, "^function%s[%w_]+%.([%w_]+)%.?([%w_]*)%.?([%w_]*)%(.*%)")
           if l2 == "" and l3 == "" then
             API[base].childs[l1] = child
@@ -233,7 +224,7 @@ for _, fileName in pairs(files) do
       elseif startswith(tstr, "---@return") then
       -- replace { literal table } by "table" and get ---return 'type'
         local ret = find(tstr, "@return%s%b{}") and 'table' or match(tstr, "@return%s([%w%|_]+)%f[%W]")
-        if ret and ret ~= "" and isUserType(ret) and (not find(ret, "|")) then
+        if ret and ret ~= "" and isSpecialType(ret) and (not find(ret, "|")) then
           child.valuetype = ret
           child.returns   = '(' .. ret .. ')'
         else
@@ -248,11 +239,25 @@ for _, fileName in pairs(files) do
         descr = descr .. "\n"
 
       elseif startswith(tstr, "---@param") then
-        ---@type string, string
-        local param, paramType = match(tstr, "^%-%-%-@param%s([%w_?]+)%s([%w_]+)%f[%W]")
-        if alias(paramType) then paramType = alias(paramType) end
-        if isUserType(paramType) then paramType = "table" end
-        allParams  = allParams .. param .. ": " .. paramType
+        local paramName, paramType = match(tstr, "^%-%-%-@param%s([%w_?]+)%s([%w_]+)%f[%W]")
+
+        -- Example:
+        -- @alias letter string
+        -- |'a'
+        -- |'b'
+        -- @param L letter # paramName - n, paramType - aliasName
+        for aliasName, aliasType in pairs(tAlias) do
+          if paramType == aliasName then paramType = aliasType break end
+        end
+
+        -- Example: @param tblName ConfigTable #name - tblName, type - ConfigTable
+        if isSpecialType(paramType) then paramType = "table" end
+
+        -- surround optional parameter with square brackets
+        allParams  = find(paramName, "%?$")
+          and allParams .. "[".. paramName:sub(1,-2) .. ": " .. paramType .."]"
+          or  allParams .. paramName .. ": " .. paramType
+
         child.args = "(" .. allParams .. ")"
         allParams  = allParams .. ", "
 
