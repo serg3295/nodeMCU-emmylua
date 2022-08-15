@@ -3,15 +3,15 @@
 -- The Unlicense
 --
 -- Script:
--- removes the char '?' which denotes an optional parameter from --@param name? type
--- converts
---  @alias name type
---- | 'par1' #comment 1
---- |>'par2' #comment 2
--- to @alias name 'par1'|'par2'
--- a comments and char '>' (it denotes default value) will be lost
---
--- removes '\' at the end of lines
+-- 1. removes the char '?' which denotes an optional parameter from --@param name? type
+-- 2. change @param ... Type -> @vararg Type
+-- 3. converts
+--      @alias name type
+--      | 'par1' #comment 1
+--      |>'par2' #comment 2
+--    to @alias name 'par1'|'par2'
+--    a comments and char '>' (it denotes default value) will be lost
+-- 4. removes '\' at the end of lines
 --
 -- Usage:
 -- | sumn2idea.lua  # script
@@ -61,9 +61,9 @@ local function main()
 
     local content = readFile(srcDir .. '/' .. fileName)
     content = content : gsub("(%-%-%-@param%s[%w_]+)%?", "%1") -- delete '?'
+                      : gsub("(%-%-%-@)param%s%.%.%.","%1vararg")  -- change @param ... -> @vararg
                       : gsub("(alias%s[%w_]+%s[%a]+\n.-)(%-%-%-[^|])", function (alias, tail)
-                            ---@type table<integer, string>
-                            local tbl = lines(alias)
+                            local tbl = lines(alias)  ---@type string[]
                             for k, v in ipairs(tbl) do
                               tbl[k]  = v:gsub("(alias%s[%w_]+%s)[%a]+\n*", "%1"):
                                           gsub("^%-%-%-|[%s>]?('.+')%s?#?.*\n*", "%1|")
@@ -114,9 +114,9 @@ end
 ---@param data  string data for save
 ---@return nil
 saveFile = function(fname, data)
-  local file = io.open(fname, "w")
-  file:write(data)  ---@diagnostic disable-line: need-check-nil
-  file:close()      ---@diagnostic disable-line: need-check-nil
+  local file = assert(io.open(fname, "w"))
+  file:write(data)
+  file:close()
 end
 
 -- from http://lua-users.org/wiki/SplitJoin \

@@ -43,7 +43,7 @@ gpio = {}
 ---   - gpio.PULL_UP -- enables pull-up and disables pull-down
 ---   - gpio.PULL_DOWN -- enables pull-down and disables pull-up
 ---   - gpio.PULL_UP_DOWN -- enables both pull-up and -down
----@vararg GpioConfig
+---@param ... GpioConfig
 ---@return nil
 function gpio.config(tbl, ...) end
 

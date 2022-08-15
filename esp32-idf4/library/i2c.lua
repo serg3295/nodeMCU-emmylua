@@ -112,6 +112,6 @@ function i2c.slave.setup(id, slave_config) end
 ---It blocks if the buffer is doesn't provide enough space.
 ---@param id integer|'i2c.HW0'|'i2c.HW1' @interface id
 ---@param data1 number|string|table @data can be numbers, string or lua table.
----@vararg number|string|table
+---@param ... number|string|table
 ---@return number @number of bytes written
 function i2c.slave.send(id, data1, ...) end

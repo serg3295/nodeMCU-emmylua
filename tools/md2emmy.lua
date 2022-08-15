@@ -418,8 +418,8 @@ function getParams(cont)
       end
 
       t[k] = t[k]:gsub("^%-%-%-@param ([%w_]+)/([%w_]+) (.+)", "---@param %1_or_%2 %3") -- change \ or | -> _or_
-                 :gsub("^%-%-%-@param%s%.%.%.[%w%s_]+.+@([%w]*)", "---@vararg any @%1") -- vararg
-                 :gsub("^%-%-%-@param%s[%w%s_]+%.%.%..+@([%w]*)", "---@vararg any @%1")
+                 :gsub("^%-%-%-@param%s%.%.%.[%w%s_]+.+@([%w]*)",   "---@param ... any @%1") -- vararg
+                 :gsub("^%-%-%-@param%s[%w%s%?_]+%.%.%..+@([%w]*)", "---@param ... any @%1")
     end
 
     if k == #t then t[k] = t[k] .. "\n" end
@@ -513,9 +513,9 @@ end
 ---@param data  string data for save
 ---@return nil
 saveFile = function(fname, data)
-  local file = io.open(fname, "w")
-  file:write(data)  ---@diagnostic disable-line: need-check-nil
-  file:close()      ---@diagnostic disable-line: need-check-nil
+  local file = assert(io.open(fname, "w"))
+  file:write(data)
+  file:close()
 end
 
 -- from http://lua-users.org/wiki/SplitJoin \
@@ -557,7 +557,7 @@ local function main()
 --]]
 
 ---[[ -- debug mode
-  local argf = arg[1] or "func.md"
+  local argf = arg[1] .. ".md" or "func.md"
   fileParse(argf)
 --]]
 

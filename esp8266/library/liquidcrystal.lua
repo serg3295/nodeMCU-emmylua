@@ -215,6 +215,6 @@ function lc:scrollLeft() end
 function lc:scrollRight() end
 
 ---Print text. vararg - strings or char codes.
----@vararg string
+---@param ... string
 ---@return nil
 function lc:write(...) end

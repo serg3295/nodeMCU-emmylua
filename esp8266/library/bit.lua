@@ -14,7 +14,7 @@ function bit.arshift(value, shift) end
 ---Bitwise *AND*, equivalent to `val1 & val2 & ... & valn` in C.
 ---@param val1 integer @first *AND* argument
 ---@param val2 integer @second *AND* argument
----@vararg integer
+---@param ... integer
 ---@return integer @the bitwise *AND* of all the arguments
 function bit.band(val1, val2, ...) end
 
@@ -32,21 +32,21 @@ function bit.bnot(value) end
 ---Bitwise *OR*, equivalent to `val1 | val2 | ... | valn` in C.
 ---@param val1 integer @first *OR* argument.
 ---@param val2 integer @second *OR* argument.
----@vararg integer
+---@param ... integer
 ---@return integer @the bitwise *OR* of all the arguments
 function bit.bor(val1, val2, ...) end
 
 ---Bitwise *XOR*, equivalent to `val1 ^ val2 ^ ... ^ valn` in C.
 ---@param val1 integer @first *XOR* argument
 ---@param val2 integer @second *XOR* argument
----@vararg integer
+---@param ... integer
 ---@return integer @the bitwise *XOR* of all the arguments
 function bit.bxor(val1, val2, ...) end
 
 ---Clear bits in a number.
 ---@param value integer @the base number
 ---@param pos1 integer @position of the first bit to clear
----@vararg integer
+---@param ... integer
 ---@return integer @the number with the bit(s) cleared in the given position(s)
 function bit.clear(value, pos1, ...) end
 
@@ -78,6 +78,6 @@ function bit.rshift(value, shift) end
 ---Set bits in a number.
 ---@param value integer @the base number.
 ---@param pos1 integer @position of the first bit to set.
----@vararg integer
+---@param ... integer
 ---@return integer @the number with the bit(s) set in the given position(s)
 function bit.set(value, pos1, ...) end

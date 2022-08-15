@@ -239,7 +239,7 @@ for _, fileName in pairs(files) do
         descr = descr .. "\n"
 
       elseif startswith(tstr, "---@param") then
-        local paramName, paramType = match(tstr, "^%-%-%-@param%s([%w_?]+)%s([%w_]+)%f[%W]")
+        local paramName, paramType = match(tstr, "^%-%-%-@param%s([%w_?.]+)%s([%w_]+)%f[%W]")
 
         -- Example:
         -- @alias letter string

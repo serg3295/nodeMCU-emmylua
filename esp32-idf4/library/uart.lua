@@ -113,6 +113,6 @@ function uart.wakeup(id, val) end
 ---Write string or byte to the UART.
 ---@param id integer @uart id
 ---@param data1 any @... string or byte to send via UART
----@vararg any @string or byte to send via UART
+---@param ... any @string or byte to send via UART
 ---@return nil
 function uart.write(id, data1, ...) end

@@ -55,7 +55,7 @@ function uart.getconfig(id) end
 ---Write string or byte to the UART.
 ---@param id integer @UART id (0 or 1).
 ---@param data1 string|number @... string or byte to send via UART
----@vararg string|number
+---@param ... string|number
 ---@return nil
 function uart.write(id, data1, ...) end
 

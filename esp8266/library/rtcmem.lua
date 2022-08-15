@@ -14,6 +14,6 @@ function rtcmem.read32(idx, num) end
 ---Writes one or more values to RTC user memory, starting at index idx.
 ---@param idx integer @zero-based index to start writing to.
 ---@param val number @value to store (32bit)
----@vararg number @(optional) additional values to store
+---@param ... number @(optional) additional values to store
 ---@return nil
 function rtcmem.write32(idx, val, ...) end

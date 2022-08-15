@@ -78,7 +78,7 @@ function gpio.write(pin, level) end
 --- - **delay** specifies the number of microseconds after setting the pin values to wait until moving to the next state.
 --- - **min** and **max** can be used to specify (along with delay) that this time can be varied.
 --- - **count** and **loop** allow simple looping.
----@vararg GpioPulse
+---@param ... GpioPulse
 ---@return pulser obj @gpio.pulse object.
 function gpio.pulse.build(tbl, ...) end
 
