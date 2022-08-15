@@ -8,7 +8,7 @@
 ---@field PHY_KSZ8041 integer
 ---@field PHY_KSZ8081 integer
 ---@field PHY_LAN8720 integer
----@field PHY_RTL8201  integer
+---@field PHY_RTL8201 integer
 eth = {}
 
 ---Get MAC address.
