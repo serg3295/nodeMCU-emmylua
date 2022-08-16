@@ -1,6 +1,6 @@
 # Emmy Lua annotations for NodeMCU ESP8266 & ESP32
 
-NodeMCU function annotations for autocomplete in
+[NodeMCU](https://nodemcu.readthedocs.io/en/release/) function annotations for autocomplete in
 - Visual Studio Code
 - Neovim
 - IntelliJ IDEA
