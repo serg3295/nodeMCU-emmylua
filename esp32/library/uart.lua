@@ -21,7 +21,7 @@ uart = {}
 ---@param method string @data | error
 ---|'"data"' #"data", data has been received on the UART.
 ---|'"error"' #error occurred on the UART.
----@param number_or_endChar? number @(optional) Only for event data.
+---@param number_or_endChar? number|string @(optional) Only for event data.
 --- - if pass in a number *n* < 255, the callback will called when *n* chars are received.
 --- - if *n* = 0, will receive every char in buffer.
 --- - if pass in a one char string "c", the callback will called when "c" is encounterd, or max *n* = 255 received.
