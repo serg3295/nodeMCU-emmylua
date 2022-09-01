@@ -183,6 +183,7 @@ function node.input(str) end
 
 ---Redirects all standard output (`stdout`) to a callback function. Optionally also prints it\
 ---to the console device, as specified in Kconfig under the "ESP System Settings" section.
+---@overload fun(): nil
 ---@param callback function @"`output_fn(str)` a function accept every output as str,  \n and can send the output to a socket (or maybe a file). `nil` to unregister  \n the previous function."
 ---@param console_output integer @0 | 1
 ---|>'1' #output also sent out the console port.

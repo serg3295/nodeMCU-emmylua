@@ -154,6 +154,7 @@ function node.input(str) end
 
 ---Redirects the Lua interpreter output to a callback function.\
 ---Optionally also prints it to the serial console.
+---@overload fun(): nil
 ---@param callback function @"`output_fn(str)` a function accept every output as str,  \n and can send the output to a socket (or maybe a file). `nil` to unregister  \n the previous function."
 ---@param serial_output integer @0 | 1
 ---|>'1' #output also sent out the serial port.
