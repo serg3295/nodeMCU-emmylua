@@ -67,6 +67,8 @@ function netsrv:close() end
 function netsrv:getaddr() end
 
 ---Listen on port from IP address.
+---@overload fun(self: netsrv, callback: function): nil
+---@overload fun(self: netsrv, port: integer, callback: function): nil
 ---@param port? integer @(optional) port number, can be omitted (random port will be chosen)
 ---@param ip? string @(optional) IP address string, can be omitted
 ---@param callback fun(net.socket:netsocket) @"`function(net.socket)`, pass to caller function as param if  \n a connection is created successfully"
