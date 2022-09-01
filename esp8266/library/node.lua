@@ -307,6 +307,7 @@ function node.egc.setmode(mode, level) end
 function node.egc.meminfo() end
 
 ---Enable a Lua callback or task to post another task request.
+---@overload fun(callback: function): nil
 ---@param task_priority? integer @(optional) 0 | 1 | 2
 ---| 'node.task.LOW_PRIORITY' #=0
 ---|>'node.task.MEDIUM_PRIORITY' #=1
