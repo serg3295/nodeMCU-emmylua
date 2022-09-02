@@ -62,6 +62,10 @@ local function main()
     local content = readFile(srcDir .. '/' .. fileName)
     content = content : gsub("(%-%-%-@param%s[%w_]+)%?", "%1") -- delete '?'
                       : gsub("(%-%-%-@)param%s%.%.%.","%1vararg")  -- change @param ... -> @vararg
+                      : gsub("(%-%-%-@param%s[%w_]+%s[%w_]+%s?|)(.-[@\n])", function (start, values)  -- changes |`text`|`text2` -> |'text'|'text2' in line @param
+                            return start .. values:gsub("`", "'")
+                          end)
+                      : gsub("(%-%-%-|[%s>]?)`(.-)`([%s#\n]?)", "%1'%2'%3")  -- changes ` -> ' in a line that starts with ---|
                       : gsub("(alias%s[%w_]+%s[%a]+\n.-)(%-%-%-[^|])", function (alias, tail)
                             local tbl = lines(alias)  ---@type string[]
                             for k, v in ipairs(tbl) do
