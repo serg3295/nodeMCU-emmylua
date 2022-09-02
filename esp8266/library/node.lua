@@ -178,7 +178,7 @@ function node.restart() end
 function node.restore() end
 
 ---Change the working CPU Frequency.
----@param speed integer|'node.CPU80MHZ'|'node.CPU160MHZ' @constant
+---@param speed integer|`node.CPU80MHZ`|`node.CPU160MHZ` @constant
 ---@return number @target CPU frequency
 function node.setcpufreq(speed) end
 
@@ -218,15 +218,15 @@ function node.setpartitiontable(partition_info) end
 ---Put NodeMCU in light sleep mode to reduce current consumption.
 ---@param wake_pin integer @1-12, pin to attach wake interrupt to. Note that pin 0(GPIO 16) does not support interrupts.
 ---@param int_type? integer @(optional) type of interrupt that you would like to wake on.
----| 'node.INT_UP'   #Rising edge
----| 'node.INT_DOWN' #Falling edge
----| 'node.INT_BOTH' #Both edges
----|>'node.INT_LOW'  #Low level
----| 'node.INT_HIGH' #High level
+---| `node.INT_UP` #Rising edge
+---| `node.INT_DOWN` #Falling edge
+---| `node.INT_BOTH` #Both edges
+---|>`node.INT_LOW` #Low level
+---| `node.INT_HIGH` #High level
 ---@param resume_cb? fun() @(optional) Callback to execute when WiFi wakes from suspension.
 ---@param preserve_mode? boolean @(optional) preserve current WiFi mode through node sleep.
----|'true' #Station and StationAP modes will automatically reconnect to previously configured Access Point when NodeMCU resumes.
----|'false' #discard WiFi mode and leave NodeMCU in wifi.NULL_MODE. WiFi mode will be restored to original mode on restart.
+---|`true` #Station and StationAP modes will automatically reconnect to previously configured Access Point when NodeMCU resumes.
+---|`false` #discard WiFi mode and leave NodeMCU in wifi.NULL_MODE. WiFi mode will be restored to original mode on restart.
 ---@return nil
 function node.sleep(wake_pin, int_type, resume_cb, preserve_mode) end
 
@@ -266,9 +266,9 @@ function node.startupcommand(str) end
 ---Controls the amount of debug information kept during `node.compile()`, and\
 ---allows removal of debug information from already compiled Lua code.
 ---@param level? integer @(optional) level
----|'1' #don't discard debug info
----|'2' #discard Local and Upvalue debug info
----|'3' #discard Local, Upvalue and line-number debug info
+---|`1` #don't discard debug info
+---|`2` #discard Local and Upvalue debug info
+---|`3` #discard Local, Upvalue and line-number debug info
 ---@param foo? function @"(optional) a compiled function to be stripped per setfenv  \n except 0 is not permitted."
 ---@return integer|nil @"If invoked without arguments, returns the current level settings.  \n Otherwise, `nil` is returned."
 function node.stripdebug(level, foo) end
@@ -293,10 +293,10 @@ function node.random(l, u) end
 
 ---Sets the Emergency Garbage Collector mode.
 ---@param mode integer @mode
----|'node.egc.NOT_ACTIVE' #EGC inactive, no collection cycle will be forced in low memory situations
----|'node.egc.ON_ALLOC_FAILURE' #Try to allocate a new block of memory, and run the garbage collector if the allocation fails. If the allocation fails even after running the garbage collector, the allocator will return with error.
----|'node.egc.ON_MEM_LIMIT' #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit. If the upper limit can't be satisfied even after running the garbage collector, the allocator will return with error. If the given limit is negative, it is interpreted as the desired amount of heap which should be left available. Whenever the free heap (as reported by node.heap() falls below the requested limit, the garbage collector will be run.
----|'node.egc.ALWAYS' #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error. This mode is very efficient with regards to memory savings, but it's also the slowest.
+---|`node.egc.NOT_ACTIVE` #EGC inactive, no collection cycle will be forced in low memory situations
+---|`node.egc.ON_ALLOC_FAILURE` #Try to allocate a new block of memory, and run the garbage collector if the allocation fails. If the allocation fails even after running the garbage collector, the allocator will return with error.
+---|`node.egc.ON_MEM_LIMIT` #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit. If the upper limit can't be satisfied even after running the garbage collector, the allocator will return with error. If the given limit is negative, it is interpreted as the desired amount of heap which should be left available. Whenever the free heap (as reported by node.heap() falls below the requested limit, the garbage collector will be run.
+---|`node.egc.ALWAYS` #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error. This mode is very efficient with regards to memory savings, but it's also the slowest.
 ---@param level? number @(optional) in the case of **node.egc.ON_MEM_LIMIT**, this specifies the memory limit.
 ---@return nil
 function node.egc.setmode(mode, level) end
@@ -309,9 +309,9 @@ function node.egc.meminfo() end
 ---Enable a Lua callback or task to post another task request.
 ---@overload fun(callback: function): nil
 ---@param task_priority? integer @(optional) 0 | 1 | 2
----| 'node.task.LOW_PRIORITY' #=0
----|>'node.task.MEDIUM_PRIORITY' #=1
----| 'node.task.HIGH_PRIORITY' #=2
+---| `node.task.LOW_PRIORITY` #=0
+---|>`node.task.MEDIUM_PRIORITY` #=1
+---| `node.task.HIGH_PRIORITY` #=2
 ---@param callback fun() @function to be executed when the task is run.
 ---@return nil
 function node.task.post(task_priority, callback) end

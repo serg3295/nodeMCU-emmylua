@@ -30,12 +30,12 @@ function spi.send(id, data1, ...) end
 
 ---Set up the SPI configuration.
 ---@param id integer @SPI ID number: 0 for SPI, 1 for HSPI
----@param mode integer|'spi.MASTER'|'spi.SLAVE' @select master or slave mode. Slave not supported currently
----@param cpol integer|'spi.CPOL_LOW'|'spi.CPOL_HIGH' @clock polarity selection
----@param cpha integer|'spi.CPHA_LOW'|'spi.CPHA_HIGH' @clock phase selection
+---@param mode integer|`spi.MASTER`|`spi.SLAVE` @select master or slave mode. Slave not supported currently
+---@param cpol integer|`spi.CPOL_LOW`|`spi.CPOL_HIGH` @clock polarity selection
+---@param cpha integer|`spi.CPHA_LOW`|`spi.CPHA_HIGH` @clock phase selection
 ---@param databits number @number of bits per data item 1 - 32
 ---@param clock_div number @SPI clock divider
----@param duplex_mode? integer|'spi.HALFDUPLEX'|'spi.FULLDUPLEX' @(optional) HALFDUPLEX - default when omitted
+---@param duplex_mode? integer|`spi.HALFDUPLEX`|`spi.FULLDUPLEX` @(optional) HALFDUPLEX - default when omitted
 ---@return number
 function spi.setup(id, mode, cpol, cpha, databits, clock_div, duplex_mode) end
 

@@ -178,14 +178,14 @@ function u8g2DispObj:drawBox(x, y, w, h) end
 ---@param x0 integer @Position of the center of the circle.
 ---@param y0 integer @Position of the center of the circle.
 ---@param rad integer @Defines the size of the circle: Radus = rad.
----@param opt? integer|'u8g2.DRAW_ALL'|'u8g2.DRAW_UPPER_RIGHT'|'u8g2.DRAW_UPPER_LEFT'|'u8g2.DRAW_LOWER_LEFT'|'u8g2.DRAW_LOWER_RIGHT' @is optional and defaults to u8g2.DRAW_ALL if omitted.
+---@param opt? integer|`u8g2.DRAW_ALL`|`u8g2.DRAW_UPPER_RIGHT`|`u8g2.DRAW_UPPER_LEFT`|`u8g2.DRAW_LOWER_LEFT`|`u8g2.DRAW_LOWER_RIGHT` @is optional and defaults to u8g2.DRAW_ALL if omitted.
 function u8g2DispObj:drawCircle(x0, y0, rad, opt) end
 
 ---Draw a filled circle with radus `rad` at position (`x0`, `y0`). The diameter of the circle is 2*rad+1.
 ---@param x0 integer @Position of the center of the disc.
 ---@param y0 integer @Position of the center of the disc.
 ---@param rad integer @Defines the size of the circle: Radus = rad.
----@param opt? integer|'u8g2.DRAW_ALL'|'u8g2.DRAW_UPPER_RIGHT'|'u8g2.DRAW_UPPER_LEFT'|'u8g2.DRAW_LOWER_LEFT'|'u8g2.DRAW_LOWER_RIGHT' @is optional and defaults to u8g2.DRAW_ALL if omitted.
+---@param opt? integer|`u8g2.DRAW_ALL`|`u8g2.DRAW_UPPER_RIGHT`|`u8g2.DRAW_UPPER_LEFT`|`u8g2.DRAW_LOWER_LEFT`|`u8g2.DRAW_LOWER_RIGHT` @is optional and defaults to u8g2.DRAW_ALL if omitted.
 function u8g2DispObj:drawDisc(x0, y0, rad, opt) end
 
 ---Draw an ellipse with radus `rx` and `ry` at position (`x0, y0`). rx*ry must be lower than 512 in 8 Bit mode of u8g2.
@@ -193,7 +193,7 @@ function u8g2DispObj:drawDisc(x0, y0, rad, opt) end
 ---@param y0 integer @Position of the center of the filled circle.
 ---@param rx integer @Defines the size of the ellipse.
 ---@param ry integer @Defines the size of the ellipse.
----@param opt integer|'u8g2.DRAW_ALL'|'u8g2.DRAW_UPPER_RIGHT'|'u8g2.DRAW_UPPER_LEFT'|'u8g2.DRAW_LOWER_LEFT'|'u8g2.DRAW_LOWER_RIGHT' @is optional and defaults to u8g2.DRAW_ALL if omitted.
+---@param opt integer|`u8g2.DRAW_ALL`|`u8g2.DRAW_UPPER_RIGHT`|`u8g2.DRAW_UPPER_LEFT`|`u8g2.DRAW_LOWER_LEFT`|`u8g2.DRAW_LOWER_RIGHT` @is optional and defaults to u8g2.DRAW_ALL if omitted.
 function u8g2DispObj:drawEllipse(x0, y0, rx, ry, opt) end
 
 ---Draw a filled ellipse with radus `rx` and `ry` at position (`x0, y0`). rx*ry must be lower than 512 in 8 Bit mode of u8g2.
@@ -201,7 +201,7 @@ function u8g2DispObj:drawEllipse(x0, y0, rx, ry, opt) end
 ---@param y0 integer @Position of the center of the filled circle.
 ---@param rx integer @Defines the size of the ellipse.
 ---@param ry integer @Defines the size of the ellipse.
----@param opt integer|'u8g2.DRAW_ALL'|'u8g2.DRAW_UPPER_RIGHT'|'u8g2.DRAW_UPPER_LEFT'|'u8g2.DRAW_LOWER_LEFT'|'u8g2.DRAW_LOWER_RIGHT' @is optional and defaults to u8g2.DRAW_ALL if omitted.
+---@param opt integer|`u8g2.DRAW_ALL`|`u8g2.DRAW_UPPER_RIGHT`|`u8g2.DRAW_UPPER_LEFT`|`u8g2.DRAW_LOWER_LEFT`|`u8g2.DRAW_LOWER_RIGHT` @is optional and defaults to u8g2.DRAW_ALL if omitted.
 function u8g2DispObj:drawFilledEllipse(x0, y0, rx, ry, opt) end
 
 ---Draw a frame (empty box), starting at `x/y` position (upper left edge).\
@@ -332,11 +332,11 @@ function u8g2DispObj:setContrast(value) end
 
 ---Changes the display rotation.
 ---@param u8g2_cb integer @Display rotation argument.
----|'u8g2.R0' #No rotation, landscape
----|'u8g2.R1' #90 degree clockwise rotation
----|'u8g2.R2' #180 degree clockwise rotation
----|'u8g2.R3' #270 degree clockwise rotation
----|'u8g2.MIRROR' #No rotation, landscape, display content is mirrored
+---|`u8g2.R0` #No rotation, landscape
+---|`u8g2.R1` #90 degree clockwise rotation
+---|`u8g2.R2` #180 degree clockwise rotation
+---|`u8g2.R3` #270 degree clockwise rotation
+---|`u8g2.MIRROR` #No rotation, landscape, display content is mirrored
 function u8g2DispObj:setDisplayRotation(u8g2_cb) end
 
 ---Defines the bit value (color index) for all drawing functions.
@@ -352,15 +352,15 @@ function u8g2DispObj:setFlipMode(is_enable) end
 
 ---Define a u8g2 font for the glyph and string drawing functions.\
 ---They can be supplied as strings or compiled into the firmware image.
----@param font number|'u8g2.font_6x10_tf'|'u8g2.font_unifont_t_symbols'
+---@param font number|`u8g2.font_6x10_tf`|`u8g2.font_unifont_t_symbols`
 function u8g2DispObj:setFont(font) end
 
 ---Set the drawing direction of all strings or glyphs.
 ---@param dir integer @Writing direction/string rotation.
----|'0' #0 degree   Left to right
----|'1' #90 degree  Top to down
----|'2' #180 degree Right to left
----|'3' #270 degree Down to top
+---|`0` #0 degree   Left to right
+---|`1` #90 degree  Top to down
+---|`2` #180 degree Right to left
+---|`3` #270 degree Down to top
 function u8g2DispObj:setFontDirection(dir) end
 
 ---Defines, whether the glyph and string drawing functions will write the background color\

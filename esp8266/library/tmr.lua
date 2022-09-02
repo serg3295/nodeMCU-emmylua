@@ -54,9 +54,9 @@ function tmr.ccount() end
 function tmr.create() end
 
 ---@alias tmr_m integer
----|'tmr.ALARM_SINGLE' #a one-shot alarm (and no need to call unregister())
----|'tmr.ALARM_SEMI' #manually repeating alarm
----|'tmr.ALARM_AUTO' #automatically repeating alarm (call start() to restart)
+---|`tmr.ALARM_SINGLE` #a one-shot alarm (and no need to call unregister())
+---|`tmr.ALARM_SEMI` #manually repeating alarm
+---|`tmr.ALARM_AUTO` #automatically repeating alarm (call start() to restart)
 
 ---This is a convenience function combining `tobj:register()` and `tobj:start()` into a single call.
 ---@param interval number @timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).

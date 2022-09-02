@@ -45,7 +45,7 @@ function ucg.ucgDisplayType(bus, cs, dc, res) end
 
 ---Send init code to the display, setup internal data structures\
 ---and define the text output mode.
----@param fontmode integer|'ucg.FONT_MODE_TRANSPARENT'|'ucg.FONT_MODE_SOLID' @font mode
+---@param fontmode integer|`ucg.FONT_MODE_TRANSPARENT`|`ucg.FONT_MODE_SOLID` @font mode
 ---@return number @0, if the init procedure fails.
 function ucgDispObj:begin(fontmode) end
 
@@ -73,7 +73,7 @@ function ucgDispObj:drawBox(x, y, w, h) end
 ---@param x0 integer @Center of the circle.
 ---@param y0 integer @Center of the circle.
 ---@param rad integer @Radius of the circle.
----@param option integer|'ucg.DRAW_ALL'|'ucg.DRAW_UPPER_RIGHT'|'ucg.DRAW_UPPER_LEFT'|'ucg.DRAW_LOWER_LEFT'|'ucg.DRAW_LOWER_RIGHT' @One of the following constants:
+---@param option integer|`ucg.DRAW_ALL`|`ucg.DRAW_UPPER_RIGHT`|`ucg.DRAW_UPPER_LEFT`|`ucg.DRAW_LOWER_LEFT`|`ucg.DRAW_LOWER_RIGHT` @One of the following constants:
 function ucgDispObj:drawCircle(x0, y0, rad, option) end
 
 ---Draw a filled full circle or a quarter of a filled circle. Use current color from index 0.\
@@ -81,7 +81,7 @@ function ucgDispObj:drawCircle(x0, y0, rad, option) end
 ---@param x0 integer @Center of the filled circle.
 ---@param y0 integer @Center of the filled circle.
 ---@param rad integer @Radius of the filled circle.
----@param option integer|'ucg.DRAW_ALL'|'ucg.DRAW_UPPER_RIGHT'|'ucg.DRAW_UPPER_LEFT'|'ucg.DRAW_LOWER_LEFT'|'ucg.DRAW_LOWER_RIGHT' @One of the following constants:
+---@param option integer|`ucg.DRAW_ALL`|`ucg.DRAW_UPPER_RIGHT`|`ucg.DRAW_UPPER_LEFT`|`ucg.DRAW_LOWER_LEFT`|`ucg.DRAW_LOWER_RIGHT` @One of the following constants:
 function ucgDispObj:drawDisc(x0, y0, rad, option) end
 
 ---Draw a rectangle. Use current color from index 0. The top-left pixel is at `x`, `y`.\
@@ -250,12 +250,12 @@ function ucgDispObj:setColor(idx, r, g, b) end
 
 ---Define a ucg font for the glyph and string drawing functions.\
 ---They are available as `ucg.<font_name>` in Lua.
----@param font integer|'ucg.font_7x13B_tr'|'ucg.font_helvB08_hr'|'ucg.font_helvB10_hr'|'ucg.font_helvB12_hr'|'ucg.font_helvB18_hr'|'ucg.font_ncenB24_tr'|'ucg.font_ncenR12_tr'|'ucg.font_ncenR14_hr' @constant to identify pre-compiled font
+---@param font integer|`ucg.font_7x13B_tr`|`ucg.font_helvB08_hr`|`ucg.font_helvB10_hr`|`ucg.font_helvB12_hr`|`ucg.font_helvB18_hr`|`ucg.font_ncenB24_tr`|`ucg.font_ncenR12_tr`|`ucg.font_ncenR14_hr` @constant to identify pre-compiled font
 ---@return nil
 function ucgDispObj:setFont(font) end
 
 ---Define the text output mode.
----@param fontmode integer|'ucg.FONT_MODE_TRANSPARENT'|'ucg.FONT_MODE_SOLID'
+---@param fontmode integer|`ucg.FONT_MODE_TRANSPARENT`|`ucg.FONT_MODE_SOLID`
 ---@return number @0, if the init procedure fails.
 function ucgDispObj:setFontMode(fontmode) end
 

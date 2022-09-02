@@ -39,7 +39,7 @@ function rmt.rxsetup(gpio, bittime, options) end
 
 ---This is establishes a callback to use when data is received and it also starts the data reception process.\
 ---It can only be called once per receive channel.
----@param event string|'data' @This must be the string 'data' and it sets the callback that gets invoked when data is received.
+---@param event string|'"data"' @This must be the string 'data' and it sets the callback that gets invoked when data is received.
 ---@param callback? function @"(optional) This is invoked with a single argument that is a string that contains the data  \nreceived in the format described for `send`. `struct.unpack` is your friend."
 ---@return nil
 function channel:on(event, callback) end

@@ -28,28 +28,28 @@ function coap.Client() end
 function coap.Server() end
 
 ---Issues a GET request to the server.
----@param type number|'coap.CON'|'coap.NON' @"defaults to CON. If the type is CON and request fails, the library  \n retries four more times before giving up."
+---@param type number|`coap.CON`|`coap.NON` @"defaults to CON. If the type is CON and request fails, the library  \n retries four more times before giving up."
 ---@param uri string @"the URI such as 'coap://192.168.18.103:5683/v1/v/myvar',  \n only IP addresses are supported i.e. no hostname resoltion."
 ---@param payload? any @(optional) the payload will be put in the payload section of the request.
 ---@return nil
 function coap_client:get(type, uri, payload) end
 
 ---Issues a PUT request to the server.
----@param type number|'coap.CON'|'coap.NON' @"defaults to CON. If the type is CON and request fails, the library  \n retries four more times before giving up."
+---@param type number|`coap.CON`|`coap.NON` @"defaults to CON. If the type is CON and request fails, the library  \n retries four more times before giving up."
 ---@param uri string @"the URI such as 'coap://192.168.18.103:5683/v1/v/myvar',  \n only IP addresses are supported i.e. no hostname resoltion."
 ---@param payload? any @(optional) the payload will be put in the payload section of the request.
 ---@return nil
 function coap_client:put(type, uri, payload) end
 
 ---Issues a POST request to the server.
----@param type number|'coap.CON'|'coap.NON' @"defaults to CON. when type is CON, and request failed,  \n the request will retry another 4 times before giving up."
+---@param type number|`coap.CON`|`coap.NON` @"defaults to CON. when type is CON, and request failed,  \n the request will retry another 4 times before giving up."
 ---@param uri string @the uri such as coap://192.168.18.103:5683/v1/v/myvar, only IP is supported.
 ---@param payload? any @(optional) the payload will be put in the payload section of the request.
 ---@return nil
 function coap_client:post(type, uri, payload) end
 
 ---Issues a DELETE request to the server.
----@param type number|'coap.CON'|'coap.NON' @"defaults to CON. If the type is CON and request fails,  \n the library retries four more times before giving up."
+---@param type number|`coap.CON`|`coap.NON` @"defaults to CON. If the type is CON and request fails,  \n the library retries four more times before giving up."
 ---@param uri string @"the URI such as 'coap://192.168.18.103:5683/v1/v/myvar',  \n only IP addresses are supported i.e. no hostname resoltion."
 ---@param payload? any @(optional) the payload will be put in the payload section of the request.
 ---@return nil

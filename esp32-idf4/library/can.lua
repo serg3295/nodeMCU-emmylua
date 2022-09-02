@@ -8,7 +8,7 @@
 can = {}
 
 ---Send a frame.
----@param format integer|'can.STANDARD_FRAME'|'can.EXTENDED_FRAME' @frame standart | extended
+---@param format integer|`can.STANDARD_FRAME`|`can.EXTENDED_FRAME` @frame standart | extended
 ---@param msg_id any @msg_id CAN Message ID
 ---@param data any @data CAN data, up to 8 bytes
 ---@return nil

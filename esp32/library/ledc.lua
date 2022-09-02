@@ -62,7 +62,7 @@ local channel = {}
 function ledc.newChannel(tbl) end
 
 ---Disable LEDC output, and set idle level.
----@param idleLevel integer|'ledc.IDLE_LOW'|'ledc.IDLE_HIGH' @Set output idle level after LEDC stops.
+---@param idleLevel integer|`ledc.IDLE_LOW`|`ledc.IDLE_HIGH` @Set output idle level after LEDC stops.
 ---@return nil
 function channel:stop(idleLevel) end
 
@@ -99,7 +99,7 @@ function channel:resume() end
 ---Set LEDC fade function, with a limited time.
 ---@param targetDuty number @Target duty of fading.
 ---@param maxFadeTime number @The maximum time of the fading ( ms ).
----@param wait? integer|'ledc.FADE_NO_WAIT'|'ledc.FADE_WAIT_DONE' @(optional) Whether to block until fading done.
+---@param wait? integer|`ledc.FADE_NO_WAIT`|`ledc.FADE_WAIT_DONE` @(optional) Whether to block until fading done.
 ---@return nil
 function channel:fadewithtime(targetDuty, maxFadeTime, wait) end
 
@@ -107,16 +107,16 @@ function channel:fadewithtime(targetDuty, maxFadeTime, wait) end
 ---@param targetDuty number @Target duty of fading.
 ---@param scale number @Controls the increase or decrease step scale.
 ---@param cycleNum integer @Increase or decrease the duty every cycle_num cycles
----@param wait? integer|'ledc.FADE_NO_WAIT'|'ledc.FADE_WAIT_DONE' @(optional) Whether to block until fading done.
+---@param wait? integer|`ledc.FADE_NO_WAIT`|`ledc.FADE_WAIT_DONE` @(optional) Whether to block until fading done.
 ---@return nil
 function channel:fadewithstep(targetDuty, scale, cycleNum, wait) end
 
 ---Set LEDC fade function.
 ---@param duty number @Set the start of the gradient duty.
----@param direction integer|'ledc.FADE_DECREASE'|'ledc.FADE_INCREASE' @Set the direction of the gradient.
+---@param direction integer|`ledc.FADE_DECREASE`|`ledc.FADE_INCREASE` @Set the direction of the gradient.
 ---@param scale number @Set gradient change amplitude.
 ---@param cycleNum number @Set how many LEDC tick each time the gradient lasts.
 ---@param stepNum number @Set the number of the gradient.
----@param wait? integer|'ledc.FADE_NO_WAIT'|'ledc.FADE_WAIT_DONE' @(optional) Whether to block until fading done.
+---@param wait? integer|`ledc.FADE_NO_WAIT`|`ledc.FADE_WAIT_DONE` @(optional) Whether to block until fading done.
 ---@return nil
 function channel:fade(duty, direction, scale, cycleNum, stepNum, wait) end

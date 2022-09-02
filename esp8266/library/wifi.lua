@@ -91,8 +91,8 @@ function wifi.getphymode() end
 ---Configures whether or not WiFi automatically goes to sleep\
 ---in *NULL_MODE*. Enabled by default.
 ---@param enable? boolean @(optional) WiFi auto sleep in NULL_MODE
----|>'true' #Enable WiFi auto sleep in NULL_MODE.
----|'false' #Disable WiFi auto sleep in NULL_MODE.
+---|>`true` #Enable WiFi auto sleep in NULL_MODE.
+---|`false` #Disable WiFi auto sleep in NULL_MODE.
 ---@return any @sleep_enabled Current/New *NULL_MODE* sleep setting.
 --- - If `wifi.nullmodesleep()` is called with no arguments,\
 ---current setting is returned.
@@ -128,21 +128,21 @@ function wifi.setcountry(country_info) end
 
 ---Configures the WiFi mode to use. NodeMCU can run in one of four WiFi modes.
 ---@param mode integer @Station | Access point (AP) | Station + AP | WiFi off
----|'wifi.STATION' #for when the device is connected to a WiFi router.
----|'wifi.SOFTAP'  #for when the device is acting only as an access point.
----|'wifi.STATIONAP' #is the combination of wifi.STATION and wifi.SOFTAP
----|'wifi.NULLMODE' #changing WiFi mode to NULL_MODE will put wifi into a low power state similar to MODEM_SLEEP, provided 'wifi.nullmodesleep(false)' has not been called.
+---|`wifi.STATION` #for when the device is connected to a WiFi router.
+---|`wifi.SOFTAP` #for when the device is acting only as an access point.
+---|`wifi.STATIONAP` #is the combination of wifi.STATION and wifi.SOFTAP
+---|`wifi.NULLMODE` #changing WiFi mode to NULL_MODE will put wifi into a low power state similar to MODEM_SLEEP, provided 'wifi.nullmodesleep(false)' has not been called.
 ---@param save? boolean @(optional) choose whether or not to save wifi mode to flash
----|>'true' #WiFi mode configuration will be retained through power cycle.
----|'false' #WiFi mode configuration will not be retained through power cycle.
+---|>`true` #WiFi mode configuration will be retained through power cycle.
+---|`false` #WiFi mode configuration will not be retained through power cycle.
 ---@return integer @current mode after setup
 function wifi.setmode(mode, save) end
 
 ---Sets WiFi physical mode.
 ---@param mode integer @b | g | n
----|'wifi.PHYMODE_B' #802.11b, more range, low Transfer rate, more current draw
----|'wifi.PHYMODE_G' #802.11g, medium range, medium transfer rate, medium current draw
----|'wifi.PHYMODE_N' #802.11n, least range, fast transfer rate, least current draw (STATION ONLY)
+---|`wifi.PHYMODE_B` #802.11b, more range, low Transfer rate, more current draw
+---|`wifi.PHYMODE_G` #802.11g, medium range, medium transfer rate, medium current draw
+---|`wifi.PHYMODE_N` #802.11n, least range, fast transfer rate, least current draw (STATION ONLY)
 ---@return integer @physical mode after setup
 function wifi.setphymode(mode) end
 
@@ -399,9 +399,9 @@ function wifi.sta.setmac(mac) end
 ---Configures the WiFi modem sleep type to be used while station is connected to an Access Point.\
 ---Does not apply to *wifi.SOFTAP*, *wifi.STATIONAP* or *wifi.NULLMODE*.
 ---@param type_wanted integer @none | light | modem sleep
----|'wifi.NONE_SLEEP' #to keep the modem on at all times
----|'wifi.LIGHT_SLEEP' #to allow the CPU to power down under some circumstances
----|'wifi.MODEM_SLEEP' #to power down the modem as much as possible
+---|`wifi.NONE_SLEEP` #to keep the modem on at all times
+---|`wifi.LIGHT_SLEEP` #to allow the CPU to power down under some circumstances
+---|`wifi.MODEM_SLEEP` #to power down the modem as much as possible
 ---@return number @"The actual sleep mode set,  \n as one of *wifi.NONE_SLEEP, wifi.LIGHT_SLEEP* or *wifi.MODEM_SLEEP*."
 function wifi.sta.sleeptype(type_wanted) end
 
@@ -550,7 +550,7 @@ function wifi.ap.dhcp.stop() end
 ---@field AID string
 
 ---Register callbacks for WiFi event monitor.
----@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'|'wifi.eventmon.WIFI_MODE_CHANGE' @WiFi event you would like to set a callback for.
+---@param Event integer|`wifi.eventmon.STA_CONNECTED`|`wifi.eventmon.STA_DISCONNECTED`|`wifi.eventmon.STA_AUTHMODE_CHANGE`|`wifi.eventmon.STA_GOT_IP`|`wifi.eventmon.STA_DHCP_TIMEOUT`|`wifi.eventmon.AP_STACONNECTED`|`wifi.eventmon.AP_STADISCONNECTED`|`wifi.eventmon.AP_PROBEREQRECVED`|`wifi.eventmon.WIFI_MODE_CHANGE` @WiFi event you would like to set a callback for.
 ---@param callback? fun(T:EventmonRegTbl):table @(optional) function(T)
 ---@return nil
 ---Callback: T: Table returned by event.
@@ -586,6 +586,6 @@ function wifi.ap.dhcp.stop() end
 function wifi.eventmon.register(Event, callback) end
 
 ---Unregister callbacks for WiFi event monitor
----@param Event integer|'wifi.eventmon.STA_CONNECTED'|'wifi.eventmon.STA_DISCONNECTED'|'wifi.eventmon.STA_AUTHMODE_CHANGE'|'wifi.eventmon.STA_GOT_IP'|'wifi.eventmon.STA_DHCP_TIMEOUT'|'wifi.eventmon.AP_STACONNECTED'|'wifi.eventmon.AP_STADISCONNECTED'|'wifi.eventmon.AP_PROBEREQRECVED'|'wifi.eventmon.WIFI_MODE_CHANGED' @WiFi event you would like to remove the callback for.
+---@param Event integer|`wifi.eventmon.STA_CONNECTED`|`wifi.eventmon.STA_DISCONNECTED`|`wifi.eventmon.STA_AUTHMODE_CHANGE`|`wifi.eventmon.STA_GOT_IP`|`wifi.eventmon.STA_DHCP_TIMEOUT`|`wifi.eventmon.AP_STACONNECTED`|`wifi.eventmon.AP_STADISCONNECTED`|`wifi.eventmon.AP_PROBEREQRECVED`|`wifi.eventmon.WIFI_MODE_CHANGED` @WiFi event you would like to remove the callback for.
 ---@return nil
 function wifi.eventmon.unregister(Event) end

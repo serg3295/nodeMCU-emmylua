@@ -186,8 +186,8 @@ function node.input(str) end
 ---@overload fun(): nil
 ---@param callback function @"`output_fn(str)` a function accept every output as str,  \n and can send the output to a socket (or maybe a file). `nil` to unregister  \n the previous function."
 ---@param console_output integer @0 | 1
----|>'1' #output also sent out the console port.
----|'0' #no console output.
+---|>`1` #output also sent out the console port.
+---|`0` #no console output.
 ---@return nil
 function node.output(callback, console_output) end
 
@@ -206,7 +206,7 @@ function node.restart() end
 function node.restore() end
 
 ---Change the working CPU Frequency.
----@param speed integer|'node.CPU80MHZ'|'node.CPU160MHZ' @constant
+---@param speed integer|`node.CPU80MHZ`|`node.CPU160MHZ` @constant
 ---@return number @target CPU frequency
 function node.setcpufreq(speed) end
 
@@ -254,17 +254,17 @@ function node.sleep(options) end
 ---Controls the amount of debug information kept during node.compile(), and\
 ---allows removal of debug information from already compiled Lua code.
 ---@param level? number @(optional) 1 | 2 | 3
----|'1' #don't discard debug info
----|'2' #discard Local and Upvalue debug info
----|'3' #discard Local, Upvalue and line-number debug info
+---|`1` #don't discard debug info
+---|`2` #discard Local and Upvalue debug info
+---|`3` #discard Local, Upvalue and line-number debug info
 ---@param callback? function @"(optional) `function` a compiled function to be stripped  \n per setfenv except 0 is not permitted."
 ---@return integer|nil @"If invoked without arguments, returns the current level settings.  \n Otherwise, `nil` is returned."
 function node.stripdebug(level, callback) end
 
 ---Controls whether the debugging output from the Espressif SDK is printed.
 ---@param enabled boolean @>
----|'true' #to enable printing
----|>'false' #to disable printing
+---|`true` #to enable printing
+---|>`false` #to disable printing
 function node.osprint(enabled) end
 
 ---Returns the value of the system counter, which counts\
@@ -275,10 +275,10 @@ function node.uptime() end
 
 ---Sets the Emergency Garbage Collector mode.
 ---@param mode integer @>
----|'node.egc.NOT_ACTIVE' #EGC inactive, no collection cycle will be forced in low memory situations
----|'node.egc.ON_ALLOC_FAILURE' #Try to allocate a new block of memory, and run the garbage collector if the allocation fails.
----|'node.egc.ON_MEM_LIMIT' #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit.
----|'node.egc.ALWAYS' #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error.
+---|`node.egc.NOT_ACTIVE` #EGC inactive, no collection cycle will be forced in low memory situations
+---|`node.egc.ON_ALLOC_FAILURE` #Try to allocate a new block of memory, and run the garbage collector if the allocation fails.
+---|`node.egc.ON_MEM_LIMIT` #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit.
+---|`node.egc.ALWAYS` #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error.
 ---@param level number @in the case of `node.egc.ON_MEM_LIMIT`, this specifies the memory limit.
 ---@return nil
 function node.egc.setmode(mode, level) end
@@ -286,9 +286,9 @@ function node.egc.setmode(mode, level) end
 ---Enable a Lua callback or task to post another task request.
 ---@overload fun(callback: function): nil
 ---@param task_priority? number @(optional) 0 | 1 | 2
----|'node.task.LOW_PRIORITY' #= 0
----|>'node.task.MEDIUM_PRIORITY' #= 1
----|'node.task.HIGH_PRIORITY''0' #= 2
+---|`node.task.LOW_PRIORITY` #= 0
+---|>`node.task.MEDIUM_PRIORITY` #= 1
+---|`node.task.HIGH_PRIORITY` #= 2
 ---@param callback fun() @function to be executed when the task is run.
 ---@return nil
 function node.task.post(task_priority, callback) end

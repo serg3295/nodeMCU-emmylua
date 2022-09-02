@@ -58,23 +58,23 @@ function gpio.read(pin) end
 ---in that domain are consuming.
 ---@param pin integer @a valid GPIO pin number.
 ---@param strength number @the drive strength to set, one of
----|'gpio.DRIVE_0' #weakest drive strength
----|'gpio.DRIVE_1' #stronger drive strength
----|>'gpio.DRIVE_2' #default drive strength
----|>'gpio.DRIVE_DEFAULT' #default drive strength (same as DRIVE_2)
----|'gpio.DRIVE_3' #maximum drive strength
+---|`gpio.DRIVE_0` #weakest drive strength
+---|`gpio.DRIVE_1` #stronger drive strength
+---|>`gpio.DRIVE_2` #default drive strength
+---|>`gpio.DRIVE_DEFAULT` #default drive strength (same as DRIVE_2)
+---|`gpio.DRIVE_3` #maximum drive strength
 ---@return nil
 function gpio.set_drive(pin, strength) end
 
 ---Establish or clear a callback function to run on interrupt for a GPIO.
 ---@param pin integer @GPIO
 ---@param type? number @(optional) trigger type
----|'gpio.INTR_DISABLE' #or `nil` to disable interrupts on this pin (in which case `callback` is ignored and should be `nil` or omitted)
----|'gpio.INTR_UP' #for trigger on rising edge
----|'gpio.INTR_DOWN' #for trigger on falling edge
----|'gpio.INTR_UP_DOWN' #for trigger on both edges
----|'gpio.INTR_LOW' #for trigger on low level
----|'gpio.INTR_HIGH' #for trigger on high level
+---|`gpio.INTR_DISABLE` #or `nil` to disable interrupts on this pin (in which case `callback` is ignored and should be `nil` or omitted)
+---|`gpio.INTR_UP` #for trigger on rising edge
+---|`gpio.INTR_DOWN` #for trigger on falling edge
+---|`gpio.INTR_UP_DOWN` #for trigger on both edges
+---|`gpio.INTR_LOW` #for trigger on low level
+---|`gpio.INTR_HIGH` #for trigger on high level
 ---@param callback? function @"(optional) function to be called when trigger fires.  \n If `nil` or omitted (and type is not `gpio.INTR_DISABLE`) then any previously-set callback will continue to be used. Parameters are:"
 --- - pin
 --- - level
@@ -84,14 +84,14 @@ function gpio.trig(pin, type, callback) end
 ---Configure whether the given pin should trigger wake up from light sleep initiated by `node.sleep()`.
 ---@param pin integer @GPIO
 ---@param level number @wake-up level, one of
----|'gpio.INTR_NONE' #changes to the level of this pin will not trigger wake from light sleep
----|'gpio.INTR_LOW' #if this pin is low it should trigger wake from light sleep
----|'gpio.INTR_HIGH' #if this pin is high it should trigger wake from light sleep
+---|`gpio.INTR_NONE` #changes to the level of this pin will not trigger wake from light sleep
+---|`gpio.INTR_LOW` #if this pin is low it should trigger wake from light sleep
+---|`gpio.INTR_HIGH` #if this pin is high it should trigger wake from light sleep
 ---@return nil
 function gpio.wakeup(pin, level) end
 
 ---Set digital GPIO pin value.
 ---@param pin integer @pin to write
----@param level integer|'1'|'0' @**1** or **0**
+---@param level integer|`1`|`0` @**1** or **0**
 ---@return nil
 function gpio.write(pin, level) end

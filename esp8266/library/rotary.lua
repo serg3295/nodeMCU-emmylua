@@ -25,13 +25,13 @@ function rotary.setup(channel, pina, pinb, pinpress, longpress_time_ms, dblclick
 ---Sets a callback on specific events.
 ---@param channel integer @The rotary module supports three switches. The channel is either 0, 1 or 2.
 ---@param eventtype integer @This defines the type of event being registered.
----|'rotary.PRESS' #= 1 The eventtype for the switch press.
----|'rotary.LONGPRESS' #= 2 The eventtype for a long press.
----|'rotary.RELEASE' #= 4 The eventtype for the switch release.
----|'rotary.TURN' #= 8 The eventtype for the switch rotation.
----|'rotary.CLICK' #= 16 The eventtype for a single click (after release)
----|'rotary.DBLCLICK' #= 32 The eventtype for a double click (after second release)
----|'rotary.ALL' #= 63 All event types.
+---|`rotary.PRESS` #= 1 The eventtype for the switch press.
+---|`rotary.LONGPRESS` #= 2 The eventtype for a long press.
+---|`rotary.RELEASE` #= 4 The eventtype for the switch release.
+---|`rotary.TURN` #= 8 The eventtype for the switch rotation.
+---|`rotary.CLICK` #= 16 The eventtype for a single click (after release)
+---|`rotary.DBLCLICK` #= 32 The eventtype for a double click (after second release)
+---|`rotary.ALL` #= 63 All event types.
 ---@param callback? function @(optional) This is a function that will be invoked when the specified event happens.
 ---@return any @If an invalid eventtype is supplied, then an error will be thrown.
 function rotary.on(channel, eventtype, callback) end

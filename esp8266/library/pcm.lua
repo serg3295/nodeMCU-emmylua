@@ -40,7 +40,7 @@ function pcmdrv:close() end
 function pcmdrv:on(event, callback) end
 
 ---Starts playback.
----@param rate integer|'pcm.RATE_1K'|'pcm.RATE_2K'|'pcm.RATE_4K'|'pcm.RATE_5K'|'pcm.RATE_8K'|'pcm.RATE_10K'|'pcm.RATE_12K'|'pcm.RATE_16K' @defaults to RATE_8K if omitted
+---@param rate integer|`pcm.RATE_1K`|`pcm.RATE_2K`|`pcm.RATE_4K`|`pcm.RATE_5K`|`pcm.RATE_8K`|`pcm.RATE_10K`|`pcm.RATE_12K`|`pcm.RATE_16K` @defaults to RATE_8K if omitted
 ---@return nil
 function pcmdrv:play(rate) end
 

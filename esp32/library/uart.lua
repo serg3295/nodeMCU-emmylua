@@ -26,11 +26,11 @@ uart = {}
 --- - if *n* = 0, will receive every char in buffer.
 --- - if pass in a one char string "c", the callback will called when "c" is encounterd, or max *n* = 255 received.
 ---@param callback? function @(optional) function for event
----|'function(data) end' #for event "data"
----|'function(err) end' #for event "error" `err` could be one of "out_of_memory", "break", "rx_error".
+---|`function(data) end` #for event "data"
+---|`function(err) end` #for event "error" `err` could be one of "out_of_memory", "break", "rx_error".
 ---@param run_input? integer @(optional) **0** or **1**. Only for "data" event on console uart.
----|'0' #input from UART will not go into Lua interpreter, can accept binary data.
----|'1' #input from UART will go into Lua interpreter, and run.
+---|`0` #input from UART will not go into Lua interpreter, can accept binary data.
+---|`1` #input from UART will go into Lua interpreter, and run.
 ---@return nil
 function uart.on(id, method, number_or_endChar, callback, run_input) end
 
@@ -47,10 +47,10 @@ function uart.on(id, method, number_or_endChar, callback, run_input) end
 
 --- (Re-)configures the communication parameters of the UART.
 ---@param id integer @uart id
----@param baud integer|'300'|'600'|'1200'|'2400'|'4800'|'9600'|'19200'|'31250'|'34400'|'57600'|'74880'|'115200'|'230000'|'256000'|'460800'|'921600'|'1843200'|'3686400' @300 - 3686400
----@param databits integer|'8'|'7'|'6'|'5' @one of 5, 6, 7, 8
----@param parity integer|'uart.PARITY_NONE'|'uart.PARITY_ODD'|'uart.PARITY_EVEN' @none | odd | even
----@param stopbits integer|'uart.STOPBITS_1'|'uart.STOPBITS_1_5'|'uart.STOPBITS_2' @1 | 1.5 | 2
+---@param baud integer|`300`|`600`|`1200`|`2400`|`4800`|`9600`|`19200`|`31250`|`34400`|`57600`|`74880`|`115200`|`230000`|`256000`|`460800`|`921600`|`1843200`|`3686400` @300 - 3686400
+---@param databits integer|`8`|`7`|`6`|`5` @one of 5, 6, 7, 8
+---@param parity integer|`uart.PARITY_NONE`|`uart.PARITY_ODD`|`uart.PARITY_EVEN` @none | odd | even
+---@param stopbits integer|`uart.STOPBITS_1`|`uart.STOPBITS_1_5`|`uart.STOPBITS_2` @1 | 1.5 | 2
 ---@param echo_or_pins integer|UartCfg @for *console uart*, this should be a int. if 0, disable echo, otherwise enable echo; for others, this is a table:
 --- - **tx** int. TX pin. Required
 --- - **rx** int. RX pin. Required
@@ -87,11 +87,11 @@ function uart.stop(id) end
 ---Set UART controllers communication mode
 ---@param id integer @uart id
 ---@param mode integer @value should be one of
----|>'uart.MODE_UART' #default UART mode, is set after uart.setup() call
----|'uart.MODE_RS485_COLLISION_DETECT' #receiver must be always enabled, transmitter is automatically switched using RTS pin, collision is detected by UART hardware (note: no event is generated on collision, limitation of esp-idf)
----|'uart.MODE_RS485_APP_CONTROL' #receiver/transmitter control is left to the application
----|'uart.MODE_RS485_HALF_DUPLEX' #receiver/transmitter are controlled by RTS pin
----|'uart.MODE_IRDA'
+---|>`uart.MODE_UART` #default UART mode, is set after uart.setup() call
+---|`uart.MODE_RS485_COLLISION_DETECT` #receiver must be always enabled, transmitter is automatically switched using RTS pin, collision is detected by UART hardware (note: no event is generated on collision, limitation of esp-idf)
+---|`uart.MODE_RS485_APP_CONTROL` #receiver/transmitter control is left to the application
+---|`uart.MODE_RS485_HALF_DUPLEX` #receiver/transmitter are controlled by RTS pin
+---|`uart.MODE_IRDA`
 ---@return nil
 function uart.setmode(id, mode) end
 

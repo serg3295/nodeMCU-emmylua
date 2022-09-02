@@ -35,13 +35,13 @@ function ds3231.setTime(second, minute, hour, day, date, month, year, disableOsc
 function ds3231.getTime() end
 
 ---@alias ds3231_a1 integer
----|'ds3231.EVERYSECOND' #works only with alarm1 and triggers every second;
----|'ds3231.EVERYMINUTE' #works only with alarm2 and triggers every minute (at 00 seconds);
----|'ds3231.SECOND' #triggers when time match given seconds parameter;
----|'ds3231.MINUTE' #triggers when time match given seconds and minutes parameters;
----|'ds3231.HOUR' #triggers when time match given seconds, minutes, and hours parameters;
----|'ds3231.DAY' #triggers when time match given seconds, minutes, and hours on week day date/day parameters;
----|'ds3231.DATE' #triggers when time match given seconds, minutes, and hours on date (day of the month) date/day parameters;
+---|`ds3231.EVERYSECOND` #works only with alarm1 and triggers every second;
+---|`ds3231.EVERYMINUTE` #works only with alarm2 and triggers every minute (at 00 seconds);
+---|`ds3231.SECOND` #triggers when time match given seconds parameter;
+---|`ds3231.MINUTE` #triggers when time match given seconds and minutes parameters;
+---|`ds3231.HOUR` #triggers when time match given seconds, minutes, and hours parameters;
+---|`ds3231.DAY` #triggers when time match given seconds, minutes, and hours on week day date/day parameters;
+---|`ds3231.DATE` #triggers when time match given seconds, minutes, and hours on date (day of the month) date/day parameters;
 
 ---Set an alarm to be triggered on SQW pin
 ---@param alarmId integer @1-2

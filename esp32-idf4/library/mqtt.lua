@@ -34,7 +34,7 @@ function Mqtt:close() end
 
 ---Connects to the broker specified by the given host, port, and secure options.
 ---@param host string @host, domain or IP (string)
----@param port? integer|'1883' @(optional) broker port (number), default 1883
+---@param port? integer|`1883` @(optional) broker port (number), default 1883
 ---@param secure? boolean|table @(optional) either an interger with **0/1** for `false/true` (default 0), or a table with optional entries
 --- - **ca_cert CA** - certificate data in PEM format for server verify with SSL
 --- - **client_cert** - client certificate data in PEM format for SSL mutual authentication
@@ -49,8 +49,8 @@ function Mqtt:connect(host, port, secure, conn_est, conn_notest) end
 ---to topic "/lwt" if client does not send keepalive packet.
 ---@param topic string @the topic to publish to (string)
 ---@param message string @the message to publish, (buffer or string)
----@param qos? integer|'0'|'1'|'2' @(optional) QoS level, default **0**
----@param retain? integer|'0'|'1' @(optional) retain flag, default **0**
+---@param qos? integer|`0`|`1`|`2` @(optional) QoS level, default **0**
+---@param retain? integer|`0`|`1` @(optional) retain flag, default **0**
 ---@return nil
 function Mqtt:lwt(topic, message, qos, retain) end
 
@@ -65,8 +65,8 @@ function Mqtt:on(event, callback) end
 ---Publishes a message.
 ---@param topic string @topic the topic to publish to (topic string)
 ---@param payload string @message the message to publish, (buffer or string)
----@param qos integer|'0'|'1'|'2' @QoS level
----@param retain integer|'0'|'1' @retain flag
+---@param qos integer|`0`|`1`|`2` @QoS level
+---@param retain integer|`0`|`1` @retain flag
 ---@param callback? fun(client:Mqtt) @(optional) `function(client)` fired when PUBACK received.
 ---NOTE: When calling `publish()` more than once, the last callback function defined\
 ---will be called for ALL publish commands.
@@ -75,7 +75,7 @@ function Mqtt:publish(topic, payload, qos, retain, callback) end
 
 ---Subscribes to one or several topics.
 ---@param topic string @a topic string
----@param qos integer|'0'|'1'|'2' @QoS subscription level, default 0
+---@param qos integer|`0`|`1`|`2` @QoS subscription level, default 0
 ---@param callback? fun(client:Mqtt) @(optional) `function(client)` fired when subscription(s) succeeded.
 ---NOTE: When calling `subscribe()` more than once, the last callback function defined\
 ---will be called for ALL subscribe commands.

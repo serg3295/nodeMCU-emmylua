@@ -12,7 +12,7 @@ somfy = {}
 ---Builds an frame defined by Somfy protocol and sends it to the RF transmitter.
 ---@param pin integer @GPIO pin the RF transmitter is connected to.
 ---@param remote_address number @"address of the remote control.  \n The device to be controlled is programmed with the addresses of the remote controls it should listen to."
----@param command integer|'somfy.SOMFY_UP'|'somfy.SOMFY_DOWN'|'somfy.SOMFY_PROG'|'somfy.SOMFY_STOP' @somfy command
+---@param command integer|`somfy.SOMFY_UP`|`somfy.SOMFY_DOWN`|`somfy.SOMFY_PROG`|`somfy.SOMFY_STOP` @somfy command
 ---@param rolling_code number @The rolling code is increased every time a button is pressed.
 ---@param repeat_count integer @how many times the command is repeated
 ---@param callback function @"a function to be called after the command is transmitted.  \n Allows chaining commands to set the blinds to a defined position."

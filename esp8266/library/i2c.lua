@@ -13,7 +13,7 @@ i2c = {}
 ---Setup I²C address and read/write mode for the next transfer.
 ---@param id integer @bus number
 ---@param device_addr number @7-bit device address.
----@param direction integer|'i2c.TRANSMITTER'|'i2c.RECEIVER' @transmitter | receiver
+---@param direction integer|`i2c.TRANSMITTER`|`i2c.RECEIVER` @transmitter | receiver
 ---@return boolean @`true` if ack received, `false` if no ack received.
 function i2c.address(id, device_addr, direction) end
 
@@ -27,7 +27,7 @@ function i2c.read(id, len) end
 ---@param id integer @0~9, bus number
 ---@param pinSDA integer @1~12, IO index
 ---@param pinSCL integer @0~12, IO index
----@param speed integer|'i2c.SLOW'|'i2c.FAST'|'i2c.FASTPLUS' @slow | fast | fastplus
+---@param speed integer|`i2c.SLOW`|`i2c.FAST`|`i2c.FASTPLUS` @slow | fast | fastplus
 ---@return integer @speed the selected speed, 0 if bus initialization error.
 function i2c.setup(id, pinSDA, pinSCL, speed) end
 

@@ -35,7 +35,7 @@ function MQTT:close() end
 
 ---Connects to the broker specified by the given host, port, and secure options.
 ---@param host string @host, domain or IP
----@param port? integer|'1883' @(optional) broker port (number), default 1883
+---@param port? integer|`1883` @(optional) broker port (number), default 1883
 ---@param secure? boolean @(optional) if `true`, use TLS.
 ---@param conn_est? fun(client: MQTT) @(optional) `function(client)` callback function for when the connection was established
 ---@param conn_not_est? fun(client: MQTT, reason:mqtt) @"(optional) `function(client, reason)` callback function for when the connection could not be established.  \n No further callbacks should be called."
@@ -45,8 +45,8 @@ function MQTT:connect(host, port, secure, conn_est, conn_not_est) end
 ---Setup [Last Will and Testament](http://www.hivemq.com/blog/mqtt-essentials-part-9-last-will-and-testament).
 ---@param topic string @the topic to publish to (string)
 ---@param message string @the message to publish, (buffer or string)
----@param qos? integer|'0'|'1'|'2' @(optional) QoS level, default 0
----@param retain? integer|'0'|'1' @(optional) retain flag, default 0
+---@param qos? integer|`0`|`1`|`2` @(optional) QoS level, default 0
+---@param retain? integer|`0`|`1` @(optional) retain flag, default 0
 ---@return nil @`nil`; use callbacks to observe the outcome.
 function MQTT:lwt(topic, message, qos, retain) end
 
@@ -64,15 +64,15 @@ function MQTT:on(event, callback) end
 ---Publishes a message.
 ---@param topic string @the topic to publish to (topic string)
 ---@param payload string @the message to publish, (buffer or string)
----@param qos integer|'0'|'1'|'2' @QoS level
----@param retain integer|'0'|'1' @retain flag
+---@param qos integer|`0`|`1`|`2` @QoS level
+---@param retain integer|`0`|`1` @retain flag
 ---@param callback? fun(client:MQTT) @(optional) `function(client)` fired when PUBACK received (for QoS 1 or 2) or when message sent (for QoS 0).
 ---@return boolean
 function MQTT:publish(topic, payload, qos, retain, callback) end
 
 ---Subscribes to one or several topics.
 ---@param topic string|table @a topic string, or table array of `topic, qos` pairs to subscribe to.
----@param qos integer|'0'|'1'|'2' @QoS subscription level, default 0
+---@param qos integer|`0`|`1`|`2` @QoS subscription level, default 0
 ---@param callback? fun(client:MQTT) @(optional) `function(client)` fired when subscription(s) succeeded.
 ---@return boolean
 function MQTT:subscribe(topic, qos, callback) end

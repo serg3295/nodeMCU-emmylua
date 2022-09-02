@@ -21,10 +21,10 @@ local pulser = {}
 
 ---Initialize pin to GPIO mode, set the pin in/out direction, and optional internal weak pull-up.
 ---@param pin integer @pin to configure, IO index
----@param mode integer|'gpio.OUTPUT'|'gpio.INPUT'|'gpio.OPENDRAIN'|'gpio.INT' @interrupt mode
+---@param mode integer|`gpio.OUTPUT`|`gpio.INPUT`|`gpio.OPENDRAIN`|`gpio.INT` @interrupt mode
 ---@param pullup? integer @(optional) enables the weak pull-up resistor; default is gpio.FLOAT
----|'gpio.PULLUP'
----|>'gpio.FLOAT'
+---|`gpio.PULLUP`
+---|>`gpio.FLOAT`
 ---@return nil
 function gpio.mode(pin, mode , pullup) end
 
@@ -36,7 +36,7 @@ function gpio.read(pin) end
 ---Serialize output based on a sequence of delay-times in µs. After each delay, the pin is toggled.\
 ---After the last cycle and last delay the pin is not toggled.
 ---@param pin integer @pin to use, IO index
----@param start_level integer|'gpio.HIGH'|'gpio.LOW' @level to start on
+---@param start_level integer|`gpio.HIGH`|`gpio.LOW` @level to start on
 ---@param delay_times table @an array of delay times in µs between each toggle of the gpio pin.
 ---@param cycle_num? integer @an optional number of times to run through the sequence. (default is 1)
 ---@param callback? fun() @(optional) function or `number`, if present the function returns immediately and goes asynchronous.
@@ -46,12 +46,12 @@ function gpio.serout(pin, start_level, delay_times , cycle_num, callback) end
 ---Establish or clear a callback function to run on interrupt for a pin.
 ---@param pin integer @1-12, pin to trigger on, IO index.
 ---@param type? string @(optional) If the type is 'none' or omitted then the callback function is removed and the interrupt is disabled.
----|'"up"'   #rising edge
+---|'"up"' #rising edge
 ---|'"down"' #falling edge
 ---|'"both"' #both edges
----|'"low"'  #low level
+---|'"low"' #low level
 ---|'"high"' #high level
----@param callback? fun(level:number, when:number, eventcount:number)' @(optional) `function(level, when, eventcount)` when trigger occurs. The parameters are:
+---@param callback? fun(level:number, when:number, eventcount:number) @(optional) `function(level, when, eventcount)` when trigger occurs. The parameters are:
 --- - level - The level of the specified pin at the interrupt
 --- - when - timestamp of the event
 --- - eventcount - is the number of interrupts that were elided for this callback.
@@ -60,7 +60,7 @@ function gpio.trig(pin, type , callback) end
 
 ---Set digital GPIO pin value.
 ---@param pin integer @pin to write, IO index
----@param level integer|'gpio.HIGH'|'gpio.LOW' @high | low
+---@param level integer|`gpio.HIGH`|`gpio.LOW` @high | low
 ---@return nil
 function gpio.write(pin, level) end
 

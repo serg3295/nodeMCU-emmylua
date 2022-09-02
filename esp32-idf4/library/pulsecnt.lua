@@ -27,14 +27,14 @@ local pulsecntObj = {}
 function pulsecnt.create(unit, callbackOnEvents) end
 
 ---@alias pulse_mode1 integer
----|'pulsecnt.PCNT_COUNT_DIS' #= 0 Counter mode: Inhibit counter (counter value will not change in this condition).
----|'pulsecnt.PCNT_COUNT_INC' #= 1 Counter mode: Increase counter value.
----|'pulsecnt.PCNT_COUNT_DEC' #= 2 Counter mode: Decrease counter value.
+---|`pulsecnt.PCNT_COUNT_DIS` #= 0 Counter mode: Inhibit counter (counter value will not change in this condition).
+---|`pulsecnt.PCNT_COUNT_INC` #= 1 Counter mode: Increase counter value.
+---|`pulsecnt.PCNT_COUNT_DEC` #= 2 Counter mode: Decrease counter value.
 
 ---@alias pulse_mode2 integer
----|'pulsecnt.PCNT_MODE_KEEP' #= 0 Control mode: will not change counter mode.
----|'pulsecnt.PCNT_MODE_REVERSE' #= 1 Control mode: invert counter mode (increase -> decrease, decrease -> increase).
----|'pulsecnt.PCNT_MODE_DISABLE' #= 2 Control mode: Inhibit counter (counter value will not change in this condition).
+---|`pulsecnt.PCNT_MODE_KEEP` #= 0 Control mode: will not change counter mode.
+---|`pulsecnt.PCNT_MODE_REVERSE` #= 1 Control mode: invert counter mode (increase -> decrease, decrease -> increase).
+---|`pulsecnt.PCNT_MODE_DISABLE` #= 2 Control mode: Inhibit counter (counter value will not change in this condition).
 
 ---Configure channel 0 of the pulse counter object you created from the create() method.
 ---@param pulse_gpio_num integer @Any GPIO pin can be used.

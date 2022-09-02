@@ -54,7 +54,7 @@ function httpd.stop() end
 function httpd.static(route, content_type) end
 
 ---Registers a dynamic route handler.
----@param method integer|'httpd.GET'|'httpd.HEAD'|'httpd.PUT'|'httpd.POST'|'httpd.DELETE' @The HTTP method this route applies to.
+---@param method integer|`httpd.GET`|`httpd.HEAD`|`httpd.PUT`|`httpd.POST`|`httpd.DELETE` @The HTTP method this route applies to.
 ---@param route string @The route prefix. Be mindful of any trailing "/" as that may interact with the `auto_index` functionality.
 ---@param handler function @The route handler function - `handler(req)`. The provided request object `req` has the following fields/functions:
 --- - **method** The request method. Same as the `method` parameter above. If the same function is registered for several methods,\
@@ -85,7 +85,7 @@ function httpd.dynamic(method, route, handler) end
 
 ---Unregisters a previously registered handler. The default handlers\
 ---may be unregistered.
----@param method integer|'httpd.GET'|'httpd.HEAD'|'httpd.PUT'|'httpd.POST'|'httpd.DELETE' @The method the route was registered for.
+---@param method integer|`httpd.GET`|`httpd.HEAD`|`httpd.PUT`|`httpd.POST`|`httpd.DELETE` @The method the route was registered for.
 ---@param route string @The route prefix.
 ---@return integer|nil @"`1` on success, `nil` on failure (including if the route  \nwas not registered)."
 function httpd.unregister(method, route) end

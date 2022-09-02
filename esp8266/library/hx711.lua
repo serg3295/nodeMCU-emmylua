@@ -12,9 +12,9 @@ hx711 = {}
 function hx711.init(clk, data) end
 
 ---@alias hx711_a1 integer
----|'0' #channel A, gain 128
----|'1' #channel B, gain 32
----|'2' #channel A, gain 64
+---|`0` #channel A, gain 128
+---|`1` #channel B, gain 32
+---|`2` #channel A, gain 64
 
 ---Read digital loadcell ADC value.
 ---@param mode hx711_a1 @"ADC mode. This parameter specifies which input and  \n the gain to apply to that input."

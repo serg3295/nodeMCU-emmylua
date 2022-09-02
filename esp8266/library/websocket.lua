@@ -40,8 +40,8 @@ function ws:connect(url) end
 
 ---Registers the callback function to handle websockets events\
 ---(there can be only one handler function registered per event type).
----@param eventName integer|'connection'|'receive'|'close' @the type of websocket event to register the callback function
----@param callback function|'funtion(ws, ...) end' @"The function first parameter is always the **websocketclient**.  \n Other arguments are required depending on the event type. If `nil`, any previously  \n configured callback is unregistered."
+---@param eventName integer|`connection`|`receive`|`close` @the type of websocket event to register the callback function
+---@param callback function|`funtion(ws, ...) end` @"The function first parameter is always the **websocketclient**.  \n Other arguments are required depending on the event type. If `nil`, any previously  \n configured callback is unregistered."
 ---@return nil
 function ws:on(eventName, callback) end
 

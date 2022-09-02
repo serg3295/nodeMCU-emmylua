@@ -16,9 +16,9 @@ local tObj = {}
 function tmr.create() end
 
 ---@alias t32 integer
----|'tmr.ALARM_AUTO' #automatically repeating alarm
----|'tmr.ALARM_SINGLE' #a one-shot alarm (and no need to call tmr.unregister())
----|'tmr.ALARM_SEMI' #manually repeating alarm (call tmr.start() to restart)
+---|`tmr.ALARM_AUTO` #automatically repeating alarm
+---|`tmr.ALARM_SINGLE` #a one-shot alarm (and no need to call tmr.unregister())
+---|`tmr.ALARM_SEMI` #manually repeating alarm (call tmr.start() to restart)
 
 ---This is a convenience function combining `tmr.obj:register()` and `tmr.obj:start()` into a single call.
 ---@param interval integer @timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).

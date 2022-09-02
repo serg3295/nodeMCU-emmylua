@@ -17,8 +17,8 @@ local buffer = {}
 ---Initialize UART1 and GPIO2, should be called once and before write().\
 ---Initialize UART0 (TXD0) too if `ws2812.MODE_DUAL` is set.
 ---@param mode? integer @(optional) single | dual
----|>'ws2812.MODE_SINGLE'
----|'ws2812.MODE_DUAL' #you will be able to handle two strips in parallel
+---|>`ws2812.MODE_SINGLE`
+---|`ws2812.MODE_DUAL` #you will be able to handle two strips in parallel
 ---@return nil
 function ws2812.init(mode) end
 
@@ -86,15 +86,15 @@ function buffer:power() end
 
 ---Fade in or out. Defaults to out
 ---@param value number @value by which to divide or multiply each byte
----@param direction? integer|'ws2812.FADE_IN'|'ws2812.FADE_OUT' @(optional) Defaults to ws2812.FADE_OUT
+---@param direction? integer|`ws2812.FADE_IN`|`ws2812.FADE_OUT` @(optional) Defaults to ws2812.FADE_OUT
 ---@return nil
 function buffer:fade(value, direction) end
 
 ---Shift the content of (a piece of) the buffer in positive or negative direction.
 ---@param value number @"number of pixels by which to rotate the buffer.  \n Positive values rotate forwards, negative values backwards."
 ---@param mode? integer @(optional) is the shift mode to use.
----|>'ws2812.SHIFT_LOGICAL' #the freed pixels are set to 0 (off).
----|'ws2812.SHIFT_CIRCULAR' #the buffer is treated like a ring buffer, inserting the pixels falling out on one end again on the other end
+---|>`ws2812.SHIFT_LOGICAL` #the freed pixels are set to 0 (off).
+---|`ws2812.SHIFT_CIRCULAR` #the buffer is treated like a ring buffer, inserting the pixels falling out on one end again on the other end
 ---@param i? integer @"(optional) is the first offset in the buffer to be affected.  \n Negative values are permitted and count backwards from the end. Default is 1."
 ---@param j? integer @"(optional) is the last offset in the buffer to be affected.  \n Negative values are permitted and count backwards from the end. Default is -1."
 ---@return nil

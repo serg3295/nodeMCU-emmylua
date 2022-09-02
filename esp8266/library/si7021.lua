@@ -29,14 +29,14 @@ function si7021.read() end
 function si7021.serial() end
 
 ---@alias si7021_a1 number
----|>'si7021.RH12_TEMP14' #Relative Humidity 12 bit - Temperature 14 bit
----|'si7021.RH08_TEMP12' #Relative Humidity 8 bit - Temperature 12 bit
----|'si7021.RH10_TEMP13' #Relative Humidity 10 bit - Temperature 13 bit
----|'si7021.RH11_TEMP11' #Relative Humidity 11 bit - Temperature 11 bit
+---|>`si7021.RH12_TEMP14` #Relative Humidity 12 bit - Temperature 14 bit
+---|`si7021.RH08_TEMP12` #Relative Humidity 8 bit - Temperature 12 bit
+---|`si7021.RH10_TEMP13` #Relative Humidity 10 bit - Temperature 13 bit
+---|`si7021.RH11_TEMP11` #Relative Humidity 11 bit - Temperature 11 bit
 
 ---@alias si7021_a2 integer
----|'si7021.HEATER_ENABLE' #On-chip Heater Enable
----|>'si7021.HEATER_DISABLE' #On-chip Heater Disable
+---|`si7021.HEATER_ENABLE` #On-chip Heater Enable
+---|>`si7021.HEATER_DISABLE` #On-chip Heater Disable
 
 ---Settings for the sensors configuration register.
 ---@param RESOLUTION si7021_a1 @resolution

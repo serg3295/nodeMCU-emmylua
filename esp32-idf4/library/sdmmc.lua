@@ -22,7 +22,7 @@ local card = {}
 ---@field width  integer
 
 ---SDMMC Mode. Initialize the SDMMC and probe the attached SD card.
----@param slot integer|'sdmmc.HS1'|'sdmmc.HS2' @SDMMC slot
+---@param slot integer|`sdmmc.HS1`|`sdmmc.HS2` @SDMMC slot
 ---@param cfg? SDmmcCfg @optional table containing slot configuration:
 --- - **cd_pin** card detect pin, none if omitted
 --- - **wp_pin** write-protect pin, none if omitted
@@ -46,7 +46,7 @@ function sdmmc.init(slot, cfg) end
 ---@field fmax integer
 
 ---SD SPI Mode. Initialize the SDMMC and probe the attached SD card.
----@param slot integer|'sdmmc.HSPI'|'sdmmc.VSPI' @SD SPI slot
+---@param slot integer|`sdmmc.HSPI`|`sdmmc.VSPI` @SD SPI slot
 ---@param cfg SDspiCfg @mandatory table containing slot configuration:
 --- - **sck_pin** SPI SCK pin, mandatory
 --- - **mosi_pin**, SPI MOSI pin, mandatory

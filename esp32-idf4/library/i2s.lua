@@ -28,13 +28,13 @@
 i2s = {}
 
 ---Mute the I2S channel. The hardware buffer is instantly filled with silence.
----@param i2s_num integer|'0'|'1' @I2S peripheral 0 or 1
+---@param i2s_num integer|`0`|`1` @I2S peripheral 0 or 1
 ---@return nil
 ---An error is thrown in case of invalid parameters or if the i2s driver failed.
 function i2s.mute(i2s_num) end
 
 ---Read data from I2S receive buffer.
----@param i2s_num integer|'0'|'1' @I2S peripheral 0 or 1
+---@param i2s_num integer|`0`|`1` @I2S peripheral 0 or 1
 ---@param size number @Bytes to read
 ---@param wait_ms? number @"(optional) Millisecond to wait if data is not ready.  \n Defaults to 0 (not to wait) when omitted."
 ---@return any @"Data read from data-in pin. If data is not ready in `wait_ms` millisecond,  \n less than `size` bytes can be returned. An error is thrown in case of invalid parameters  \n or if the i2s driver failed."
@@ -56,7 +56,7 @@ function i2s.read(i2s_num, size, wait_ms) end
 ---@field adc1_channel number
 
 ---Configuration and start I2S bus.
----@param i2s_num integer|'0'|'1' @I2S peripheral
+---@param i2s_num integer|`0`|`1` @I2S peripheral
 ---@param cfg I2sCfg @table containing configuration data:
 --- - **mode** I2S work mode. Optional,\
 ---defaults to `i2s.MODE_MASTER + i2s.MODE_TX` when omitted.
@@ -106,14 +106,14 @@ function i2s.read(i2s_num, size, wait_ms) end
 function i2s.start(i2s_num, cfg, cb) end
 
 ---Stop I2S bus.
----@param i2s_num integer|'0'|'1' @I2S peripheral
+---@param i2s_num integer|`0`|`1` @I2S peripheral
 ---@return nil
 ---An error is thrown in case of invalid parameters\
 ---or if the i2s driver failed.
 function i2s.stop(i2s_num) end
 
 ---Write to I2S transmit buffer.
----@param i2s_num integer|'0'|'1' @I2S peripheral
+---@param i2s_num integer|`0`|`1` @I2S peripheral
 ---@param data string @string containing I2S stream data
 ---@return nil
 ---An error is thrown in case of invalid parameters or\

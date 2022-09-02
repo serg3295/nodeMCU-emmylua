@@ -20,7 +20,7 @@ local netsrv = {}
 local udpsocket = {}
 
 ---Creates a client.
----@param type? integer|'net.TCP' @"(optional) `net.TCP` (default) or `net.UDP` There's no such thing as  \n a UDP connection because UDP is connection*less*. Thus no connection `type` parameter  \n should be required. For UDP use `net.createUDPSocket()` instead."
+---@param type? integer|`net.TCP` @"(optional) `net.TCP` (default) or `net.UDP` There's no such thing as  \n a UDP connection because UDP is connection*less*. Thus no connection `type` parameter  \n should be required. For UDP use `net.createUDPSocket()` instead."
 ---@param secure? integer @"(optional) 0 for plain (default). Secure connections are not supported,  \n and the `secure` parameter is ignored."
 ---@return netsocket @>
 --- - for `net.TCP` - net.socket sub module
@@ -28,7 +28,7 @@ local udpsocket = {}
 function net.createConnection(type, secure) end
 
 ---Creates a server.
----@param type? integer|'net.TCP' @"(optional) The `type` parameter will be removed in upcoming  \n releases so that `net.createServer` will always create a TCP-based server.  \n For UDP use `net.createUDPSocket()` instead."
+---@param type? integer|`net.TCP` @"(optional) The `type` parameter will be removed in upcoming  \n releases so that `net.createServer` will always create a TCP-based server.  \n For UDP use `net.createUDPSocket()` instead."
 ---@param timeout? integer @"(optional) for a TCP server timeout is 1~28'800 seconds,  \n 30 sec by default (for an inactive client to be disconnected)"
 ---@return netsrv @>
 --- - for `net.TCP` - net.server sub module
@@ -164,7 +164,7 @@ function udpsocket:dns(domain, callback) end
 function udpsocket:getaddr() end
 
 ---Gets the IP address of the DNS server used to resolve hostnames.
----@param dns_index integer|'0'|'1' @which DNS server to get (range 0~1)
+---@param dns_index integer|`0`|`1` @which DNS server to get (range 0~1)
 ---@return string @IP address (string) of DNS server
 function net.dns.getdnsserver(dns_index) end
 
@@ -176,6 +176,6 @@ function net.dns.resolve(host, callback) end
 
 ---Sets the IP of the DNS server used to resolve hostnames.
 ---@param dns_ip_addr string @IP address of a DNS server. Default: resolver1.opendns.com (208.67.222.222).
----@param dns_index integer|'0'|'1' @which DNS server to set (range 0~1). Hence, it supports max. 2 servers.
+---@param dns_index integer|`0`|`1` @which DNS server to set (range 0~1). Hence, it supports max. 2 servers.
 ---@return nil
 function net.dns.setdnsserver(dns_ip_addr, dns_index) end

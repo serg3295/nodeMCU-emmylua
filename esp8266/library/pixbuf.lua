@@ -84,7 +84,7 @@ function pixbuffer:powerI() end
 ---Fade in or out. Defaults to out. Multiply or divide each byte of each led with/by\
 ---the given value.
 ---@param value number @value by which to divide or multiply each byte
----@param direction? integer|'pixbuf.FADE_IN'|'pixbuf.FADE_OUT' @(optional) Defaults to pixbuf.FADE_OUT
+---@param direction? integer|`pixbuf.FADE_IN`|`pixbuf.FADE_OUT` @(optional) Defaults to pixbuf.FADE_OUT
 ---@return nil
 function pixbuffer:fade(value, direction) end
 
@@ -97,8 +97,8 @@ function pixbuffer:fadeI() end
 ---Negative values count backwards from the end of the buffer.
 ---@param value number @"number of pixels by which to rotate the buffer.  \n Positive values rotate forwards, negative values backwards."
 ---@param mode? integer @(optional) is the shift mode to use.
----|>'pixbuf.SHIFT_LOGICAL' #the freed pixels are set to 0 (off).
----|'pixbuf.SHIFT_CIRCULAR' #the buffer is treated like a ring buffer, inserting the pixels falling out on one end again on the other end
+---|>`pixbuf.SHIFT_LOGICAL` #the freed pixels are set to 0 (off).
+---|`pixbuf.SHIFT_CIRCULAR` #the buffer is treated like a ring buffer, inserting the pixels falling out on one end again on the other end
 ---@param i? integer @"(optional) is the first offset in the buffer to be affected.  \n Negative values are permitted and count backwards from the end. Default is 1."
 ---@param j? integer @"(optional) is the last offset in the buffer to be affected.  \n Negative values are permitted and count backwards from the end. Default is -1."
 ---@return nil

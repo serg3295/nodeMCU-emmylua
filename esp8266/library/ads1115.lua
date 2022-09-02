@@ -51,13 +51,13 @@ local ads1x15 = {}
 
 ---Registers ADS1115 (ADS1113, ADS1114) device.
 ---@param I2C_ID number @always 0
----@param I2C_ADDR number|'ads1115.ADDR_GND'|'ads1115.ADDR_VDD'|'ads1115.ADDR_SDA'|'ads1115.ADDR_SCL' @I²C address of a device
+---@param I2C_ADDR number|`ads1115.ADDR_GND`|`ads1115.ADDR_VDD`|`ads1115.ADDR_SDA`|`ads1115.ADDR_SCL` @I²C address of a device
 ---@return ads1x15 obj @Registered device object
 function ads1115.ads1115(I2C_ID, I2C_ADDR) end
 
 ---Registers ADS1015 (ADS1013, ADS1014) device.
 ---@param I2C_ID number @always 0
----@param I2C_ADDR number|'ads1115.ADDR_GND'|'ads1115.ADDR_VDD'|'ads1115.ADDR_SDA'|'ads1115.ADDR_SCL' @I²C address of a device
+---@param I2C_ADDR number|`ads1115.ADDR_GND`|`ads1115.ADDR_VDD`|`ads1115.ADDR_SDA`|`ads1115.ADDR_SCL` @I²C address of a device
 ---@return ads1x15 obj @Registered device object
 function ads1115.ads1015(I2C_ID, I2C_ADDR) end
 
@@ -76,40 +76,40 @@ function ads1x15:read() end
 
 ---Configuration settings for the ADC.
 ---@param GAIN number @Programmable gain amplifier
----|'ads1115.GAIN_6_144V' #2/3x Gain
----|'ads1115.GAIN_4_096V' #1x Gain
----|'ads1115.GAIN_2_048V' #2x Gain
----|'ads1115.GAIN_1_024V' #4x Gain
----|'ads1115.GAIN_0_512V' #8x Gain
----|'ads1115.GAIN_0_256V' #16x Gain
+---|`ads1115.GAIN_6_144V` #2/3x Gain
+---|`ads1115.GAIN_4_096V` #1x Gain
+---|`ads1115.GAIN_2_048V` #2x Gain
+---|`ads1115.GAIN_1_024V` #4x Gain
+---|`ads1115.GAIN_0_512V` #8x Gain
+---|`ads1115.GAIN_0_256V` #16x Gain
 ---@param SAMPLES number @Data rate in samples per second
----|'ads1115.DR_8SPS' #ADS1115 only
----|'ads1115.DR_16SPS' #ADS1115 only
----|'ads1115.DR_32SPS' #ADS1115 only
----|'ads1115.DR_64SPS' #ADS1115 only
----|'ads1115.DR_128SPS'
----|'ads1115.DR_250SPS'
----|'ads1115.DR_475SPS' #ADS1115 only
----|'ads1115.DR_490SPS' #ADS1015 only
----|'ads1115.DR_860SPS' #ADS1115 only
----|'ads1115.DR_920SPS' #ADS1015 only
----|'ads1115.DR_1600SPS' #ADS1015 only
----|'ads1115.DR_2400SPS' #ADS1015 only
----|'ads1115.DR_3300SPS' #ADS1015 only
+---|`ads1115.DR_8SPS` #ADS1115 only
+---|`ads1115.DR_16SPS` #ADS1115 only
+---|`ads1115.DR_32SPS` #ADS1115 only
+---|`ads1115.DR_64SPS` #ADS1115 only
+---|`ads1115.DR_128SPS`
+---|`ads1115.DR_250SPS`
+---|`ads1115.DR_475SPS` #ADS1115 only
+---|`ads1115.DR_490SPS` #ADS1015 only
+---|`ads1115.DR_860SPS` #ADS1115 only
+---|`ads1115.DR_920SPS` #ADS1015 only
+---|`ads1115.DR_1600SPS` #ADS1015 only
+---|`ads1115.DR_2400SPS` #ADS1015 only
+---|`ads1115.DR_3300SPS` #ADS1015 only
 ---@param CHANNEL number @Input multiplexer for single-ended or differential measurement
----|'ads1115.SINGLE_0' #channel 0 to GND
----|'ads1115.SINGLE_1' #channel 1 to GND
----|'ads1115.SINGLE_2' #channel 2 to GND
----|'ads1115.SINGLE_3' #channel 3 to GND
----|'ads1115.DIFF_0_1' #channel 0 to 1
----|'ads1115.DIFF_0_3' #channel 0 to 3
----|'ads1115.DIFF_1_3' #channel 1 to 3
----|'ads1115.DIFF_2_3' #channel 2 to 3
+---|`ads1115.SINGLE_0` #channel 0 to GND
+---|`ads1115.SINGLE_1` #channel 1 to GND
+---|`ads1115.SINGLE_2` #channel 2 to GND
+---|`ads1115.SINGLE_3` #channel 3 to GND
+---|`ads1115.DIFF_0_1` #channel 0 to 1
+---|`ads1115.DIFF_0_3` #channel 0 to 3
+---|`ads1115.DIFF_1_3` #channel 1 to 3
+---|`ads1115.DIFF_2_3` #channel 2 to 3
 ---@param MODE number @Device operating mode
----|'ads1115.SINGLE_SHOT' #single-shot mode
----|'ads1115.CONTINUOUS' #continuous mode
----@param CONVERSION_RDY? number|'ads1115.CONV_RDY_1'|'ads1115.CONV_RDY_2'|'ads1115.CONV_RDY_4' @(optional) Number of conversions after conversion ready asserts
----@param COMPARATOR? number|'ads1115.COMP_1CONV'|'ads1115.COMP_2CONV'|'ads1115.COMP_4CONV' @(optional) Number of conversions after comparator asserts
+---|`ads1115.SINGLE_SHOT` #single-shot mode
+---|`ads1115.CONTINUOUS` #continuous mode
+---@param CONVERSION_RDY? number|`ads1115.CONV_RDY_1`|`ads1115.CONV_RDY_2`|`ads1115.CONV_RDY_4` @(optional) Number of conversions after conversion ready asserts
+---@param COMPARATOR? number|`ads1115.COMP_1CONV`|`ads1115.COMP_2CONV`|`ads1115.COMP_4CONV` @(optional) Number of conversions after comparator asserts
 ---@param THRESHOLD_LOW number @>
 --- - **0** - **+ GAIN_MAX** in mV for single-ended inputs
 --- - **- GAIN_MAX** - **+ GAIN_MAX** in mV for differential inputs
@@ -117,8 +117,8 @@ function ads1x15:read() end
 --- - **0** - **+ GAIN_MAX** in mV for single-ended inputs
 --- - **- GAIN_MAX** - **+ GAIN_MAX** in mV for differential inputs
 ---@param COMP_MODE? number @(optional) Comparator mode
----|'ads1115.CMODE_TRAD' #traditional comparator mode (with hysteresis)
----|'ads1115.CMODE_WINDOW' #window comparator mode
+---|`ads1115.CMODE_TRAD` #traditional comparator mode (with hysteresis)
+---|`ads1115.CMODE_WINDOW` #window comparator mode
 ---@return nil
 function ads1x15:setting(GAIN, SAMPLES, CHANNEL, MODE, CONVERSION_RDY, COMPARATOR, THRESHOLD_LOW, THRESHOLD_HI,COMP_MODE) end
 

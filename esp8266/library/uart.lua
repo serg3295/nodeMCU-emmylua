@@ -36,10 +36,10 @@ function uart.on(method, number_or_endChar, callback, run_input) end
 
 --- (Re-)configures the communication parameters of the UART.
 ---@param id integer @UART id (0 or 1).
----@param baud integer|'300'|'600'|'1200'|'2400'|'4800'|'9600'|'19200'|'31250'|'34400'|'57600'|'74880'|'115200'|'230000'|'256000'|'460800'|'921600'|'1843200'|'3686400' @300 - 3686400
----@param databits integer|'8'|'7'|'6'|'5' @5 - 8
----@param parity integer|'uart.PARITY_NONE'|'uart.PARITY_ODD'|'uart.PARITY_EVEN' @none |  even | odd
----@param stopbits integer|'uart.STOPBITS_1'|'uart.STOPBITS_1_5'|'uart.STOPBITS_2' @1 | 1.5 | 2
+---@param baud integer|`300`|`600`|`1200`|`2400`|`4800`|`9600`|`19200`|`31250`|`34400`|`57600`|`74880`|`115200`|`230000`|`256000`|`460800`|`921600`|`1843200`|`3686400` @300 - 3686400
+---@param databits integer|`8`|`7`|`6`|`5` @5 - 8
+---@param parity integer|`uart.PARITY_NONE`|`uart.PARITY_ODD`|`uart.PARITY_EVEN` @none |  even | odd
+---@param stopbits integer|`uart.STOPBITS_1`|`uart.STOPBITS_1_5`|`uart.STOPBITS_2` @1 | 1.5 | 2
 ---@param echo? integer @(optional) 0 - disable echo, 1 - enable echo (default if omitted)
 ---@return number baudrate @configured baud rate
 function uart.setup(id, baud, databits, parity, stopbits, echo) end
@@ -62,6 +62,6 @@ function uart.write(id, data1, ...) end
 ---Report the depth, in bytes, of TX or RX hardware queues\
 ---associated with the UART.
 ---@param id integer @UART id (0 or 1).
----@param dir integer|'uart.DIR_RX'|'uart.DIR_TX' @`uart.DIR_RX` for the RX FIFO, `uart.DIR_TX` for TX FIFO.
+---@param dir integer|`uart.DIR_RX`|`uart.DIR_TX` @`uart.DIR_RX` for the RX FIFO, `uart.DIR_TX` for TX FIFO.
 ---@return integer @The number of bytes in the selected FIFO.
 function uart.fifodepth(id, dir) end

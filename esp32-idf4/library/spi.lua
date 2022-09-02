@@ -22,9 +22,9 @@ local devSpi = {}
 ---@field quadhd integer
 
 ---Initializes a bus in master mode and returns a bus master object.
----@param host integer|'spi.VSPI'|'spi.HSPI' @id
+---@param host integer|`spi.VSPI`|`spi.HSPI` @id
 ---@param config? SpiMaster @"(optional) table listing the assigned GPIOs.  \n All signal assignment are optional. **sclk, mosi, miso, quadwp, quadhd**"
----@param dma? integer|'1'|'2'|'0' @(optional) set DMA channel (1 or 2) or disable DMA (0), defaults to 1 if omitted.
+---@param dma? integer|`1`|`2`|`0` @(optional) set DMA channel (1 or 2) or disable DMA (0), defaults to 1 if omitted.
 ---@return busmaster @SPI bus master object
 function spi.master(host, config, dma) end
 

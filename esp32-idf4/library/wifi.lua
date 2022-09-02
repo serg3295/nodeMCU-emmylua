@@ -43,13 +43,13 @@ function wifi.getmode() end
 
 ---Configures the WiFi mode to use.
 ---@param mode integer @station | softap | stationap | nullmode
----|'wifi.STATION' #for when the device is connected to a WiFi router.
----|'wifi.SOFTAP' #for when the device is acting only as an access point.
----|'wifi.STATIONAP' #is the combination of wifi.STATION and wifi.SOFTAP
----|'wifi.NULLMODE' #disables the WiFi interface(s).
+---|`wifi.STATION` #for when the device is connected to a WiFi router.
+---|`wifi.SOFTAP` #for when the device is acting only as an access point.
+---|`wifi.STATIONAP` #is the combination of wifi.STATION and wifi.SOFTAP
+---|`wifi.NULLMODE` #disables the WiFi interface(s).
 ---@param save? boolean @(optional) choose whether or not to save wifi mode to flash
----|>'true' #WiFi mode configuration will be retained through power cycle.
----|'false' #WiFi mode configuration will not be retained through power cycle.
+---|>`true` #WiFi mode configuration will be retained through power cycle.
+---|`false` #WiFi mode configuration will not be retained through power cycle.
 ---@return any @current mode after setup
 function wifi.mode(mode, save) end
 
@@ -89,8 +89,8 @@ function wifi.stop() end
 ---   - `wifi.sta.PMF_REQUIRED`.\
 ---PMF is required when joining to WPA3-Personal access points.
 ---@param save boolean @Save station configuration to flash.
----|'true' #configuration will be retained through power cycle.
----|>'false' #configuration will not be retained through power cycle.
+---|`true` #configuration will be retained through power cycle.
+---|>`false` #configuration will not be retained through power cycle.
 ---@return nil
 function wifi.sta.config(station_config, save) end
 
@@ -202,8 +202,8 @@ function wifi.sta.sethostname(hostname) end
 --- - **max** maximum number of connections 1-4 default=4
 --- - **beacon** beacon interval time in range 100-60000, default = 100
 ---@param save boolean @save configuration to flash.
----|>'true' #configuration will be retained through power cycle.
----|'false' #configuration will not be retained through power cycle.
+---|>`true` #configuration will be retained through power cycle.
+---|`false` #configuration will not be retained through power cycle.
 ---@return nil
 function wifi.ap.config(cfg, save) end
 

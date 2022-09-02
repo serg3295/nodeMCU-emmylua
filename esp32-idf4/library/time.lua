@@ -70,7 +70,7 @@ function time.getlocal() end
 function time.initntp(ntpAddr) end
 
 ---Checks if NTP client is enabled.
----@return boolean @`true' if NTP client is enabled.
+---@return boolean @`true` if NTP client is enabled.
 function time.ntpenabled() end
 
 ---Stops NTP client.

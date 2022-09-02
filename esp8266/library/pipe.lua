@@ -11,9 +11,9 @@ local pobj = {}
 ---Create a pipe.
 ---@param CB_function? fun(p:pobj) @"optional reader callback which is called through the `node.task.post()`  \n when the pipe is written to. If the CB returns a boolean, then the reposting action is forced:  \n it is reposted if `true` and not if `false`. If the return is `nil` or omitted then the deault is to repost  \nif a pipe write has occured since the last call."
 ---@param task_priority? integer @(optional) low | medium | high
----|'node.task.LOW_PRIORITY' #0
----|>'node.task.MEDIUM_PRIORITY' #1
----|'node.task.HIGH_PRIORITY' #2
+---|`node.task.LOW_PRIORITY` #0
+---|>`node.task.MEDIUM_PRIORITY` #1
+---|`node.task.HIGH_PRIORITY` #2
 ---@return pobj @A pipe resource.
 function pipe.create(CB_function, task_priority) end
 

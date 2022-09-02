@@ -22,7 +22,7 @@ local connection = {}
 
 ---Creates a connection object which can be configured and then executed.
 ---@param url string|'"http://"'|'"https://"' @The URL to fetch, including the http:// or https:// prefix. Required.
----@param method? integer|'http.GET'|'http.POST'|'http.PUT'|'http.DELETE'|'http.HEAD' @The HTTP method to use. Optional and may be omitted, the default is http.GET.
+---@param method? integer|`http.GET`|`http.POST`|`http.PUT`|`http.DELETE`|`http.HEAD` @The HTTP method to use. Optional and may be omitted, the default is http.GET.
 ---@param options? CreateHTTPConn @An optional table containing any or all of:
 --- - **async** If true, the request is processed asynchronously, meaning `request()` returns immediately rather than blocking until\
 ---the connection is complete and all callbacks have been made. Some other connection APIs behave differently in asynchronous mode,\
@@ -52,7 +52,7 @@ function connection:on(event, callback) end
 function connection:request() end
 
 ---Sets the connection method.
----@param method? integer|'http.GET'|'http.POST'|'http.PUT'|'http.DELETE'|'http.HEAD' @(optional) one of
+---@param method? integer|`http.GET`|`http.POST`|`http.PUT`|`http.DELETE`|`http.HEAD` @(optional) one of
 ---@return nil
 function connection:setmethod(method) end
 

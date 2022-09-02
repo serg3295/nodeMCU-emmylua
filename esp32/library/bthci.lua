@@ -33,7 +33,7 @@ function bthci.reset(callback) end
 
 ---Enables or disables BlueTooth LE advertisements. Before enabling advertisements,\
 ---both parameters and data should be set.
----@param onoff integer|'0'|'1' @**1** or **0** to enable or disable advertisements, respectively.
+---@param onoff integer|`0`|`1` @**1** or **0** to enable or disable advertisements, respectively.
 ---@param callback? function @"(optional) function to be invoked when the reset completes.  \n Its only argument is the HCI error code, or `nil` on success."
 ---@return nil
 function bthci.adv.enable(onoff, callback) end
@@ -76,7 +76,7 @@ function bthci.adv.setdata(advbytes, callback) end
 function bthci.adv.setparams(paramtable, callback) end
 
 ---Enables or disable scanning for advertisements from other BlueTooth devices.
----@param onoff integer|'0'|'1' @**1** or **0** to enable or disable advertisements, respectively.
+---@param onoff integer|`0`|`1` @**1** or **0** to enable or disable advertisements, respectively.
 ---@param callback? function @"(optional) function to be invoked when the reset completes.  \n Its only argument is the HCI error code, or `nil` on success."
 ---@return nil
 function bthci.scan.enable(onoff, callback) end

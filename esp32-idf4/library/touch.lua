@@ -75,7 +75,7 @@ function tp:read() end
 function tp:setThres(padNum, thresVal) end
 
 ---Set the trigger mode globally for all touch pads.
----@param mode integer|'touch.TOUCH_TRIGGER_BELOW'|'touch.TOUCH_TRIGGER_ABOVE' @mode
+---@param mode integer|`touch.TOUCH_TRIGGER_BELOW`|`touch.TOUCH_TRIGGER_ABOVE` @mode
 ---@return nil
 function tp:setTriggerMode(mode) end
 
