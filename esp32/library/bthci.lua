@@ -100,7 +100,7 @@ function bthci.scan.enable(onoff, callback) end
 function bthci.scan.setparams(paramstable, callback) end
 
 ---Registers the callback to be passed any received advertisements.
----@param event string|'"adv_report"' @the string describing the event.
+---@param event string|"adv_report" @the string describing the event.
 ---@param callback? function @"(optional) the callback function to receive the advertising  \n reports, or `nil` to deregister the callback. This callback receives the raw bytes  \n of the advertisement payload."
 ---@return nil
 function bthci.scan.on(event, callback) end

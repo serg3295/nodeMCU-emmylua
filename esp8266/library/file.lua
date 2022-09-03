@@ -10,7 +10,7 @@ local fd = {}
 
 ---Change current directory (and drive). This will be used\
 ---when no drive/directory is prepended to filenames.
----@param dir string|'"/FLASH"'|'"/SD0"'|'"/SD1"' @directory name
+---@param dir string|"/FLASH"|"/SD0"|"/SD1" @directory name
 ---@return boolean
 function file.chdir(dir) end
 
@@ -54,13 +54,13 @@ function file.list(pattern) end
 
 ---Mounts a FatFs volume on SD card. Function is only available when FatFS\
 ---support is compiled into the firmware and it is not supported for internal flash.
----@param ldrv string|'"/SD0"'|'"/SD1"' @name of the logical drive, /SD0, /SD1, etc.
+---@param ldrv string|"/SD0"|"/SD1" @name of the logical drive, /SD0, /SD1, etc.
 ---@param pin? integer @(optional) 1~12, IO index for SS/CS, defaults to 8 if omitted.
 ---@return any obj @Volume object
 function file.mount(ldrv, pin) end
 
 ---Registers callback functions.
----@param event string|'"rtc"' @"Trigger events are: `rtc` deliver current *date & time* to the file system.  \n Function is expected to return a table containing the fields **year, mon, day, hour, min, sec**  \n of current date and time. Not supported for internal flash."
+---@param event string|"rtc" @"Trigger events are: `rtc` deliver current *date & time* to the file system.  \n Function is expected to return a table containing the fields **year, mon, day, hour, min, sec**  \n of current date and time. Not supported for internal flash."
 ---@param callback? fun() @(optional) function. Unregisters the callback if function() is omitted or `nil`.
 ---@return nil
 function file.on(event, callback) end
@@ -68,12 +68,12 @@ function file.on(event, callback) end
 ---Opens a file for access, potentially creating it (for write modes).
 ---@param filename string @file to be opened
 ---@param mode string @r | w | a | r+ | w+ | a+
----|>' "r"' #read mode
----| ' "w"' #write mode
----| ' "a"' #append mode
----| ' "r+"' #update mode, all previous data is preserved
----| ' "w+"' #update mode, all previous data is erased
----| ' "a+"' #append update mode, previous data is preserved, writing is only allowed at the end of file
+---|> "r" #read mode
+---|  "w" #write mode
+---|  "a" #append mode
+---|  "r+" #update mode, all previous data is preserved
+---|  "w+" #update mode, all previous data is erased
+---|  "a+" #append update mode, previous data is preserved, writing is only allowed at the end of file
 ---@return fd fileobject @if file opened ok. `nil` if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 
@@ -167,9 +167,9 @@ function file.readline() end
 function fd:readline() end
 
 ---@alias seekwhence_f string
----| '"set"' #Base is position 0 (beginning of the file)
----|>'"cur"' #Base is current position
----| '"end"' #Base is end of file
+---| "set" #Base is position 0 (beginning of the file)
+---|>"cur" #Base is current position
+---| "end" #Base is end of file
 
 ---Sets and gets the file position, measured from the beginning of the file, to the position\
 ---given by `offset` plus a base specified by the string whence. If no parameters are given,\

@@ -36,7 +36,7 @@ function TLS:getpeer() end
 function TLS:hold() end
 
 ---Register callback functions for specific events.
----@param event string|'"dns"'|'"connection"'|'"reconnection"'|'"disconnection"'|'"receive"'|'"sent"' @event
+---@param event string|"dns"|"connection"|"reconnection"|"disconnection"|"receive"|"sent" @event
 ---@param callback fun(tls.socket:TLS, str:string) @function. The first parameter is the socket.
 --- - If event is *"receive"*, the second parameter is the received data as string.
 --- - If event is *"reconnection"*, the second parameter is the reason of connection error (string).
@@ -77,7 +77,7 @@ function tls.cert.verify(callback) end
 function tls.cert.auth(enable) end
 
 ---Controls the client key and certificate used when the ESP creates a TLS connection
----@param pemdata string @"Two strings, the first containing the PEM-encoded client's  \n certificate and the second containing the PEM-encoded client's private key."
+---@param pemdata string @"Two strings, the first containing the PEM-encoded clients  \n certificate and the second containing the PEM-encoded clients private key."
 ---@param pemdata1? string @(optional)
 ---@return boolean|any @`true` if it worked. Can throw a number of errors if invalid data is supplied.
 function tls.cert.auth(pemdata, pemdata1) end

@@ -14,7 +14,7 @@ function hashobj:update(str) end
 ---for finalizing and returning the resulting signature
 function hashobj:finalize() end
 
----@alias crypto_algo string|'"MD5"'|'"SHA1"'|'"RIPEMD160"'|'"SHA224"'|'"SHA256"'|'"SHA384"'|'"SHA512"'
+---@alias crypto_algo string|"MD5"|"SHA1"|"RIPEMD160"|"SHA224"|"SHA256"|"SHA384"|"SHA512"
 
 ---Create a digest/hash object that can have any number of strings\
 ---added to it. The returned object has `update(str)` and `finalize()`\

@@ -74,7 +74,7 @@ function node.bootreason() end
 function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as .lc file.
----@param filename string|'".lua"' @filename name of Lua text file
+---@param filename string|".lua" @filename name of Lua text file
 ---@return nil
 function node.compile(filename) end
 

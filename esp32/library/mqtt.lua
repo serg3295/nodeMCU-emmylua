@@ -55,7 +55,7 @@ function Mqtt:connect(host, port, secure, conn_est, conn_notest) end
 function Mqtt:lwt(topic, message, qos, retain) end
 
 ---Registers a callback function for an event.
----@param event string|'"connect"'|'"message"'|'"offline"' @can be "connect", "message" or "offline"
+---@param event string|"connect"|"message"|"offline" @can be "connect", "message" or "offline"
 ---@param callback fun(client:Mqtt, topic:string, message:string) @`function(client, topic?:string, message?:string)`.
 ---The first parameter is the client. If event is "message",\
 ---the 2nd and 3rd param are received topic and message (strings).

@@ -19,8 +19,8 @@ uart = {}
 ---Sets the callback function to handle UART events. To unregister the callback, provide only the "data" parameter.
 ---@param id? integer @(optional) uart id, default value is uart num of the console.
 ---@param method string @data | error
----|'"data"' #"data", data has been received on the UART.
----|'"error"' #error occurred on the UART.
+---|"data" #"data", data has been received on the UART.
+---|"error" #error occurred on the UART.
 ---@param number_or_endChar? number|string @(optional) Only for event data.
 --- - if pass in a number *n* < 255, the callback will called when *n* chars are received.
 --- - if *n* = 0, will receive every char in buffer.

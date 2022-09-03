@@ -85,7 +85,7 @@ function sdmmc.init(slot, cfg) end
 function card:get_info() end
 
 ---Mount filesystem on SD card.
----@param ldrv string|'"/SD0"'|'"/SD1"' @name of logical drive
+---@param ldrv string|"/SD0"|"/SD1" @name of logical drive
 ---@param partition? integer @"(optional) the partition number, default is 0,  \n meaning the first available FAT partition."
 ---@return boolean #`true` if successful, `false` otherwise
 function card:mount(ldrv, partition) end

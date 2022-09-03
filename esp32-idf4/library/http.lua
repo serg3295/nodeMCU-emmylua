@@ -21,7 +21,7 @@ local connection = {}
 ---@field timeout number
 
 ---Creates a connection object which can be configured and then executed.
----@param url string|'"http://"'|'"https://"' @The URL to fetch, including the http:// or https:// prefix. Required.
+---@param url string|"http://"|"https://" @The URL to fetch, including the http:// or https:// prefix. Required.
 ---@param method? integer|`http.GET`|`http.POST`|`http.PUT`|`http.DELETE`|`http.HEAD` @The HTTP method to use. Optional and may be omitted, the default is http.GET.
 ---@param options? CreateHTTPConn @An optional table containing any or all of:
 --- - **async** If true, the request is processed asynchronously, meaning `request()` returns immediately rather than blocking until\
@@ -39,10 +39,10 @@ function http.createConnection(url, method, options) end
 
 ---Set a callback to be called when a certain event occurs.
 ---@param event string @connect | headers | data | complete
----|'"connect"' #Called when the connection is first established. Callback receives no arguments.
----|'"headers"' #Called once the HTTP headers from the remote end have been received. Callback is called as callback(status_code, headers_table).
----|'"data"' #Can be called multiple times, each time more (non-headers) data is received. Callback is called as callback(status_code, data).
----|'"complete"' #Called once all data has been received. Callback is called as callback status_code, connected) where connected is true if the connection is still open.
+---|"connect" #Called when the connection is first established. Callback receives no arguments.
+---|"headers" #Called once the HTTP headers from the remote end have been received. Callback is called as callback(status_code, headers_table).
+---|"data" #Can be called multiple times, each time more (non-headers) data is received. Callback is called as callback(status_code, data).
+---|"complete" #Called once all data has been received. Callback is called as callback status_code, connected) where connected is true if the connection is still open.
 ---@param callback? fun() @"(optional) a function to be called when the given event occurs.  \n Can be `nil` to remove a previously configured callback."
 ---@return nil
 function connection:on(event, callback) end
@@ -57,7 +57,7 @@ function connection:request() end
 function connection:setmethod(method) end
 
 ---Sets the connection URL.
----@param url string|'""' @Required. The URL to use for the next `request()` call.
+---@param url string|"" @Required. The URL to use for the next `request()` call.
 ---@return nil
 function connection:seturl(url) end
 
@@ -85,7 +85,7 @@ function connection:ack() end
 function connection:close() end
 
 ---Make an HTTP GET request. If a callback is specifed then the function operates in asynchronous mode, otherwise it is synchronous.
----@param url string|'"http://"'|'"https://"' @The URL to fetch
+---@param url string|"http://"|"https://" @The URL to fetch
 ---@param options? any|nil @(optional) Same options as http.createConnection(), except that async is set for you based on whether a callback is specified or not. May be `nil` or omitted.
 --- - **bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
 --- - **cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or intermediate certificates otherwise the request will fail. This option is ignored for HTTP requests (unless they redirect to an HTTPS URL).
@@ -98,7 +98,7 @@ function http.get(url, options, callback) end
 
 ---Executes a single HTTP POST request and closes the connection. If a callback is specifed then the function operates\
 ---in asynchronous mode, otherwise it is synchronous.
----@param url string|'"http://"'|'"https://"' @The URL to fetch
+---@param url string|"http://"|"https://" @The URL to fetch
 ---@param options any|nil @Same options as http.createConnection(), except that async is set for you based on whether a callback is specified or not. May be `nil`.
 --- - **bufsz** The size in bytes of the temporary buffer used for reading data. If not specified, the default is 512.
 --- - **cert** A PEM-encoded certificate (or certificates). If specified, the server's TLS certificate must chain back to one of these root or\

@@ -70,7 +70,7 @@ local function main()
                             local tbl = lines(alias)  ---@type string[]
                             for k, v in ipairs(tbl) do
                               tbl[k]  = v:gsub("(alias%s[%w_]+%s)[%a]+\n*", "%1"):
-                                          gsub("^%-%-%-|[%s>]?('.+')%s?#?.*\n*", "%1|")
+                                          gsub("^%-%-%-|[%s>]?([\x22'].+[\x22'])%s?#?.*\n*", "%1|")
                             end
                             local   result = table.concat(tbl)
                                     result = result:sub(1, -2)  -- delete the last '|'

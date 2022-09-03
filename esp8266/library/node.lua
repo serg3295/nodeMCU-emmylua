@@ -54,7 +54,7 @@ function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode,\
 ---and saves it as .lc file.
----@param filename string|'".lua"' @name of Lua text file
+---@param filename string|".lua" @name of Lua text file
 ---@return nil
 function node.compile(filename) end
 
@@ -110,7 +110,7 @@ function node.getpartitiontable() end
 function node.heap() end
 
 ---Returns information about hardware, software version and build configuration.
----@param group? string|'"hw"'|'"sw_version"'|'"build_config"' @(optional) A designator for a group of properties.
+---@param group? string|"hw"|"sw_version"|"build_config" @(optional) A designator for a group of properties.
 ---@return any @If a group is given the return value will be a table containing the following elements:
 --- - for group = `"hw"`
 ---   - **chip_id** (number)
@@ -146,7 +146,7 @@ function node.info(group) end
 function node.input(str) end
 
 ---Returns the function reference for a function in LFS.
----@param modulename string|'""' @The name of the module to be loaded.
+---@param modulename string|"" @The name of the module to be loaded.
 ---@return function|nil @"If the LFS is loaded and the modulename is a string  \n that is the name of a valid module in the LFS, then the function  \n is returned in the same way the `load()` and the other Lua load  \n functions do. Otherwise `nil` is returned."
 function node.LFS.get(modulename) end
 
@@ -155,7 +155,7 @@ function node.LFS.get(modulename) end
 function node.LFS.list() end
 
 ---Reload LFS with the flash image provided.
----@param imageName string|'""' @The name of a image file in the filesystem to be loaded into the LFS.
+---@param imageName string|"" @The name of a image file in the filesystem to be loaded into the LFS.
 ---@return any|nil @"In the case when the imagename is a valid LFS image, this is expanded and  \n loaded into flash, and the ESP is then immediately rebooted, *so control is not returned to  \n the calling Lua application* in the case of a successful reload. The reload process internally  \n makes multiple passes through the LFS image file. The first pass validates the file and header  \n formats and detects many errors. If any is detected then an error string is returned."
 function node.LFS.reload(imageName) end
 

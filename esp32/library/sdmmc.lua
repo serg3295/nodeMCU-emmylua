@@ -85,8 +85,8 @@ function sdmmc.init(slot, cfg) end
 function card:get_info() end
 
 ---Mount filesystem on SD card.
----@param ldrv string|'"/SD0"'|'"/SD1"' @name of logical drive
----@param slot? integer|'sdmmc.HS2'|'sdmmc.HS1' @(optional) defaults to sdmmc.HS2 if omitted
+---@param ldrv string|"/SD0"|"/SD1" @name of logical drive
+---@param slot? integer|`sdmmc.HS2`|`sdmmc.HS1` @(optional) defaults to sdmmc.HS2 if omitted
 ---@return boolean
 function card:mount(ldrv, slot) end
 

@@ -105,7 +105,7 @@ function wifi.sta.connect() end
 function wifi.sta.disconnect() end
 
 ---Registers callbacks for WiFi station status events.
----@param event string|'"start"'|'"stop"'|'"connected"'|'"disconnected"'|'"authmode_changed"'|'"got_ip"' @WiFi station event you would like to set a callback for:
+---@param event string|"start"|"stop"|"connected"|"disconnected"|"authmode_changed"|"got_ip" @WiFi station event you would like to set a callback for:
 ---@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister the callback for  \n the event. The info argument given to the callback is a table containing additional information about the event."
 ---Event information provided for each event is as follows:\
 ---`"start"`: no additional info\
@@ -208,7 +208,7 @@ function wifi.sta.sethostname(hostname) end
 function wifi.ap.config(cfg, save) end
 
 ---Registers callbacks for WiFi AP events.
----@param event string|'"start"'|'"stop"'|'"sta_connected"'|'"sta_disconnected"'|'"probe_req"' @WiFi AP event you would like to set a callback for:
+---@param event string|"start"|"stop"|"sta_connected"|"sta_disconnected"|"probe_req" @WiFi AP event you would like to set a callback for:
 ---@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister  \n the callback for the event.The info argument given to the callback is a table containing additional  \n information about the event."
 ---Event information provided for each event is as follows:\
 ---`"start"`: no additional info\

@@ -51,7 +51,7 @@ function ws2812_effects.set_delay(delay) end
 function ws2812_effects.get_delay() end
 
 ---Set the active effect mode.
----@param mode string|'"static"'|'"blink"'|'"gradient"'|'"gradient_rgb"'|'"random_color"'|'"rainbow"'|'"rainbow_cycle"'|'"flicker"'|'"fire"'|'"fire_soft"'|'"fire_intense"'|'"halloween"'|'"circus_combustus"'|'"larson_scanner"'|'"color_wipe"'|'"random_dot"'|'"cycle"' @is the effect mode as a string
+---@param mode string|"static"|"blink"|"gradient"|"gradient_rgb"|"random_color"|"rainbow"|"rainbow_cycle"|"flicker"|"fire"|"fire_soft"|"fire_intense"|"halloween"|"circus_combustus"|"larson_scanner"|"color_wipe"|"random_dot"|"cycle" @is the effect mode as a string
 ---@param effect_param? integer|string @is an optional effect parameter.
 ---@return nil
 function ws2812_effects.set_mode(mode, effect_param) end

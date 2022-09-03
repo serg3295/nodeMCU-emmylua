@@ -34,12 +34,12 @@ function file.list(mountpoint) end
 ---When done with the file, it must be closed using `file.close()`.
 ---@param filename string @file to be opened, directories are not supported
 ---@param mode string @mode
----|>' "r"' #read mode
----| ' "w"' #write mode
----| ' "a"' #append mode
----| ' "r+"' #update mode, all previous data is preserved
----| ' "w+"' #update mode, all previous data is erased
----| ' "a+"' #append update mode, previous data is preserved, writing is only allowed at the end of file
+---|> "r" #read mode
+---|  "w" #write mode
+---|  "a" #append mode
+---|  "r+" #update mode, all previous data is preserved
+---|  "w+" #update mode, all previous data is erased
+---|  "a+" #append update mode, previous data is preserved, writing is only allowed at the end of file
 ---@return fd fileObj @file object if file opened ok. `nil` if file not opened, or not exists (read modes).
 function file.open(filename, mode) end
 

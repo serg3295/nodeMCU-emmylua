@@ -51,7 +51,7 @@ function MQTT:connect(host, port, secure, conn_est, conn_not_est) end
 function MQTT:lwt(topic, message, qos, retain) end
 
 ---Registers a callback function for an event.
----@param event string|'"connect"'|'"connfail"'|'"suback"'|'"unsuback"'|'"puback"'|'"message"'|'"overflow"'|'"offline"' @event
+---@param event string|"connect"|"connfail"|"suback"|"unsuback"|"puback"|"message"|"overflow"|"offline" @event
 ---@param callback fun(client:MQTT, topic:string, message:string) @"`function(client[, topic[, message]])`. The first parameter is always the client object itself.  \n Any remaining parameters passed differ by event:"
 --- - If event is `"message"`, the 2nd and 3rd parameters are received topic and message, respectively, as Lua strings.
 --- - If the event is `"overflow"`, the parameters are as with `"message"``,\

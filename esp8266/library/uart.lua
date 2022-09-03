@@ -21,7 +21,7 @@ uart = {}
 function uart.alt(on) end
 
 ---Sets the callback function to handle UART events. To unregister the callback, provide only the `"data"` parameter.
----@param method string|'"data"' @`"data"`, data has been received on the UART.
+---@param method string|"data" @`"data"`, data has been received on the UART.
 ---@param number_or_endChar? number|string @(optional) number or end char
 --- - **number** if n=0, will receive every char in buffer
 --- - **number** if n<255, the callback is called when n chars are received
