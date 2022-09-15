@@ -50,6 +50,7 @@ function math.ceil(x) end
 ---Returns the cosine of `x`\
 --- (assumed to be in radians).
 ---@param x number
+---@return number
 ---@nodiscard
 function math.cos(x) end
 
