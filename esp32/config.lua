@@ -6,10 +6,13 @@ configs = {
     action = 'set',
     value  = 'Lua 5.1',
   },
-  {
+}
+
+for _, name in ipairs{"math", "bit", "bit32", "utf8", "os", "io"} do
+  configs[#configs+1] = {
     key    = 'Lua.runtime.builtin',
     action = 'prop',
-    prop   = 'math',
+    prop   = name,
     value  = 'disable',
-  },
-}
+  }
+end

@@ -5,14 +5,17 @@ configs = {
     key    = 'Lua.runtime.version',
     action = 'set',
     value  = 'Lua 5.3',
-  },
-  {
-    key    = 'Lua.runtime.builtin',
-    action = 'prop',
-    prop   = 'math',
-    value  = 'disable',
   }
 }
+
+for _, name in ipairs{"math", "bit", "bit32", "utf8", "os", "io"} do
+  configs[#configs+1] = {
+    key    = 'Lua.runtime.builtin',
+    action = 'prop',
+    prop   = name,
+    value  = 'disable',
+  }
+end
 
 for _, name in ipairs {"FAST_ftp", "SPIFFS_ftp", "fast", "dataSrv"} do
   configs[#configs+1] = {
