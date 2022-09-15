@@ -17,4 +17,5 @@ function perf.start(start, endaddr, nbins) end
 ---@return number outside @The number of samples that were outside the histogram range
 ---@return number histogram @"The histogram represented as a table indexed by address  \n where the value is the number of samples."
 ---@return number binsize @The number of bytes per histogram bin.
+---@nodiscard
 function perf.stop() end

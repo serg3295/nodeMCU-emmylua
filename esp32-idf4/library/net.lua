@@ -25,6 +25,7 @@ local udpsocket = {}
 ---@return netsocket @>
 --- - for `net.TCP` - net.socket sub module
 --- - for `net.UDP` - net.udpsocket sub module
+---@nodiscard
 function net.createConnection(type, secure) end
 
 ---Creates a server.
@@ -33,10 +34,12 @@ function net.createConnection(type, secure) end
 ---@return netsrv @>
 --- - for `net.TCP` - net.server sub module
 --- - for `net.UDP` - net.udpsocket sub module
+---@nodiscard
 function net.createServer(type, timeout) end
 
 ---Creates an UDP socket.
 ---@return udpsocket @net.udpsocket submodule
+---@nodiscard
 function net.createUDPSocket() end
 
 ---Join multicast group.
@@ -67,6 +70,7 @@ function netsrv:listen(port, ip, callback) end
 ---Returns server local address/port.
 ---@return integer|nil @port or `nil` if not listening
 ---@return string|nil @ip or `nil` if not listening
+---@nodiscard
 function netsrv:getaddr() end
 
 ---Closes socket.
@@ -89,11 +93,13 @@ function netsocket:dns(domain, callback) end
 ---Retrieve port and ip of remote peer.
 ---@return integer|nil @port or `nil` if not connected
 ---@return string|nil @ip or `nil` if not connected
+---@nodiscard
 function netsocket:getpeer() end
 
 ---Retrieve local port and ip of socket.
 ---@return integer|nil @port or `nil` if not connected
 ---@return string|nil @ip or `nil` if not connected
+---@nodiscard
 function netsocket:getaddr() end
 
 ---@deprecated
@@ -160,11 +166,13 @@ function udpsocket:dns(domain, callback) end
 ---Retrieve local port and ip of socket.
 ---@return integer|nil @port or `nil` if not connected
 ---@return string|nil @ip or `nil` if not connected
+---@nodiscard
 function udpsocket:getaddr() end
 
 ---Gets the IP address of the DNS server used to resolve hostnames.
 ---@param dns_index integer|`0`|`1` @which DNS server to get (range 0~1)
 ---@return string @IP address (string) of DNS server
+---@nodiscard
 function net.dns.getdnsserver(dns_index) end
 
 ---Resolve a hostname to an IP address. Doesn't require a socket like `net.socket.dns()`.

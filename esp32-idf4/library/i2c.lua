@@ -35,6 +35,7 @@ function i2c.address(id, device_addr, direction, ack_check_en) end
 ---@return string|nil @>
 --- - for software interface `i2c.SW` : returns string of received data
 --- - for hardware interfaces `id i2c.HWx` : no value returned
+---@nodiscard
 function i2c.read(id, len) end
 
 ---Initialize the I²C interface for master mode.

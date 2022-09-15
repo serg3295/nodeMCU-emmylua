@@ -64,10 +64,12 @@ node.task = {}
 ---an additional value is returned containing the number of consecutive Lua panics. If the reset was caused by a call to\
 ---node.restart() this value is 0; after the first panic the value is 1; if a panic reoccurs the value increments upto 15.
 ---@return any @ [`exccause, epc1, epc2, epc3, excvaddr, depc`]
+---@nodiscard
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
 ---@return string @chip ID
+---@nodiscard
 function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as .lc file.
@@ -110,6 +112,7 @@ function node.dsleep(options) end
 
 ---Returns the flash chip ID.
 ---@return number flashID @flash ID
+---@nodiscard
 function node.flashid() end
 
 ---Returns the current available heap size in bytes.
@@ -126,6 +129,7 @@ function node.heap() end
 ---@return number flashsize
 ---@return number flashmode
 ---@return number flashspeed
+---@nodiscard
 function node.info() end
 
 ---@deprecated
@@ -237,6 +241,7 @@ function node.osprint(enabled) end
 ---in microseconds starting at 0 when the device is booted.
 ---@return number lowbits @"the time in microseconds since boot or  \n the last time the counter wrapped"
 ---@return number highbits @the number of times the counter has wrapped
+---@nodiscard
 function node.uptime() end
 
 ---Sets the Emergency Garbage Collector mode.

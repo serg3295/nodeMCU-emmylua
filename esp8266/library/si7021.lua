@@ -13,6 +13,7 @@ si7021 = {}
 
 ---Read the internal firmware revision of the Si7021 sensor.
 ---@return number @"*0xFF*: Firmware version 1.0;  \n *0x20*: Firmware version 2.0"
+---@nodiscard
 function si7021.firmware() end
 
 ---`si7021.read()`
@@ -20,12 +21,14 @@ function si7021.firmware() end
 ---@return number temp @temperature
 ---@return number hum_dec @humidity decimal
 ---@return number temp_dec @temperature decimal
+---@nodiscard
 function si7021.read() end
 
 ---Read the individualized 64-bit electronic\
 ---serial number of the Si7021 sensor.
 ---@return number @32-bit serial number part a
 ---@return number @"32-bit serial number part b,  \n upper byte contains the device identification"
+---@nodiscard
 function si7021.serial() end
 
 ---@alias si7021_a1 number

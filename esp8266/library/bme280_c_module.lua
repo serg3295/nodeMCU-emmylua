@@ -7,6 +7,7 @@
 ---@param P number @measured pressure
 ---@param QNH number @current sea level pressure
 ---@return number altitude @in meters of measurement point
+---@nodiscard
 function bme280.altitude(P, QNH) end
 
 ---Reads the sensor and returns the air pressure in hectopascals as an integer multiplied with 1000\
@@ -15,6 +16,7 @@ function bme280.altitude(P, QNH) end
 ---Second returned variable is therefore current air temperature.
 ---@return number P @air pressure in hectopascals multiplied by 1000
 ---@return number T @temperature in celsius as an integer multiplied with 100
+---@nodiscard
 function bme280.baro() end
 
 ---For given temperature and relative humidity returns the dew point\
@@ -22,6 +24,7 @@ function bme280.baro() end
 ---@param H number @relative humidity in percent multiplied by 1000.
 ---@param T number @temperate in celsius multiplied by 100.
 ---@return number dewpoint @dew point in celsisus
+---@nodiscard
 function bme280.dewpoint(H, T) end
 
 ---Reads the sensor and returns the air relative humidity in percents as an integer multiplied with 100 or\
@@ -30,12 +33,14 @@ function bme280.dewpoint(H, T) end
 ---Second returned variable is therefore current temperature.
 ---@return number H @last relative humidity reading in % times 1000
 ---@return number T @temperature in celsius as an integer multiplied with 100
+---@nodiscard
 function bme280.humi() end
 
 ---For given altitude converts the air pressure to sea level air pressure.
 ---@param P number @measured pressure
 ---@param altitude number @in meters of measurement point
 ---@return number P @sea level pressure
+---@nodiscard
 function bme280.qfe2qnh(P, altitude) end
 
 ---Reads the sensor and returns the temperature, the air pressure, the air relative humidity and
@@ -44,6 +49,7 @@ function bme280.qfe2qnh(P, altitude) end
 ---@return number P @air pressure in hectopascals multiplied by 1000
 ---@return number H @relative humidity in percent multiplied by 1000
 ---@return number QNH @air pressure in hectopascals multiplied by 1000 converted to sea level
+---@nodiscard
 function bme280.read(altitude) end
 
 ---Starts readout (turns the sensor into forced mode).\
@@ -69,4 +75,5 @@ function bme280.setup(temp_oss, press_oss, humi_oss, power_mode, inactive_durati
 ---as an integer multiplied with 100.
 ---@return integer T @"temperature in celsius as an integer multiplied with 100  \n or nil when readout is not successful"
 ---@return integer t_fine @"temperature measure used in pressure and  \n humidity compensation formulas (generally no need to use this value)"
+---@nodiscard
 function bme280.temp() end

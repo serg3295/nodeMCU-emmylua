@@ -15,6 +15,7 @@ local mcp17 = {}
 ---@param address number @address for MCP23017, default: 0x20 (should be between 0x20 and 0x27)
 ---@param i2c_id number @id for the i2c bus connection (remember to call i2c.setup before)
 ---@return mcp17 @"instance for mcp23017. `error` if MCP23017 address is out of range or device  \n MCP23017 on address not found."
+---@nodiscard
 function mcp23017(address, i2c_id) end
 
 ---Set the mode of a single channel. This can be OUTPUT or INPUT.
@@ -35,6 +36,7 @@ function mcp17:setPin(register, pin, state) end
 ---@param register number @the side of channels (GPA or GPB)
 ---@param pin number @the number to be set for the channel (0-15)
 ---@return boolean @`true` for HIGH, `false` for LOW, in case of error `nil`.
+---@nodiscard
 function mcp17:getPinState(register, pin) end
 
 ---By calling this function, a safe state is established.\
@@ -59,4 +61,5 @@ function mcp17:writeGPIO(register, byte) end
 ---Read the input states of the channels with a whole byte.
 ---@param register number @the side of channels (GPA or GPB)
 ---@return number @byte with states
+---@nodiscard
 function mcp17:readGPIO(register) end

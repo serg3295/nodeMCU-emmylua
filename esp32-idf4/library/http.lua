@@ -35,6 +35,7 @@ local connection = {}
 ---Specify 0 to disable following redirects entirely.
 --- - **timeout** Network timeout, in milliseconds. If not specified, the default is 10000 (10 seconds).
 ---@return connection @The connection object.
+---@nodiscard
 function http.createConnection(url, method, options) end
 
 ---Set a callback to be called when a certain event occurs.

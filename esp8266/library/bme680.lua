@@ -10,6 +10,7 @@ bme680 = {}
 ---@param P number @measured pressure
 ---@param QNH number @current sea level pressure
 ---@return number altitude @in meters of measurement point
+---@nodiscard
 function bme680.altitude(P, QNH) end
 
 ---For given temperature and relative humidity returns\
@@ -17,12 +18,14 @@ function bme680.altitude(P, QNH) end
 ---@param H number @relative humidity in percent multiplied by 1000.
 ---@param T number @temperate in Celsius multiplied by 100.
 ---@return number dewpoint @dew point in Celsius
+---@nodiscard
 function bme680.dewpoint(H, T) end
 
 ---For given altitude converts the air pressure to sea level air pressure.
 ---@param P number @measured pressure
 ---@param altitude number @altitude in meters of measurement point
 ---@return number P @sea level pressure
+---@nodiscard
 function bme680.qfe2qnh(P, altitude) end
 
 ---Reads the sensor and returns the temperature, the air pressure,\
@@ -34,6 +37,7 @@ function bme680.qfe2qnh(P, altitude) end
 ---@return number G @gas resistance
 ---@return number QNH @air pressure in hectopascals multiplied by 100 converted to sea level
 ---Any of these variables is `nil` if the readout of given measure was not successful.
+---@nodiscard
 function bme680.read(altitude) end
 
 ---Starts readout (turns the sensor into forced mode).

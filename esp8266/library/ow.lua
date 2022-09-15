@@ -11,18 +11,21 @@ ow = {}
 ---@param inverted_crc1 number @MSB of received CRC
 ---@param crc? number @(optional) CRC starting value
 ---@return boolean @`true` if the CRC matches, `false` otherwise
+---@nodiscard
 function ow.check_crc16(buf, inverted_crc0, inverted_crc1, crc) end
 
 ---Computes a Dallas Semiconductor 16 bit CRC.
 ---@param buf string @value, data to be calculated check sum in string
 ---@param crc? number @(optional) CRC starting value
 ---@return number @the CRC16 as defined by Dallas Semiconductor
+---@nodiscard
 function ow.crc16(buf, crc) end
 
 ---Computes a Dallas Semiconductor 8 bit CRC, these are used\
 ---in the ROM and scratchpad registers.
 ---@param buf string @value, data to be calculated check sum in string
 ---@return number CRC @result as byte
+---@nodiscard
 function ow.crc8(buf) end
 
 ---Stops forcing power onto the bus.
@@ -33,12 +36,14 @@ function ow.depower(pin) end
 ---Reads a byte.
 ---@param pin integer @1~12, I/O index
 ---@return integer @byte read from slave device
+---@nodiscard
 function ow.read(pin) end
 
 ---Reads multi bytes.
 ---@param pin integer @1~12, I/O index
 ---@param size number @of bytes to be read from slave device (up to 256)
 ---@return string @bytes read from slave device
+---@nodiscard
 function ow.read_bytes(pin, size) end
 
 ---Performs a 1-Wire reset cycle.
@@ -56,6 +61,7 @@ function ow.reset_search(pin) end
 ---@param pin integer @1~12, I/O index
 ---@param alarm_search? integer @"(optional) 1 / 0,  \n if 0 a regular 0xF0 search is performed(default if parameter is absent),  \nif 1 a 0xEC ALARM SEARCH is performed."
 ---@return string|nil @"string with length of 8 upon success.  \n It contains the rom code of slave device.  \n Returns `nil` if search was unsuccessful."
+---@nodiscard
 function ow.search(pin, alarm_search) end
 
 ---Issues a 1-Wire rom select command.\

@@ -21,6 +21,7 @@ local pcmdrv = {}
 ---@param pcm_SD any @pcm.SD use sigma-delta hardware
 ---@param pin integer @pin 1~10, IO index
 ---@return pcmdrv obj @Audio driver object.
+---@nodiscard
 function pcm.new(pcm_SD, pin) end
 
 ---Stops playback and releases\

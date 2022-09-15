@@ -18,6 +18,7 @@ spi = {}
 ---@param size number @number of data items to be read
 ---@param default_data? any @(optional) default data being sent on MOSI (all-1 if omitted)
 ---@return string @String containing the bytes read from SPI.
+---@nodiscard
 function spi.recv(id, size, default_data) end
 
 ---Send data via SPI in half-duplex mode.\
@@ -51,6 +52,7 @@ function spi.set_clock_div(id, clock_div) end
 ---@param bitlen integer @bit length of a single data item
 ---@param num number @of data items to retrieve
 ---@return number|string
+---@nodiscard
 function spi.get_miso(id, offset, bitlen, num) end
 
 ---Insert data items into MOSI buffer for spi.transaction().

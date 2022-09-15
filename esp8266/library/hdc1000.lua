@@ -19,10 +19,12 @@ function HDC1000.config(address, resolution, heater) end
 
 ---Reads the temperature from HDC1000 sensor.
 ---@return number Temperature @in Celsius degrees.
+---@nodiscard
 function HDC1000.getTemp() end
 
 ---Reads the humidity value from HDC1000 sensor.
 ---@return number Humidity @in percents.
+---@nodiscard
 function HDC1000.getHumi() end
 
 ---Function that checks if voltage of sensor power supply\

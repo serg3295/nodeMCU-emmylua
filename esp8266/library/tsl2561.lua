@@ -28,6 +28,7 @@ tsl2561 = {}
 --- - tsl2561.TSL2561_ERROR_I2CBUSY - I²C bus busy
 --- - tsl2561.TSL2561_ERROR_NOINIT - initialize I²C bus before calling function
 --- - tsl2561.TSL2561_ERROR_LAST
+---@nodiscard
 function tsl2561.getlux() end
 
 ---Reads the device's 2 sensors and returns their values.
@@ -39,6 +40,7 @@ function tsl2561.getlux() end
 --- - tsl2561.TSL2561_ERROR_I2CBUSY - I²C bus busy
 --- - tsl2561.TSL2561_ERROR_NOINIT - initialize I²C bus before calling function
 --- - tsl2561.TSL2561_ERROR_LAST
+---@nodiscard
 function tsl2561.getrawchannels() end
 
 ---Initializes the device on pins sdapin & sclpin.

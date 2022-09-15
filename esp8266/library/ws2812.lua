@@ -36,11 +36,13 @@ function ws2812.write(data1, data2) end
 ---@param numberOfLeds integer @length of the led strip
 ---@param bytesPerLed integer @3 for RGB strips and 4 for RGBW strips
 ---@return buffer ws2812.buffer
+---@nodiscard
 function ws2812.newBuffer(numberOfLeds, bytesPerLed) end
 
 ---Return the value at the given position
 ---@param index integer @position in the buffer (1 for first led)
 ---@return number @(color)
+---@nodiscard
 function buffer:get(index) end
 
 ---Set the value at the given position
@@ -54,6 +56,7 @@ function buffer:set(index, color) end
 
 ---Return the size of the buffer in number of leds
 ---@return integer
+---@nodiscard
 function buffer:size() end
 
 ---Fill the buffer with the given color. The number of given bytes\
@@ -65,6 +68,7 @@ function buffer:fill(color) end
 ---Returns the contents of the buffer\
 ---(the pixel values) as a string.
 ---@return string @A string containing the pixel values.
+---@nodiscard
 function buffer:dump() end
 
 ---Inserts a string (or a buffer) into another buffer with an offset.
@@ -82,6 +86,7 @@ function buffer:mix(factor1, buffer1, ...) end
 
 ---Computes the total energy requirement for the buffer.
 ---@return integer @An integer which is the sum of all the pixel values.
+---@nodiscard
 function buffer:power() end
 
 ---Fade in or out. Defaults to out
@@ -104,4 +109,5 @@ function buffer:shift(value, mode, i, j) end
 ---@param i integer @"This is the start of the extracted data.  \n Negative values can be used."
 ---@param j? integer @"(optional) this is the end of the extracted data.  \n Negative values can be used. The default is -1."
 ---@return buffer buff @A buffer containing the extracted piece.
+---@nodiscard
 function buffer:sub(i, j) end

@@ -15,6 +15,7 @@ local pobj = {}
 ---|>`node.task.MEDIUM_PRIORITY` #1
 ---|`node.task.HIGH_PRIORITY` #2
 ---@return pobj @A pipe resource.
+---@nodiscard
 function pipe.create(CB_function, task_priority) end
 
 ---Read a record from a pipe object.
@@ -28,6 +29,7 @@ function pipe.create(CB_function, task_priority) end
 ---Note that if the last record in the pipe is missing a delimiter or is too short,\
 ---then it is still returned, emptying the pipe.
 ---@return string|nil @A string or `nil` if the pipe is empty
+---@nodiscard
 function pobj:read(size_or_endChar) end
 
 ---Returns a Lua **iterator** function for a pipe object.
@@ -39,6 +41,7 @@ function pobj:read(size_or_endChar) end
 ---otherwise it is discarded.
 --- - If omitted, then this defaults to "\n+"
 ---@return function @`myFunc` iterator function
+---@nodiscard
 function pobj:reader(size_or_endChar) end
 
 ---Write a string to the head of a pipe object.\
@@ -59,4 +62,5 @@ function pobj:write(s) end
 ---it may be useful to have a quickly estimated upper\
 ---bound on the length of the string that would be returned.
 ---@return number @the number of internal records in the pipe.
+---@nodiscard
 function pobj:nrec() end

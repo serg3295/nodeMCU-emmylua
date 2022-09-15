@@ -7,6 +7,7 @@ eromfs = {}
 
 ---Returns a list of the bundled file sets (volumes).
 ---@return table @An array with the names of the bundled volumes.
+---@nodiscard
 function eromfs.list() end
 
 ---Mounts a volume at a specified point in the virtual file system.\

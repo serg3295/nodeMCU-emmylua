@@ -38,6 +38,7 @@ function i2s.mute(i2s_num) end
 ---@param size number @Bytes to read
 ---@param wait_ms? number @"(optional) Millisecond to wait if data is not ready.  \n Defaults to 0 (not to wait) when omitted."
 ---@return any @"Data read from data-in pin. If data is not ready in `wait_ms` millisecond,  \n less than `size` bytes can be returned. An error is thrown in case of invalid parameters  \n or if the i2s driver failed."
+---@nodiscard
 function i2s.read(i2s_num, size, wait_ms) end
 
 ---@class I2sCfg

@@ -70,6 +70,7 @@ function uart.setup(id, baud, databits, parity, stopbits, echo_or_pins) end
 ---@return integer databits
 ---@return integer parity
 ---@return integer stopbits
+---@nodiscard
 function uart.getconfig(id) end
 
 ---Start the UART. You do not need to call\

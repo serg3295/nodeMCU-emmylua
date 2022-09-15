@@ -12,6 +12,7 @@ function lm92.setup(address) end
 
 ---Returns the temperature register's content.
 ---@return number Temperature @in degree Celsius.
+---@nodiscard
 function lm92.getTemperature() end
 
 ---Makes the chip enter the low power shutdown mode.
@@ -44,6 +45,7 @@ function lm92.setThigh(hwtemp) end
 
 ---Get hysteresis Temperature.
 ---@return number @Hysteresis Temperature in degree Celsius.
+---@nodiscard
 function lm92.getThyst() end
 
 ---Get Critical Temperature.
@@ -52,8 +54,10 @@ function lm92.getTcrit() end
 
 ---Get Low Window Temperature.
 ---@return number @Low Window Temperature in degree Celsius.
+---@nodiscard
 function lm92.getTlow() end
 
 ---Get High Window Temperature.
 ---@return number @High Window Temperature in degree Celsius.
+---@nodiscard
 function lm92.getThigh() end

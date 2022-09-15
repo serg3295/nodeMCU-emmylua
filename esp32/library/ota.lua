@@ -16,6 +16,7 @@ otaupgrade = {}
 --- - **version** the build version, as set by the *PROJECT_VER* variable during build
 --- - **secure_version** the secure version number, if secure boot is enabled
 --- - **idf_version** the IDF version
+---@nodiscard
 function otaupgrade.info() end
 
 ---Wipes the spare application partition and prepares to receive\

@@ -16,8 +16,10 @@ function adc.force_init_mode(mode_value) end
 ---Samples the ADC.
 ---@param channel integer|`0` @always 0 on the ESP8266
 ---@return number @the sampled value
+---@nodiscard
 function adc.read(channel) end
 
 ---Reads the system voltage.
 ---@return number @system voltage in millivolts
+---@nodiscard
 function adc.readvdd33() end

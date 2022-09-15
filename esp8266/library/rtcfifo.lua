@@ -16,6 +16,7 @@ function rtcfifo.dsleep_until_sample(minsleep_us) end
 ---@return number value @the value
 ---@return number neg_e @scaling factor
 ---@return any @"sensor name.If no sample is available (at the specified offset),  \n  nothing is returned."
+---@nodiscard
 function rtcfifo.peek(offset) end
 
 ---Reads the first sample from the rtcfifo,\
@@ -24,6 +25,7 @@ function rtcfifo.peek(offset) end
 ---@return number value @the value
 ---@return number neg_e @scaling factor
 ---@return any @sensor name
+---@nodiscard
 function rtcfifo.pop() end
 
 ---Initializes the rtcfifo module for use. Calling `rtcfifo.prepare()` unconditionally re-initializes the storage - any samples stored are discarded.
@@ -48,4 +50,5 @@ function rtcfifo.put(timestamp, value, neg_e, name) end
 
 ---Returns non-zero if the rtcfifo has been prepared and is ready for use, zero if not.
 ---@return number @Non-zero if the rtcfifo has been prepared and is ready for use, zero if not.
+---@nodiscard
 function rtcfifo.ready() end

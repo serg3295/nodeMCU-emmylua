@@ -26,6 +26,7 @@ local devSpi = {}
 ---@param config? SpiMaster @"(optional) table listing the assigned GPIOs.  \n All signal assignment are optional. **sclk, mosi, miso, quadwp, quadhd**"
 ---@param dma? integer|`1`|`2`|`0` @(optional) set DMA channel (1 or 2) or disable DMA (0), defaults to 1 if omitted.
 ---@return busmaster @SPI bus master object
+---@nodiscard
 function spi.master(host, config, dma) end
 
 ---Close the bus host. This fails if there are\
@@ -78,6 +79,7 @@ function busmaster:close() end
 --- - **clk_as_cs** output clock on cs line when cs is active if true,\
 ---defaults to false if omitted
 ---@return devSpi @SPI device object
+---@nodiscard
 function busmaster:device(config) end
 
 ---Removes a device from the related bus master.

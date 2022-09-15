@@ -15,6 +15,7 @@ eth = {}
 ---Get MAC address.
 ---@return string @MAC address as string
 ---"aa:bb:cc:dd:ee:dd".
+---@nodiscard
 function eth.get_mac() end
 
 ---Get Ethernet connection speed.
@@ -22,6 +23,7 @@ function eth.get_mac() end
 --- - 10
 --- - 100,\
 ---or error if not connected.
+---@nodiscard
 function eth.get_speed() end
 
 ---@class EthInit

@@ -46,6 +46,7 @@ function packet:radio_sub(start, end_sub) end
 ---@param start any @"Same rules as for string.sub except that it  \n operates on the received frame."
 ---@param end_sub any
 ---@return string @A string according to the `string.sub` rules.
+---@nodiscard
 function packet:frame_sub(start, end_sub) end
 
 ---This is like the string.sub method, except that it gives access to the bytes of the radio header.\
@@ -54,6 +55,7 @@ function packet:frame_sub(start, end_sub) end
 ---@param end_sub any
 ---@param seperator? string @is an optional sting which is placed between the individual hex pairs returned.
 ---@return string @A string according to the `string.sub` rules, converted into hex with possible inserted spacers.
+---@nodiscard
 function packet:radio_subhex(start, end_sub, seperator) end
 
 ---This is like the string.sub method, except that it gives access to the bytes of the received frame.
@@ -61,10 +63,12 @@ function packet:radio_subhex(start, end_sub, seperator) end
 ---@param end_sub any
 ---@param seperator? string @is an optional sting which is placed between the individual hex pairs returned.
 ---@return string @A string according to the `string.sub` rules, converted into hex with possible inserted spacers.
+---@nodiscard
 function packet:frame_subhex(start, end_sub, seperator) end
 
 ---This returns a table of the information elements\
 ---from the management frame. The table keys values\
 ---are the information element numbers (0 - 255).
 ---@return table @A table with all the information elements in it.
+---@nodiscard
 function packet:ie_table() end

@@ -9,4 +9,5 @@ debug = {}
 ---the `lua_getstrings` function.
 ---@param type string|"RAM"|"ROM"
 ---@return table
+---@nodiscard
 function debug.getstrings(type) end

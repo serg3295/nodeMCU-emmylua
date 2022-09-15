@@ -25,6 +25,7 @@ function imap.login(socket) end
 ---Function to check the most recent email number.\
 ---Should only be called after examine function.
 ---@return number @The most recent email number.
+---@nodiscard
 function imap.get_most_recent_num() end
 
 ---IMAP examines the given mailbox/folder. Sends the IMAP EXAMINE command.
@@ -35,6 +36,7 @@ function imap.examine(socket, mailbox) end
 
 ---Function that gets the last fetched header field.
 ---@return string @The last fetched header field.
+---@nodiscard
 function imap.get_header() end
 
 ---Fetches an e-mails header field e.g. SUBJECT, FROM, DATE.
@@ -46,6 +48,7 @@ function imap.fetch_header(socket, msg_number, field) end
 
 ---Function to get the last email read's body.
 ---@return any @The last email read's body.
+---@nodiscard
 function imap.get_body() end
 
 ---Sends the IMAP command to fetch a plain text version of the email's body.

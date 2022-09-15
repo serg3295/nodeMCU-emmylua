@@ -50,6 +50,7 @@ function uart.setup(id, baud, databits, parity, stopbits, echo) end
 ---@return number databits @one of 5, 6, 7, 8
 ---@return number parity @uart.PARITY_NONE | uart.PARITY_ODD | uart.PARITY_EVEN
 ---@return number stopbits @uart.STOPBITS_1 | uart.STOPBITS_1_5 | uart.STOPBITS_2
+---@nodiscard
 function uart.getconfig(id) end
 
 ---Write string or byte to the UART.
@@ -64,4 +65,5 @@ function uart.write(id, data1, ...) end
 ---@param id integer @UART id (0 or 1).
 ---@param dir integer|`uart.DIR_RX`|`uart.DIR_TX` @`uart.DIR_RX` for the RX FIFO, `uart.DIR_TX` for TX FIFO.
 ---@return integer @The number of bytes in the selected FIFO.
+---@nodiscard
 function uart.fifodepth(id, dir) end

@@ -53,12 +53,14 @@ local ads1x15 = {}
 ---@param I2C_ID number @always 0
 ---@param I2C_ADDR number|`ads1115.ADDR_GND`|`ads1115.ADDR_VDD`|`ads1115.ADDR_SDA`|`ads1115.ADDR_SCL` @I²C address of a device
 ---@return ads1x15 obj @Registered device object
+---@nodiscard
 function ads1115.ads1115(I2C_ID, I2C_ADDR) end
 
 ---Registers ADS1015 (ADS1013, ADS1014) device.
 ---@param I2C_ID number @always 0
 ---@param I2C_ADDR number|`ads1115.ADDR_GND`|`ads1115.ADDR_VDD`|`ads1115.ADDR_SDA`|`ads1115.ADDR_SCL` @I²C address of a device
 ---@return ads1x15 obj @Registered device object
+---@nodiscard
 function ads1115.ads1015(I2C_ID, I2C_ADDR) end
 
 ---Reset all devices connected to I²C interface.
@@ -72,6 +74,7 @@ function ads1115.reset() end
 ---@return number volt_dec @voltage decimal in uV
 ---@return number adc @raw adc register value
 ---@return number|nil sign @sign of the result
+---@nodiscard
 function ads1x15:read() end
 
 ---Configuration settings for the ADC.

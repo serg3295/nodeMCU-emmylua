@@ -9,6 +9,7 @@ hmc5883l = {}
 ---@return integer x @measurements multiplied with 10
 ---@return integer y @measurements multiplied with 10
 ---@return integer z @measurements multiplied with 10
+---@nodiscard
 function hmc5883l.read() end
 
 ---Initializes the module.

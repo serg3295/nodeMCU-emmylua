@@ -34,6 +34,7 @@ local card = {}
 ---@return card cardObj @Card object.
 ---Error is thrown for invalid parameters or if SDMMC hardware or\
 ---card cannot be initialized.
+---@nodiscard
 function sdmmc.init(slot, cfg) end
 
 ---@class SDspiCfg
@@ -58,6 +59,7 @@ function sdmmc.init(slot, cfg) end
 ---@return card cardObj @Card object.
 ---Error is thrown for invalid parameters or if SDMMC hardware or\
 ---card cannot be initialized.
+---@nodiscard
 function sdmmc.init(slot, cfg) end
 
 ---Retrieve information from the SD card.
@@ -82,6 +84,7 @@ function sdmmc.init(slot, cfg) end
 ---   - sd_spec-  SD physical layer specification version, reported by card
 ---   - bus_width - bus widths supported by card
 --- - **rca** Relative Card Address
+---@nodiscard
 function card:get_info() end
 
 ---Mount filesystem on SD card.
@@ -95,6 +98,7 @@ function card:mount(ldrv, partition) end
 ---@param num_sec integer @number of sectors to read (>= 1)
 ---@return string @String containing the sector data.
 ---Error is thrown for invalid parameters or if sector(s) cannot be read.
+---@nodiscard
 function card:read(start_sec, num_sec) end
 
 ---Unmount filesystem. Error is thrown\

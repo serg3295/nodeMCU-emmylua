@@ -12,6 +12,7 @@ file_lfs = {}
 ---If a pattern is given, only those file names matching the pattern (interpreted as\
 ---a traditional [Lua pattern](https://www.lua.org/pil/20.2.html), not, say, a UNIX shell glob) will be included in the resulting\
 ---table. `file.list` will throw any errors encountered during pattern matching.
+---@nodiscard
 function file_lfs.list(pattern, SPIFFs_only) end
 
 ---Renames a file. If a file is currently open, it will be closed first.\
@@ -34,6 +35,7 @@ function file_lfs.rename(oldname, newname) end
 ---allow file updates the LFS file is copied to SPIFFS and then it is\
 ---opened with corresponding open mode.
 ---@return fd LFSfileobject @"LFS file object (Lua table) or SPIFFS file object  \n if file opened ok. `nil` if file not opened, or not exists (read modes)."
+---@nodiscard
 function file_lfs.open(filename, mode) end
 
 --- Read content from the open file. It has the same parameters and returns values as\
@@ -44,12 +46,14 @@ function file_lfs.open(filename, mode) end
 ---  - if passed a string containing the single character `char`, then read until `char` appears next\
 ---in the file, `FILE_READ_CHUNK` bytes have been read, or EOF is reached.
 ---@return string|nil @File content as a string, or `nil` when EOF
+---@nodiscard
 function file_lfs.read(n_or_char) end
 
 --- Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.\
 ---If the next line is longer than 1024, this function only returns the first 1024 bytes.\
 --- It has the same parameters and return values as `file.readline()` / `file.obj:readline()`
 ---@return string @File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
+---@nodiscard
 function file_lfs.readline() end
 
 --- Sets and gets the file position, measured from the beginning of the file,\
@@ -62,6 +66,7 @@ function file_lfs.readline() end
 ---@param offset? integer @(optional) default 0
 --- If no parameters are given, the function simply returns the current file offset.
 ---@return integer|nil @the resulting file position, or `nil` on error
+---@nodiscard
 function file_lfs.seek(whence, offset) end
 
 ---Get attribtues of a file or directory in a table.
@@ -79,4 +84,5 @@ function file_lfs.seek(whence, offset) end
 --- - **is_arch** flag `true` if item is archive, otherwise `false`
 --- - **is_LFS** flag `true` if item is stored in LFS, otherwise it is not present \
 ---in the `file.stat()` result table - **the only difference to `file.stat()`**
+---@nodiscard
 function file_lfs.stat(filename) end

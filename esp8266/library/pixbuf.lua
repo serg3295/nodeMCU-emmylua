@@ -16,12 +16,14 @@ local pixbuffer = {}
 ---@param numberOfLeds integer @length of the led strip (in pixels)
 ---@param numberOfChannels integer @the channel count (bytes per pixel)
 ---@return pixbuffer @pixbuf.buffer object
+---@nodiscard
 function pixbuf.newBuffer(numberOfLeds, numberOfChannels) end
 
 ---Return the value at the given position, in native\
 ---strip color order.
 ---@param index integer @position in the buffer (1 for first led)
 ---@return number @(color)
+---@nodiscard
 function pixbuffer:get(index) end
 
 ---Set the value at the given position, in native strip color order.
@@ -36,10 +38,12 @@ function pixbuffer:set(index, color) end
 
 ---Return the size of the buffer in number of LEDs.
 ---@return integer
+---@nodiscard
 function pixbuffer:size() end
 
 ---Return the buffer's channel count.
 ---@return integer
+---@nodiscard
 function pixbuffer:channels() end
 
 ---Fill the buffer with the given color.\
@@ -53,6 +57,7 @@ function pixbuffer:fill(color) end
 ---This can then be saved to a file or sent over a network and\
 ---may be fed back to` pixbuf.buffer:set()`.
 ---@return string @A string containing the pixel values.
+---@nodiscard
 function pixbuffer:dump() end
 
 ---Inserts a string (or a pixbuf) into another buffer with an offset.\
@@ -75,10 +80,12 @@ function pixbuffer:mix4I5() end
 
 ---Computes the total energy requirement for the buffer.
 ---@return integer @An integer which is the sum of all the pixel values.
+---@nodiscard
 function pixbuffer:power() end
 
 ---Like `pixbuf.buffer:power()` but treats the first\
 ---channel as a scaling intensity value.
+---@nodiscard
 function pixbuffer:powerI() end
 
 ---Fade in or out. Defaults to out. Multiply or divide each byte of each led with/by\
@@ -109,6 +116,7 @@ function pixbuffer:shift(value, mode, i, j) end
 ---@param i integer @"This is the start of the extracted data.  \n Negative values can be used."
 ---@param j? integer @"(optional) This is the end of the extracted data.  \n Negative values can be used. The default is -1."
 ---@return pixbuffer @A buffer containing the extracted piece.
+---@nodiscard
 function pixbuffer:sub(i, j) end
 
 ---Map a function across each pixel of one, or zip a function along two, pixbuf(s), storing into the buffer on which it is called.
@@ -119,4 +127,5 @@ function pixbuffer:sub(i, j) end
 ---@param buffer2? any @(optional) is a second buffer, for zip operations
 ---@param start2? integer @(optional) This is the start of the mapped range within `buffer2`. Negative values can be used and will be interpreted as before the end of `buffer2`. The default is 1.
 ---@return pixbuffer buffer0 @buffer0
+---@nodiscard
 function pixbuffer:map(f, buffer1, start1, end1, buffer2, start2) end

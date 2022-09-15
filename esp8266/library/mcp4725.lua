@@ -27,6 +27,7 @@ mcp4725 = {}
 ---@return number por_state @Power-On-Reset status;
 --- - 0 - The MCP4725 is performing reset and is not ready.
 --- - 1 - The MCP4725 has successfully performed reset.
+---@nodiscard
 function mcp4725.read(tbl) end
 
 ---Write configuration to dac register or dac register and eeprom.

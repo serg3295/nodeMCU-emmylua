@@ -67,10 +67,12 @@ node.LFS = {}
 ---an additional value is returned containing the number of consecutive Lua panics. If the reset was caused by a call to\
 ---node.restart() this value is 0; after the first panic the value is 1; if a panic reoccurs the value increments upto 15.
 ---@return any @ [`exccause, epc1, epc2, epc3, excvaddr, depc`]
+---@nodiscard
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
 ---@return string @chip ID
+---@nodiscard
 function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as .lc file.
@@ -113,6 +115,7 @@ function node.dsleep(options) end
 
 ---Returns the flash chip ID.
 ---@return number flashID @flash ID
+---@nodiscard
 function node.flashid() end
 
 ---@deprecated
@@ -131,6 +134,7 @@ function node.flashreload(imageName) end
 
 ---Returns the current available heap size in bytes.
 ---@return number heap @system heap size left in bytes
+---@nodiscard
 function node.heap() end
 
 ---Returns NodeMCU version, chipid, flashid,\
@@ -143,6 +147,7 @@ function node.heap() end
 ---@return number flashsize
 ---@return number flashmode
 ---@return number flashspeed
+---@nodiscard
 function node.info() end
 
 ---Returns the function reference for a function in LFS.\
@@ -160,6 +165,7 @@ function node.LFS.get(modulename) end
 ---@return table|nil @
 --- - If no LFS image IS LOADED then `nil` is returned.
 --- - Otherwise an sorted array of the name of modules in LFS is returned.
+---@nodiscard
 function node.LFS.list() end
 
 ---Reload LFS with the flash image provided. Flash images can be generated\

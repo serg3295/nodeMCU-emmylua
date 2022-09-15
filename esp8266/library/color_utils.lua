@@ -12,6 +12,7 @@ color_utils = {}
 ---@return number green @as values between 0 and 255
 ---@return number red
 ---@return number blue
+---@nodiscard
 function color_utils.hsv2grb(hue, saturation, value) end
 
 ---Convert HSV color to GRB color and explicitly return a white value.
@@ -22,6 +23,7 @@ function color_utils.hsv2grb(hue, saturation, value) end
 ---@return number red
 ---@return number blue
 ---@return number white
+---@nodiscard
 function color_utils.hsv2grbw(hue, saturation, value) end
 
 ---Convert GRB color to HSV color.
@@ -31,6 +33,7 @@ function color_utils.hsv2grbw(hue, saturation, value) end
 ---@return number hue @as values between 0 and 360, respective 0 and 255
 ---@return number saturation
 ---@return number value
+---@nodiscard
 function color_utils.grb2hsv(green, red, blue) end
 
 ---makes use of the HSV color space and calculates colors based on\
@@ -39,4 +42,5 @@ function color_utils.grb2hsv(green, red, blue) end
 ---@return number green @as values between 0 and 255
 ---@return number red
 ---@return number blue
+---@nodiscard
 function color_utils.colorWheel(angle) end

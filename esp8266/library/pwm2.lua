@@ -50,6 +50,7 @@ function pwm2.release_pin(pin) end
 ---@return boolean isStarted @if `true` PWM2 has been started
 ---@return integer interruptTimerCPUTicks @int, desired timer interrupt period in CPU ticks
 ---@return integer interruptTimerTicks @int, actual timer interrupt period in timer ticks
+---@nodiscard
 function pwm2.get_timer_data() end
 
 ---Prints internal data structures related to given GPIO pin.
@@ -61,4 +62,5 @@ function pwm2.get_timer_data() end
 ---@return integer frequencyDivisor @int, assigned frequency divisor
 ---@return integer resolutionCPUTicks @int, calculated one pulse period in CPU ticks
 ---@return integer resolutionInterruptCounterMultiplier @"int, how many timer  \n interrupts constitute one pulse period"
+---@nodiscard
 function pwm2.get_pin_data(pin) end

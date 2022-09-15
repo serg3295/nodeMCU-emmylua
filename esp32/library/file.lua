@@ -17,6 +17,7 @@ function file.chdir(dir) end
 ---Determines whether the specified file exists.
 ---@param filename string @file to check
 ---@return boolean @"`true` of the file exists (even if 0 bytes in size),  \n and `false` if it does not exist"
+---@nodiscard
 function file.exists(filename) end
 
 ---Format the file system. Completely erases any\
@@ -28,6 +29,7 @@ function file.format() end
 ---size of the file system area, in bytes.
 ---@return number flash_address
 ---@return number size
+---@nodiscard
 function file.fscfg() end
 
 ---Return size information for the file system.\
@@ -35,10 +37,12 @@ function file.fscfg() end
 ---@return number remaining
 ---@return number used
 ---@return number total
+---@nodiscard
 function file.fsinfo() end
 
 ---Lists all files in the file system.
 ---@return table @"a lua table which contains  \n the `{file name: file size}` pairs"
+---@nodiscard
 function file.list() end
 
 ---Registers callback functions.
@@ -58,6 +62,7 @@ function file.on(event, callback) end
 ---|  "w+" #update mode, all previous data is erased
 ---|  "a+" #append update mode, previous data is preserved, writing is only allowed at the end of file
 ---@return fd fileObj @file object if file opened ok. `nil` if file not opened, or not exists (read modes).
+---@nodiscard
 function file.open(filename, mode) end
 
 ---Remove a file from the file system.\
@@ -104,6 +109,7 @@ function fd:flush() end
 ---then read until char appears next in the file,\
 ---FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil @File content as a string, or `nil` when EOF
+---@nodiscard
 function file.read(n_or_char) end
 
 ---Read content from the open file.
@@ -116,18 +122,21 @@ function file.read(n_or_char) end
 ---then read until char appears next in the file,\
 ---FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil @File content as a string, or `nil` when EOF
+---@nodiscard
 function fd:read(n_or_char) end
 
 ---Read the next line from the open file. Lines are defined as zero\
 ---or more bytes ending with a EOL ('\n') byte.
 ---@return string|nil @File content in string, line by line, including EOL('\n').
 ---Return `nil` when EOF.
+---@nodiscard
 function file.readline() end
 
 ---Read the next line from the open file. Lines are defined as zero\
 ---or more bytes ending with a EOL ('\n') byte.
 ---@return string|nil @File content in string, line by line, including EOL('\n').
 ---Return `nil` when EOF.
+---@nodiscard
 function fd:readline() end
 
 ---@alias seekwhence32_f string
@@ -141,6 +150,7 @@ function fd:readline() end
 ---@param whence? seekwhence32_f @(optional) 'set' | 'cur' | 'end'
 ---@param offset? integer @(optional) default 0
 ---@return integer @the resulting file position, or `nil` on error
+---@nodiscard
 function file.seek(whence, offset) end
 
 ---Sets and gets the file position, measured from the beginning of the file,\

@@ -1,7 +1,7 @@
 --#region Overview
 -- The following script is used to convert NodeMCU API descriptions to ZeroBrane Studio format.
 -- written by serg3295
--- ver. 0.1.0
+-- ver. 0.1.1
 --
 -- The script uses some code from script to convert Corona API descriptions
 -- by Paul Kulchenko. https://github.com/pkulchenko/ZeroBraneStudio
@@ -20,10 +20,10 @@
 --
 --    in file 'bme280_c_module.lua' and delete file 'bme280.lua'. Then run the script.
 -- 3. run as "../../bin/lua sumn2zbs.lua "srcDir" >outputFile.lua" from ZBS/api/lua folder
---    If no "srcDir" is given, script uses ./esp8266 directory
+--    If no "srcDir" is given, script uses ./esp8266/library directory
 --      lua sumn2zbs.lua >nodemcu.lua
 --    otherwise, the argument is directory's name and script uses ./"arg" directory
---      lua sumn2zbs.lua esp32 >nodemcu32.lua
+--      lua sumn2zbs.lua esp32/library >nodemcu32.lua
 -- 4. launch the IDE with setting -> api = {'nodemcu'} or api = {'nodemcu32'}
 --    to confirm it's loading without issues
 --#endregion Overview
@@ -39,7 +39,7 @@ local API     = {}
 local files   = {}
 ---@type table<string, string>
 local tAlias  = {}  -- <aliasName> <aliasType>
-local srcDir  = arg[1] and ("." .. DIR_SEP .. arg[1])  or ("." .. DIR_SEP .. "esp8266")
+local srcDir  = arg[1] and ("." .. DIR_SEP .. arg[1])  or ("." .. DIR_SEP .. "esp8266/library")
 
 --#region Utility functions
 

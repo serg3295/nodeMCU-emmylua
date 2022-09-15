@@ -38,11 +38,13 @@ qrcodegen = {}
 ---Use `qrcodegen.getSize()` and `qrcodegen.getPixel()` to extract data from\
 ---the result. If the text cannot be represented within the given version\
 ---range (for example it is too long) then `nil` is returned.
+---@nodiscard
 function qrcodegen.encodeText(text, options) end
 
 ---@param qrcode string @a QR Code string, as returned by `qrcodegen.encodeText()`.
 ---@return integer @Returns the side length in pixels of the given QR Code.
 ---The result is in the range [21, 177].
+---@nodiscard
 function qrcodegen.getSize(qrcode) end
 
 ---Get the color of the pixel at the given coordinates of the QR Code.\
@@ -51,4 +53,5 @@ function qrcodegen.getSize(qrcode) end
 ---@param x number @coordinate
 ---@param y number @coordinate
 ---@return boolean @`true` if the given pixel is black, `false` if it is white.
+---@nodiscard
 function qrcodegen.getPixel(qrcode, x, y) end

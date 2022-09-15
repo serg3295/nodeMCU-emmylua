@@ -46,10 +46,12 @@ node.task = {}
 ---In case of extended reset cause 3 (exception reset),\
 ---additional values are returned containing the crash information.\
 ---These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
+---@nodiscard
 function node.bootreason() end
 
 ---Returns the ESP chip ID.
 ---@return number @chip ID
+---@nodiscard
 function node.chipid() end
 
 ---Compiles a Lua text file into Lua bytecode,\
@@ -75,10 +77,12 @@ function node.dsleep(us, option, instant) end
 ---Returns the current theoretical\
 ---maximum deep sleep duration.
 ---@return number max_duration
+---@nodiscard
 function node.dsleepMax() end
 
 ---Returns the flash chip ID
 ---@return number flashID
+---@nodiscard
 function node.flashid() end
 
 ---@deprecated
@@ -95,18 +99,22 @@ function node.flashreload() end
 
 ---Returns the flash chip size in bytes.
 ---@return integer @flash size in bytes
+---@nodiscard
 function node.flashsize() end
 
 ---Get the current CPU Frequency.
 ---@return number @Current CPU frequency
+---@nodiscard
 function node.getcpufreq() end
 
 ---Get the current LFS and SPIFFS partition information.
 ---@return { lfs_addr:number, lfs_size:number, spiffs_addr:number, spiffs_size:number } @"An array containing entries for **lfs_addr, lfs_size,  \n spiffs_addr** and **spiffs_size**. The address values are offsets  \n relative to the start of the Flash memory."
+---@nodiscard
 function node.getpartitiontable() end
 
 ---Returns the current available heap size in bytes.
 ---@return number heap @system heap size left in bytes
+---@nodiscard
 function node.heap() end
 
 ---Returns information about hardware, software version and build configuration.
@@ -136,6 +144,7 @@ function node.heap() end
 ---   - **lfs_size** (number) as defined at build time
 ---   - **modules** (string) comma separated list
 ---   - **number_type** (string) integer or float
+---@nodiscard
 function node.info(group) end
 
 ---Submits a string to the Lua interpreter.\
@@ -152,6 +161,7 @@ function node.LFS.get(modulename) end
 
 ---List the modules in LFS.
 ---@return table|nil @"If no LFS image IS LOADED then `nil` is returned.  \n Otherwise an sorted array of the name of modules in LFS is returned."
+---@nodiscard
 function node.LFS.list() end
 
 ---Reload LFS with the flash image provided.
@@ -233,6 +243,7 @@ function node.sleep(wake_pin, int_type, resume_cb, preserve_mode) end
 ---Query the performance of system startup.
 ---@param marker? any @"(optional) If present, this will add another  \n entry into the startup counts"
 ---@return table @"An array of tables which indicate how many CPU  \n cycles had been consumed at each step of platform boot."
+---@nodiscard
 function node.startupcounts(marker) end
 
 ---@class NodeStartup
@@ -289,6 +300,7 @@ function node.osprint(enabled) end
 ---@param u integer @the upper bound of the range
 ---@return integer @The random number in the appropriate range.
 ---Note that the zero argument form will always return 0 in the integer build.
+---@nodiscard
 function node.random(l, u) end
 
 ---Sets the Emergency Garbage Collector mode.
@@ -304,6 +316,7 @@ function node.egc.setmode(mode, level) end
 ---Returns memory usage information for the Lua runtime.
 ---@return number total_allocated @"The total number of bytes allocated by the Lua runtime.  \n This is the number which is relevant when using the **node.egc.ON_MEM_LIMIT** option  \n with positive limit values."
 ---@return number estimated_used @This value shows the estimated usage of the allocated memory.
+---@nodiscard
 function node.egc.meminfo() end
 
 ---Enable a Lua callback or task to post another task request.

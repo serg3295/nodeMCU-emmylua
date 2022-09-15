@@ -10,6 +10,7 @@ adxl345 = {}
 ---@return integer x @data
 ---@return integer y @data
 ---@return integer z @data
+---@nodiscard
 function adxl345.read() end
 
 ---Initializes the module.

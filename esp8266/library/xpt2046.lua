@@ -23,6 +23,7 @@ function xpt2046.setCalibration(x1, y1, x2, y2) end
 
 ---Checks if the touch panel is touched.
 ---@return boolean touch @"`true` if the display is touched,  \n else `false`"
+---@nodiscard
 function xpt2046.isTouched() end
 
 ---Returns the position the display is touched\
@@ -30,15 +31,18 @@ function xpt2046.isTouched() end
 ---width and height.
 ---@return integer posX
 ---@return integer posY
+---@nodiscard
 function xpt2046.getPosition() end
 
 ---reads the position three times and averages\
 ---the two positions with the least distance.
 ---@return integer posX
 ---@return integer posY
+---@nodiscard
 function xpt2046.getPositionAvg() end
 
 ---Reads the raw value from the display.
 ---@return integer rawX @position X as a raw value.
 ---@return integer rawY @position Y as a raw value.
+---@nodiscard
 function xpt2046.getRaw() end

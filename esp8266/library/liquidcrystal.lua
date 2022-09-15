@@ -41,6 +41,7 @@ local lc = {}
 --- - **d6**: bit position assigned to D6 pin in I²C word. Defaults to 6
 --- - **d7**: bit position assigned to D7 pin in I²C word. Defaults to 7
 ---@return backend_obj @backend object
+---@nodiscard
 function i2c4bit_meta(tbl) end
 
 ---@class gpio4bitCfg
@@ -69,6 +70,7 @@ function i2c4bit_meta(tbl) end
 --- - **d6**: GPIO pin connected to D6 pin. Defaults to 4
 --- - **d7**: GPIO pin connected to D7 pin. Defaults to 5
 ---@return backend_obj @backend object
+---@nodiscard
 function gpio4bit_meta(tbl) end
 
 ---@class gpio8bitCfg
@@ -106,6 +108,7 @@ function gpio4bit_meta(tbl) end
 --- - **d6**: GPIO pin connected to D6 pin. Defaults to 8
 --- - **d7**: GPIO pin connected to D7 pin. Defaults to 9
 ---@return backend_obj @backend object
+---@nodiscard
 function gpio8bit_meta(tbl) end
 
 ---Loading Liquidcrystal module returns initialization closure. It requires backend object and returns LCD object.
@@ -114,6 +117,7 @@ function gpio8bit_meta(tbl) end
 ---@param eightdotsmode boolean @`true` to use 5x8 dot font, `false` to use 5x10 dot font
 ---@param column_width number @"number of characters in column. Used for offset calculations in function cursorMove. If set to `nil`,  \n functionality of cursorMove will be limited. For most displays column width is 20 characters."
 ---@return lc LCD_obj @screen object
+---@nodiscard
 function lc_meta(backend, onelinemode, eightdotsmode, column_width) end
 
 ---Autoscroll text when printing. When turned off, cursor\
@@ -187,12 +191,14 @@ function lc:leftToRight() end
 ---When using GPIO backend without **rw** argument\
 ---specification function does nothing.
 ---@return number @0 indexed position of the cursor
+---@nodiscard
 function lc:position() end
 
 ---Return current character numerical representation. When\
 ---using GPIO backend without **rw** argument specification\
 ---function does nothing.
 ---@return number @numerical representation of the current character
+---@nodiscard
 function lc:read() end
 
 ---Return custom char byte array. When using GPIO backend\
@@ -200,6 +206,7 @@ function lc:read() end
 ---@param index integer custom char index in range from 0 to 7
 ---@return table @table of size 8 in eight dot mode or 11 in ten dot mode.
 ---Each 8 bit number represents a character dot line
+---@nodiscard
 function lc:readCustom(index) end
 
 ---Print text right to left.

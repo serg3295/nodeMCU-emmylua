@@ -11,6 +11,7 @@ local fifo = {}
 ---Constructor.\
 ---fifo = (`require "fifo"`).new()
 ---@return fifo
+---@nodiscard
 function FIFO.new() end
 
 ---Fetch an element from the fifo and pass it to the function `k`, together with a boolean\

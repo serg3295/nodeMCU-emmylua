@@ -39,9 +39,11 @@ function adc.setup(adc_number, channel, atten) end
 ---@param adc_number integer|`adc.ADC1` @Only adc.ADC1 now
 ---@param channel integer|`0`|`1`|`2`|`3`|`4`|`5`|`6`|`7` @0 to 7 for adc.ADC1
 ---@return number @the sampled value
+---@nodiscard
 function adc.read(adc_number, channel) end
 
 ---Read Hall sensor (GPIO36, GPIO39).\
 ---We recommend using 12-bits width on ADC1.
 ---@return number @the sampled value
+---@nodiscard
 function adc.read_hall_sensor() end

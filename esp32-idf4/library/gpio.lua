@@ -50,6 +50,7 @@ function gpio.config(tbl, ...) end
 ---Read digital GPIO pin value.
 ---@param pin integer @pin to read,
 ---@return integer @0 = low, 1 = high
+---@nodiscard
 function gpio.read(pin) end
 
 ---Set the drive strength of a given GPIO pin. The higher the drive strength,\

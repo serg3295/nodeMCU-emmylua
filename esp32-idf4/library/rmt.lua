@@ -21,6 +21,7 @@ local channel = {}
 ---@return channel @
 --- - The `rmt.channel` object that can be used for sending data
 --- - The actual bit time in picoseconds.
+---@nodiscard
 function rmt.txsetup(gpio, bittime, options) end
 
 ---This sets up a receive channel on the specified gpio pin at the specified rate. Various options described below\
@@ -35,6 +36,7 @@ function rmt.txsetup(gpio, bittime, options) end
 ---@return channel @
 --- - The `rmt.channel` object that can be used for receiving data
 --- - The actual bit time in picoseconds.
+---@nodiscard
 function rmt.rxsetup(gpio, bittime, options) end
 
 ---This is establishes a callback to use when data is received and it also starts the data reception process.\

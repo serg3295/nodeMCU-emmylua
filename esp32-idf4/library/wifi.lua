@@ -31,6 +31,7 @@ wifi.ap = {}
 --- - wifi.HT20,
 --- - wifi.HT40_ABOVE,
 --- - wifi.HT40_BELOW
+---@nodiscard
 function wifi.getchannel() end
 
 ---Gets WiFi operation mode.
@@ -39,6 +40,7 @@ function wifi.getchannel() end
 --- - wifi.SOFTAP
 --- - wifi.STATIONAP
 --- - wifi.NULLMODE
+---@nodiscard
 function wifi.getmode() end
 
 ---Configures the WiFi mode to use.
@@ -135,6 +137,7 @@ function wifi.sta.on(event, callback) end
 
 ---Gets MAC address in station mode.
 ---@return string
+---@nodiscard
 function wifi.sta.getmac() end
 
 ---@class ScanCfg
@@ -229,6 +232,7 @@ function wifi.ap.on(event, callback) end
 ---Gets MAC address in access point mode.
 ---@return string MAC @address as string
 ---e.g. "18:fe:34:a2:d7:34"
+---@nodiscard
 function wifi.ap.getmac() end
 
 ---Sets IP address, netmask, gateway, dns address in AccessPoint mode.

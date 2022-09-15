@@ -22,6 +22,7 @@ time = {}
 --- - **min**
 --- - **sec**
 ---@return integer @number of seconds since the Epoch
+---@nodiscard
 function time.cal2epoch(calendar) end
 
 ---Converts timestamp in Unix epoch to calendar format
@@ -39,12 +40,14 @@ function time.cal2epoch(calendar) end
 ---   - 1, (DST in effect, i.e. daylight time)
 ---   - 0, (DST not in effect, i.e. standard time)
 ---   - -1, (Unknown DST status)
+---@nodiscard
 function time.epoch2cal(time) end
 
 ---Returns current system time in the Unix epoch\
 ---(seconds from midnight 1970/01/01).
 ---@return integer sec @seconds since the Unix epoch
 ---@return integer usec @the microseconds part
+---@nodiscard
 function time.get() end
 
 ---Returns current system time adjusted for\
@@ -62,6 +65,7 @@ function time.get() end
 ---   - 1, (DST in effect, i.e. daylight time)
 ---   - 0, (DST not in effect, i.e. standard time)
 ---   - -1, (Unknown DST status)
+---@nodiscard
 function time.getlocal() end
 
 ---Initializes and starts NTP client
@@ -71,6 +75,7 @@ function time.initntp(ntpAddr) end
 
 ---Checks if NTP client is enabled.
 ---@return boolean @`true` if NTP client is enabled.
+---@nodiscard
 function time.ntpenabled() end
 
 ---Stops NTP client.

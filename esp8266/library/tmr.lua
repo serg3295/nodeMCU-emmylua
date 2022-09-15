@@ -21,6 +21,7 @@ function tmr.delay(us) end
 ---in microseconds. Limited to 31 bits,\
 ---after that it wraps around back to zero.
 ---@return number @the current value of the system counter
+---@nodiscard
 function tmr.now() end
 
 ---Provides a simple software watchdog, which needs to be re-armed\
@@ -33,6 +34,7 @@ function tmr.softwd(timeout_s) end
 ---Returns the system uptime, in seconds. Limited to\
 ---31 bits, after that it wraps around back to zero.
 ---@return number @"the system uptime, in seconds,  \n possibly wrapped around"
+---@nodiscard
 function tmr.time() end
 
 ---Feed the system watchdog.
@@ -47,10 +49,12 @@ function tmr.wdclr() end
 ---unlike `tmr.now()`. Because of same reason when CCOUNT is having\
 --- its 32nd bit set, it appears in Lua as negative number.
 ---@return number @The current value of CCOUNT register.
+---@nodiscard
 function tmr.ccount() end
 
 ---Creates a dynamic timer object
 ---@return tObj @timer object
+---@nodiscard
 function tmr.create() end
 
 ---@alias tmr_m integer

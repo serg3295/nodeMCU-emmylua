@@ -23,11 +23,13 @@ function file.format() end
 ---@return number remaining
 ---@return number used
 ---@return number total
+---@nodiscard
 function file.fsinfo() end
 
 ---Lists all files in the file system.
 ---@param mountpoint? any @(optional) to list files in other file systems, the mountpoint can be given.
 ---@return table @"a lua table which contains the `{file name: file size}` pairs. For SPIFFS file systems  \n the size is returned in bytes, whereas for FAT file systems the size is given in kilobytes."
+---@nodiscard
 function file.list(mountpoint) end
 
 ---Opens a file for access, potentially creating it (for write modes).\
@@ -41,6 +43,7 @@ function file.list(mountpoint) end
 ---|  "w+" #update mode, all previous data is erased
 ---|  "a+" #append update mode, previous data is preserved, writing is only allowed at the end of file
 ---@return fd fileObj @file object if file opened ok. `nil` if file not opened, or not exists (read modes).
+---@nodiscard
 function file.open(filename, mode) end
 
 ---Remove a file from the file system.\

@@ -21,15 +21,18 @@ local udpsocket = {}
 
 ---Creates a TCP client.
 ---@return netsocket @net.socket submodule
+---@nodiscard
 function net.createConnection() end
 
 ---Creates a TCP listening socket (a server).
 ---@param timeout integer @"seconds until disconnecting an inactive client;  \n 1~28'800 seconds, 30 sec by default."
 ---@return netsrv @net.server submodule
+---@nodiscard
 function net.createServer(timeout) end
 
 ---Creates an UDP socket.
 ---@return udpsocket @net.udpsocket submodule
+---@nodiscard
 function net.createUDPSocket() end
 
 ---Return information about a network interface, specified by index.
@@ -43,6 +46,7 @@ function net.createUDPSocket() end
 --- - ntp_server - the NTP server suggested by the DHCP server.\
 ---DNS servers are not tracked per-interface in LwIP and, as such, are not reported here;\
 ---use `net.dns:getdnsserver()`.
+---@nodiscard
 function net.ifinfo(if_index) end
 
 ---Join multicast group.
@@ -64,6 +68,7 @@ function netsrv:close() end
 ---Returns server local address/port.
 ---@return integer|nil @port or `nil` if not listening
 ---@return string|nil @ip or `nil` if not listening
+---@nodiscard
 function netsrv:getaddr() end
 
 ---Listen on port from IP address.
@@ -99,6 +104,7 @@ function netsocket:getaddr() end
 ---Retrieve port and ip of remote peer.
 ---@return integer|nil @port or `nil` if not connected
 ---@return string|nil @ip or `nil` if not connected
+---@nodiscard
 function netsocket:getpeer() end
 
 ---Throttle data reception by placing\
@@ -145,6 +151,7 @@ function udpsocket:dns(domain, callback) end
 ---Retrieve local port and ip of socket.
 ---@return integer|nil @port or `nil` if not connected
 ---@return string|nil @ip or `nil` if not connected
+---@nodiscard
 function udpsocket:getaddr() end
 
 ---Listen on port from IP address.
@@ -178,6 +185,7 @@ function udpsocket:ttl(ttl) end
 ---Gets the IP address of the DNS server used to resolve hostnames.
 ---@param dns_index integer @which DNS server to get (range 0~1)
 ---@return string @IP address (string) of DNS server
+---@nodiscard
 function net.dns.getdnsserver(dns_index) end
 
 ---Resolve a hostname to an IP address. Doesn't require a socket like net.socket.dns().

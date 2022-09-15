@@ -13,11 +13,13 @@ function pwm.close(pin) end
 ---Get selected PWM frequency of pin.
 ---@param pin integer @1~12, IO index
 ---@return number @PWM frequency of pin
+---@nodiscard
 function pwm.getclock(pin) end
 
 ---Get selected duty cycle of pin.
 ---@param pin integer @1~12, IO index
 ---@return number @duty cycle, max 1023
+---@nodiscard
 function pwm.getduty(pin) end
 
 ---Set PWM frequency.

@@ -31,6 +31,7 @@ function gpio.mode(pin, mode , pullup) end
 ---Read digital GPIO pin value.
 ---@param pin integer @pin to read, IO index
 ---@return number @0 = low, 1 = high
+---@nodiscard
 function gpio.read(pin) end
 
 ---Serialize output based on a sequence of delay-times in µs. After each delay, the pin is toggled.\
@@ -80,6 +81,7 @@ function gpio.write(pin, level) end
 --- - **count** and **loop** allow simple looping.
 ---@param ... GpioPulse
 ---@return pulser obj @gpio.pulse object.
+---@nodiscard
 function gpio.pulse.build(tbl, ...) end
 
 ---This starts the output operations.
@@ -94,6 +96,7 @@ function pulser:start(adjust,  callback) end
 ---@return integer steps @"is the number of states that have been executed (including  \n the current one). This allows monitoring of progress when there are loops."
 ---@return number offset @"is the time (in microseconds) until the next state transition.  \n This will be negative once the output operation is complete."
 ---@return number now @"is the value of the `tmr.now()` function at the instant when the `offset`  \n was calculated."
+---@nodiscard
 function pulser:getstate() end
 
 ---This stops the output operation at some future time.

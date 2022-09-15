@@ -13,6 +13,7 @@ local tObj = {}
 
 ---Creates a dynamic timer object.
 ---@return tObj @timer object
+---@nodiscard
 function tmr.create() end
 
 ---@alias t32 integer
@@ -46,6 +47,7 @@ function tObj:start() end
 ---Checks the state of a timer.
 ---@return boolean|nil @If the specified timer is registered, returns whether it is currently started
 ---@return integer|nil @and its mode. If the timer is not registered, `nil` is returned.
+---@nodiscard
 function tObj:state() end
 
 ---Stops a running timer, but does not unregister it.\

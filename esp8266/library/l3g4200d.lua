@@ -10,6 +10,7 @@ l3g4200d = {}
 ---@return number X @gyroscope output
 ---@return number Y @gyroscope output
 ---@return number Z @gyroscope output
+---@nodiscard
 function l3g4200d.read() end
 
 ---Initializes the module.

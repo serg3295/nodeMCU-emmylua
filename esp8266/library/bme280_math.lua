@@ -10,6 +10,7 @@ bme280_math = {}
 ---@param P number @measured pressure
 ---@param QNH number @current sea level pressure
 ---@return number altitude @in meters of measurement point
+---@nodiscard
 function bme280_math.altitude(self, P, QNH) end
 
 ---For given temperature and relative humidity returns the dew point in celsius.
@@ -17,6 +18,7 @@ function bme280_math.altitude(self, P, QNH) end
 ---@param H number @relative humidity in percent (100 means 100%)
 ---@param T number @temperate in celsius
 ---@return number dewpoint @dew point in celsisus
+---@nodiscard
 function bme280_math.dewpoint(self, H, T) end
 
 ---For given altitude converts the air pressure to sea level air pressure (QNH).
@@ -24,6 +26,7 @@ function bme280_math.dewpoint(self, H, T) end
 ---@param P number @measured pressure
 ---@param altitude number @in meters of measurement point
 ---@return number P @sea level pressure
+---@nodiscard
 function bme280_math.qfe2qnh(self, P, altitude) end
 
 ---Reads the sensor and returns the temperature, the air pressure, the air relative humidity and\
@@ -35,6 +38,7 @@ function bme280_math.qfe2qnh(self, P, altitude) end
 ---@return number P @air pressure in hectopascals
 ---@return number H @relative humidity in percent
 ---@return number QNH @(optional) air pressure in hectopascals. Returns `nil` if the conversion is not successful.
+---@nodiscard
 function bme280_math.read(bme280sensor, registers, altitude) end
 
 ---Initializes the module. Initialization is mandatory before reading values.

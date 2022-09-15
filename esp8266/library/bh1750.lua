@@ -19,4 +19,5 @@ function bh1750.read() end
 ---Function used to return last read\
 ---lux value.
 ---@return number @Last known lux value.
+---@nodiscard
 function bh1750.getlux() end

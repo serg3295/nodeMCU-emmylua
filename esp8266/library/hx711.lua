@@ -19,6 +19,7 @@ function hx711.init(clk, data) end
 ---Read digital loadcell ADC value.
 ---@param mode hx711_a1 @"ADC mode. This parameter specifies which input and  \n the gain to apply to that input."
 ---@return number @24 bit signed ADC value extended to the machine int size
+---@nodiscard
 function hx711.read(mode) end
 
 ---Starts to read multiple samples from the ADC.

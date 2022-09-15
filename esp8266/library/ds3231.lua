@@ -32,6 +32,7 @@ function ds3231.setTime(second, minute, hour, day, date, month, year, disableOsc
 ---@return integer date @01-31
 ---@return integer month @01-12
 ---@return integer year @00-99
+---@nodiscard
 function ds3231.getTime() end
 
 ---@alias ds3231_a1 integer

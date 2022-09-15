@@ -22,6 +22,7 @@ function hashobj:finalize() end
 ---finalizing and returning the resulting digest.
 ---@param algo crypto_algo @the hash algorithm to use, case insensitive string
 ---@return hashobj @Hasher object with update and finalize functions available.
+---@nodiscard
 function crypto.new_hash(algo) end
 
 ---Create an object for calculating a HMAC (Hashed Message Authentication Code,\
@@ -32,4 +33,5 @@ function crypto.new_hash(algo) end
 ---@param algo crypto_algo @the hash algorithm to use, case insensitive string
 ---@param key any @the signing key (may be a binary string)
 ---@return hashobj @Hasher object with update and finalize functions available.
+---@nodiscard
 function crypto.new_hmac(algo, key) end

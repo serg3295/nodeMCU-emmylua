@@ -56,4 +56,5 @@ function gossip.setRevFileValue(number) end
 ---The network state can be directly accessed as a Lua table:\
 ---`gossip.networkState` or it can be received as a JSON with this method.
 ---@return string @JSON formatted string regarding the network state.
+---@nodiscard
 function gossip.getNetworkState() end

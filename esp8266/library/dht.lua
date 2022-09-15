@@ -20,6 +20,7 @@ dht = {}
 ---@return number humi @humidity
 ---@return number temp_dec @temperature decimal
 ---@return number humi_dec @humidity decimal
+---@nodiscard
 function dht.read(pin) end
 
 ---Read DHT11 humidity temperature combo sensor.
@@ -29,6 +30,7 @@ function dht.read(pin) end
 ---@return number humi @humidity
 ---@return number temp_dec @temperature decimal
 ---@return number humi_dec @humidity decimal
+---@nodiscard
 function dht.read11(pin) end
 
 ---Read DHT12 humidity temperature combo sensor.
@@ -38,6 +40,7 @@ function dht.read11(pin) end
 ---@return number humi @humidity
 ---@return number temp_dec @temperature decimal
 ---@return number humi_dec @humidity decimal
+---@nodiscard
 function dht.read12(pin) end
 
 ---Read all kinds of DHT sensors, except DHT11 and DHT12.\
@@ -49,4 +52,5 @@ function dht.read12(pin) end
 ---@return number humi @humidity
 ---@return number temp_dec @temperature decimal
 ---@return number humi_dec @humidity decimal
+---@nodiscard
 function dht.readxx(pin) end

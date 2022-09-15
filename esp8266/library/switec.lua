@@ -31,6 +31,7 @@ function switec.reset(channel) end
 ---@param channel integer @"The switec module supports three  \n stepper motors. The channel is either 0, 1 or 2."
 ---@return number position @the current position of the needle
 ---@return integer moving @"**0** if the needle is stationary. **1** for clockwise,  \n **-1** for anti-clockwise."
+---@nodiscard
 function switec.getpos(channel) end
 
 ---Releases the resources associated with the stepper.

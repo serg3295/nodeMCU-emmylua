@@ -12,6 +12,7 @@ local rds = {}
 ---@param host string @Redis host name or address
 ---@param port integer @Redis database port. Default value is 6379.
 ---@return rds rdsObj @Object with rest of the functions.
+---@nodiscard
 function redis.connect(host, port) end
 
 ---Subscribe to a Redis channel.

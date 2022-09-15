@@ -26,6 +26,7 @@ local Mqtt = {}
 ---@param password? string @(optional) user password
 ---@param cleansession? integer @(optional) **0/1** for `false/true`. Default is 1 (`true`).
 ---@return Mqtt @MQTT client
+---@nodiscard
 function mqtt.Client(clientid, keepalive, username, password, cleansession) end
 
 ---Closes connection to the broker.

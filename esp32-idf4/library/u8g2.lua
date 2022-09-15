@@ -152,6 +152,7 @@ local u8g2DispObj = {}
 ---@param address integer @I²C slave address of display (unshifted)
 ---@param cb_fn? function @optional callback function, see Framebuffer callback
 ---@return u8g2DispObj @u8g2 display object
+---@nodiscard
 function u8g2.u8g2DisplayTypeI2C(id, address, cb_fn) end
 
 ---Initialize a display via Hardware SPI.
@@ -161,6 +162,7 @@ function u8g2.u8g2DisplayTypeI2C(id, address, cb_fn) end
 ---@param res? integer @(optional) GPIO pin for RES, none if omitted
 ---@param cb_fn? function @"(optional) callback function, `function(rle_line?)`.  \n **rle_line** is a string containing a run-length encoded framebuffer line, or `nil` to indicate start of frame."
 ---@return u8g2DispObj @u8g2 display object
+---@nodiscard
 function u8g2.u8g2DisplayTypeSPI(bus, cs, dc, res, cb_fn) end
 
 ---Clears all pixel in the memory frame buffer.
@@ -300,21 +302,25 @@ function u8g2DispObj:drawXBM(x, y, w, h, bitmap) end
 ---Returns the reference height of the glyphs\
 ---above the baseline (ascent).
 ---@return number @The ascent of the current font.
+---@nodiscard
 function u8g2DispObj:getAscent() end
 
 ---Returns the reference height of the glyphs\
 ---below the baseline (descent).
 ---@return number @The descent of the current font.
+---@nodiscard
 function u8g2DispObj:getDescent() end
 
 ---Return the pixel width of string.
 ---@param s string @text
 ---@return number @Width of the string if drawn with the current font (setFont).
+---@nodiscard
 function u8g2DispObj:getStrWidth(s) end
 
 ---Return the pixel width of an UTF-8 encoded string.
 ---@param s string @UTF-8 encoded text.
 ---@return number @Width of the string if drawn with the current font (setFont).
+---@nodiscard
 function u8g2DispObj:getUTF8Width(s) end
 
 ---Send the content of the memory frame buffer to the display.

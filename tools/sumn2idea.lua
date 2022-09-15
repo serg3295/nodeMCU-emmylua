@@ -82,6 +82,7 @@ local function main()
                             return h .. s:gsub("%s%s\\n%s", " ")
                           end)
                       : gsub("%-%-%-@version%s.-%-", "-")
+                      : gsub("%-%-%-@nodiscard.-f", "f")  -- delete nodiscard
     content = content:sub(11) -- delete ---@meta
 
     saveFile(outDir .. "/" .. fileName, content)

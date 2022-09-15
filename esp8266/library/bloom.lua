@@ -12,6 +12,7 @@ local filter = {}
 ---@param elements number @The largest number of elements to be added to the filter.
 ---@param errorrate number @The error rate (the false positive rate).
 ---@return filter objfilter @A filter object.
+---@nodiscard
 function bloom.create(elements, errorrate) end
 
 ---Adds a string to the set and returns an indication of whether\
@@ -34,4 +35,5 @@ function filter:reset() end
 ---@return number @The number of bits set in the filter.
 ---@return number @The approximate chance that the next check
 ---will return true when it should return false
+---@nodiscard
 function filter:info() end

@@ -59,6 +59,7 @@ local channel = {}
 ---Example: if `ledc.TIMER_13_BIT` is used maximum\
 ---value is 4096 x 2 -1 = 8091
 ---@return channel @ledc.channel
+---@nodiscard
 function ledc.newChannel(tbl) end
 
 ---Disable LEDC output, and set idle level.
@@ -73,6 +74,7 @@ function channel:setfreq(frequency) end
 
 ---Get channel frequency (Hz)
 ---@return number @0 error; Others current LEDC frequency
+---@nodiscard
 function channel:getfreq() end
 
 ---Set channel duty
@@ -82,6 +84,7 @@ function channel:setduty(duty) end
 
 ---Get channel duty
 ---@return number @"(-1) parameter error;  \n Others current LEDC duty"
+---@nodiscard
 function channel:getduty() end
 
 ---Resets the timer

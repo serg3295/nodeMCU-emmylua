@@ -14,6 +14,7 @@ local ws = {}
 ---the callback functions are kept - and you can connect again to any server.\
 ---Before disposing the client, make sure to call `ws:close()`.
 ---@return ws websocketclient
+---@nodiscard
 function websocket.createClient() end
 
 ---Closes a websocket connection. he client issues a close frame and\

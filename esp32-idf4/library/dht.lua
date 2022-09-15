@@ -15,6 +15,7 @@ dht = {}
 ---@return number humi @humidity
 ---@return number temp_dec @temperature decimal (always 0)
 ---@return number humi_dec @humidity decimal (always 0)
+---@nodiscard
 function dht.read11(pin) end
 
 ---Read DHT21/22/33/43 and AM2301/2302/2303\
@@ -25,4 +26,5 @@ function dht.read11(pin) end
 ---@return number humi @humidity
 ---@return number temp_dec @temperature decimal (always 0)
 ---@return number humi_dec @humidity decimal (always 0)
+---@nodiscard
 function dht.read2x(pin) end

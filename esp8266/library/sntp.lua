@@ -22,4 +22,5 @@ function sntp.setoffset(offset) end
 
 ---Gets the offset between the rtc clock and the NTP time.
 ---@return number offset @The current offset.
+---@nodiscard
 function sntp.getoffset() end

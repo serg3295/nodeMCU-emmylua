@@ -21,6 +21,7 @@ function i2c.address(id, device_addr, direction) end
 ---@param id integer @bus number
 ---@param len number @number of data bytes
 ---@return string @string of received data
+---@nodiscard
 function i2c.read(id, len) end
 
 ---Initialize the I²C bus with the selected bus number, pins and speed.

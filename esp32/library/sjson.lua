@@ -29,11 +29,13 @@ local decoder = {}
 ---The default is 20.
 --- - **null** the string value to treat as null.
 ---@return encoder @A sjson.encoder object.
+---@nodiscard
 function sjson.encoder(tbl, opts) end
 
 ---This gets a chunk of JSON encoded data.
 ---@param size? integer @"an optional value for the number of bytes to return.  \n The default is 1024."
 ---@return string|nil @"A `string` of up to size bytes, or `nil` if the encoding  \n is complete and all data has been returned."
+---@nodiscard
 function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
@@ -43,6 +45,7 @@ function encoder:read(size) end
 ---The default is 20 which should be enough for nearly all situations.
 --- - **null** the string value to treat as null.
 ---@return string @JSON string
+---@nodiscard
 function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object.\
@@ -53,6 +56,7 @@ function sjson.encode(tbl, opts) end
 --- - **null** the string value to treat as null.
 --- - **metatable** a table to use as the metatable for all the new tables in the returned object.
 ---@return decoder @A `sjson.decoder` object
+---@nodiscard
 function sjson.decoder(opts) end
 
 ---This provides more data to be parsed into the Lua object.
@@ -60,12 +64,14 @@ function sjson.decoder(opts) end
 ---@return any|nil @The constructed Lua object or `nil` if the decode is not yet complete.
 ---If a parse error occurrs during this decode, then an error is thrown\
 ---and the parse is aborted. The object cannot be used again.
+---@nodiscard
 function decoder:write(str) end
 
 ---This gets the decoded Lua object, or raises an error\
 ---if the decode is not yet complete. This can be called\
 ---multiple times and will return the same object each time.\
 ---If the decode is not complete, then an error is thrown.
+---@nodiscard
 function decoder:result() end
 
 ---Decode a JSON string to a Lua table.
@@ -78,4 +84,5 @@ function decoder:result() end
 ---for all the new tables in the returned object.
 ---@return table @Lua table representation of the JSON data.
 ---If the string is not valid JSON, then an error is thrown.
+---@nodiscard
 function sjson.decode(str, opts) end

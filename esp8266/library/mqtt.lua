@@ -27,6 +27,7 @@ local MQTT = {}
 ---@param cleansession? integer @(optional) **0/1** for `false/true`. Default is 1 (`true`).
 ---@param max_message_length? integer @(optional) how large messages to accept. Default is 1024.
 ---@return MQTT @MQTT client
+---@nodiscard
 function mqtt.Client(clientid, keepalive, username, password, cleansession, max_message_length) end
 
 ---Closes connection to the broker.

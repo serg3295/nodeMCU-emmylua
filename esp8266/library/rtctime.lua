@@ -27,12 +27,14 @@ function rtctime.dsleep_aligned(aligned_us, minsleep_us, option) end
 --- - **sec**
 --- - **yday** day 1 ~ 366 in current year
 --- - **wday** day 1 ~ 7 in current weak (Sunday is 1)
+---@nodiscard
 function rtctime.epoch2cal(timestamp) end
 
 ---Returns the current time.
 ---@return integer sec @seconds since the Unix epoch
 ---@return integer usec @the microseconds part
 ---@return integer rate @"the current clock rate offset.  \n This is an offset of rate / 2^32"
+---@nodiscard
 function rtctime.get() end
 
 ---Sets the rtctime to a given timestamp in the Unix epoch.

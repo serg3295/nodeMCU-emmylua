@@ -9,6 +9,7 @@ rtcmem = {}
 ---@param idx integer @zero-based index to start reading from
 ---@param num? number @(optional) number of slots to read (default 1)
 ---@return any @The value(s) read from RTC user memory.
+---@nodiscard
 function rtcmem.read32(idx, num) end
 
 ---Writes one or more values to RTC user memory, starting at index idx.

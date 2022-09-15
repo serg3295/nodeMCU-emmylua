@@ -25,6 +25,7 @@ function tcs34725.disable() end
 ---@return integer red @in uint16_t.
 ---@return integer green @in uint16_t.
 ---@return integer blue @in uint16_t.
+---@nodiscard
 function tcs34725.raw() end
 
 ---Sets the gain of the sensor.\

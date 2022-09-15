@@ -11,6 +11,7 @@ struct = {}
 ---@param d1 any @The first data item to be packed
 ---@param d2 any @The second data item to be packed etc.
 ---@return string @The packed string.
+---@nodiscard
 function struct.pack(fmt, d1, d2, ...) end
 
 ---Returns the values packed in string s according to the format string `fmt`.\
@@ -21,10 +22,12 @@ function struct.pack(fmt, d1, d2, ...) end
 ---@param s string @The string holding the data to be unpacked
 ---@param offset? integer @(optional) The position to start in the string (default is 1)
 ---@return any @All the unpacked data and index in `s` where it stoppped reading..
+---@nodiscard
 function struct.unpack(fmt, s, offset) end
 
 ---Returns the size of a string formatted\
 ---according to the format string `fmt`.
 ---@param fmt string @The format string
 ---@return integer @"The size of the string that would be  \n output in a pack operation with this format string."
+---@nodiscard
 function struct.size(fmt) end

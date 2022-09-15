@@ -41,6 +41,7 @@ local ucgDispObj = {}
 ---@param dc integer @GPIO pin for DC
 ---@param res? integer @(optional) GPIO pin for /RES, none if omitted
 ---@return ucgDispObj @ucg display object
+---@nodiscard
 function ucg.ucgDisplayType(bus, cs, dc, res) end
 
 ---Send init code to the display, setup internal data structures\
@@ -199,6 +200,7 @@ function ucgDispObj:drawVLine(x, y, len) end
 ---Returns the height of the character 'A' or the number '1' above the baseline.\
 ---For the font in the example below, getFontAscent returns the value 24.
 ---@return number @The height of the font.
+---@nodiscard
 function ucgDispObj:getFontAscent() end
 
 ---Some glphys of a font might are extended below the baseline ('g' or ')').\
@@ -206,10 +208,12 @@ function ucgDispObj:getFontAscent() end
 ---If the extension is below the baseline (which is usually the case) then\
 ---a negative number is returned.
 ---@return number @The extension of the characters below the baseline.
+---@nodiscard
 function ucgDispObj:getFontDescent() end
 
 ---Returns the height of the display.
 ---@return number @The height of the display.
+---@nodiscard
 function ucgDispObj:getHeight() end
 
 ---Returns the number of pixels, required for the text in `*s`\
@@ -217,10 +221,12 @@ function ucgDispObj:getHeight() end
 ---in front and after the text as defined in the current font.
 ---@param str string string
 ---@return number @Width of the text in pixel.
+---@nodiscard
 function ucgDispObj:getStrWidth(str) end
 
 ---Returns the width of the display.
 ---@return number @The width of the display.
+---@nodiscard
 function ucgDispObj:getWidth() end
 
 ---Print text or values. The position of the output is defined by `setPrintPos()`,\

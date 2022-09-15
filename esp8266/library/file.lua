@@ -30,6 +30,7 @@ function file.format() end
 ---Function is not supported for SD cards.
 ---@return number flash_address
 ---@return number size
+---@nodiscard
 function file.fscfg() end
 
 ---Return size information for the file system.\
@@ -37,11 +38,13 @@ function file.fscfg() end
 ---@return number remaining
 ---@return number used
 ---@return number total
+---@nodiscard
 function file.fsinfo() end
 
 ---Open and read the contents of a file.
 ---@param filename string @file to be opened and read
 ---@return any|nil @"file contents if the file exists.  \n `nil` if the file does not exist."
+---@nodiscard
 function file.getcontents(filename) end
 
 ---Lists all files in the file system.
@@ -50,6 +53,7 @@ function file.getcontents(filename) end
 ---If a pattern is given, only those file names matching the pattern (interpreted as\
 ---a traditional [Lua pattern](https://www.lua.org/pil/20.2.html), not, say, a UNIX shell glob) will be included in the resulting\
 ---table. `file.list` will throw any errors encountered during pattern matching.
+---@nodiscard
 function file.list(pattern) end
 
 ---Mounts a FatFs volume on SD card. Function is only available when FatFS\
@@ -57,6 +61,7 @@ function file.list(pattern) end
 ---@param ldrv string|"/SD0"|"/SD1" @name of the logical drive, /SD0, /SD1, etc.
 ---@param pin? integer @(optional) 1~12, IO index for SS/CS, defaults to 8 if omitted.
 ---@return any obj @Volume object
+---@nodiscard
 function file.mount(ldrv, pin) end
 
 ---Registers callback functions.
@@ -75,6 +80,7 @@ function file.on(event, callback) end
 ---|  "w+" #update mode, all previous data is erased
 ---|  "a+" #append update mode, previous data is preserved, writing is only allowed at the end of file
 ---@return fd fileobject @if file opened ok. `nil` if file not opened, or not exists (read modes).
+---@nodiscard
 function file.open(filename, mode) end
 
 ---Remove a file from the file system.\
@@ -108,6 +114,7 @@ function file.rename(oldname, newname) end
 --- - **is_hidden** - flag `true` if item is hidden, otherwise `false`
 --- - **is_sys** - flag `true` if item is system, otherwise `false`
 --- - **is_arch** - flag `true` if item is archive, otherwise `false`
+---@nodiscard
 function file.stat(filename) end
 
 ---Closes the open file, if any.
@@ -142,6 +149,7 @@ function fd:flush() end
 ---then read until char appears next in the file,\
 ---FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil @File content as a string, or `nil` when EOF
+---@nodiscard
 function file.read(n_or_char) end
 
 ---Read content from the open file.
@@ -154,16 +162,19 @@ function file.read(n_or_char) end
 ---then read until char appears next in the file,\
 ---FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil @File content as a string, or `nil` when EOF
+---@nodiscard
 function fd:read(n_or_char) end
 
 ---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.\
 ---If the next line is longer than 1024, this function only returns the first 1024 bytes.
 ---@return string|nil @File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
+---@nodiscard
 function file.readline() end
 
 ---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.\
 ---If the next line is longer than 1024, this function only returns the first 1024 bytes.
 ---@return string|nil @File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
+---@nodiscard
 function fd:readline() end
 
 ---@alias seekwhence_f string
@@ -177,6 +188,7 @@ function fd:readline() end
 ---@param whence? seekwhence_f @(optional) set | cur | end
 ---@param offset? integer @(optional) default 0
 ---@return integer|nil @the resulting file position, or nil on error
+---@nodiscard
 function file.seek(whence, offset) end
 
 ---Sets and gets the file position, measured from the beginning of the file,\
@@ -185,6 +197,7 @@ function file.seek(whence, offset) end
 ---@param whence? seekwhence_f @(optional) set | cur | end
 ---@param offset? integer @(optional) default 0
 ---@return integer|nil @the resulting file position, or `nil` on error
+---@nodiscard
 function fd:seek(whence, offset) end
 
 ---Write a string to the open file.

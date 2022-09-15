@@ -21,10 +21,12 @@ local coap_server = {}
 
 ---Creates a CoAP client.
 ---@return coap_client @CoAP client
+---@nodiscard
 function coap.Client() end
 
 ---Creates a CoAP server.
 ---@return coap_server @CoAP server
+---@nodiscard
 function coap.Server() end
 
 ---Issues a GET request to the server.

@@ -40,6 +40,7 @@ function rotary.on(channel, eventtype, callback) end
 ---@param channel integer @"The rotary module supports three switches.  \n The channel is either 0, 1 or 2."
 ---@return number pos @The current position of the switch.
 ---@return boolean press @A boolean indicating if the switch is currently pressed.
+---@nodiscard
 function rotary.getpos(channel) end
 
 ---Releases the resources associated with the rotary switch.

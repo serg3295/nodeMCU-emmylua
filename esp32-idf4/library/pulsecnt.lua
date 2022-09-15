@@ -24,6 +24,7 @@ local pulsecntObj = {}
 --- - PCNT_EVT_H_LIM (Maximum counter value),
 --- - PCNT_EVT_ZERO (counter value zero event)
 ---@return pulsecntObj @pulsecnt object
+---@nodiscard
 function pulsecnt.create(unit, callbackOnEvents) end
 
 ---@alias pulse_mode1 integer
@@ -81,4 +82,5 @@ function pulsecntObj:clear() end
 
 ---Get the current pulse counter.
 ---@return integer
+---@nodiscard
 function pulsecntObj:getCnt() end

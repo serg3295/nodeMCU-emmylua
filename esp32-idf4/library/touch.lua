@@ -61,11 +61,13 @@ local tp = {}
 ---   - touch.TOUCH_HVOLT_ATTEN_1V5
 --- - **isDebug** Optional. Defaults to `false`. Set to `true` to get debug information during development. The info returned while debug is on can be very helpful in understanding polling vs interrupts, configuration, and threshold settings. Set to `false` during production.
 ---@return tp touchObj @touch object
+---@nodiscard
 function touch.create(tbl) end
 
 ---Read the touch sensor counter values for all pads configured in touch.create() method.
 ---@return table raw @Lua table of touch sensor counter values per pad
 ---@return table filter @"A 2nd Lua table of touch sensor filtered counter values per pad  \n is returned if filterMs is specified during the `touch.create()` method."
+---@nodiscard
 function tp:read() end
 
 ---Set touch sensor interrupt threshold per pad.

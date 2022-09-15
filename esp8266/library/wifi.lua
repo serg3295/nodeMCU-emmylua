@@ -51,6 +51,7 @@ wifi.eventmon = {}
 
 ---Gets the current WiFi channel.
 ---@return integer @current WiFi channel
+---@nodiscard
 function wifi.getchannel() end
 
 ---Get the current country info.
@@ -63,6 +64,7 @@ function wifi.getchannel() end
 ---    - **0** - Country policy is auto, NodeMCU will use the country info provided by AP\
 ---that the station is connected to.
 ---    - **1** - Country policy is manual, NodeMCU will use locally configured country info.
+---@nodiscard
 function wifi.getcountry() end
 
 ---Gets default WiFi operation mode.
@@ -71,6 +73,7 @@ function wifi.getcountry() end
 --- - wifi.SOFTAP
 --- - wifi.STATIONAP
 --- - wifi.NULLMODE
+---@nodiscard
 function wifi.getdefaultmode() end
 
 ---Gets WiFi operation mode.
@@ -79,6 +82,7 @@ function wifi.getdefaultmode() end
 --- - wifi.SOFTAP
 --- - wifi.STATIONAP
 --- - wifi.NULLMODE
+---@nodiscard
 function wifi.getmode() end
 
 ---Gets WiFi physical mode.
@@ -86,6 +90,7 @@ function wifi.getmode() end
 --- - wifi.PHYMODE_B
 --- - wifi.PHYMODE_G
 --- - wifi.PHYMODE_N
+---@nodiscard
 function wifi.getphymode() end
 
 ---Configures whether or not WiFi automatically goes to sleep\
@@ -291,10 +296,12 @@ function wifi.sta.disconnect(disconnected_cb) end
 --- - **1** - new format (BSSID : SSID, RSSI, auth mode, Channel)
 ---@param callback function @"function to receive the AP table when the scan is done.This function  \n  receives a table, the key is the BSSID, the value is other info in format:  \n **SSID, RSSID, auth mode, channel**."
 ---@return nil
+---@nodiscard
 function wifi.sta.getap(cfg, format, callback) end
 
 ---Get index of current Access Point stored in AP cache.
 ---@return integer current_index @"index of currently selected  \n Access Point. (Range:1-5)"
+---@nodiscard
 function wifi.sta.getapindex() end
 
 ---Get information of APs cached by ESP8266 station.
@@ -306,10 +313,12 @@ function wifi.sta.getapindex() end
 --- - **pwd** password for Access Point, nil if no password was configured
 --- - **bssid** MAC address of Access Point. `nil` will be returned\
 ---if no MAC address was configured during station configuration.
+---@nodiscard
 function wifi.sta.getapinfo() end
 
 ---Gets the broadcast address in station mode.
 ---@return string|nil @"broadcast address as string,  \n for example '192.168.0.255',  \n returns `nil` if IP address = '0.0.0.0'."
+---@nodiscard
 function wifi.sta.getbroadcast() end
 
 ---Gets the WiFi station configuration.
@@ -326,6 +335,7 @@ function wifi.sta.getbroadcast() end
 --- - If `return_table` is false:
 ---   - **ssid, password, bssid_set, bssid**, if bssid_set is equal to 0\
 ---then bssid is irrelevant
+---@nodiscard
 function wifi.sta.getconfig(return_table) end
 
 ---Gets the default WiFi station configuration stored in flash.
@@ -342,20 +352,24 @@ function wifi.sta.getconfig(return_table) end
 --- - If `return_table` is false:
 ---   - **ssid, password, bssid_set, bssid**, if bssid_set is equal to 0\
 ---then bssid is irrelevant
+---@nodiscard
 function wifi.sta.getdefaultconfig(return_table) end
 
 ---Gets current station hostname.
 ---@return string hostname @currently configured hostname
+---@nodiscard
 function wifi.sta.gethostname() end
 
 ---Gets IP address, netmask, and gateway address in station mode.
 ---@return string IP_address @"as string, for example '192.168.0.111'.  \n Returns `nil` if IP = '0.0.0.0'."
 ---@return string netmask
 ---@return string gateway_address @Returns `nil` if IP = '0.0.0.0'.
+---@nodiscard
 function wifi.sta.getip() end
 
 ---Gets MAC address in station mode.
 ---@return string MAC @"address as string  \n e.g. '18:fe:34:a2:d7:34'"
+---@nodiscard
 function wifi.sta.getmac() end
 
 ---Get RSSI (Received Signal Strength Indicator) of the Access Point\
@@ -363,6 +377,7 @@ function wifi.sta.getmac() end
 ---@return number|nil @>
 --- - If station is connected to an access point, `rssi` is returned.
 --- - If station is not connected to an access point, `nil` is returned.
+---@nodiscard
 function wifi.sta.getrssi() end
 
 ---Set Maximum number of Access Points to store\
@@ -413,6 +428,7 @@ function wifi.sta.sleeptype(type_wanted) end
 --- - wifi.STA_APNOTFOUND
 --- - wifi.STA_FAIL
 --- - wifi.STA_GOTIP
+---@nodiscard
 function wifi.sta.status() end
 
 ---@class APConfig
@@ -465,6 +481,7 @@ function wifi.ap.getbroadcast() end
 ---Gets table of clients connected to\
 ---device in AP mode.
 ---@return table @table of connected clients
+---@nodiscard
 function wifi.ap.getclient() end
 
 ---Gets the current SoftAP configuration.
@@ -481,6 +498,7 @@ function wifi.ap.getclient() end
 ---   - **beacon** - Beacon interval
 --- - If `return_table` is `false`:
 ---   - **ssid, password**, if bssid_set is equal to 0 then bssid is irrelevant
+---@nodiscard
 function wifi.ap.getconfig(return_table) end
 
 ---Gets the default SoftAP configuration stored in flash.
@@ -497,14 +515,17 @@ function wifi.ap.getconfig(return_table) end
 ---   - **beacon** - Beacon interval
 --- - If return_table is false:
 ---   - **ssid, password**, if bssid_set is equal to 0 then bssid is irrelevant
+---@nodiscard
 function wifi.ap.getdefaultconfig(return_table) end
 
 ---Gets IP address, netmask and gateway in AP mode.
 ---@return string @"IP address, netmask, gateway address  \n  as string,for example '192.168.0.111',  \n returns `nil` if IP address = '0.0.0.0'."
+---@nodiscard
 function wifi.ap.getip() end
 
 ---Gets MAC address in AP mode.
 ---@return string @"MAC address as string,  \n for example '1A-33-44-FE-55-BB'"
+---@nodiscard
 function wifi.ap.getmac() end
 
 ---Sets IP address, netmask and gateway address in AP mode.

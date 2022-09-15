@@ -39,6 +39,7 @@ function ws2812_effects.set_speed(speed) end
 
 ---Get current speed.
 ---@return integer speed @between 0 and 255
+---@nodiscard
 function ws2812_effects.get_speed() end
 
 ---Set the delay between two effect steps in milliseconds.
@@ -48,6 +49,7 @@ function ws2812_effects.set_delay(delay) end
 
 ---Get current delay.
 ---@return number delay @is the current effect delay in milliseconds
+---@nodiscard
 function ws2812_effects.get_delay() end
 
 ---Set the active effect mode.

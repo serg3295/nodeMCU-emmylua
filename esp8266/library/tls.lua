@@ -13,6 +13,7 @@ local TLS = {}
 
 ---Creates TLS connection.
 ---@return TLS tls.socket @sub module
+---@nodiscard
 function tls.createConnection() end
 
 ---Closes socket.
@@ -28,6 +29,7 @@ function TLS:connect(port, ip_domain) end
 ---Retrieve port and ip of peer.
 ---@return number @ip of peer
 ---@return number @port of peer
+---@nodiscard
 function TLS:getpeer() end
 
 ---Throttle data reception by placing a request\
@@ -58,31 +60,37 @@ function TLS:unhold() end
 ---Controls the certificate verification process when the NodeMCU makes a secure connection.
 ---@param enable boolean @"A boolean which indicates whether verification should be enabled or not.  \n The default at boot is false."
 ---@return boolean|any @`true` if it worked. Can throw a number of errors if invalid data is supplied.
+---@nodiscard
 function tls.cert.verify(enable) end
 
 ---Controls the certificate verification process when the NodeMCU makes a secure connection.
 ---@param pemdata string @"A string containing the CA certificate to use for verification.  \n There can be several of these."
 ---@param pemdata1? string @(optional)
 ---@return boolean|any @`true` if it worked. Can throw a number of errors if invalid data is supplied.
+---@nodiscard
 function tls.cert.verify(pemdata, pemdata1) end
 
 ---Controls the certificate verification process when the NodeMCU makes a secure connection.
 ---@param callback function @A Lua function which returns TLS keys and certificates for use with connections.
 ---@return boolean|any @`true` if it worked. Can throw a number of errors if invalid data is supplied.
+---@nodiscard
 function tls.cert.verify(callback) end
 
 ---Controls the client key and certificate used when the ESP creates a TLS connection
 ---@param enable boolean @"A boolean, specifying whether subsequent TLS connections  \n will present a client certificate. The default at boot is false."
 ---@return boolean|any @`true` if it worked. Can throw a number of errors if invalid data is supplied.
+---@nodiscard
 function tls.cert.auth(enable) end
 
 ---Controls the client key and certificate used when the ESP creates a TLS connection
 ---@param pemdata string @"Two strings, the first containing the PEM-encoded clients  \n certificate and the second containing the PEM-encoded clients private key."
 ---@param pemdata1? string @(optional)
 ---@return boolean|any @`true` if it worked. Can throw a number of errors if invalid data is supplied.
+---@nodiscard
 function tls.cert.auth(pemdata, pemdata1) end
 
 ---Controls the client key and certificate used when the ESP creates a TLS connection
 ---@param callback function @A Lua function which returns TLS keys and certificates for use with connections.
 ---@return boolean|any @`true` if it worked. Can throw a number of errors if invalid data is supplied.
+---@nodiscard
 function tls.cert.auth(callback) end
