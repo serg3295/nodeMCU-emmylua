@@ -296,7 +296,6 @@ function wifi.sta.disconnect(disconnected_cb) end
 --- - **1** - new format (BSSID : SSID, RSSI, auth mode, Channel)
 ---@param callback function @"function to receive the AP table when the scan is done.This function  \n  receives a table, the key is the BSSID, the value is other info in format:  \n **SSID, RSSID, auth mode, channel**."
 ---@return nil
----@nodiscard
 function wifi.sta.getap(cfg, format, callback) end
 
 ---Get index of current Access Point stored in AP cache.
