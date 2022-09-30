@@ -106,6 +106,12 @@ function wifi.sta.connect() end
 ---@return nil
 function wifi.sta.disconnect() end
 
+---Allows adjusting the maximum TX power for the WiFi. This is (unfortunately)\
+---needed for some boards which have a badly matched antenna.
+---@param power number @"The maximum transmit power in dBm. This must have  \nthe range 2dBm - 20dBm. This value is a float."
+---@return boolean @A `boolean` where `true` is OK.
+function wifi.sta.settxpower(power) end
+
 ---Registers callbacks for WiFi station status events.
 ---@param event string|"start"|"stop"|"connected"|"disconnected"|"authmode_changed"|"got_ip" @WiFi station event you would like to set a callback for:
 ---@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister the callback for  \n the event. The info argument given to the callback is a table containing additional information about the event."
