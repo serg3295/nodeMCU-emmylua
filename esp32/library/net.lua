@@ -178,7 +178,7 @@ function net.dns.getdnsserver(dns_index) end
 
 ---Resolve a hostname to an IP address. Doesn't require a socket like `net.socket.dns()`.
 ---@param host string @hostname to resolve
----@param callback fun(sk:nil, ip:string) @`function(sk, ip)` called when the name was resolved. **sk** is always `nil`
+---@param callback fun(ip:string) @`function(ip)` called when the name was resolved.
 ---@return nil
 function net.dns.resolve(host, callback) end
 
