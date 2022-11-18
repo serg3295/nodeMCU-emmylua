@@ -43,8 +43,8 @@ function http.createConnection(url, method, options) end
 ---|"connect" #Called when the connection is first established. Callback receives no arguments.
 ---|"headers" #Called once the HTTP headers from the remote end have been received. Callback is called as callback(status_code, headers_table).
 ---|"data" #Can be called multiple times, each time more (non-headers) data is received. Callback is called as callback(status_code, data).
----|"complete" #Called once all data has been received. Callback is called as callback status_code, connected) where connected is true if the connection is still open.
----@param callback? fun() @"(optional) a function to be called when the given event occurs.  \n Can be `nil` to remove a previously configured callback."
+---|"complete" #Called once all data has been received. Callback is called as callback(status_code, connected) where connected is true if the connection is still open.
+---@param callback? fun(sc?: integer, par?:any)|nil @"(optional) a function to be called when the given event occurs.  \n Can be `nil` to remove a previously configured callback."
 ---@return nil
 function connection:on(event, callback) end
 
