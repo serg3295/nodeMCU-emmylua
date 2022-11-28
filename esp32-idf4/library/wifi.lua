@@ -52,7 +52,7 @@ function wifi.getmode() end
 ---@param save? boolean @(optional) choose whether or not to save wifi mode to flash
 ---|>`true` #WiFi mode configuration will be retained through power cycle.
 ---|`false` #WiFi mode configuration will not be retained through power cycle.
----@return any @current mode after setup
+---@return nil
 function wifi.mode(mode, save) end
 
 ---Starts the WiFi interface(s).
@@ -66,7 +66,6 @@ function wifi.stop() end
 ---@class StaConfig32
 ---@field ssid string
 ---@field pwd string
----@field auto boolean
 ---@field bssid string
 ---@field pmf number
 
@@ -108,13 +107,13 @@ function wifi.sta.disconnect() end
 
 ---Allows adjusting the maximum TX power for the WiFi. This is (unfortunately)\
 ---needed for some boards which have a badly matched antenna.
----@param power number @"The maximum transmit power in dBm. This must have  \nthe range 2dBm - 20dBm. This value is a float."
+---@param power number @"The maximum transmit power in dBm. This must have  \n the range 2dBm - 20dBm. This value is a float."
 ---@return boolean @A `boolean` where `true` is OK.
 function wifi.sta.settxpower(power) end
 
 ---Registers callbacks for WiFi station status events.
 ---@param event string|"start"|"stop"|"connected"|"disconnected"|"authmode_changed"|"got_ip" @WiFi station event you would like to set a callback for:
----@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister the callback for  \n the event. The info argument given to the callback is a table containing additional information about the event."
+---@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister the callback for  \n the event. The *info* argument given to the callback is a table containing additional information about the event."
 ---Event information provided for each event is as follows:\
 ---`"start"`: no additional info\
 ---`"stop"`: no additional info\
@@ -122,8 +121,8 @@ function wifi.sta.settxpower(power) end
 --- - **ssid**: the SSID of the network
 --- - **bssid**: the BSSID of the AP
 --- - **channel**: the primary channel of the network
---- - **auth** authentication method, one of wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK,\
----wifi.AUTH_WPA2_PSK (default), wifi.AUTH_WPA_WPA2_PSK
+--- - **auth** authentication method, one of wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK,\
+---wifi.WPA_WPA2_PSK, wifi.AUTH_WPA3_PSK, wifi.AUTH_WAPI_PSK
 ---
 ---`"disconnected"`: information about the network/AP that was disconnected from:
 --- - **ssid**: the SSID of the network
@@ -158,12 +157,14 @@ function wifi.sta.getmac() end
 --- - **bssid** BSSID == `nil`, don't filter BSSID
 --- - **channel** channel == 0, scan all channels, otherwise scan set channel (default is 0)
 --- - **hidden** hidden == 1, get info for router with hidden SSID (default is 0)
----@param callback fun(ap_list:table) @"`function(ap_list)` to receive the list of APs when the scan is done.  \n Each entry in the returned array follows the format used for `wifi.sta.config()`,  \n with some additional fields. The following fields are provided for each scanned AP:"
+---@param callback fun(err: integer, ap_list:table) @"`function(err, ap_list)` to receive the list of APs when the scan is done.  \n Each entry in the returned array follows the format used for `wifi.sta.config()`,  \n with some additional fields. The following fields are provided for each scanned AP:"
 --- - **ssid**: the network SSID
 --- - **bssid**: the BSSID of the AP
 --- - **channel**: primary WiFi channel of the AP
 --- - **rssi**: Received Signal Strength Indicator value
---- - **auth** authentication method, one of *wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK* (default), *wifi.AUTH_WPA_WPA2_PSK*
+--- - **auth** authentication method, one of *wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK,\
+---wifi.AUTH_WPA2_PSK, wifi.AUTH_WPA_WPA2_PSK, wifi.AUTH_WPA2_ENTERPRISE,\
+---wifi.AUTH_WPA2_WPA3_PSK, wifi.AUTH_WPA3_PSK, wifi.AUTH_WAPI_PSK*
 --- - **bandwidth**: one of the following constants: *wifi.HT20, wifi.HT40_ABOVE, wifi.HT40_BELOW*
 ---@return nil
 function wifi.sta.scan(cfg, callback) end
@@ -175,7 +176,8 @@ function wifi.sta.scan(cfg, callback) end
 ---@field dns string
 
 ---Sets IP address, netmask, gateway, dns address\
----in station mode.
+---in station mode. Options set by this function\
+---are not saved to flash.
 ---@param cfg Setip32 @table to hold configuration:
 --- - **ip** device ip address.
 --- - **netmask** network netmask.
@@ -217,8 +219,8 @@ function wifi.sta.sethostname(hostname) end
 function wifi.ap.config(cfg, save) end
 
 ---Registers callbacks for WiFi AP events.
----@param event string|"start"|"stop"|"sta_connected"|"sta_disconnected"|"probe_req" @WiFi AP event you would like to set a callback for:
----@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister  \n the callback for the event.The info argument given to the callback is a table containing additional  \n information about the event."
+---@param event string|"start"|"stop"|"sta_connected"|"sta_disconnected"|"probe_req" @WiFi AP event you would like to set a callback for: start, stop, sta_connected, sta_disconnected, probe_req
+---@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister the callback for the event.  \n The *info* argument given to the callback is a table containing additional information about the event."
 ---Event information provided for each event is as follows:\
 ---`"start"`: no additional info\
 ---`"stop"`: no additional info\
@@ -241,17 +243,19 @@ function wifi.ap.on(event, callback) end
 ---@nodiscard
 function wifi.ap.getmac() end
 
----Sets IP address, netmask, gateway, dns address in AccessPoint mode.
+---Sets IP address, netmask, gateway, dns address in AccessPoint mode.\
+---Options set by this function are not saved to flash.
 ---@param cfg Setip32 @table to hold configuration:
 --- - **ip** device ip address.
 --- - **netmask** network netmask.
 --- - **gateway** gateway address.
---- - **dns** name server address,\
----which will be provided to clients over DHCP. (Optional)
+--- - **dns** (optional) name server address,\
+---which will be provided to clients over DHCP.
 ---@return nil
 function wifi.ap.setip(cfg) end
 
----Sets AccessPoint hostname.
+---Sets AccessPoint hostname.\
+---Options set by this function are not saved to flash.
 ---@param hostname string @"must only contain letters,  \n numbers and hyphens('-') and be 32 characters or  \n less with first and last character being alphanumeric"
----@return boolean
+---@return boolean @`true` if success, `false` otherwise
 function wifi.ap.sethostname(hostname) end
