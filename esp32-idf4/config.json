@@ -1,0 +1,23 @@
+{
+  "name": "ESP32-IDF4",
+  "words": [
+    "%-%-%-esp32%-idf4\r?\n",
+    "eromfs%.%l+",
+    "heaptrace%.%l+",
+    "rmt%.%l+",
+    "wifi%.start",
+    "wifi%.sta%.on",
+    "wifi%.ap%.on",
+    "gpio%.config"
+  ],
+  "settings": {
+    "Lua.runtime.version": "Lua 5.3",
+    "Lua.runtime.builtin": {
+      "math" : "disable",
+      "bit" : "disable",
+      "bit32" : "disable",
+      "utf8" : "disable",
+      "os" : "disable"
+    }
+  }
+}
