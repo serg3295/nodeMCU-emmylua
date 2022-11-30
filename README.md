@@ -18,32 +18,32 @@ If you use VSCode or Neovim, then you have to install **[sumneko lua-language-se
 
 Since version 2.3.1 of **sumneko.lua** extension you can use new feature *Automatic adapt to the project environment*.
 
-The extension will try to determine the runtime environment by keywords from *config.lua* and set the appropriate settings in *settings.json*.
+The extension will try to determine the runtime environment by keywords from *config.json* and set the appropriate settings in *settings.json*.
 
 #### Install
 
-Copy API definition files, *config.lua* and *plugin.lua* to the directories as shown in example below.<br>
-Note: `config.lua`, `plugin.lua` and `library` are predefined names.
+Copy API definition files, *config.json* and *plugin.lua* to the directories as shown in example below.<br>
+Note: `config.json`, `plugin.lua` and `library` are predefined names.
 ```
 nodeMCU-emmylua
 |
 |___esp32-idf4
-|   | config.lua  # settings for esp32-idf4 environment
+|   | config.json  # settings for esp32-idf4 environment
 |   | plugin.lua
 |   |___library
-|       | *.lua   # files with functions definitions for esp32-idf4
+|       | *.lua   # files with function definitions for esp32-idf4
 |
 |___esp32
-|   | config.lua  # settings for esp32 environment
+|   | config.json  # settings for esp32 environment
 |   | plugin.lua
 |   |___library
-|       | *.lua   # files with functions definitions for esp32
+|       | *.lua   # files with function definitions for esp32
 |
 |___esp8266
-    | config.lua  # settings for esp8266 environment
+    | config.json  # settings for esp8266 environment
     | plugin.lua
     |___library
-        | *.lua   # files with functions definitions for esp8266
+        | *.lua   # files with function definitions for esp8266
 ```
 
 Then set path to the directories in the setting `User -> Lua.workspace.userThirdParty`. For example:
@@ -103,7 +103,7 @@ The script requires ZeroBrane Studio already installed to run.
 2. copy `esp8266` and `esp32` folders with module.lua files to `ZBS/api/lua` folder
 
   *Note*.
-  'bme280_c_module.lua' is deprecated. You must delete this file from `esp8266` folder
+  'bme280_c_module.lua' is deprecated. You **must** delete this file from `esp8266` folder
   before converting, otherwise, the conversion will fail with an error.
   If you want to use bme280 C module instead of Lua module bme280.lua you could add lines
 
