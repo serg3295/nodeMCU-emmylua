@@ -1,7 +1,7 @@
 {
-  "name": "ESP32-IDF4",
+  "name": "ESP32",
   "words": [
-    "%-%-%-esp32%-idf4\r?\n",
+    "%-%-%-esp32\r?\n",
     "eromfs%.%l+",
     "heaptrace%.%l+",
     "rmt%.%l+",

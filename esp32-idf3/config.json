@@ -1,6 +1,6 @@
 {
-  "name": "ESP32",
-  "words": [ "%-%-%-esp32\r?\n" ],
+  "name": "ESP32-IDF3",
+  "words": [ "%-%-%-esp32%-idf3\r?\n" ],
   "settings": {
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {
