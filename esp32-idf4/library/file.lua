@@ -18,9 +18,9 @@ function file.format() end
 
 ---Return size information for the file system, in bytes.\
 ---Function is not supported for SD cards.
----@return number remaining
----@return number used
----@return number total
+---@return integer remaining
+---@return integer used
+---@return integer total
 ---@nodiscard
 function file.fsinfo() end
 
@@ -29,6 +29,22 @@ function file.fsinfo() end
 ---@return table @"a lua table which contains the `{file name: file size}` pairs. For SPIFFS file systems  \n the size is returned in bytes, whereas for FAT file systems the size is given in kilobytes."
 ---@nodiscard
 function file.list(mountpoint) end
+
+---Creates a directory, provided the underlying file system supports directories.\
+---SPIFFS does not, but FAT (which you may have on an attached SD card) does.
+---@param path string @the full path name of the directory to create. E.g. "/SD0/MYDIR".
+---@param mode? integer @(optional), only used for file systems which use mode permissions. Defaults to 0777 (octal).
+---@return nil
+---Throws an error if the directory could not be created. Error code 134 (at the time of writing)\
+---indicates that the filesystem at the given path does not support directories.
+function file.mkdir(path, mode) end
+
+---Removes an empty directory, provided the underlying file system supports directories.\
+---SPIFFS does not, but FAT (which you may have on an attached SD card) does.
+---@param path string @the path to the directory to remove. The directory must be empty.
+---@return nil
+---Throws an error if the directory could not be removed.
+function file.rmdir(path) end
 
 ---Remove a file from the file system.\
 ---The file must not be currently open.
