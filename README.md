@@ -1,4 +1,4 @@
-# Emmy Lua annotations for NodeMCU ESP8266 & ESP32
+# EmmyLua annotations for NodeMCU ESP8266 & ESP32
 
 [NodeMCU](https://nodemcu.readthedocs.io/en/release/) function annotations for autocomplete in
 - Visual Studio Code
@@ -11,39 +11,33 @@
 <img src="./images/nodemcu_emmy2.gif" style="max-width:100%;">
 
 ## VS Code and Neovim
+If you use VSCode or Neovim, then you have to install **[sumneko's lua-language-server](https://github.com/sumneko/lua-language-server/wiki)** extension first.
 
-If you use VSCode or Neovim, then you have to install **[sumneko lua-language-server](https://github.com/sumneko/lua-language-server)** extension first.
-
-### Automatic including of API definition files
-
-Since version 2.3.1 of **sumneko.lua** extension you can use new feature *Automatic adapt to the project environment*.
-
-The extension will try to determine the runtime environment by keywords from *config.json* and set the appropriate settings in *settings.json*.
-
-#### Install
-
-Copy API definition files, *config.json* and *plugin.lua* to the directories as shown in example below.<br>
-Note: `config.json`, `plugin.lua` and `library` are predefined names.
+### Install
+Create directory with arbitrary name e.g. *nodeMCU-emmylua* and copy directories from this repository into it as shown in the example below.<br>
+*Note:* `config.json`, `plugin.lua` and `library` are predefined names.
+      
+Here is the directories structure:
 ```
 nodeMCU-emmylua
-|
-|___esp32-idf4
-|   | config.json  # settings for esp32-idf4 environment
-|   | plugin.lua
-|   |___library
-|       | *.lua   # files with function definitions for esp32-idf4
 |
 |___esp32
 |   | config.json  # settings for esp32 environment
 |   | plugin.lua
 |   |___library
-|       | *.lua   # files with function definitions for esp32
+|       | *.lua   # files with function annotations for the dev-esp32 branch
 |
 |___esp8266
-    | config.json  # settings for esp8266 environment
+|   | config.json  # settings for esp8266 environment
+|   | plugin.lua
+|   |___library
+|       | *.lua   # files with function annotations for the dev branch
+|
+|___esp32-idf3 (stale branch)
+    | config.json  # settings for esp32-idf3 environment
     | plugin.lua
     |___library
-        | *.lua   # files with function definitions for esp8266
+        | *.lua   # files with function annotations for the dev-esp32-idf3-final branch
 ```
 
 Then set path to the directories in the setting `User -> Lua.workspace.userThirdParty`. For example:
@@ -53,44 +47,36 @@ Then set path to the directories in the setting `User -> Lua.workspace.userThird
       "/home/user/nodeMCU-emmylua"
     ]
 ```
+### Automatic including of annotation files (recommended)
+  
+Since version 2.3.1 of **sumneko.lua** extension you can use new feature *Automatic adapt to the project environment*.
 
-Hint! When starting new project you can type in short keyword `---esp32-idf4` or `---esp32` or `---esp8266` followed by `Enter` into *new_file.lua* and environment will set up automatically.
+The extension will try to determine the runtime environment by keywords from *config.json* and set the appropriate settings in *settings.json*.
+      
+*Hint!* When starting new project you can type in short keyword `---esp32` or `---esp8266` followed by `Enter` into *any_file.lua* in workspace and environment will set up automatically.
 
-### Installing API definition files manually
+### Installing annotation files manually
 
-Create directories and copy files from this repository into them as shown in the example below.<br>
-*Note*. Files for esp32 and for esp8266 must be located in different directories.
+The **sumneko.lua** extension provides a number of parameters that are stored in .vscode/settings.json.
 
-Here is example of the directories structure:
-```
-nodeMCU
-| plugin.lua  # script
-|
-|___esp32
-|   | *.lua   # files with functions definitions for esp32
-|
-|___esp8266
-    | *.lua   # files with functions definitions for esp8266
-```
-
-The **sumneko.Lua** extension provides a number of parameters that are stored in .vscode/settings.json.
-
-Now you have to set path to the files with functions definitions for esp32-idf4 **OR** esp32 **OR** for esp8266 in the setting ```"Lua.workspace.library"```.
+You can set path to the directory with function annotations for esp8266 **OR** esp32 **OR** for esp32-idf3 in the setting ```"Lua.workspace.library"```.
 ```json
 "Lua.workspace.library": [
-      "path"
+  "path/esp<your choose>/library"
     ]
 ```
-To perform the autocomplete some functions copy the script **plugin.lua** in any directory and specify the path to this file in the setting:
+To perform the autocomplete some functions specify the
+path to the script **plugin.lua** in the setting:
 ```json
- "Lua.runtime.plugin": "PATH/plugin.lua"
+ "Lua.runtime.plugin": "path/esp<your choose>/plugin.lua"
 ```
+You have to also specify `Lua.runtime.builtin"` and `"Lua.runtime.version"` settings according with *config.json* file content.
 
 ## IntelliJ IDEA
 
 You have to install the **[IntelliJ-EmmyLua ](https://github.com/EmmyLua/IntelliJ-EmmyLua)** plugin. The auto-completion capabilities of this plugin differ from those of the sumneko extension. Therefore, some of the advanced features will not be supported.
 
-You will need to convert files from the sumneko format to the IDEA format by running **sumn2idea.lua** script from the `tools` directory.
+You will need to convert files from sumneko format to IDEA format by running **sumn2idea.lua** script from the `tools` directory.
 
 ## ZeroBrane Studio
 
