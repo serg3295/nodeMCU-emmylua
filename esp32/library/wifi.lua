@@ -69,31 +69,40 @@ function wifi.stop() end
 ---@field bssid string
 ---@field pmf number
 
----Sets the WiFi station configuration. The WiFi mode must be set to\
---- *wifi.STATION* or *wifi.STATIONAP* before this function can be used.
+---Sets the WiFi station configuration. The WiFi mode must be set to *wifi.STATION* or *wifi.STATIONAP* before this function can be used.
 ---@param station_config StaConfig32 @table containing configuration data for station
 --- - **ssid** string which is less than 32 bytes.
 --- - **pwd** string which is 8-64 or 0 bytes. Empty string indicates an open WiFi access point.
---- - **bssid** (optional) string that contains the MAC address of the access point.\
----You can set BSSID if you have multiple access points with the same SSID.\
----Note: if you set BSSID for a specific SSID and would like to configure station to connect\
----to the same SSID only without the BSSID requirement, you MUST first configure to station\
----to a different SSID first, then connect to the desired SSID. The following formats are valid:\
+--- - **bssid** (optional) string that contains the MAC address of the access point. You can set BSSID if you have multiple access points with the same SSID.\
+---Note: if you set BSSID for a specific SSID and would like to configure station to connect to the same SSID only without the BSSID requirement, you MUST first configure to station to a different SSID first, then connect to the desired SSID. The following formats are valid:\
 --- "DE:C1:A5:51:F1:ED"\
 --- "AC-1D-1C-B1-0B-22"\
 --- "DE AD BE EF 7A C0"\
 --- "AcDc0123c0DE"
---- - **pmf** an optional setting to control whether Protected Management Frames\
----are supported and/or required. One of:
----   - `wifi.sta.PMF_OFF`
+--- - **pmf** an (optional) setting to control whether Protected Management Frames are supported and/or required. One of:
 ---   - `wifi.sta.PMF_AVAILABLE` Defaults to `wifi.sta.PMF_AVAILABLE`.
 ---   - `wifi.sta.PMF_REQUIRED`.\
----PMF is required when joining to WPA3-Personal access points.
+---PMF is required when joining to WPA3-Personal access points. The value `wifi.sta.PMF_OFF` is no longer available as it is no longer supported by the wifi stack.
+--- - **channel** (optional) integer value, the channel number to start scanning for the AP from, if known.
+--- - **scan_method** (optional) string value, one of `"fast"` or `"all"` do either do a fast scan or all channel scan when looking for the AP to connect to. With fast scan, the first found matching AP is used even if it is not the best/closest one.
+--- - **listen_interval** (optional) listen interval to receive beacon if max wifi power saving mode is enabled. Units is in AP beacon intervals. Defaults to 3.
+--- - **sort_by** (optional) string value for preferential selection of AP. Must be one of `"rssi"` or `"authmode"` if present.
+--- - **threshold_rssi** (optional) integer value to limit APs to only those which have a signal stronger than this value.
+--- - **threshold_authmode** (optional) value to limit APs to those with an authentication mode of at least this settings. One of `wifi.AUTH_OPEN`, `wifi.AUTH_WEP`, `wifi.AUTH_WPA_PSK`, `wifi.AUTH_WPA2_PSK`, `wifi.AUTH_WPA_WPA2_PSK`, `wifi.AUTH_WPA2_ENTERPRISE`, `wifi.AUTH_WPA3_PSK`, `wifi.AUTH_WPA2_WPA3_PSK`, `wifi.AUTH_WAPI_PSK`.
+--- - **rm** (optional) boolean, set to `true` to enable Radio Measurements
+--- - **btm** (optional) boolean, set to `true` to enable BSS Transition Management
+--- - **mbo** (optional) boolean, set to `true` to enable Multi-Band Operation
+--- - **sae_pwe** optional, configures WPA3 SAE Password Element setting. One of `wifi.SAE_PWE_UNSPECIFIED`, `wifi.SAE_PWE_HUNT_AND_PECK`, `wifi.SAE_PWE_HASH_TO_ELEMENT` or `wifi.SAE_PWE_BOTH`.
 ---@param save boolean @Save station configuration to flash.
 ---|`true` #configuration will be retained through power cycle.
 ---|>`false` #configuration will not be retained through power cycle.
 ---@return nil
 function wifi.sta.config(station_config, save) end
+
+---Returns the current station configuration.
+---@return table @A table with the configuration settings.
+---Refer to `wifi.sta.config()` for field details.
+function wifi.sta.getconfig() end
 
 ---Connects to the configured AP in station mode. You will want to call this\
 ---on start-up after `wifi.start()`, and quite possibly also in response to\
@@ -111,6 +120,16 @@ function wifi.sta.disconnect() end
 ---@return boolean @A `boolean` where `true` is OK.
 function wifi.sta.settxpower(power) end
 
+---Configures power-saving setting in station mode.
+---@param setting string |"none"|"min"|"max" @"In `\"min\"` mode, the station wakes up every DTIM period to receive the beacon.  \nIn `\"max\"` mode, the station wakes up at the interval configured in `listen_interval` see `wifi.sta.config()`.  \nWhen set to `\"none\"` the station does not go to sleep and can receive frames immediately."
+---@return nil
+function wifi.sta.powersave(setting) end
+
+--- Returns the configured station power-saving mode.
+---@return string @One of `"none"`, `"min"` or `"max"`.
+--- Refer to `wifi.sta.powersave()` for details.
+function wifi.sta.getpowersave() end
+
 ---Registers callbacks for WiFi station status events.
 ---@param event string|"start"|"stop"|"connected"|"disconnected"|"authmode_changed"|"got_ip" @WiFi station event you would like to set a callback for:
 ---@param callback fun(event:string, info:table) @"`function(event, info)` to perform when event occurs, or `nil` to unregister the callback for  \n the event. The *info* argument given to the callback is a table containing additional information about the event."
@@ -121,8 +140,8 @@ function wifi.sta.settxpower(power) end
 --- - **ssid**: the SSID of the network
 --- - **bssid**: the BSSID of the AP
 --- - **channel**: the primary channel of the network
---- - **auth** authentication method, one of wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK,\
----wifi.WPA_WPA2_PSK, wifi.AUTH_WPA3_PSK, wifi.AUTH_WAPI_PSK
+--- - **auth** authentication method, one of wifi.AUTH_OPEN, wifi.AUTH_WEP, wifi.AUTH_WPA_PSK, wifi.AUTH_WPA2_PSK, wifi.AUTH_WPA_WPA2_PSK,\
+---wifi.AUTH_WPA2_ENTERPRISE, wifi.AUTH_WPA3_PSK, wifi.AUTH_WPA2_WPA3_PSK, wifi.AUTH_WAPI_PSK
 ---
 ---`"disconnected"`: information about the network/AP that was disconnected from:
 --- - **ssid**: the SSID of the network
@@ -162,9 +181,9 @@ function wifi.sta.getmac() end
 --- - **bssid**: the BSSID of the AP
 --- - **channel**: primary WiFi channel of the AP
 --- - **rssi**: Received Signal Strength Indicator value
---- - **auth** authentication method, one of *wifi.AUTH_OPEN, wifi.AUTH_WPA_PSK,\
----wifi.AUTH_WPA2_PSK, wifi.AUTH_WPA_WPA2_PSK, wifi.AUTH_WPA2_ENTERPRISE,\
----wifi.AUTH_WPA2_WPA3_PSK, wifi.AUTH_WPA3_PSK, wifi.AUTH_WAPI_PSK*
+--- - **auth** authentication method, one of *wifi.AUTH_OPEN, wifi.AUTH_WEP, wifi.AUTH_WPA_PSK,\
+---wifi.AUTH_WPA2_PSK, wifi.AUTH_WPA_WPA2_PSK, wifi.AUTH_WPA2_ENTERPRISE, wifi.AUTH_WPA3_PSK\
+---wifi.AUTH_WPA2_WPA3_PSK, wifi.AUTH_WAPI_PSK*
 --- - **bandwidth**: one of the following constants: *wifi.HT20, wifi.HT40_ABOVE, wifi.HT40_BELOW*
 ---@return nil
 function wifi.sta.scan(cfg, callback) end
