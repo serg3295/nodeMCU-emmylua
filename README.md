@@ -11,7 +11,7 @@
 <img src="./images/nodemcu_emmy2.gif" style="max-width:100%;">
 
 ## VS Code and Neovim
-If you use VSCode or Neovim, then you have to install **[sumneko's lua-language-server](https://github.com/sumneko/lua-language-server/wiki)** extension first.
+If you use VSCode or Neovim, then you have to install **[sumneko's lua-language-server](https://github.com/LuaLS/lua-language-server/wiki)** extension first.
 
 ### Install
 Create directory with arbitrary name e.g. *nodeMCU-emmylua* and copy directories from this repository into it as shown in the example below.<br>
@@ -25,19 +25,19 @@ nodeMCU-emmylua
 |   | config.json  # settings for esp32 environment
 |   | plugin.lua
 |   |___library
-|       | *.lua   # files with function annotations for the dev-esp32 branch
+|       | *.lua   # definition files for the dev-esp32 branch
 |
 |___esp8266
 |   | config.json  # settings for esp8266 environment
 |   | plugin.lua
 |   |___library
-|       | *.lua   # files with function annotations for the dev branch
+|       | *.lua   # defintion files for the dev branch
 |
 |___esp32-idf3 (stale branch)
     | config.json  # settings for esp32-idf3 environment
     | plugin.lua
     |___library
-        | *.lua   # files with function annotations for the dev-esp32-idf3-final branch
+        | *.lua   # defintion files for the dev-esp32-idf3-final branch
 ```
 
 Then set path to the directories in the setting `User -> Lua.workspace.userThirdParty`. For example:
