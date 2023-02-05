@@ -31,13 +31,13 @@ nodeMCU-emmylua
 |   | config.json  # settings for esp8266 environment
 |   | plugin.lua
 |   |___library
-|       | *.lua   # defintion files for the dev branch
+|       | *.lua   # definition files for the dev branch
 |
 |___esp32-idf3 (stale branch)
     | config.json  # settings for esp32-idf3 environment
     | plugin.lua
     |___library
-        | *.lua   # defintion files for the dev-esp32-idf3-final branch
+        | *.lua   # definition files for the dev-esp32-idf3-final branch
 ```
 
 Then set path to the directories in the setting `User -> Lua.workspace.userThirdParty`. For example:
