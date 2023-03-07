@@ -123,7 +123,18 @@ function ads1x15:read() end
 ---|`ads1115.CMODE_TRAD` #traditional comparator mode (with hysteresis)
 ---|`ads1115.CMODE_WINDOW` #window comparator mode
 ---@return nil
-function ads1x15:setting(GAIN, SAMPLES, CHANNEL, MODE, CONVERSION_RDY, COMPARATOR, THRESHOLD_LOW, THRESHOLD_HI,COMP_MODE) end
+function ads1x15:setting(
+	GAIN,
+	SAMPLES,
+	CHANNEL,
+	MODE,
+	CONVERSION_RDY,
+	COMPARATOR,
+	THRESHOLD_LOW,
+	THRESHOLD_HI,
+	COMP_MODE
+)
+end
 
 ---Starts the ADC reading for single-shot mode and after the conversion is done it will invoke\
 ---an optional callback function in which the ADC conversion result can be obtained.

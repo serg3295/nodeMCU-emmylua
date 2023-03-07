@@ -12,7 +12,7 @@ pwm2 = {}
 ---@param initialDuty number @initial duty in pulse period steps i.e. 50 for 50% pulse of 100 resolution
 ---@param frequencyDivisor? number @(optional) an integer to divide product of frequency and pulsePeriod.
 ---@return nil
-function pwm2.setup_pin_hz(pin,frequencyAsHz,pulsePeriod,initialDuty ,frequencyDivisor) end
+function pwm2.setup_pin_hz(pin, frequencyAsHz, pulsePeriod, initialDuty, frequencyDivisor) end
 
 ---Assigns PWM frequency expressed as one impulse per second(s) to given pin.
 ---@param pin integer @1-12
@@ -21,7 +21,7 @@ function pwm2.setup_pin_hz(pin,frequencyAsHz,pulsePeriod,initialDuty ,frequencyD
 ---@param initialDuty number @initial duty in pulse period steps i.e. 50 for 50% pulse of 100 resolution
 ---@param frequencyDivisor? number @(optional) an integer to divide product of frequency and pulsePeriod.
 ---@return nil
-function pwm2.setup_pin_sec(pin,frequencyAsSec,pulsePeriod,initialDuty ,frequencyDivisor) end
+function pwm2.setup_pin_sec(pin, frequencyAsSec, pulsePeriod, initialDuty, frequencyDivisor) end
 
 ---Starts PWM for all setup pins. At this moment GPIO pins are marked\
 ---as output and TIMER1 is being reserved for this module.
