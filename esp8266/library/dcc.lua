@@ -53,7 +53,18 @@ dcc = {}
 ---  - **dcc.CV_RESET** Called when CVs must be reset to their factory defaults.
 ---  - **dcc.CV_ACK_COMPLETE** Called when an ACK pulse has finished being sent. Only invoked if `AckPin` is specified.
 ---@return nil
-function dcc.setup(Pin, AckPin, DCC_command, ManufacturerId, VersionId, Flags, OpsModeAddressBaseCV, CV_table, CV_callback) end
+function dcc.setup(
+	Pin,
+	AckPin,
+	DCC_command,
+	ManufacturerId,
+	VersionId,
+	Flags,
+	OpsModeAddressBaseCV,
+	CV_table,
+	CV_callback
+)
+end
 
 ---Stops the dcc module.
 ---@return nil

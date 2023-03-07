@@ -26,7 +26,7 @@ local pulser = {}
 ---|`gpio.PULLUP`
 ---|>`gpio.FLOAT`
 ---@return nil
-function gpio.mode(pin, mode , pullup) end
+function gpio.mode(pin, mode, pullup) end
 
 ---Read digital GPIO pin value.
 ---@param pin integer @pin to read, IO index
@@ -42,7 +42,7 @@ function gpio.read(pin) end
 ---@param cycle_num? integer @an optional number of times to run through the sequence. (default is 1)
 ---@param callback? fun() @(optional) function or `number`, if present the function returns immediately and goes asynchronous.
 ---@return nil
-function gpio.serout(pin, start_level, delay_times , cycle_num, callback) end
+function gpio.serout(pin, start_level, delay_times, cycle_num, callback) end
 
 ---Establish or clear a callback function to run on interrupt for a pin.
 ---@param pin integer @1-12, pin to trigger on, IO index.
@@ -57,7 +57,7 @@ function gpio.serout(pin, start_level, delay_times , cycle_num, callback) end
 --- - when - timestamp of the event
 --- - eventcount - is the number of interrupts that were elided for this callback.
 ---@return nil
-function gpio.trig(pin, type , callback) end
+function gpio.trig(pin, type, callback) end
 
 ---Set digital GPIO pin value.
 ---@param pin integer @pin to write, IO index
@@ -88,7 +88,7 @@ function gpio.pulse.build(tbl, ...) end
 ---@param adjust? number @(optional) This is the number of microseconds to add to the next adjustable period.
 ---@param callback fun(position:number, steps:number, offset:number, now:number) @"This callback is executed when the pulses are complete. The callback is invoked  \n with the same four parameters that are described as the return values of `gpio.pulse:getstate`."
 ---@return nil
-function pulser:start(adjust,  callback) end
+function pulser:start(adjust, callback) end
 
 ---This returns the current state.\
 ---These four values are also passed into the callback functions.
@@ -103,7 +103,7 @@ function pulser:getstate() end
 ---@param position? integer @"(optional) is the index to stop at. The stopping happens on entry to this state.  \n If not specified, then stops on the next state transition."
 ---@param callback? fun(position:number, steps:number, offset:number, now:number) @(optional) is invoked (with the same arguments as are returned by `:getstate`) when the operation has been stopped.
 ---@return boolean
-function pulser:stop(position , callback) end
+function pulser:stop(position, callback) end
 
 ---This stops the output operation immediately.
 ---@return integer position @"is the index of the currently active state. The first state is state 1.  \n This is `nil` if the output operation is complete."

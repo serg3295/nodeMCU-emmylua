@@ -21,7 +21,18 @@ local sobj = {}
 ---@param cold_start? number @(optional) If **0** then the BME280 chip is not initialised.
 ---@return sobj @BME280 Sensor Object (`nil` if initialization has failed)
 ---@nodiscard
-function bme280.setup(id, address, temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter, cold_start) end
+function bme280.setup(
+	id,
+	address,
+	temp_oss,
+	press_oss,
+	humi_oss,
+	power_mode,
+	inactive_duration,
+	IIR_filter,
+	cold_start
+)
+end
 
 ---Re-initializes the sensor.
 ---@param id number @I2C bus number
@@ -35,7 +46,18 @@ function bme280.setup(id, address, temp_oss, press_oss, humi_oss, power_mode, in
 ---@param cold_start? number @(optional) If **0** then the BME280 chip is not initialised.
 ---@return sobj @BME280 Sensor Object (`nil` if initialization has failed)
 ---@nodiscard
-function sobj:setup(id, address, temp_oss, press_oss, humi_oss, power_mode, inactive_duration, IIR_filter, cold_start) end
+function sobj:setup(
+	id,
+	address,
+	temp_oss,
+	press_oss,
+	humi_oss,
+	power_mode,
+	inactive_duration,
+	IIR_filter,
+	cold_start
+)
+end
 
 ---For given air pressure (called QFE in aviation) and sea level air pressure\
 ---returns the altitude in meters, i.e. altimeter function.

@@ -12,7 +12,7 @@ crypto = {}
 ---@param iv? any @(optional) the initilization vector, if using AES-CBC; defaults to all-zero if not given
 ---@return any @The encrypted data as a binary string. For AES this is always a multiple of 16 bytes in length.
 ---@nodiscard
-function crypto.encrypt(algo, key, plain , iv) end
+function crypto.encrypt(algo, key, plain, iv) end
 
 ---Decrypts previously encrypted data.
 ---@param algo string @the name of a supported encryption algorithm to use
@@ -21,7 +21,7 @@ function crypto.encrypt(algo, key, plain , iv) end
 ---@param iv? any @(optional) the initilization vector, if using AES-CBC; defaults to all-zero if not given
 ---@return any @The decrypted string.
 ---@nodiscard
-function crypto.decrypt(algo, key, cipher , iv) end
+function crypto.decrypt(algo, key, cipher, iv) end
 
 ---Compute a cryptographic hash of a a file.
 ---@param algo string @the hash algorithm to use, case insensitive string
@@ -29,7 +29,7 @@ function crypto.decrypt(algo, key, cipher , iv) end
 ---@return any @A binary string containing the message digest.
 ---To obtain the textual version (ASCII hex characters), please use `encoder.toHex()`.
 ---@nodiscard
-function crypto.fhash(algo, filename)	end
+function crypto.fhash(algo, filename) end
 
 ---Compute a cryptographic hash of a Lua string.
 ---@param algo string @the hash algorithm to use, case insensitive string
