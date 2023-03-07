@@ -47,7 +47,17 @@ function pulsecnt.create(unit, callbackOnEvents) end
 ---@param counter_l_lim integer @Range -32768 to 32767. The lower limit counter. You get a callback at this count and the counter is reset to zero after this lower limit is hit.
 ---@param counter_h_lim integer @Range -32768 to 32767. The high limit counter.You get a callback at this count and the counter is reset to zero after this high limit is hit.
 ---@return nil
-function pulsecntObj:chan0Config(pulse_gpio_num, ctrl_gpio_num, pos_mode, neg_mode, lctrl_mode, hctrl_mode, counter_l_lim, counter_h_lim) end
+function pulsecntObj:chan0Config(
+	pulse_gpio_num,
+	ctrl_gpio_num,
+	pos_mode,
+	neg_mode,
+	lctrl_mode,
+	hctrl_mode,
+	counter_l_lim,
+	counter_h_lim
+)
+end
 
 ---Configure channel 1 of the pulse counter object you created from the `create()` method.
 ---@param pulse_gpio_num integer @Any GPIO pin can be used.
@@ -59,7 +69,17 @@ function pulsecntObj:chan0Config(pulse_gpio_num, ctrl_gpio_num, pos_mode, neg_mo
 ---@param counter_l_lim integer @Range -32768 to 32767. The lower limit counter. You get a callback at this count and the counter is reset to zero after this lower limit is hit.
 ---@param counter_h_lim integer @Range -32768 to 32767. The high limit counter. You get a callback at this count and the counter is reset to zero after this high limit is hit.
 ---@return nil
-function pulsecntObj:chan1Config(pulse_gpio_num, ctrl_gpio_num, pos_mode, neg_mode, lctrl_mode, hctrl_mode, counter_l_lim, counter_h_lim) end
+function pulsecntObj:chan1Config(
+	pulse_gpio_num,
+	ctrl_gpio_num,
+	pos_mode,
+	neg_mode,
+	lctrl_mode,
+	hctrl_mode,
+	counter_l_lim,
+	counter_h_lim
+)
+end
 
 ---Set the threshold values to establish watchpoints for getting callbacks on.
 ---@param thr0 integer @"Threshold 0 value. Range -32768 to 32767. This is a watchpoint  \n value to get a callback with isThr0 set to true on this count being reached."
