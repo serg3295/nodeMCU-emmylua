@@ -200,7 +200,7 @@ for _, fileName in pairs(files) do
         if find(tstr, "^function [%w_]-%..+%(") then
           child.type = "function"
           ---@type string, string, string
-          local l1, l2, l3 = match(tstr, "^function%s[%w_]+%.([%w_]+)%.?([%w_]*)%.?([%w_]*)%(.*%)")
+          local l1, l2, l3 = match(tstr, "^function%s[%w_]+%.([%w_]+)%.?([%w_]*)%.?([%w_]*)%(")
           if l2 == "" and l3 == "" then
             API[base].childs[l1] = child
           elseif l2 ~= "" and l3 == "" then
