@@ -113,17 +113,16 @@ function node.compile(filename) end
 ---touchpads. Default is `false` if not specified.
 function node.dsleep(options) end
 
----Returns the flash chip ID.
----@return number flashID @flash ID
----@nodiscard
-function node.flashid() end
-
----@deprecated
----Deprecated synonym for `node.LFS.get()` to return an LFS\
----function reference.
----@param modulename string @@The name of the module to be loaded.
----@return function|nil @"If the LFS is loaded and the modulename is a string  \n that is the name of a valid module in the LFS, then the function  \n is returned in the same way the `load()` and the other Lua load  \n functions do. Otherwise `nil` is returned."
-function node.flashindex(modulename) end
+---@version 5.1
+---Sets the Emergency Garbage Collector mode.
+---@param mode integer @>
+---|`node.egc.NOT_ACTIVE` #EGC inactive, no collection cycle will be forced in low memory situations
+---|`node.egc.ON_ALLOC_FAILURE` #Try to allocate a new block of memory, and run the garbage collector if the allocation fails.
+---|`node.egc.ON_MEM_LIMIT` #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit.
+---|`node.egc.ALWAYS` #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error.
+---@param level number @in the case of `node.egc.ON_MEM_LIMIT`, this specifies the memory limit.
+---@return nil
+function node.egc.setmode(mode, level) end
 
 ---@deprecated
 ---Deprecated synonym for `node.LFS.reload()`.\
@@ -132,23 +131,17 @@ function node.flashindex(modulename) end
 ---@return any|nil @"In the case when the imagename is a valid LFS image,  \n this is expanded and loaded into flash, and the ESP is then  \n immediately rebooted, *so control is not returned to the calling  \n Lua application* in the case of a successful reload.
 function node.flashreload(imageName) end
 
+---@deprecated
+---Deprecated synonym for `node.LFS.get()` to return an LFS\
+---function reference.
+---@param modulename string @@The name of the module to be loaded.
+---@return function|nil @"If the LFS is loaded and the modulename is a string  \n that is the name of a valid module in the LFS, then the function  \n is returned in the same way the `load()` and the other Lua load  \n functions do. Otherwise `nil` is returned."
+function node.flashindex(modulename) end
+
 ---Returns the current available heap size in bytes.
 ---@return number heap @system heap size left in bytes
 ---@nodiscard
 function node.heap() end
-
----Returns NodeMCU version, chipid, flashid,\
----flash size, flash mode, flash speed.
----@return number majorVer
----@return number minorVer
----@return number devVer
----@return number chipid
----@return number flashid
----@return number flashsize
----@return number flashmode
----@return number flashspeed
----@nodiscard
-function node.info() end
 
 ---Returns the function reference for a function in LFS.\
 ---Note that unused `node.LFS` properties map onto the equialent `get()` call\
@@ -197,24 +190,15 @@ function node.input(str) end
 ---@return nil
 function node.output(callback, console_output) end
 
----@deprecated
----Moved to `adc.readvdd33()`.
-function node.readvdd33() end
+---Controls whether the debugging output from the Espressif SDK is printed.
+---@param enabled boolean @>
+---|`true` #to enable printing
+---|>`false` #to disable printing
+function node.osprint(enabled) end
 
 ---Restarts the chip.
 ---@return nil
 function node.restart() end
-
----Restores system configuration to defaults using\
----the SDK function *system_restore()*, which \
----doesn't document precisely what it erases/restores.
----@return nil
-function node.restore() end
-
----Change the working CPU Frequency.
----@param speed integer|`node.CPU80MHZ`|`node.CPU160MHZ` @constant
----@return number @target CPU frequency
-function node.setcpufreq(speed) end
 
 ---Overrides the default crash handling which always restarts the system.\
 ---It can be used to e.g. write an error to a logfile or to secure connected hardware before restarting.
@@ -267,28 +251,6 @@ function node.sleep(options) end
 ---@return integer|nil @"If invoked without arguments, returns the current level settings.  \n Otherwise, `nil` is returned."
 function node.stripdebug(level, callback) end
 
----Controls whether the debugging output from the Espressif SDK is printed.
----@param enabled boolean @>
----|`true` #to enable printing
----|>`false` #to disable printing
-function node.osprint(enabled) end
-
----Returns the value of the system counter, which counts\
----in microseconds starting at 0 when the device is booted.
----@return number lowbits @"the time in microseconds since boot or  \n the last time the counter wrapped"
----@return number highbits @the number of times the counter has wrapped
-function node.uptime() end
-
----Sets the Emergency Garbage Collector mode.
----@param mode integer @>
----|`node.egc.NOT_ACTIVE` #EGC inactive, no collection cycle will be forced in low memory situations
----|`node.egc.ON_ALLOC_FAILURE` #Try to allocate a new block of memory, and run the garbage collector if the allocation fails.
----|`node.egc.ON_MEM_LIMIT` #Run the garbage collector when the memory used by the Lua script goes beyond an upper limit.
----|`node.egc.ALWAYS` #Run the garbage collector before each memory allocation. If the allocation fails even after running the garbage collector, the allocator will return with error.
----@param level number @in the case of `node.egc.ON_MEM_LIMIT`, this specifies the memory limit.
----@return nil
-function node.egc.setmode(mode, level) end
-
 ---Enable a Lua callback or task to post another task request.
 ---@overload fun(callback: function): nil
 ---@param task_priority? number @(optional) 0 | 1 | 2
@@ -298,3 +260,9 @@ function node.egc.setmode(mode, level) end
 ---@param callback fun() @function to be executed when the task is run.
 ---@return nil
 function node.task.post(task_priority, callback) end
+
+---Returns the value of the system counter, which counts\
+---in microseconds starting at 0 when the device is booted.
+---@return number lowbits @"the time in microseconds since boot or  \n the last time the counter wrapped"
+---@return number highbits @the number of times the counter has wrapped
+function node.uptime() end
