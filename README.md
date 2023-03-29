@@ -1,6 +1,6 @@
 # EmmyLua annotations for NodeMCU ESP8266 & ESP32
 
-[NodeMCU](https://nodemcu.readthedocs.io/en/release/) function annotations for autocomplete in
+Definition files for [NodeMCU](https://nodemcu.readthedocs.io/en/release/), a Lua based firmware for the ESP8266 WiFi SoC from Espressif, to use with [Lua Language Server](https://github.com/LuaLS/lua-language-server/wiki) for autocomplete in
 - Visual Studio Code
 - Neovim
 - IntelliJ IDEA
@@ -11,9 +11,13 @@
 <img src="./images/nodemcu_emmy2.gif" style="max-width:100%;">
 
 ## VS Code and Neovim
-If you use VSCode or Neovim, then you have to install **[sumneko's lua-language-server](https://github.com/LuaLS/lua-language-server/wiki)** extension first.
+If you use VS Code or Neovim, then you need to install the [sumneko's lua-language-server](https://github.com/LuaLS/lua-language-server#install) first.
 
-### Install
+In VS Code, definition files can easily be installed and enabled by the [addon manager](https://github.com/LuaLS/lua-language-server/wiki/Addons#vs-code-addon-manager).
+
+In Neovim you will have to install the definition files manually.
+
+### Installing definition files manually
 Create directory with arbitrary name e.g. *nodeMCU-emmylua* and copy directories from this repository into it as shown in the example below.<br>
 *Note:* `config.json`, `plugin.lua` and `library` are predefined names.
       
@@ -47,16 +51,6 @@ Then set path to the directories in the setting `User -> Lua.workspace.userThird
       "/home/user/nodeMCU-emmylua"
     ]
 ```
-### Automatic including of annotation files (recommended)
-  
-Since version 2.3.1 of **sumneko.lua** extension you can use new feature *Automatic adapt to the project environment*.
-
-The extension will try to determine the runtime environment by keywords from *config.json* and set the appropriate settings in *settings.json*.
-      
-*Hint!* When starting new project you can type in short keyword `---esp32` or `---esp8266` followed by `Enter` into *any_file.lua* in workspace and environment will set up automatically.
-
-### Installing annotation files manually
-
 The **sumneko.lua** extension provides a number of parameters that are stored in .vscode/settings.json.
 
 You can set path to the directory with function annotations for esp8266 **OR** esp32 **OR** for esp32-idf3 in the setting ```"Lua.workspace.library"```.
@@ -65,12 +59,19 @@ You can set path to the directory with function annotations for esp8266 **OR** e
   "path/esp<your choose>/library"
     ]
 ```
-To perform the autocomplete some functions specify the
-path to the script **plugin.lua** in the setting:
+To perform the autocomplete some functions specify the path to the script **plugin.lua** in the setting:
 ```json
  "Lua.runtime.plugin": "path/esp<your choose>/plugin.lua"
 ```
 You have to also specify `Lua.runtime.builtin"` and `"Lua.runtime.version"` settings according with *config.json* file content.
+
+### Automatic including of annotation files
+  
+Since version 2.3.1 of **sumneko.lua** extension you can use new feature *Automatic adapt to the project environment*.
+
+The extension will try to determine the runtime environment by keywords from *config.json* and set the appropriate settings in *settings.json*.
+      
+*Hint!* When starting new project you can type in short keyword `---esp32` or `---esp8266` followed by `Enter` into *any_file.lua* in workspace and environment will set up automatically.
 
 ## IntelliJ IDEA
 
