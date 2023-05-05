@@ -8,8 +8,8 @@
 ---@field ALARM_AUTO integer
 tmr = {}
 
----@class tObj
-local tObj = {}
+---@class tmrObj
+local tmrObj = {}
 
 ---Busyloops the processor for a specified\
 ---number of microseconds.
@@ -53,7 +53,7 @@ function tmr.wdclr() end
 function tmr.ccount() end
 
 ---Creates a dynamic timer object
----@return tObj @timer object
+---@return tmrObj @timer object
 ---@nodiscard
 function tmr.create() end
 
@@ -62,42 +62,42 @@ function tmr.create() end
 ---|`tmr.ALARM_SEMI` #manually repeating alarm
 ---|`tmr.ALARM_AUTO` #automatically repeating alarm (call start() to restart)
 
----This is a convenience function combining `tobj:register()` and `tobj:start()` into a single call.
+---This is a convenience function combining `tmrObj:register()` and `tmrObj:start()` into a single call.
 ---@param interval number @timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m @timer mode
----@param callback fun(t:tObj) @function which is invoked with the timer object as an argument
+---@param callback fun(t:tmrObj) @function which is invoked with the timer object as an argument
 ---@return boolean @`true` if the timer was (re)started, `false` on error
-function tObj:alarm(interval, mode, callback) end
+function tmrObj:alarm(interval, mode, callback) end
 
 ---Changes a registered timer's expiry interval.
 ---@param interval_ms integer @"new timer interval in milliseconds.  \n Maximum value is 6870947 (1:54:30.947).""
 ---@return nil
-function tObj:interval(interval_ms) end
+function tmrObj:interval(interval_ms) end
 
 ---Configures a timer and registers the callback function to call on expiry.\
 ---Note that registering does not start the alarm.
 ---@param interval_ms integer @new timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
 ---@param mode tmr_m @timer mode
----@param callback fun(t:tObj) @function which is invoked with the timer object as an argument
+---@param callback fun(t:tmrObj) @function which is invoked with the timer object as an argument
 ---@return nil
-function tObj:register(interval_ms, mode, callback) end
+function tmrObj:register(interval_ms, mode, callback) end
 
 ---Starts or restarts a previously configured timer. If the timer is running the timer is restarted\
 ---only when restart parameter is `true`. Otherwise `false` is returned signaling error.
 ---@param restart? boolean @optional boolean parameter forcing to restart already running timer
 ---@return boolean @`true` if the timer was (re)started, `false` on error
-function tObj:start(restart) end
+function tmrObj:start(restart) end
 
 ---Checks the state of a timer.
 ---@return boolean|integer|nil @"If the specified timer is registered,  \n returns whether it is currently started and its mode.  \n If the timer is not registered, `nil` is returned."
-function tObj:state() end
+function tmrObj:state() end
 
 ---Stops a running timer, but does *not* unregister it.\
----A stopped timer can be restarted with `tobj:start()`.
+---A stopped timer can be restarted with `tmrObj:start()`.
 ---@return boolean @`true` if the timer was stopped, `false` on error
-function tObj:stop() end
+function tmrObj:stop() end
 
 ---Stops the timer (if running) and\
 ---unregisters the associated callback.
 ---@return nil
-function tObj:unregister() end
+function tmrObj:unregister() end
