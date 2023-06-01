@@ -10,23 +10,23 @@ net = {}
 ---@class net.dns
 net.dns = {}
 
----@class netsocket
-local netsocket = {}
+---@class socket
+local socket = {}
 
----@class netsrv
-local netsrv = {}
+---@class server
+local server = {}
 
 ---@class udpsocket
 local udpsocket = {}
 
 ---Creates a TCP client.
----@return netsocket @net.socket submodule
+---@return socket @net.socket submodule
 ---@nodiscard
 function net.createConnection() end
 
 ---Creates a TCP listening socket (a server).
 ---@param timeout integer @"seconds until disconnecting an inactive client;  \n 1~28'800 seconds, 30 sec by default."
----@return netsrv @net.server submodule
+---@return server @net.server submodule
 ---@nodiscard
 function net.createServer(timeout) end
 
@@ -63,80 +63,85 @@ function net.multicastLeave(if_ip, multicast_ip) end
 
 ---Closes the server.
 ---@return nil
-function netsrv:close() end
+function server:close() end
 
 ---Returns server local address/port.
 ---@return integer|nil @port or `nil` if not listening
 ---@return string|nil @ip or `nil` if not listening
 ---@nodiscard
-function netsrv:getaddr() end
+function server:getaddr() end
 
 ---Listen on port from IP address.
----@overload fun(self: netsrv, callback: fun(net.socket:netsocket)): nil
----@overload fun(self: netsrv, port: integer, callback: fun(net.socket:netsocket)): nil
+---@overload fun(self: server, callback: fun(netsocket: socket)): nil
+---@overload fun(self: server, port: integer, callback: fun(netsocket: socket)): nil
+---@overload fun(self: server, ip: string, callback: fun(netsocket: socket)): nil
 ---@param port? integer @(optional) port number, can be omitted (random port will be chosen)
 ---@param ip? string @(optional) IP address string, can be omitted
----@param callback fun(net.socket:netsocket) @"`function(net.socket)`, pass to caller function as param if  \n a connection is created successfully"
+---@param callback fun(netsocket:socket) @"`function(net.socket)`, pass to caller function as param if  \n a connection is created successfully"
 ---@return nil
-function netsrv:listen(port, ip, callback) end
+function server:listen(port, ip, callback) end
 
 ---Connect to a remote server.
 ---@param port integer @port number
 ---@param ip_domain string @IP address or domain name string
 ---@return nil
-function netsocket:connect(port, ip_domain) end
+function socket:connect(port, ip_domain) end
 
 ---Closes socket.
 ---@return nil
-function netsocket:close() end
+function socket:close() end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string @domain name
----@param callback fun(net.socket:netsocket, ip:string) @"`function(net.socket, ip)`. The first parameter is the socket,  \n the second parameter is the IP address as a string."
+---@param callback fun(netsocket: socket, ip: string) @"`function(net.socket, ip)`. The first parameter is the socket,  \n the second parameter is the IP address as a string."
 ---@return nil
-function netsocket:dns(domain, callback) end
+function socket:dns(domain, callback) end
 
 ---Retrieve local port and ip of socket.
 ---@return integer|nil @port or `nil` if not connected
 ---@return string|nil @ip or `nil` if not connected
-function netsocket:getaddr() end
+function socket:getaddr() end
 
 ---Retrieve port and ip of remote peer.
 ---@return integer|nil @port or `nil` if not connected
 ---@return string|nil @ip or `nil` if not connected
 ---@nodiscard
-function netsocket:getpeer() end
+function socket:getpeer() end
 
 ---Throttle data reception by placing\
 ---a request to block the TCP receive function.
 ---@return nil
-function netsocket:hold() end
+function socket:hold() end
 
 ---Register callback functions for specific events.
 ---@param event string|"connection"|"reconnection"|"disconnection"|"receive"|"sent" @event
----@param callback fun(net.socket:netsocket, str:string) @"callback function. Can be `nil` to remove callback.  \n The first parameter of callback is the socket."
+---@param callback fun(netsocket: socket, data_or_error: string|number)|nil  @"callback function. Can be `nil` to remove callback.  \n The first parameter of callback is the socket."
 --- - If event is `"receive"`, the second parameter is the received data as string.\
 --- - If event is `"disconnection"` or `"reconnection"`, the second parameter is error code.\
 ---If reconnection event is specified, disconnection receives only "normal close" events.\
 ---Otherwise, all connection errors (with normal close) passed to disconnection event.
 ---@return nil
-function netsocket:on(event, callback) end
+function socket:on(event, callback) end
 
----Sends data to remote peer.
----@param str string @data in string which will be sent to server
----@param callback? fun(sent:string) @(optional) `function(sent)` for sending string
+---Sends data to remote peer. `sck:send(data, fnA)` is functionally equivalent to
+--[[```lua
+sck:send(data)
+sck:on("sent", fnA)
+```]]
+---@param data string @data in string which will be sent to server
+---@param callback? fun(sent: socket) @(optional) `function(sent)` for sending string
 ---@return nil
-function netsocket:send(str, callback) end
+function socket:send(data, callback) end
 
 ---Changes or retrieves Time-To-Live value on socket.
 ---@param ttl? integer @(optional) new time-to-live value
 ---@return integer ttl @current / new ttl value
-function netsocket:ttl(ttl) end
+function socket:ttl(ttl) end
 
 ---Unblock TCP receiving data\
 ---by revocation of a preceding `hold()`.
 ---@return nil
-function netsocket:unhold() end
+function socket:unhold() end
 
 ---Closes UDP socket.
 ---@return nil
@@ -144,7 +149,7 @@ function udpsocket:close() end
 
 ---Provides DNS resolution for a hostname.
 ---@param domain string @domain name
----@param callback fun(net.socket:netsocket, ip:string) @"`function(net.socket, ip)`. The first parameter is the socket,  \n the second parameter is the IP address as a string."
+---@param callback fun(netsocket: udpsocket, ip: string) @"`function(net.udpsocket, ip)`. The first parameter is the socket,  \n the second parameter is the IP address as a string."
 ---@return nil
 function udpsocket:dns(domain, callback) end
 
@@ -162,7 +167,7 @@ function udpsocket:listen(port, ip) end
 
 ---Register callback functions for specific events.
 ---@param event string|"receive"|"sent"|"dns" @event
----@param callback fun(net.socket:netsocket, str:string) @`function(net.socket[, string])`. Can be `nil` to remove callback.
+---@param callback fun(netsocket: udpsocket, str?: string)|nil @`function(net.udpsocket[, string])`. Can be `nil` to remove callback.
 ---The first parameter of callback is the socket.
 --- - If event is `"receive"`, the second parameter is the received data as string.\
 ---The `receive` callback receives port and ip *after* the data argument.\
@@ -190,7 +195,7 @@ function net.dns.getdnsserver(dns_index) end
 
 ---Resolve a hostname to an IP address. Doesn't require a socket like net.socket.dns().
 ---@param host string @hostname to resolve
----@param callback fun(sk:nil, ip:string) @"`function(sk, ip)` called when the name was resolved.  \n **sk** is always `nil`."
+---@param callback fun(sk: nil, ip: string) @"`function(sk, ip)` called when the name was resolved.  \n **sk** is always `nil`."
 ---@return nil @"`nil` but may raise errors for severe network stack issues  \n (e.g., out of DNS query table slots)"
 function net.dns.resolve(host, callback) end
 
