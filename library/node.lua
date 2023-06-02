@@ -150,7 +150,7 @@ function node.info(group) end
 ---Submits a string to the Lua interpreter.\
 ---Similar to `pcall(loadstring(str))`,\
 ---but without the single-line limitation.
----@param str any @Lua chunk
+---@param str string @Lua chunk
 ---@return nil
 function node.input(str) end
 
@@ -172,11 +172,11 @@ function node.LFS.reload(imageName) end
 ---Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)\
 ---and resets output to normal otherwise. Optionally also prints to the serial console.
 ---@overload fun(): nil
----@param foo fun(pipe:any) @"`output_fn(pipe)` a function accept every output as str,  \n and can send the output to a socket (or maybe a file)."
+---@param callback fun(opipe: pipeObj) @"`output_fn(pipe)` a function accept every output as str,  \n and can send the output to a socket (or maybe a file)."
 ---Note that this function must conform to the rules for a pipe reader callback.
 ---@param serial_debug integer @**1** - output also show in serial. **0** - no serial output.
 ---@return nil
-function node.output(foo, serial_debug) end
+function node.output(callback, serial_debug) end
 
 ---Restarts the chip.
 ---@return nil

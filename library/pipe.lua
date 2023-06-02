@@ -5,16 +5,16 @@
 ---@class pipe
 pipe = {}
 
----@class pobj
-local pobj = {}
+---@class pipeObj
+local pipeObj = {}
 
 ---Create a pipe.
----@param CB_function? fun(p:pobj) @"optional reader callback which is called through the `node.task.post()`  \n when the pipe is written to. If the CB returns a boolean, then the reposting action is forced:  \n it is reposted if `true` and not if `false`. If the return is `nil` or omitted then the deault is to repost  \nif a pipe write has occured since the last call."
+---@param CB_function? fun(p:pipeObj) @"optional reader callback which is called through the `node.task.post()`  \n when the pipe is written to. If the CB returns a boolean, then the reposting action is forced:  \n it is reposted if `true` and not if `false`. If the return is `nil` or omitted then the deault is to repost  \nif a pipe write has occured since the last call."
 ---@param task_priority? integer @(optional) low | medium | high
 ---|`node.task.LOW_PRIORITY` #0
 ---|>`node.task.MEDIUM_PRIORITY` #1
 ---|`node.task.HIGH_PRIORITY` #2
----@return pobj @A pipe resource.
+---@return pipeObj @A pipe resource.
 ---@nodiscard
 function pipe.create(CB_function, task_priority) end
 
@@ -30,7 +30,7 @@ function pipe.create(CB_function, task_priority) end
 ---then it is still returned, emptying the pipe.
 ---@return string|nil @A string or `nil` if the pipe is empty
 ---@nodiscard
-function pobj:read(size_or_endChar) end
+function pipeObj:read(size_or_endChar) end
 
 ---Returns a Lua **iterator** function for a pipe object.
 ---@param size_or_endChar? number|string @(optional)
@@ -42,18 +42,18 @@ function pobj:read(size_or_endChar) end
 --- - If omitted, then this defaults to "\n+"
 ---@return function @`myFunc` iterator function
 ---@nodiscard
-function pobj:reader(size_or_endChar) end
+function pipeObj:reader(size_or_endChar) end
 
 ---Write a string to the head of a pipe object.\
 ---This can be used to back-out a previous read.
 ---@param s string @"Any input string. Note that with all Lua strings,  \n these may contain all character values including '\\0'."
-function pobj:unread(s) end
+function pipeObj:unread(s) end
 
 ---Write a string to a pipe object.
 ---@param s string @Any input string.
 ---Note that with all Lua strings, these may contain \
 ---all character values including '\0'.
-function pobj:write(s) end
+function pipeObj:write(s) end
 
 ---Return the number of internal records in the pipe. Each\
 ---record ranges from 1 to 256 bytes in length, with full\
@@ -63,4 +63,4 @@ function pobj:write(s) end
 ---bound on the length of the string that would be returned.
 ---@return number @the number of internal records in the pipe.
 ---@nodiscard
-function pobj:nrec() end
+function pipeObj:nrec() end

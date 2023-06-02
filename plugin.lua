@@ -32,6 +32,7 @@ function OnSetText(uri, text)
 		["()require[%(%s\"']+telnet[%)\"']+()"] = "telnet",
 		["()require[%(%s\"']+yeelink_lib[%)\"']+()"] = "yeelink",
 		["()require[%(%s\"']+file_lfs[%)\"']+()"] = "file_lfs",
+		["()require[%(%s\"']+ads1115[%)\"']+()"] = "ads1115",
 	}
 
 	for patt, txt in pairs(subst) do
