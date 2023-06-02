@@ -46,20 +46,20 @@
 ---@field COMP_4CONV integer
 ads1115 = {}
 
----@class ads1x15
-local ads1x15 = {}
+---@class ads1x15Obj
+local ads1x15Obj = {}
 
 ---Registers ADS1115 (ADS1113, ADS1114) device.
 ---@param I2C_ID number @always 0
 ---@param I2C_ADDR number|`ads1115.ADDR_GND`|`ads1115.ADDR_VDD`|`ads1115.ADDR_SDA`|`ads1115.ADDR_SCL` @I²C address of a device
----@return ads1x15 obj @Registered device object
+---@return ads1x15Obj @Registered device object
 ---@nodiscard
 function ads1115.ads1115(I2C_ID, I2C_ADDR) end
 
 ---Registers ADS1015 (ADS1013, ADS1014) device.
 ---@param I2C_ID number @always 0
 ---@param I2C_ADDR number|`ads1115.ADDR_GND`|`ads1115.ADDR_VDD`|`ads1115.ADDR_SDA`|`ads1115.ADDR_SCL` @I²C address of a device
----@return ads1x15 obj @Registered device object
+---@return ads1x15Obj @Registered device object
 ---@nodiscard
 function ads1115.ads1015(I2C_ID, I2C_ADDR) end
 
@@ -75,7 +75,7 @@ function ads1115.reset() end
 ---@return number adc @raw adc register value
 ---@return number|nil sign @sign of the result
 ---@nodiscard
-function ads1x15:read() end
+function ads1x15Obj:read() end
 
 ---Configuration settings for the ADC.
 ---@param GAIN number @Programmable gain amplifier
@@ -113,17 +113,17 @@ function ads1x15:read() end
 ---|`ads1115.CONTINUOUS` #continuous mode
 ---@param CONVERSION_RDY? number|`ads1115.CONV_RDY_1`|`ads1115.CONV_RDY_2`|`ads1115.CONV_RDY_4` @(optional) Number of conversions after conversion ready asserts
 ---@param COMPARATOR? number|`ads1115.COMP_1CONV`|`ads1115.COMP_2CONV`|`ads1115.COMP_4CONV` @(optional) Number of conversions after comparator asserts
----@param THRESHOLD_LOW number @>
+---@param THRESHOLD_LOW? number @(optional)
 --- - **0** - **+ GAIN_MAX** in mV for single-ended inputs
 --- - **- GAIN_MAX** - **+ GAIN_MAX** in mV for differential inputs
----@param THRESHOLD_HI number @>
+---@param THRESHOLD_HI? number @(optional)
 --- - **0** - **+ GAIN_MAX** in mV for single-ended inputs
 --- - **- GAIN_MAX** - **+ GAIN_MAX** in mV for differential inputs
 ---@param COMP_MODE? number @(optional) Comparator mode
 ---|`ads1115.CMODE_TRAD` #traditional comparator mode (with hysteresis)
 ---|`ads1115.CMODE_WINDOW` #window comparator mode
 ---@return nil
-function ads1x15:setting(
+function ads1x15Obj:setting(
 	GAIN,
 	SAMPLES,
 	CHANNEL,
@@ -140,4 +140,4 @@ end
 ---an optional callback function in which the ADC conversion result can be obtained.
 ---@param callback fun(volt:number, volt_dec:number, adc:number, sign:number) @function which will be invoked after the adc conversion is done
 ---@return nil
-function ads1x15:startread(callback) end
+function ads1x15Obj:startread(callback) end

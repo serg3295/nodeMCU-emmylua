@@ -5,8 +5,8 @@
 ---@class bme280
 bme280 = {}
 
----@class sobj
-local sobj = {}
+---@class bme280Obj
+local bme280Obj = {}
 
 ---Creates bme280sensor object and initializes the module. Initialization is mandatory before reading values.\
 ---Note that there has to be a delay between some tens to hundreds of milliseconds between calling `setup()` and reading measurements.
@@ -19,7 +19,7 @@ local sobj = {}
 ---@param inactive_duration? number @(optional) Controls inactive duration in normal mode. Default inactive duration is 20ms.
 ---@param IIR_filter? number @(optional) Controls the time constant of the IIR filter. Default filter coefficient is 16.
 ---@param cold_start? number @(optional) If **0** then the BME280 chip is not initialised.
----@return sobj @BME280 Sensor Object (`nil` if initialization has failed)
+---@return bme280Obj @BME280 Sensor Object (`nil` if initialization has failed)
 ---@nodiscard
 function bme280.setup(
 	id,
@@ -44,9 +44,9 @@ end
 ---@param inactive_duration? number @(optional) Controls inactive duration in normal mode. Default inactive duration is 20ms.
 ---@param IIR_filter? number @(optional) Controls the time constant of the IIR filter. Default filter coefficient is 16.
 ---@param cold_start? number @(optional) If **0** then the BME280 chip is not initialised.
----@return sobj @BME280 Sensor Object (`nil` if initialization has failed)
+---@return bme280Obj @BME280 Sensor Object (`nil` if initialization has failed)
 ---@nodiscard
-function sobj:setup(
+function bme280Obj:setup(
 	id,
 	address,
 	temp_oss,
@@ -65,14 +65,14 @@ end
 ---@param QNH number @current sea level pressure
 ---@return number altitude @in meters of measurement point
 ---@nodiscard
-function sobj:altitude(P, QNH) end
+function bme280Obj:altitude(P, QNH) end
 
 ---For given temperature and relative humidity returns the dew point in celsius.
 ---@param H number @relative humidity in percent (100 means 100%)
 ---@param T number @temperate in celsius
 ---@return number dewpoint @dew point in celsisus
 ---@nodiscard
-function sobj:dewpoint(H, T) end
+function bme280Obj:dewpoint(H, T) end
 
 ---For given altitude converts the air pressure to sea level\
 ---air pressure (QNH).
@@ -80,7 +80,7 @@ function sobj:dewpoint(H, T) end
 ---@param altitude number @in meters of measurement point
 ---@return number P @sea level pressure
 ---@nodiscard
-function sobj:qfe2qnh(P, altitude) end
+function bme280Obj:qfe2qnh(P, altitude) end
 
 ---Reads the sensor and returns the temperature, the air pressure,\
 ---the air relative humidity and see level pressure when `altitude` is specified.
@@ -91,7 +91,7 @@ function sobj:qfe2qnh(P, altitude) end
 ---@return number QNH @"(optional) QNH air pressure in hectopascals  \n (when `altitude` is specified)"
 --- Returns `nil` if the readout is not successful.
 ---@nodiscard
-function sobj:read(altitude) end
+function bme280Obj:read(altitude) end
 
 ---Starts readout (turns the sensor into forced mode). After the readout the sensor turns to sleep mode.\
 ---Callback function is called with readout results.
@@ -102,4 +102,4 @@ function sobj:read(altitude) end
 ---@param delay? number @"(optional) sets sensor to forced mode and calls the callback (if provided)  \n after given number of milliseconds. For **0** the default delay is set to 113ms."
 ---@param altitude number @in meters of measurement point (QNH is returned when specified)
 ---@return nil
-function sobj:startreadout(callback, delay, altitude) end
+function bme280Obj:startreadout(callback, delay, altitude) end
