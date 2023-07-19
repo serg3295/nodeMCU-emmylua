@@ -26,6 +26,8 @@ node.egc = {}
 node.task = {}
 
 ---@class node.LFS
+---@field time integer
+---@field config table
 node.LFS = {}
 
 ---Returns the boot reason and extended reset info.
