@@ -13,6 +13,8 @@
 node = {}
 
 ---@class node.LFS
+---@field time integer
+---@field config table
 node.LFS = {}
 
 ---@class node.egc
@@ -169,10 +171,10 @@ function node.LFS.list() end
 ---@return any|nil @"In the case when the imagename is a valid LFS image, this is expanded and  \n loaded into flash, and the ESP is then immediately rebooted, *so control is not returned to  \n the calling Lua application* in the case of a successful reload. The reload process internally  \n makes multiple passes through the LFS image file. The first pass validates the file and header  \n formats and detects many errors. If any is detected then an error string is returned."
 function node.LFS.reload(imageName) end
 
----Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)\
+---Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)
 ---and resets output to normal otherwise. Optionally also prints to the serial console.
 ---@overload fun(): nil
----@param callback fun(opipe: pipeObj) @"`output_fn(pipe)` a function accept every output as str,  \n and can send the output to a socket (or maybe a file)."
+---@param callback fun(opipe: pipeObj) @`output_fn(pipe)` a function accept every output as str, and can send the output to a socket (or maybe a file).
 ---Note that this function must conform to the rules for a pipe reader callback.
 ---@param serial_debug integer @**1** - output also show in serial. **0** - no serial output.
 ---@return nil
