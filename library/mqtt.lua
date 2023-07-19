@@ -3,17 +3,6 @@
 --=== mqtt ===
 
 ---@class mqtt
----@field CONN_FAIL_SERVER_NOT_FOUND integer
----@field CONN_FAIL_NOT_A_CONNACK_MSG integer
----@field CONN_FAIL_DNS integer
----@field CONN_FAIL_TIMEOUT_RECEIVING integer
----@field CONN_FAIL_TIMEOUT_SENDING integer
----@field CONNACK_ACCEPTED integer
----@field CONNACK_REFUSED_PROTOCOL_VER integer
----@field CONNACK_REFUSED_ID_REJECTED integer
----@field CONNACK_REFUSED_SERVER_UNAVAILABLE integer
----@field CONNACK_REFUSED_BAD_USER_OR_PASS integer
----@field CONNACK_REFUSED_NOT_AUTHORIZED integer
 mqtt = {}
 
 ---@class Mqtt
@@ -30,21 +19,23 @@ local Mqtt = {}
 function mqtt.Client(clientid, keepalive, username, password, cleansession) end
 
 ---Closes connection to the broker.
----@return boolean
 function Mqtt:close() end
 
 ---Connects to the broker specified by the given host, port, and secure options.
----@param host string @host, domain or IP (string)
+---@overload fun(self, host: string, conn_est: function, conn_notest: function): boolean
+---@overload fun(self, host: string, conn_est: function): boolean
+---@param host string @host, domain or IP (string), or schema://host
 ---@param port? integer|`1883` @(optional) broker port (number), default 1883
----@param secure? boolean|table @(optional) either an interger with **0/1** for `false/true` (default 0), or a table with optional entries
+---@param secure? integer|table @(optional) either an interger with **0/1** for `false/true` (default 0), or a table with optional entries
 --- - **ca_cert CA** - certificate data in PEM format for server verify with SSL
 --- - **client_cert** - client certificate data in PEM format for SSL mutual authentication
 --- - **client_key** - client private key data in PEM format for SSL mutual authentication.\
 ---Note that both client_cert and client_key have to be provided for mutual authentication.
+---@param autoreconnect? integer @(optional) **0/1** for `false/true` (default 0). This option is *deprecated*.
 ---@param conn_est? fun(client:Mqtt) @(optional) `function(client)` callback function for when the connection was established
 ---@param conn_notest? fun(client:Mqtt, reason:mqtt) @(optional) `function(client, reason)` callback function for when the connection could not be established. No further callbacks should be called.
 ---@return boolean
-function Mqtt:connect(host, port, secure, conn_est, conn_notest) end
+function Mqtt:connect(host, port, secure, autoreconnect, conn_est, conn_notest) end
 
 ---Setup Last Will and Testament. A broker will publish a message with qos = 0, retain = 0, data = "offline"\
 ---to topic "/lwt" if client does not send keepalive packet.
