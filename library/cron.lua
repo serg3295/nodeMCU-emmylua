@@ -12,7 +12,6 @@ local CRON = {}
 ---@param mask string|"* * * * *" @crontab-like string mask for schedule
 ---@param callback fun(entry:CRON) @`function(entry)` that is executed at the scheduled time
 ---@return CRON cron.entry @sub module
----@nodiscard
 function cron.schedule(mask, callback) end
 
 ---Removes all scheduled entries.

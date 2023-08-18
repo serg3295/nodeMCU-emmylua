@@ -210,30 +210,30 @@ function wifi.sta.clearconfig() end
 
 ---@class StaStationConfig
 ---@field ssid string
----@field pwd string
----@field auto boolean
----@field bssid string
----@field save boolean
----@field connect_cb function
----@field disconnect_cb function
----@field authmode_change_cb function
----@field got_ip_cb function
----@field dhcp_timeout_cb function
+---@field pwd? string
+---@field auto? boolean
+---@field bssid? string
+---@field save? boolean
+---@field connect_cb? function
+---@field disconnect_cb? function
+---@field authmode_change_cb? function
+---@field got_ip_cb? function
+---@field dhcp_timeout_cb? function
 
 ---Sets the WiFi station configuration.
 ---@param station_config StaStationConfig @table containing configuration data for station
 --- - **ssid** string which is less than 32 bytes.
---- - **pwd** string which is 0-64. Empty string indicates an open WiFi access point.
---- - **auto**
+--- - **pwd**  (Optional) string which is 0-64. Empty string indicates an open WiFi access point.
+--- - **auto** (Optional)
 ---   - `true` (default) to enable auto connect and connect to access point,\
 ---hence with auto=true there's no need to call `wifi.sta.connect()`
 ---   - `false` to disable auto connect and remain disconnected from access point
---- - **bssid** string that contains the MAC address of the access point (optional).\
+--- - **bssid** (Optional) string that contains the MAC address of the access point (optional).\
 ---The following formats are valid:
 ---   - "DE:C1:A5:51:F1:ED"
 ---   - "AC-1D-1C-B1-0B-22"
 ---   - "DE AD BE EF 7A C0"
---- - **save** Save station configuration to flash.
+--- - **save** (Optional) Save station configuration to flash.
 ---   - `true` configuration will be retained through power cycle. (Default).
 ---   - `false` configuration will not be retained through power cycle.
 --- - **Event callbacks** will only be available if WIFI_SDK_EVENT_MONITOR_ENABLE\
@@ -257,7 +257,7 @@ function wifi.sta.clearconfig() end
 ---   - IP: The IP address assigned to the station. (format: string)
 ---   - netmask: Subnet mask. (format: string)
 ---   - gateway: The IP address of the access point the station is connected to. (format: string)
---- - *dhcp_timeout_cb*: Station DHCP request has timed out. (Optional)
+--- - *dhcp_timeout_cb*: (Optional) Station DHCP request has timed out.
 ---   - Blank table is returned.
 ---@return boolean
 function wifi.sta.config(station_config) end
