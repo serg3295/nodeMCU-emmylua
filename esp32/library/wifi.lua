@@ -63,11 +63,11 @@ function wifi.start() end
 ---@return nil
 function wifi.stop() end
 
----@class StaConfig32
+---@class (exact) StaConfig32
 ---@field ssid string
 ---@field pwd string
----@field bssid string
----@field pmf number
+---@field bssid string?
+---@field pmf number?
 
 ---Sets the WiFi station configuration. The WiFi mode must be set to *wifi.STATION* or *wifi.STATIONAP* before this function can be used.
 ---@param station_config StaConfig32 @table containing configuration data for station
