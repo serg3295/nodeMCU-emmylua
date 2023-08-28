@@ -37,13 +37,13 @@ function uart.on(id, method, number_or_endChar, callback, run_input) end
 ---@class UartCfg
 ---@field tx integer
 ---@field rx integer
----@field cts integer
----@field rts integer
----@field tx_inverse boolean
----@field rx_inverse boolean
----@field cts_inverse boolean
----@field rts_inverse boolean
----@field flow_control integer
+---@field cts integer?
+---@field rts integer?
+---@field tx_inverse boolean?
+---@field rx_inverse boolean?
+---@field cts_inverse boolean?
+---@field rts_inverse boolean?
+---@field flow_control integer?
 
 --- (Re-)configures the communication parameters of the UART.
 ---@param id integer @uart id
