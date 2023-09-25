@@ -72,9 +72,9 @@ function spi.set_mosi(id, str) end
 ---Start an SPI transaction
 ---@param id integer @SPI ID number: 0 for SPI, 1 for HSPI
 ---@param cmd_bitlen integer @bit length of the command phase (0 - 16)
----@param cmd_data any @data for command phase
+---@param cmd_data integer @data for command phase
 ---@param addr_bitlen integer @bit length for address phase (0 - 32)
----@param addr_data any @data for command phase
+---@param addr_data integer @data for address phase
 ---@param mosi_bitlen integer @bit length of the MOSI phase (0 - 512)
 ---@param dummy_bitlen integer @bit length of the dummy phase (0 - 256)
 ---@param miso_bitlen integer  @bit length of the MISO phase (0 - 512) for half-duplex.
