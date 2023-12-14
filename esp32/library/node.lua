@@ -31,7 +31,7 @@ node.task = {}
 node.LFS = {}
 
 ---Returns the boot reason and extended reset info.
----@return integer rawcode @"The first value returned is the raw code, not the new  \n 'reset info' code which was introduced in recent SDKs. Values are:"
+---@return integer rawcode @The first value returned is the raw code, not the new 'reset info' code which was introduced in recent SDKs. Values are:
 --- - 1, power-on
 --- - 2, reset (software?)
 --- - 3, hardware reset via reset pin
@@ -61,14 +61,20 @@ node.LFS = {}
 --- - 20: RTCWDT_CPU_RESET       RTC Watch dog Reset CPU
 --- - 21: EXT_CPU_RESET          for APP CPU, reseted by PRO CPU
 --- - 22: RTCWDT_BROWN_OUT_RESET Reset when the vdd voltage is not stable
---- - 23: RTCWDT_RTC_RESET       RTC Watch dog reset digital core and rtc module\
+--- - 23: RTCWDT_RTC_RESET       RTC Watch dog reset digital core and rtc module
+---
 ---In general, the extended reset cause supercedes the raw code. The raw code is kept for backwards compatibility only.\
----For new applications it is highly recommended to use the extended reset cause instead. In case of extended reset\
----cause 3 (exception reset), additional values are returned containing the crash information. These are, in order,\
----EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC. In case of extended extended reset cause 19 (SW_CPU_RESET),\
+---For new applications it is highly recommended to use the extended reset cause instead.
+---In case of extended reset cause 19 (SW_CPU_RESET),\
 ---an additional value is returned containing the number of consecutive Lua panics. If the reset was caused by a call to\
 ---node.restart() this value is 0; after the first panic the value is 1; if a panic reoccurs the value increments upto 15.
----@return any @ [`exccause, epc1, epc2, epc3, excvaddr, depc`]
+---In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information. These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
+---@return integer|nil EXCCAUSE #Exception Cause
+---@return integer|nil EPC1 #additional CPU register
+---@return integer|nil EPC2 #additional CPU register
+---@return integer|nil EPC3 #additional CPU register
+---@return integer|nil EXCVADDR #an invalid memory location address which was written/read
+---@return integer|nil DEPC
 ---@nodiscard
 function node.bootreason() end
 
@@ -163,16 +169,12 @@ function node.LFS.get(modulename) end
 ---@nodiscard
 function node.LFS.list() end
 
----Reload LFS with the flash image provided. Flash images can be generated\
+---Reload LFS with the flash image provided. Flash images can be generated
 ---on the host machine using the `luac.cross`command.
 ---@param imageName string @The name of a image file in the filesystem to be loaded into the LFS.
----@return any @
---- - In the case when the `imagename` is a valid LFS image, this is expanded and loaded into flash,\
----and the ESP is then immediately rebooted, *so control is not returned to the calling Lua application*\
----in the case of a successful reload.
---- - The reload process internally makes multiple passes through the LFS image file.\
----The first pass validates the file and header formats and detects many errors.\
----If any is detected then an error string is returned.
+---@return string|nil @
+--- - In the case when the `imagename` is a valid LFS image, this is expanded and loaded into flash, and the ESP is then immediately rebooted, *so control is not returned to the calling Lua application* in the case of a successful reload.
+--- - The reload process internally makes multiple passes through the LFS image file. The first pass validates the file and header formats and detects many errors. If any is detected then an error string is returned.
 function node.LFS.reload(imageName) end
 
 ---Submits a string to the Lua interpreter.\
