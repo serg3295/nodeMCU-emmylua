@@ -31,13 +31,12 @@ node.egc = {}
 node.task = {}
 
 ---Returns the boot reason and extended reset info.
----@return integer rawcode @The first value returned is the raw code,
----not the new "reset info" code which was introduced in recent SDKs. Values are:
+---@return integer rawcode @The first value returned is the raw code, not the new 'reset info' code which was introduced in recent SDKs. Values are:
 --- - 1, power-on
 --- - 2, reset (software?)
 --- - 3, hardware reset via reset pin
 --- - 4, WDT reset (watchdog timeout)
----@return integer reason @"The second value returned is the extended reset cause.  \n Values are:"
+---@return integer reason @The second value returned is the extended reset cause. Values are:
 --- - 0, power-on
 --- - 1, hardware watchdog reset
 --- - 2, exception reset
@@ -45,9 +44,16 @@ node.task = {}
 --- - 4, software restart
 --- - 5, wake from deep sleep
 --- - 6, external reset
----In case of extended reset cause 3 (exception reset),\
----additional values are returned containing the crash information.\
----These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
+---
+---In general, the extended reset cause supercedes the raw code. The raw code is kept for backwards compatibility only.\
+---For new applications it is highly recommended to use the extended reset cause instead.
+---In case of extended reset cause 3 (exception reset), additional values are returned containing the crash information. These are, in order, EXCCAUSE, EPC1, EPC2, EPC3, EXCVADDR, and DEPC.
+---@return integer|nil EXCCAUSE #Exception Cause
+---@return integer|nil EPC1 #additional CPU register
+---@return integer|nil EPC2 #additional CPU register
+---@return integer|nil EPC3 #additional CPU register
+---@return integer|nil EXCVADDR #an invalid memory location address which was written/read
+---@return integer|nil DEPC
 ---@nodiscard
 function node.bootreason() end
 
@@ -110,7 +116,7 @@ function node.flashsize() end
 function node.getcpufreq() end
 
 ---Get the current LFS and SPIFFS partition information.
----@return { lfs_addr:number, lfs_size:number, spiffs_addr:number, spiffs_size:number } @"An array containing entries for **lfs_addr, lfs_size,  \n spiffs_addr** and **spiffs_size**. The address values are offsets  \n relative to the start of the Flash memory."
+---@return { lfs_addr:number, lfs_size:number, spiffs_addr:number, spiffs_size:number } @"An array containing entries for **lfs_addr, lfs_size, spiffs_addr** and **spiffs_size**.  \nThe address values are offsets relative to the start of the Flash memory."
 ---@nodiscard
 function node.getpartitiontable() end
 
@@ -166,9 +172,12 @@ function node.LFS.get(modulename) end
 ---@nodiscard
 function node.LFS.list() end
 
----Reload LFS with the flash image provided.
----@param imageName string|"" @The name of a image file in the filesystem to be loaded into the LFS.
----@return any|nil @"In the case when the imagename is a valid LFS image, this is expanded and  \n loaded into flash, and the ESP is then immediately rebooted, *so control is not returned to  \n the calling Lua application* in the case of a successful reload. The reload process internally  \n makes multiple passes through the LFS image file. The first pass validates the file and header  \n formats and detects many errors. If any is detected then an error string is returned."
+---Reload LFS with the flash image provided. Flash images can be generated
+---on the host machine using the `luac.cross`command.
+---@param imageName string @The name of a image file in the filesystem to be loaded into the LFS.
+---@return string|nil @
+--- - In the case when the `imagename` is a valid LFS image, this is expanded and loaded into flash, and the ESP is then immediately rebooted, *so control is not returned to the calling Lua application* in the case of a successful reload.
+--- - The reload process internally makes multiple passes through the LFS image file. The first pass validates the file and header formats and detects many errors. If any is detected then an error string is returned.
 function node.LFS.reload(imageName) end
 
 ---Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)
