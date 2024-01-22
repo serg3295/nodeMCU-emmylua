@@ -34,7 +34,7 @@ function file_lfs.rename(oldname, newname) end
 ---  - "r+", "w+", "a", "a+": as LFS file is read-only and all these modes\
 ---allow file updates the LFS file is copied to SPIFFS and then it is\
 ---opened with corresponding open mode.
----@return fd LFSfileobject @"LFS file object (Lua table) or SPIFFS file object  \n if file opened ok. `nil` if file not opened, or not exists (read modes)."
+---@return fileObj LFSfileobject @"LFS file object (Lua table) or SPIFFS file object  \n if file opened ok. `nil` if file not opened, or not exists (read modes)."
 ---@nodiscard
 function file_lfs.open(filename, mode) end
 
