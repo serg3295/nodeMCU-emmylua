@@ -5,8 +5,8 @@
 ---@class file
 file = {}
 
----@class fd
-local fd = {}
+---@class fileObj
+local fileObj = {}
 
 ---Change current directory (and drive). This will be used\
 ---when no drive/directory is prepended to filenames.
@@ -79,7 +79,7 @@ function file.on(event, callback) end
 ---|  "r+" #update mode, all previous data is preserved
 ---|  "w+" #update mode, all previous data is erased
 ---|  "a+" #append update mode, previous data is preserved, writing is only allowed at the end of file
----@return fd fileobject @if file opened ok. `nil` if file not opened, or not exists (read modes).
+---@return fileObj fileobject @if file opened ok. `nil` if file not opened, or not exists (read modes).
 ---@nodiscard
 function file.open(filename, mode) end
 
@@ -123,21 +123,21 @@ function file.close() end
 
 ---Closes the open file, if any.
 ---@return nil
-function fd:close() end
+function fileObj:close() end
 
 ---Flushes any pending writes to the file system,\
 ---ensuring no data is lost on a restart. Closing\
----the open file using `file.close()/fd:close()`\
+---the open file using `file.close()/fileObj:close()`\
 ---performs an implicit flush as well.
 ---@return nil
 function file.flush() end
 
 ---Flushes any pending writes to the file system,\
 ---ensuring no data is lost on a restart. Closing\
----the open file using `file.close()/fd:close()`\
+---the open file using `file.close()/fileObj:close()`\
 ---performs an implicit flush as well.
 ---@return nil
-function fd:flush() end
+function fileObj:flush() end
 
 ---Read content from the open file.
 ---@param n_or_char? integer @(optional) >
@@ -163,7 +163,7 @@ function file.read(n_or_char) end
 ---FILE_READ_CHUNK bytes have been read, or EOF is reached.
 ---@return string|nil @File content as a string, or `nil` when EOF
 ---@nodiscard
-function fd:read(n_or_char) end
+function fileObj:read(n_or_char) end
 
 ---Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.\
 ---If the next line is longer than 1024, this function only returns the first 1024 bytes.
@@ -175,7 +175,7 @@ function file.readline() end
 ---If the next line is longer than 1024, this function only returns the first 1024 bytes.
 ---@return string|nil @File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 ---@nodiscard
-function fd:readline() end
+function fileObj:readline() end
 
 ---@alias seekwhence_f string
 ---| "set" #Base is position 0 (beginning of the file)
@@ -198,7 +198,7 @@ function file.seek(whence, offset) end
 ---@param offset? integer @(optional) default 0
 ---@return integer|nil @the resulting file position, or `nil` on error
 ---@nodiscard
-function fd:seek(whence, offset) end
+function fileObj:seek(whence, offset) end
 
 ---Write a string to the open file.
 ---@param str string @content to be write to file
@@ -208,7 +208,7 @@ function file.write(str) end
 ---Write a string to the open file.
 ---@param str string @content to be write to file
 ---@return boolean|nil @`true` if write ok, `nil` on error
-function fd:write(str) end
+function fileObj:write(str) end
 
 ---Write a string to the open file and append '\n' at the end.
 ---@param str string @content to be write to file
@@ -218,4 +218,4 @@ function file.writeline(str) end
 ---Write a string to the open file and append '\n' at the end.
 ---@param str string @content to be write to file
 ---@return boolean|nil @`true` if write ok, `nil` on error
-function fd:writeline(str) end
+function fileObj:writeline(str) end
