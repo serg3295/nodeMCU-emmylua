@@ -27,8 +27,8 @@ gpio = {}
 ---@class GpioConfig
 ---@field gpio integer|table
 ---@field dir integer
----@field opendrain integer
----@field pull integer
+---@field opendrain? integer
+---@field pull? integer
 
 ---Configure GPIO mode for one or more pins.
 ---@param tbl GpioConfig @List of configuration tables:
