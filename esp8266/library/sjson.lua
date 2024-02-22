@@ -12,19 +12,19 @@ local encoder = {}
 ---@class decoder
 local decoder = {}
 
----@class SjsonCfg1
----@field depth integer
----@field null string
+---@class SjsonCfgE
+---@field depth? integer the maximum encoding depth needed to encode the table
+---@field null? string the string value to treat as null
 
----@class SjsonCfg2
----@field depth integer
----@field null string
----@field metatable table
+---@class SjsonCfgD
+---@field depth? integer the maximum encoding depth needed to encode the table
+---@field null? string the string value to treat as null
+---@field metatable? table a table to use as the metatable for all the new tables in the returned object
 
 ---This creates an encoder object that can convert a Lua object\
 ---into a JSON encoded string.
 ---@param tbl table @data to encode
----@param opts? SjsonCfg1 @an optional table of options. The possible entries are:
+---@param opts? SjsonCfgE @an optional table of options. The possible entries are:
 --- - **depth** - the maximum encoding depth needed to encode the table.\
 ---The default is 20.
 --- - **null** - the string value to treat as null.
@@ -40,7 +40,7 @@ function encoder:read(size) end
 
 ---Encode a Lua table to a JSON string.
 ---@param tbl table @data to encode
----@param opts? SjsonCfg1 @an optional table of options. The possible entries are:
+---@param opts? SjsonCfgE @an optional table of options. The possible entries are:
 --- - **depth** - the maximum encoding depth needed to encode the table.\
 ---The default is 20.
 --- - **null** - the string value to treat as null.
@@ -49,7 +49,7 @@ function encoder:read(size) end
 function sjson.encode(tbl, opts) end
 
 ---This makes a decoder object that can parse a JSON encoded string into a Lua object.
----@param opts? SjsonCfg2 @an optional table of options. The possible entries are:
+---@param opts? SjsonCfgD @an optional table of options. The possible entries are:
 --- - **depth** - the maximum encoding depth needed to encode the table. The default is 20.
 --- - **null** - the string value to treat as null.
 --- - **metatable** - a table to use as the metatable for all the new tables in the returned object.
@@ -70,7 +70,7 @@ function decoder:result() end
 
 ---Decode a JSON string to a Lua table.
 ---@param str string @JSON string to decode
----@param opts? SjsonCfg2 @n optional table of options. The possible entries are:
+---@param opts? SjsonCfgD @n optional table of options. The possible entries are:
 --- - **depth** - the maximum encoding depth needed to encode the table.\
 ---The default is 20.
 --- - **null** - the string value to treat as null.
