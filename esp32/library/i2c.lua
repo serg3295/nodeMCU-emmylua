@@ -3,6 +3,9 @@
 --=== i2c ===
 
 ---@class i2c
+---@field FASTPLUS integer
+---@field FAST integer
+---@field SLOW integer
 ---@field TRANSMITTER integer
 ---@field RECEIVER integer
 ---@field SW integer
