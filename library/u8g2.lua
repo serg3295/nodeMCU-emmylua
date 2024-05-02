@@ -337,7 +337,7 @@ function u8g2DispObj:setBitmapMode(is_transparent) end
 function u8g2DispObj:setContrast(value) end
 
 ---Changes the display rotation.
----@param u8g2_cb integer @Display rotation argument.
+---@param u8g2_cb userdata @Display rotation argument.
 ---|`u8g2.R0` #No rotation, landscape
 ---|`u8g2.R1` #90 degree clockwise rotation
 ---|`u8g2.R2` #180 degree clockwise rotation
@@ -358,7 +358,7 @@ function u8g2DispObj:setFlipMode(is_enable) end
 
 ---Define a u8g2 font for the glyph and string drawing functions.\
 ---They can be supplied as strings or compiled into the firmware image.
----@param font number|`u8g2.font_6x10_tf`|`u8g2.font_unifont_t_symbols`
+---@param font userdata|`u8g2.font_6x10_tf`|`u8g2.font_unifont_t_symbols`
 function u8g2DispObj:setFont(font) end
 
 ---Set the drawing direction of all strings or glyphs.
