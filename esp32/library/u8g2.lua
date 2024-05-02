@@ -129,19 +129,19 @@
 ---@field uc1701_ea_dogs102 function
 ---@field uc1701_mini12864 function
 ---fonts
----@field font_6x10_tf number
----@field font_unifont_t_symbols number
+---@field font_6x10_tf userdata
+---@field font_unifont_t_symbols userdata
 ---constants
----@field DRAW_UPPER_RIGHT number
----@field DRAW_UPPER_LEFT number
----@field DRAW_LOWER_RIGHT number
----@field DRAW_LOWER_LEFT number
----@field DRAW_ALL number
----@field MIRROR number
----@field R0 number
----@field R1 number
----@field R2 number
----@field R3 number
+---@field DRAW_UPPER_RIGHT integer
+---@field DRAW_UPPER_LEFT integer
+---@field DRAW_LOWER_RIGHT integer
+---@field DRAW_LOWER_LEFT integer
+---@field DRAW_ALL integer
+---@field MIRROR userdata
+---@field R0 userdata
+---@field R1 userdata
+---@field R2 userdata
+---@field R3 userdata
 u8g2 = {}
 
 ---@class u8g2DispObj
