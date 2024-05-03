@@ -71,7 +71,7 @@ function mqttObj:publish(topic, payload, qos, retain, callback) end
 ---NOTE: When calling `subscribe()` more than once, the last callback function defined\
 ---will be called for ALL subscribe commands.
 ---@return boolean
-function mqttObj: subscribe(topic, qos, callback) end
+function mqttObj:subscribe(topic, qos, callback) end
 
 ---Unsubscribes from one or several topics.
 ---@param topic string @a topic string
