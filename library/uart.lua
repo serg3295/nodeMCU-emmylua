@@ -32,6 +32,7 @@ uart = {}
 ---|`0` #input from UART will not go into Lua interpreter, can accept binary data.
 ---|`1` #input from UART will go into Lua interpreter, and run.
 ---@return nil
+---@overload fun(method, number_or_endChar, callback, run_input)
 function uart.on(id, method, number_or_endChar, callback, run_input) end
 
 ---@class UartCfg
