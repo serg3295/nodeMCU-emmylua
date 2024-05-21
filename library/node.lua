@@ -86,6 +86,7 @@ function node.chipid() end
 
 --- Returns the model of the ESP chip.
 ---@return string @"The chip model as a string, e.g. 'esp32c3'.  \nThis is the string corresponding to the IDF's Kconfig parameter IDF_TARGET."
+---@nodiscard
 function node.chipmodel() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as .lc file.
