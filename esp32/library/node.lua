@@ -78,10 +78,15 @@ node.LFS = {}
 ---@nodiscard
 function node.bootreason() end
 
----Returns the ESP chip ID.
+---Returns the ESP chip ID.\
+---Only available on the base ESP32 model.
 ---@return string @chip ID
 ---@nodiscard
 function node.chipid() end
+
+--- Returns the model of the ESP chip.
+---@return string @"The chip model as a string, e.g. 'esp32c3'.  \nThis is the string corresponding to the IDF's Kconfig parameter IDF_TARGET."
+function node.chipmodel() end
 
 ---Compiles a Lua text file into Lua bytecode, and saves it as .lc file.
 ---@param filename string|".lua" @filename name of Lua text file
