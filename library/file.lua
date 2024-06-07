@@ -188,7 +188,6 @@ function fileObj:readline() end
 ---@param whence? seekwhence_f @(optional) set | cur | end
 ---@param offset? integer @(optional) default 0
 ---@return integer|nil @the resulting file position, or nil on error
----@nodiscard
 function file.seek(whence, offset) end
 
 ---Sets and gets the file position, measured from the beginning of the file,\
@@ -197,7 +196,6 @@ function file.seek(whence, offset) end
 ---@param whence? seekwhence_f @(optional) set | cur | end
 ---@param offset? integer @(optional) default 0
 ---@return integer|nil @the resulting file position, or `nil` on error
----@nodiscard
 function fileObj:seek(whence, offset) end
 
 ---Write a string to the open file.

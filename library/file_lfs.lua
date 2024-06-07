@@ -66,7 +66,6 @@ function file_lfs.readline() end
 ---@param offset? integer @(optional) default 0
 --- If no parameters are given, the function simply returns the current file offset.
 ---@return integer|nil @the resulting file position, or `nil` on error
----@nodiscard
 function file_lfs.seek(whence, offset) end
 
 ---Get attribtues of a file or directory in a table.
