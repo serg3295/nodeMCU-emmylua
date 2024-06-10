@@ -6,14 +6,14 @@
 file_lfs = {}
 
 ---Lists all files in the file system. It works almost in the same way as `file.list()`
----@param pattern? any @(optional) only files matching the Lua pattern will be returned
----@param SPIFFs_only? any @"(optional) if not `nil` LFS files won't be included in the result  \n (LFS files are returned only if the parameter is `nil`)"
+---@param pattern? string @(optional) only files matching the Lua pattern will be returned
+---@param SPIFFS_only? any @"(optional) if not `nil` LFS files won't be included in the result  \n (LFS files are returned only if the parameter is `nil`)"
 ---@return table @a Lua table which contains all {file name: file size} pairs, if no pattern given.
 ---If a pattern is given, only those file names matching the pattern (interpreted as\
 ---a traditional [Lua pattern](https://www.lua.org/pil/20.2.html), not, say, a UNIX shell glob) will be included in the resulting\
 ---table. `file.list` will throw any errors encountered during pattern matching.
 ---@nodiscard
-function file_lfs.list(pattern, SPIFFs_only) end
+function file_lfs.list(pattern, SPIFFS_only) end
 
 ---Renames a file. If a file is currently open, it will be closed first.\
 ---It works almost in the same way as `file.rename()`
@@ -26,7 +26,7 @@ function file_lfs.rename(oldname, newname) end
 ---cannot be found in LFS not standard `file.open()` function is called.\
 ---LFS file is opened only when "r" access is requested.
 ---@param filename string @file to be opened
----@param mode string @r | w | a | r+ | w+ | a+
+---@param mode? string @(optional) r | w | a | r+ | w+ | a+
 ---  - "r": read mode (the default). If file of the same name is present\
 ---in SPIFFS then SPIFFS file is opened instead of LFS file.
 ---  - "w": write mode - as LFS file is read-only a SPIFFS file of the same\
