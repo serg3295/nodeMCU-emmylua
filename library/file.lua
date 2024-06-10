@@ -80,7 +80,6 @@ function file.on(event, callback) end
 ---|  "w+" #update mode, all previous data is erased
 ---|  "a+" #append update mode, previous data is preserved, writing is only allowed at the end of file
 ---@return fileObj fileobject @if file opened ok. `nil` if file not opened, or not exists (read modes).
----@nodiscard
 function file.open(filename, mode) end
 
 ---Remove a file from the file system.\

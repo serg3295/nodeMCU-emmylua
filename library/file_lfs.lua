@@ -35,7 +35,6 @@ function file_lfs.rename(oldname, newname) end
 ---allow file updates the LFS file is copied to SPIFFS and then it is\
 ---opened with corresponding open mode.
 ---@return fileObj LFSfileobject @"LFS file object (Lua table) or SPIFFS file object  \n if file opened ok. `nil` if file not opened, or not exists (read modes)."
----@nodiscard
 function file_lfs.open(filename, mode) end
 
 --- Read content from the open file. It has the same parameters and returns values as\
