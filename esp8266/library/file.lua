@@ -72,7 +72,7 @@ function file.on(event, callback) end
 
 ---Opens a file for access, potentially creating it (for write modes).
 ---@param filename string @file to be opened
----@param mode string @r | w | a | r+ | w+ | a+
+---@param mode? string @r | w | a | r+ | w+ | a+
 ---|> "r" #read mode
 ---|  "w" #write mode
 ---|  "a" #append mode
