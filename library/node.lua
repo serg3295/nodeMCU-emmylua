@@ -12,6 +12,7 @@
 ---@field wakeup_ULP integer
 node = {}
 
+---@version 5.1
 ---@class node.egc
 ---@field NOT_ACTIVE integer
 ---@field ON_ALLOC_FAILURE integer
@@ -26,8 +27,12 @@ node.egc = {}
 node.task = {}
 
 ---@class node.LFS
----@field time integer
----@field config table
+---@field time integer Returns the Unix timestamp at time of image creation.
+---@field config table Returns the properties `lfs_base`, `lfs_mapped`, `lfs_size`, `lfs_used`.
+---@field get function|nil
+---@field list table|nil
+---@field reload unknown
+---@field [string] function|nil
 node.LFS = {}
 
 ---Returns the boot reason and extended reset info.
@@ -177,10 +182,9 @@ function node.LFS.list() end
 
 ---Reload LFS with the flash image provided. Flash images can be generated
 ---on the host machine using the `luac.cross`command.
----@param imageName string @The name of a image file in the filesystem to be loaded into the LFS.
----@return string|nil @
 --- - In the case when the `imagename` is a valid LFS image, this is expanded and loaded into flash, and the ESP is then immediately rebooted, *so control is not returned to the calling Lua application* in the case of a successful reload.
 --- - The reload process internally makes multiple passes through the LFS image file. The first pass validates the file and header formats and detects many errors. If any is detected then an error string is returned.
+---@param imageName string @The name of a image file in the filesystem to be loaded into the LFS.
 function node.LFS.reload(imageName) end
 
 ---Submits a string to the Lua interpreter.\
