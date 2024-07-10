@@ -61,6 +61,8 @@ function server:close() end
 ---Listen on port from IP address.
 ---@overload fun(self: server, callback: fun(netsocket: socket)): nil
 ---@overload fun(self: server, port: integer, callback: fun(netsocket: socket)): nil
+---@overload fun(self: server, ip: string, callback: fun(netsocket: socket)): nil
+---@overload fun(self: server, port: integer, ip: string, callback: fun(netsocket: socket)): nil
 ---@param port? integer @(optional) number, can be omitted (random port will be chosen)
 ---@param ip? string @(optional) IP address string, can be omitted
 ---@param callback fun(netsocket: socket) @"`function(net.socket)`, pass to caller function as param if  \n a connection is created successfully"
