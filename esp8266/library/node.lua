@@ -74,8 +74,12 @@ function node.chipid() end
 function node.compile(filename) end
 
 ---Enters deep sleep mode, wakes up when timed out.
----@param us integer @"number (integer) or `nil`, sleep time in micro second.  \n If *us* == 0, it will sleep forever. If *us* == nil, will not set sleep time."
----@param option integer @"number (integer) or `nil`. If `nil`, it will use last alive setting  \n as default option."
+---@overload fun(): nil
+---@overload fun(us: integer): nil
+---@overload fun(us: integer, option: integer): nil
+---@overload fun(us: integer, option: integer, instant: integer): nil
+---@param us? integer @"number (integer) or `nil`, sleep time in micro second.  \n If *us* == 0, it will sleep forever. If *us* == nil, will not set sleep time."
+---@param option? integer @"number (integer) or `nil`. If `nil`, it will use last alive setting  \n as default option."
 --- - 0 , init data byte 108 is valuable
 --- - \>0, init data byte 108 is valueless
 --- - 0, RF_CAL or not after deep-sleep wake up, depends on init data byte 108
@@ -83,7 +87,7 @@ function node.compile(filename) end
 --- - 2, no RF_CAL after deep-sleep wake up, there will only be small current
 --- - 4, disable RF after deep-sleep wake up, just like modem sleep,\
 ---there will be the smallest current
----@param instant integer @"number (integer) or `nil`. If present and non-zero, the chip  \n will enter Deep-sleep immediately and will not wait for the Wi-Fi core to be shutdown."
+---@param instant? integer @"number (integer) or `nil`. If present and non-zero, the chip  \n will enter Deep-sleep immediately and will not wait for the Wi-Fi core to be shutdown."
 ---@return nil
 function node.dsleep(us, option, instant) end
 
