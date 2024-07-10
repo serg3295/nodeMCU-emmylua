@@ -100,13 +100,13 @@ function node.chipmodel() end
 function node.compile(filename) end
 
 ---@class DsleepCfg
----@field secs number
----@field us number
----@field gpio number|table
----@field level number
----@field isolate table
----@field pull boolean
----@field touch boolean
+---@field secs? number
+---@field us? number
+---@field gpio? number|table
+---@field level? number
+---@field isolate? table
+---@field pull? boolean
+---@field touch? boolean
 
 ---Enters deep sleep mode.\
 --- *@param* `usecs` - For compatibility, a `number` parameter `usecs` can be supplied instead of\
