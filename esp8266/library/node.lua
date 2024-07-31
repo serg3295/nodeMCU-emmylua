@@ -135,8 +135,8 @@ function node.getpartitiontable() end
 function node.heap() end
 
 ---Returns information about hardware, software version and build configuration.
----@param group? string|"hw"|"sw_version"|"build_config" @(optional) A designator for a group of properties.
----@return any @If a group is given the return value will be a table containing the following elements:
+---@param group? string|"hw"|"sw_version"|"build_config"|"lfs" @(optional) A designator for a group of properties.
+---@return table @If a group is given the return value will be a table containing the following elements:
 --- - for group = `"hw"`
 ---   - **chip_id** (number)
 ---   - **flash_id** (number)
@@ -161,6 +161,11 @@ function node.heap() end
 ---   - **lfs_size** (number) as defined at build time
 ---   - **modules** (string) comma separated list
 ---   - **number_type** (string) integer or float
+--- - for `group` = `"lfs"`
+---   - **lfs_base** (number) Flash offset of selected LFS region
+---   - **lfs_mapped** (number) Mapped memory address of selected LFS region
+---   - **lfs_size** (number) size of selected LFS region
+---   - **lfs_used** (number) actual size used by current LFS image
 ---@nodiscard
 function node.info(group) end
 
