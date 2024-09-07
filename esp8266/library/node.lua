@@ -188,9 +188,10 @@ function node.LFS.list() end
 
 ---Reload LFS with the flash image provided. Flash images can be generated
 ---on the host machine using the `luac.cross`command.
+---@param imageName string @The name of a image file in the filesystem to be loaded into the LFS.
+---@return unknown|string #
 --- - In the case when the `imagename` is a valid LFS image, this is expanded and loaded into flash, and the ESP is then immediately rebooted, *so control is not returned to the calling Lua application* in the case of a successful reload.
 --- - The reload process internally makes multiple passes through the LFS image file. The first pass validates the file and header formats and detects many errors. If any is detected then an error string is returned.
----@param imageName string @The name of a image file in the filesystem to be loaded into the LFS.
 function node.LFS.reload(imageName) end
 
 ---Redirects the Lua interpreter to a `stdout` pipe when a CB function is specified (See `pipe` module)
