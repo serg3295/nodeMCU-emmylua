@@ -165,10 +165,10 @@ function wifi.sta.on(event, callback) end
 function wifi.sta.getmac() end
 
 ---@class ScanCfg
----@field ssid string
----@field bssid string
----@field channel integer
----@field hidden integer
+---@field ssid? string
+---@field bssid? string
+---@field channel? integer
+---@field hidden? integer
 
 ---Scan for available networks.
 ---@param cfg ScanCfg @table that contains scan configuration:
