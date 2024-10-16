@@ -6,6 +6,10 @@
 mqtt = {}
 
 ---@class mqttObj
+---Registers a callback function for an event.
+---@field on fun(self: mqttObj, event: "connect", callback: fun(client: mqttObj))
+---@field on fun(self: mqttObj, event: "message", callback: fun(client: mqttObj, topic: string, message: string))
+---@field on fun(self: mqttObj, event: "offline", callback: fun(client: mqttObj))
 local mqttObj = {}
 
 ---Creates a mqttObj client.
@@ -22,9 +26,9 @@ function mqtt.Client(clientid, keepalive, username, password, cleansession) end
 function mqttObj:close() end
 
 ---Connects to the broker specified by the given host, port, and secure options.
----@overload fun(self, host: string, conn_est: function, conn_notest: function): boolean
----@overload fun(self, host: string, port: integer, secure: integer|table, conn_est: function): boolean
----@overload fun(self, host: string, conn_est: function): boolean
+---@overload fun(self: mqttObj, host: string, conn_est: function, conn_notest: function): boolean
+---@overload fun(self: mqttObj, host: string, port: integer, secure: integer|table, conn_est: function): boolean
+---@overload fun(self: mqttObj, host: string, conn_est: function): boolean
 ---@param host string @host, domain or IP (string), or schema://host
 ---@param port? integer|`1883` @(optional) broker port (number), default 1883
 ---@param secure? integer|table @(optional) either an interger with **0/1** for `false/true` (default 0), or a table with optional entries
@@ -33,10 +37,10 @@ function mqttObj:close() end
 --- - **client_key** - client private key data in PEM format for SSL mutual authentication.\
 ---Note that both client_cert and client_key have to be provided for mutual authentication.
 ---@param autoreconnect? integer @(optional) **0/1** for `false/true` (default 0). This option is *deprecated*.
----@param conn_est? fun(client:mqttObj) @(optional) `function(client)` callback function for when the connection was established
----@param conn_notest? fun(client:mqttObj, reason:mqtt) @(optional) `function(client, reason)` callback function for when the connection could not be established. No further callbacks should be called.
+---@param conn_est? fun(client: mqttObj) @(optional) `function(client)` callback function for when the connection was established
+---@param conn_not_est? fun(client: mqttObj, reason: mqtt) @(optional) `function(client, reason)` callback function for when the connection could not be established. No further callbacks should be called.
 ---@return boolean
-function mqttObj:connect(host, port, secure, autoreconnect, conn_est, conn_notest) end
+function mqttObj:connect(host, port, secure, autoreconnect, conn_est, conn_not_est) end
 
 ---Setup Last Will and Testament. A broker will publish a message with qos = 0, retain = 0, data = "offline"\
 ---to topic "/lwt" if client does not send keepalive packet.
@@ -48,9 +52,8 @@ function mqttObj:connect(host, port, secure, autoreconnect, conn_est, conn_notes
 function mqttObj:lwt(topic, message, qos, retain) end
 
 ---Registers a callback function for an event.
----@param event string|"connect"|"message"|"offline" @can be "connect", "message" or "offline"
----@param callback fun(client:mqttObj, topic:string, message:string) @`function(client, topic?:string, message?:string)`.
----The first parameter is the client. If event is "message", the 2nd and 3rd param are received topic and message (strings).
+---@param event string
+---@param callback function
 ---@return nil
 function mqttObj:on(event, callback) end
 
@@ -67,7 +70,7 @@ function mqttObj:publish(topic, payload, qos, retain, callback) end
 ---Subscribes to one or several topics.
 ---@param topic string @a topic string
 ---@param qos integer|`0`|`1`|`2` @QoS subscription level, default 0
----@param callback? fun(client:mqttObj) @(optional) `function(client)` fired when subscription(s) succeeded.
+---@param callback? fun(client: mqttObj) @(optional) `function(client)` fired when subscription(s) succeeded.
 ---NOTE: When calling `subscribe()` more than once, the last callback function defined\
 ---will be called for ALL subscribe commands.
 ---@return boolean
@@ -75,7 +78,7 @@ function mqttObj:subscribe(topic, qos, callback) end
 
 ---Unsubscribes from one or several topics.
 ---@param topic string @a topic string
----@param callback? fun(client:mqttObj) @(optional) `function(client)` fired when unsubscription(s) succeeded.
+---@param callback? fun(client: mqttObj) @(optional) `function(client)` fired when unsubscription(s) succeeded.
 ---NOTE: When calling unsubscribe() more than once, the last callback function defined\
 ---will be called for ALL unsubscribe commands.
 ---@return boolean
