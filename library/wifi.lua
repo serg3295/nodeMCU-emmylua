@@ -2,6 +2,73 @@
 
 --=== wifi ===
 
+---@class EventmonReasons
+---@field UNSPECIFIED integer
+---@field AUTH_EXPIRE integer
+---@field AUTH_LEAVE integer
+---@field ASSOC_EXPIRE integer
+---@field ASSOC_TOOMANY integer
+---@field NOT_AUTHED integer
+---@field NOT_ASSOCED integer
+---@field ASSOC_LEAVE integer
+---@field ASSOC_NOT_AUTHED integer
+---@field DISASSOC_PWRCAP_BAD integer
+---@field DISASSOC_SUPCHAN_BAD integer
+---@field IE_INVALID integer
+---@field MIC_FAILURE integer
+---@field ["4WAY_HANDSHAKE_TIMEOUT"] integer
+---@field GROUP_KEY_UPDATE_TIMEOUT integer
+---@field IE_IN_4WAY_DIFFERS integer
+---@field GROUP_CIPHER_INVALID integer
+---@field PAIRWISE_CIPHER_INVALID integer
+---@field AKMP_INVALID integer
+---@field UNSUPP_RSN_IE_VERSION integer
+---@field INVALID_RSN_IE_CAP integer
+---@field ["802_1X_AUTH_FAILED"] integer
+---@field CIPHER_SUITE_REJECTED integer
+---@field BEACON_TIMEOUT integer
+---@field NO_AP_FOUND integer
+---@field AUTH_FAIL integer
+---@field ASSOC_FAIL integer
+---@field HANDSHAKE_TIMEOUT integer
+
+---@class sta_connected_t
+---@field SSID string SSID of access point.
+---@field BSSID string BSSID of access point.
+---@field channel integer The channel the access point is on.
+
+---@class sta_disconnected_t
+---@field SSID string SSID of access point.
+---@field BSSID string BSSID of access point.
+---@field reason EventmonReasons wifi.eventmon.reason.
+
+---@class sta_authmode_change_t
+---@field old_auth_mode integer Old wifi authorization mode.
+---@field new_auth_mode integer New wifi authorization mode.
+
+---@class sta_got_ip_t
+---@field IP string The IP address assigned to the station.
+---@field netmask string Subnet mask.
+---@field gateway string The IP address of the access point the station is connected to.
+
+---@class (exact) sta_dhcp_timeout_t
+
+---@class ap_staconnected_t
+---@field MAC string MAC address of client that has connected.
+---@field AID string SDK provides no details concerning this return value.
+
+---@class ap_stadisconnected_t
+---@field MAC string MAC address of client that has disconnected.
+---@field AID string SDK provides no details concerning this return value.
+
+---@class ap_probereqrecved_t
+---@field MAC string MAC address of the client that is probing the access point.
+---@field RSSI string Received Signal Strength Indicator of client.
+
+---@class wifi_mode_changed_t
+---@field old_mode integer Old WiFi mode.
+---@field new_mode integer New WiFi mode.
+
 ---@class wifi
 ---@field STATION integer
 ---@field SOFTAP integer
@@ -37,17 +104,19 @@ wifi.ap = {}
 wifi.ap.dhcp = {}
 
 ---@class wifi.eventmon
----@field STA_CONNECTED integer
----@field STA_DISCONNECTED integer
----@field STA_AUTHMODE_CHANGE integer
----@field STA_GOT_IP integer
----@field STA_DHCP_TIMEOUT integer
----@field AP_STACONNECTED integer
----@field AP_STADISCONNECTED integer
----@field AP_PROBEREQRECVED integer
----@field WIFI_MODE_CHANGED integer
----@field reason table
-wifi.eventmon = {}
+---@field reason EventmonReasons
+---@field EVENT_MAX integer
+wifi.eventmon = {
+	STA_CONNECTED = 0, ---@alias wifi.eventmon.STA_CONNECTED 0 | `wifi.eventmon.STA_CONNECTED`
+	STA_DISCONNECTED = 1, ---@alias wifi.eventmon.STA_DISCONNECTED 1 | `wifi.eventmon.STA_DISCONNECTED`
+	STA_AUTHMODE_CHANGE = 2, ---@alias wifi.eventmon.STA_AUTHMODE_CHANGE 2 | `wifi.eventmon.STA_AUTHMODE_CHANGE`
+	STA_GOT_IP = 3, ---@alias wifi.eventmon.STA_GOT_IP 3 | `wifi.eventmon.STA_GOT_IP`
+	STA_DHCP_TIMEOUT = 4, ---@alias wifi.eventmon.STA_DHCP_TIMEOUT 4 | `wifi.eventmon.STA_DHCP_TIMEOUT`
+	AP_STACONNECTED = 5, ---@alias wifi.eventmon.AP_STACONNECTED 5 | `wifi.eventmon.AP_STACONNECTED`
+	AP_STADISCONNECTED = 6, ---@alias wifi.eventmon.AP_STADISCONNECTED 6 | `wifi.eventmon.AP_STADISCONNECTED`
+	AP_PROBEREQRECVED = 7, ---@alias wifi.eventmon.AP_PROBEREQRECVED 7 | `wifi.eventmon.AP_PROBEREQRECVED`
+	WIFI_MODE_CHANGED = 8, ---@alias wifi.eventmon.WIFI_MODE_CHANGED 8 | `wifi.eventmon.WIFI_MODE_CHANGED`
+}
 
 ---Gets the current WiFi channel.
 ---@return integer @current WiFi channel
@@ -202,13 +271,12 @@ function wifi.sta.autoconnect(auto) end
 ---@return boolean
 function wifi.sta.changeap(ap_index) end
 
----Clears the currently saved\
----WiFi station configuration,\
----erasing it from the flash.
+---Clears the currently saved WiFi station\
+---configuration, erasing it from the flash.
 ---@return boolean
 function wifi.sta.clearconfig() end
 
----@class StaStationConfig
+---@class StaConfig
 ---@field ssid string
 ---@field pwd? string
 ---@field auto? boolean
@@ -221,7 +289,7 @@ function wifi.sta.clearconfig() end
 ---@field dhcp_timeout_cb? function
 
 ---Sets the WiFi station configuration.
----@param station_config StaStationConfig @table containing configuration data for station
+---@param station_config StaConfig @table containing configuration data for station
 --- - **ssid** string which is less than 32 bytes.
 --- - **pwd**  (Optional) string which is 0-64. Empty string indicates an open WiFi access point.
 --- - **auto** (Optional)
@@ -556,55 +624,66 @@ function wifi.ap.dhcp.start() end
 ---@return boolean @boolean indicating success
 function wifi.ap.dhcp.stop() end
 
----@class EventmonRegTbl
----@field SSID string
----@field BSSID string
----@field channel integer
----@field reason integer
----@field old_mode integer
----@field new_mode integer
----@field IP string
----@field netmask string
----@field gateway string
----@field MAC string
----@field AID string
----@field RSSI string
+---Register callback for WiFi event **STA_CONNECTED**.\
+---Station is connected to access point.
+---@param eventID wifi.eventmon.STA_CONNECTED
+---@param callback fun(T: sta_connected_t)
+function wifi.eventmon.register(eventID, callback) end
 
----Register callbacks for WiFi event monitor.
----@param Event integer|`wifi.eventmon.STA_CONNECTED`|`wifi.eventmon.STA_DISCONNECTED`|`wifi.eventmon.STA_AUTHMODE_CHANGE`|`wifi.eventmon.STA_GOT_IP`|`wifi.eventmon.STA_DHCP_TIMEOUT`|`wifi.eventmon.AP_STACONNECTED`|`wifi.eventmon.AP_STADISCONNECTED`|`wifi.eventmon.AP_PROBEREQRECVED`|`wifi.eventmon.WIFI_MODE_CHANGE` @WiFi event you would like to set a callback for.
----@param callback? fun(T:EventmonRegTbl) @(optional) function(T)
+---Register callback for WiFi event **STA_DISCONNECTED**.\
+---Station was disconnected from access point.
+---@param eventID wifi.eventmon.STA_DISCONNECTED
+---@param callback fun(T: sta_disconnected_t)
+function wifi.eventmon.register(eventID, callback) end
+
+---Register callback for WiFi event **STA_AUTHMODE_CHANGE**\
+---Access point has changed authorization mode.
+---@param eventID wifi.eventmon.STA_AUTHMODE_CHANGE
+---@param callback fun(T: sta_authmode_change_t)
 ---@return nil
----Callback: T: Table returned by event.
---- - *wifi.eventmon.STA_CONNECTED* Station is connected to access point.
----   - **SSID**: SSID of access point.
----   - **BSSID**: BSSID of access point.
----   - **channel**: The channel the access point is on.
---- - *wifi.eventmon.STA_DISCONNECTED*: Station was disconnected from access point.
----   - **SSID**: SSID of access point.
----   - **BSSID**: BSSID of access point.
----   - **reason**: See wifi.eventmon.reason.
---- - *wifi.eventmon.STA_AUTHMODE_CHANGE*: Access point has changed authorization mode.
----   - **old_auth_mode**: Old wifi authorization mode.
----   - **new_auth_mode**: New wifi authorization mode.
---- - *wifi.eventmon.STA_GOT_IP*: Station got an IP address.
----   - **IP**: The IP address assigned to the station.
----   - **netmask**: Subnet mask.
----   - **gateway**: The IP address of the access point the station is connected to.
---- - *wifi.eventmon.STA_DHCP_TIMEOUT*: Station DHCP request has timed out.
----   - Blank table is returned.
---- - *wifi.eventmon.AP_STACONNECTED*: A new client has connected to the access point.
----   - **MAC**: MAC address of client that has connected.
----   - **AID**: SDK provides no details concerning this return value.
---- - *wifi.eventmon.AP_STADISCONNECTED*: A client has disconnected from the access point.
----   - **MAC**: MAC address of client that has disconnected.
----   - **AID**: SDK provides no details concerning this return value.
---- - *wifi.eventmon.AP_PROBEREQRECVED*: A probe request was received.
----   - **MAC**: MAC address of the client that is probing the access point.
----   - **RSSI**: Received Signal Strength Indicator of client.
---- - *wifi.eventmon.WIFI_MODE_CHANGE*: WiFi mode has changed.
----   - **old_auth_mode**: Old WiFi mode.
----   - **new_auth_mode**: New WiFi mode.
-function wifi.eventmon.register(Event, callback) end
+function wifi.eventmon.register(eventID, callback) end
+
+---Register callback for WiFi event **wifi.eventmon.STA_GOT_IP**:\
+---Station got an IP address.
+---@param eventID wifi.eventmon.STA_GOT_IP
+---@param callback fun(T: sta_got_ip_t)
+---@return nil
+function wifi.eventmon.register(eventID, callback) end
+
+---Register callback for WiFi event **wifi.eventmon.STA_DHCP_TIMEOUT**:\
+---Station DHCP request has timed out.
+---@param eventID wifi.eventmon.STA_DHCP_TIMEOUT
+---@param callback fun(T: sta_dhcp_timeout_t)  @Blank table is returned.
+---@return nil
+function wifi.eventmon.register(eventID, callback) end
+
+---Register callback for WiFi event **wifi.eventmon.AP_STACONNECTED**:\
+---A new client has connected to the access point.
+---@param eventID wifi.eventmon.AP_STACONNECTED
+---@param callback fun(T: ap_staconnected_t)
+---@return nil
+function wifi.eventmon.register(eventID, callback) end
+
+---Register callback for WiFi event **wifi.eventmon.AP_STADISCONNECTED**:\
+---A client has disconnected from the access point.
+---@param eventID wifi.eventmon.AP_STADISCONNECTED
+---@param callback fun(T: ap_stadisconnected_t)
+---@return nil
+function wifi.eventmon.register(eventID, callback) end
+
+---Register callback for WiFi event **wifi.eventmon.AP_PROBEREQRECVED**:\
+---A probe request was received.
+---@param eventID wifi.eventmon.AP_PROBEREQRECVED
+---@param callback fun(T: ap_probereqrecved_t)
+---@return nil
+function wifi.eventmon.register(eventID, callback) end
+
+---Register callback for WiFi event **wifi.eventmon.WIFI_MODE_CHANGED**:\
+---WiFi mode has changed.
+---@param eventID wifi.eventmon.WIFI_MODE_CHANGED
+---@param callback fun(T: wifi_mode_changed_t)
+---@return nil
+function wifi.eventmon.register(eventID, callback) end
 
 ---Unregister callbacks for WiFi event monitor
 ---@param Event integer|`wifi.eventmon.STA_CONNECTED`|`wifi.eventmon.STA_DISCONNECTED`|`wifi.eventmon.STA_AUTHMODE_CHANGE`|`wifi.eventmon.STA_GOT_IP`|`wifi.eventmon.STA_DHCP_TIMEOUT`|`wifi.eventmon.AP_STACONNECTED`|`wifi.eventmon.AP_STADISCONNECTED`|`wifi.eventmon.AP_PROBEREQRECVED`|`wifi.eventmon.WIFI_MODE_CHANGED` @WiFi event you would like to remove the callback for.
