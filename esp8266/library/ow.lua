@@ -48,7 +48,10 @@ function ow.read_bytes(pin, size) end
 
 ---Performs a 1-Wire reset cycle.
 ---@param pin integer @1~12, I/O index
----@return integer @"**1** if a device responds with a presence pulse;  \n **0** if there is no device or the bus is shorted or  \n otherwise held low for more than 250 µS"
+---@return integer @>
+--- - **1** if a device responds with a presence pulse;
+--- - **0** if there is no device or the bus is shorted or\
+---otherwise held low for more than 250 µS
 function ow.reset(pin) end
 
 ---Clears the search state so that it will start\
@@ -59,8 +62,10 @@ function ow.reset_search(pin) end
 
 ---Looks for the next device.
 ---@param pin integer @1~12, I/O index
----@param alarm_search? integer @"(optional) 1 / 0,  \n if 0 a regular 0xF0 search is performed(default if parameter is absent),  \nif 1 a 0xEC ALARM SEARCH is performed."
----@return string|nil @"string with length of 8 upon success.  \n It contains the rom code of slave device.  \n Returns `nil` if search was unsuccessful."
+---@param alarm_search? integer @(optional) 1 / 0,
+--- - if **0** a regular *0xF0* search is performed(default if parameter is absent)
+--- - if **1** a *0xEC* ALARM SEARCH is performed.
+---@return string|nil @"string with length of 8 upon success.  \nIt contains the rom code of slave device.  \nReturns `nil` if search was unsuccessful."
 ---@nodiscard
 function ow.search(pin, alarm_search) end
 
@@ -89,11 +94,11 @@ function ow.skip(pin) end
 ---@return nil
 function ow.target_search(pin, family_code) end
 
----Writes a byte. If power is 1 then the wire is held high at the end\
----for parasitically powered devices.
+---Writes a byte. If power is **1** then the wire is held high at the end for parasitically powered devices.\
+---You are responsible for eventually depowering it by calling `ow.depower()` or doing another read or write.
 ---@param pin integer @1~12, I/O index
 ---@param v integer @byte to be written to slave device
----@param power integer @"**1** for wire being held high for parasitically  \n powered devices"
+---@param power integer @**1** for wire being held high for parasitically powered devices
 ---@return nil
 function ow.write(pin, v, power) end
 

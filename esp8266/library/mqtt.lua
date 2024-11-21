@@ -39,7 +39,7 @@ local mqttObj = {}
 ---@nodiscard
 function mqtt.Client(clientid, keepalive, username, password, cleansession, max_message_length) end
 
----Closes connection to the broker.
+---Schedules a clean teardown of the connection.
 ---@return nil
 function mqttObj:close() end
 
@@ -49,15 +49,15 @@ function mqttObj:close() end
 ---@param secure? boolean @(optional) if `true`, use TLS.
 ---@param conn_est? fun(client: mqttObj) @(optional) `function(client)` callback function for when the connection was established
 ---@param conn_not_est? fun(client: mqttObj, reason: mqtt) @"(optional) `function(client, reason)` callback function for when the connection could not be established.  \n No further callbacks should be called."
----@return nil
+---@return nil @use callbacks to observe the outcome.
 function mqttObj:connect(host, port, secure, conn_est, conn_not_est) end
 
 ---Setup [Last Will and Testament](http://www.hivemq.com/blog/mqtt-essentials-part-9-last-will-and-testament).
----@param topic string @the topic to publish to (string)
+---@param topic string @the topic to publish to
 ---@param message string @the message to publish, (buffer or string)
 ---@param qos? integer|`0`|`1`|`2` @(optional) QoS level, default 0
 ---@param retain? integer|`0`|`1` @(optional) retain flag, default 0
----@return nil @`nil`; use callbacks to observe the outcome.
+---@return nil
 function mqttObj:lwt(topic, message, qos, retain) end
 
 ---Registers a callback function for an event.

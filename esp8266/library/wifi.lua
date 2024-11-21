@@ -4,26 +4,26 @@
 
 ---@class EventmonReasons
 ---@field UNSPECIFIED integer
----@field AUTH_EXPIRE integer
----@field AUTH_LEAVE integer
----@field ASSOC_EXPIRE integer
----@field ASSOC_TOOMANY integer
----@field NOT_AUTHED integer
----@field NOT_ASSOCED integer
----@field ASSOC_LEAVE integer
----@field ASSOC_NOT_AUTHED integer
----@field DISASSOC_PWRCAP_BAD integer
----@field DISASSOC_SUPCHAN_BAD integer
----@field IE_INVALID integer
----@field MIC_FAILURE integer
+---@field AUTH_EXPIRE integer Previous authentication no longer valid
+---@field AUTH_LEAVE integer Deauthenticated because sending station is leaving (or has left) independent basic service set (IBSS) or extended service set (ESS)
+---@field ASSOC_EXPIRE integer Disassociated due to inactivity
+---@field ASSOC_TOOMANY integer Disassociated because access point (AP) unable to handle all currently associated stations
+---@field NOT_AUTHED integer Class 2 frame received from nonauthenticated station
+---@field NOT_ASSOCED integer Class 3 frame received from nonassociated station
+---@field ASSOC_LEAVE integer Disassociated because sending station is leaving (or has left) basic service set (BSS)
+---@field ASSOC_NOT_AUTHED integer Station requesting association or reassociation not authenticated with responding station
+---@field DISASSOC_PWRCAP_BAD integer Disassociated because of unacceptable information in the power capability element
+---@field DISASSOC_SUPCHAN_BAD integer Disassociated because of unacceptable information in the supported channels element
+---@field IE_INVALID integer Invalid information (Doesn't follow 802.11 standard)
+---@field MIC_FAILURE integer Message integrity code (MIC) failure
 ---@field ["4WAY_HANDSHAKE_TIMEOUT"] integer
----@field GROUP_KEY_UPDATE_TIMEOUT integer
----@field IE_IN_4WAY_DIFFERS integer
+---@field GROUP_KEY_UPDATE_TIMEOUT integer Group-key handshake timeout
+---@field IE_IN_4WAY_DIFFERS integer Information element in 4-way handshake different from association request, reassociation request, probe response, or beacon frame
 ---@field GROUP_CIPHER_INVALID integer
 ---@field PAIRWISE_CIPHER_INVALID integer
----@field AKMP_INVALID integer
----@field UNSUPP_RSN_IE_VERSION integer
----@field INVALID_RSN_IE_CAP integer
+---@field AKMP_INVALID integer Invalid authentication and key management protocol (AKMP)
+---@field UNSUPP_RSN_IE_VERSION integer Unsupported robust security network (RSN) information element version
+---@field INVALID_RSN_IE_CAP integer Invalid RSN information element capabilities
 ---@field ["802_1X_AUTH_FAILED"] integer
 ---@field CIPHER_SUITE_REJECTED integer
 ---@field BEACON_TIMEOUT integer
@@ -70,10 +70,10 @@
 ---@field new_mode integer New WiFi mode.
 
 ---@class wifi
----@field STATION integer
----@field SOFTAP integer
----@field STATIONAP integer
----@field NULLMODE integer
+---@field STATION integer when the device is connected to a WiFi router
+---@field SOFTAP integer when the device is acting only as an access point.
+---@field STATIONAP integer is the combination of **wifi.STATION** and **wifi.SOFTAP**. It allows you to create a local WiFi connection and connect to another WiFi router.
+---@field NULLMODE integer changing WiFi mode to **NULL_MODE** will put wifi into a low power state similar to **MODEM_SLEEP**, provided `wifi.nullmodesleep(false)` has not been called.
 ---@field PHYMODE_B integer
 ---@field PHYMODE_G integer
 ---@field PHYMODE_N integer
