@@ -52,7 +52,7 @@ function ow.read_bytes(pin, size) end
 ---Performs a 1-Wire reset cycle.
 ---@param pin integer @IO index
 ---@return integer @>
---- - **1** if a device responds with a presence pulse;\
+--- - **1** if a device responds with a presence pulse;
 --- - **0** if there is no device or the bus is shorted or\
 ---otherwise held low for more than 250 µS
 function ow.reset(pin) end
@@ -94,12 +94,11 @@ function ow.skip(pin) end
 ---@return nil
 function ow.target_search(pin, family_code) end
 
----Writes a byte. If power is 1 then the wire is held high at the end for\
----parasitically powered devices. You are responsible for eventually\
----depowering it by calling `ow.depower()` or doing another read or write.
+---Writes a byte. If power is **1** then the wire is held high at the end for parasitically powered devices.\
+---You are responsible for eventually depowering it by calling `ow.depower()` or doing another read or write.
 ---@param pin integer @IO index
 ---@param v integer @byte to be written to slave device
----@param power integer @1 for wire being held high for parasitically powered devices
+---@param power integer @**1** for wire being held high for parasitically powered devices
 ---@return nil
 function ow.write(pin, v, power) end
 

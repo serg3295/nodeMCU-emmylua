@@ -12,7 +12,7 @@ mqtt = {}
 ---@field on fun(self: mqttObj, event: "offline", callback: fun(client: mqttObj))
 local mqttObj = {}
 
----Creates a mqttObj client.
+---Creates a MQTT client.
 ---@param clientid string @client ID
 ---@param keepalive integer @keepalive seconds
 ---@param username? string @(optional) user name
