@@ -5,8 +5,8 @@
 ---@class file_lfs : file
 file_lfs = {}
 
----@class file_lfs_obj
-local file_lfs_obj = {}
+---@class lfsFileObj
+local lfsFileObj = {}
 
 ---Lists all files in the file system. It works almost in the same way as `file.list()`
 ---@param pattern? string @(optional) only files matching the Lua pattern will be returned
@@ -37,7 +37,7 @@ function file_lfs.rename(oldname, newname) end
 ---  - "r+", "w+", "a", "a+": as LFS file is read-only and all these modes\
 ---allow file updates the LFS file is copied to SPIFFS and then it is\
 ---opened with corresponding open mode.
----@return file_lfs_obj | fileObj | nil @"LFS file object (Lua table) or SPIFFS file object  \n if file opened ok. `nil` if file not opened, or not exists (read modes)."
+---@return lfsFileObj | fileObj | nil @"LFS file object (Lua table) or SPIFFS file object  \n if file opened ok. `nil` if file not opened, or not exists (read modes)."
 function file_lfs.open(filename, mode) end
 
 --- Read content from the open file. It has the same parameters and returns values as\
@@ -60,7 +60,7 @@ function file_lfs.read(n_or_char) end
 ---in the file, `FILE_READ_CHUNK` bytes have been read, or EOF is reached.
 ---@return string|nil @File content as a string, or `nil` when EOF
 ---@nodiscard
-function file_lfs_obj:read(n_or_char) end
+function lfsFileObj:read(n_or_char) end
 
 --- Read the next line from the open file. Lines are defined as zero or more bytes ending with a EOL ('\n') byte.\
 ---If the next line is longer than 1024, this function only returns the first 1024 bytes.\
@@ -74,7 +74,7 @@ function file_lfs.readline() end
 --- It has the same parameters and return values as `file.readline()` / `file.obj:readline()`
 ---@return string @File content in string, line by line, including EOL('\n'). Return `nil` when EOF.
 ---@nodiscard
-function file_lfs_obj:readline() end
+function lfsFileObj:readline() end
 
 --- Sets and gets the file position, measured from the beginning of the file,\
 ---to the position given by offset plus a base specified by the string whence.\
@@ -98,7 +98,7 @@ function file_lfs.seek(whence, offset) end
 ---@param offset? integer @(optional) default 0
 --- If no parameters are given, the function simply returns the current file offset.
 ---@return integer|nil @the resulting file position, or `nil` on error
-function file_lfs_obj:seek(whence, offset) end
+function lfsFileObj:seek(whence, offset) end
 
 ---Get attribtues of a file or directory in a table.
 ---@param filename string @file name
