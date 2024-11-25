@@ -53,9 +53,9 @@ function gpio.serout(pin, start_level, delay_times, cycle_num, callback) end
 ---|"low" #low level
 ---|"high" #high level
 ---|"none" #the interrupt is disabled
----@param callback? fun(level:number, when:number, eventcount:number) @(optional) `function(level, when, eventcount)` when trigger occurs. The parameters are:
+---@param callback? fun(level:number, when:number, eventcount:number):nil @(optional) `function(level, when, eventcount)` when trigger occurs. The parameters are:
 --- - level - The level of the specified pin at the interrupt
---- - when - timestamp of the event
+--- - when - The timestamp of the event. This is in microseconds and has the same base as for **tmr.now()**.
 --- - eventcount - is the number of interrupts that were elided for this callback.
 ---@return nil
 function gpio.trig(pin, type, callback) end
