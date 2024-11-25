@@ -45,13 +45,14 @@ function gpio.read(pin) end
 function gpio.serout(pin, start_level, delay_times, cycle_num, callback) end
 
 ---Establish or clear a callback function to run on interrupt for a pin.
----@param pin integer @1-12, pin to trigger on, IO index.
+---@param pin integer @1-12, pin to trigger on, IO index. Note that pin 0 does not support interrupts.
 ---@param type? string @(optional) If the type is 'none' or omitted then the callback function is removed and the interrupt is disabled.
 ---|"up" #rising edge
 ---|"down" #falling edge
 ---|"both" #both edges
 ---|"low" #low level
 ---|"high" #high level
+---|"none" #the interrupt is disabled
 ---@param callback? fun(level:number, when:number, eventcount:number) @(optional) `function(level, when, eventcount)` when trigger occurs. The parameters are:
 --- - level - The level of the specified pin at the interrupt
 --- - when - timestamp of the event
