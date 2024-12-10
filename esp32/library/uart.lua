@@ -14,6 +14,9 @@
 ---@field MODE_RS485_APP_CONTROL integer
 ---@field MODE_RS485_HALF_DUPLEX integer
 ---@field MODE_IRDA integer
+---@field on fun(method:string):nil
+---@field on fun(method:string, number_or_endChar:integer, callback:function):nil
+---@field on fun(id:integer, method:string, number_or_endChar:integer, callback:function):nil
 uart = {}
 
 ---Sets the callback function to handle UART events. For a UART used by the console, refer to the console module instead.
@@ -31,7 +34,6 @@ uart = {}
 ---
 ---To unregister the callback, provide only the "method" parameter.
 ---@return nil
----@overload fun(method, number_or_endChar, callback, run_input)
 function uart.on(id, method, number_or_endChar, callback) end
 
 ---@class UartCfg
@@ -51,7 +53,7 @@ function uart.on(id, method, number_or_endChar, callback) end
 ---@param databits integer|`8`|`7`|`6`|`5` @one of 5, 6, 7, 8
 ---@param parity integer|`uart.PARITY_NONE`|`uart.PARITY_ODD`|`uart.PARITY_EVEN` @none | odd | even
 ---@param stopbits integer|`uart.STOPBITS_1`|`uart.STOPBITS_1_5`|`uart.STOPBITS_2` @1 | 1.5 | 2
----@param pins integer|UartCfg @table with the following entries:
+---@param pins UartCfg @table with the following entries:
 --- - **tx** int. TX pin. Required
 --- - **rx** int. RX pin. Required
 --- - **cts** in. CTS pin. Optional
@@ -61,15 +63,15 @@ function uart.on(id, method, number_or_endChar, callback) end
 --- - **cts_inverse** boolean. Inverse CTS pin. Default: false
 --- - **rts_inverse** boolean. Inverse RTS pin. Default: false
 --- - **flow_control** int. Combination of uart.FLOWCTRL_NONE, uart.FLOWCTRL_CTS, uart.FLOWCTRL_RTS. Default: uart.FLOWCTRL_NONE
----@return number @configured baud rate
+---@return integer @configured baud rate
 function uart.setup(id, baud, databits, parity, stopbits, pins) end
 
 ---Returns the current configuration parameters of the UART.
 ---@param id integer @uart id, except console uart
----@return integer baud
----@return integer databits
----@return integer parity
----@return integer stopbits
+---@return integer baud @one of 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 74880, 115200, 230400, 256000, 460800, 921600, 1843200, 3686400
+---@return integer databits @one of 5, 6, 7, 8
+---@return integer parity @uart.PARITY_NONE, uart.PARITY_ODD, or uart.PARITY_EVEN
+---@return integer stopbits @uart.STOPBITS_1, uart.STOPBITS_1_5, or uart.STOPBITS_2
 ---@nodiscard
 function uart.getconfig(id) end
 
@@ -97,7 +99,7 @@ function uart.setmode(id, mode) end
 ---Wait for any data currently in the UART transmit buffers to be written out.\
 ---It can be useful to call this immediately before a call to `node.sleep()`\
 ---because otherwise data might not get written until after wakeup.
----@param id number @uart id, except console uart
+---@param id integer @uart id, except console uart
 ---@return nil
 function uart.txflush(id) end
 
