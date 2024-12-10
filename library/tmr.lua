@@ -3,10 +3,11 @@
 --=== tmr ===
 
 ---@class tmr
----@field ALARM_SINGLE integer
----@field ALARM_SEMI integer
----@field ALARM_AUTO integer
-tmr = {}
+tmr = {
+	ALARM_SINGLE = 0, -- a one-shot alarm (and no need to call `unregister()`)
+	ALARM_AUTO = 1, -- automatically repeating alarm
+	ALARM_SEMI = 2, -- manually repeating alarm (call `start()` to restart)
+}
 
 ---@class tmrObj
 local tmrObj = {}
@@ -58,9 +59,9 @@ function tmr.ccount() end
 function tmr.create() end
 
 ---@alias tmr_m integer
----|`tmr.ALARM_SINGLE` #a one-shot alarm (and no need to call unregister())
----|`tmr.ALARM_SEMI` #manually repeating alarm
----|`tmr.ALARM_AUTO` #automatically repeating alarm (call start() to restart)
+---|`tmr.ALARM_SINGLE` #**0**; a one-shot alarm (and no need to call unregister())
+---|`tmr.ALARM_AUTO` #**1**; automatically repeating alarm (call start() to restart)
+---|`tmr.ALARM_SEMI` #**2**; manually repeating alarm
 
 ---This is a convenience function combining `tmrObj:register()` and `tmrObj:start()` into a single call.
 ---@param interval number @timer interval in milliseconds. Maximum value is 6870947 (1:54:30.947).
@@ -84,12 +85,13 @@ function tmrObj:register(interval_ms, mode, callback) end
 
 ---Starts or restarts a previously configured timer. If the timer is running the timer is restarted\
 ---only when restart parameter is `true`. Otherwise `false` is returned signaling error.
----@param restart? boolean @optional boolean parameter forcing to restart already running timer
+---@param restart? boolean @(optional) boolean parameter forcing to restart already running timer
 ---@return boolean @`true` if the timer was (re)started, `false` on error
 function tmrObj:start(restart) end
 
 ---Checks the state of a timer.
----@return boolean|integer|nil @"If the specified timer is registered,  \n returns whether it is currently started and its mode.  \n If the timer is not registered, `nil` is returned."
+---@return boolean|nil @If the specified timer is registered, returns whether it is currently started
+---@return integer|nil @and its mode. If the timer is not registered, `nil` is returned.
 function tmrObj:state() end
 
 ---Stops a running timer, but does *not* unregister it.\
