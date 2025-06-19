@@ -10,18 +10,18 @@
 ---@field PULL_UP integer
 ---@field PULL_DOWN integer
 ---@field PULL_UP_DOWN integer
----@field INTR_DISABLE integer
----@field INTR_UP integer
----@field INTR_DOWN integer
----@field INTR_UP_DOWN integer
+---@field INTR_DISABLE integer or nil to disable interrupts on this pin (in which case callback is ignored and should be nil or omitted)
+---@field INTR_UP integer for trigger on rising edge
+---@field INTR_DOWN integer for trigger on falling edge
+---@field INTR_UP_DOWN integer for trigger on both edges
 ---@field INTR_LOW integer
 ---@field INTR_HIGH integer
----@field INTR_NONE integer
----@field DRIVE_0 integer
----@field DRIVE_1 integer
----@field DRIVE_2 integer
----@field DRIVE_DEFAULT integer
----@field DRIVE_3 integer
+---@field INTR_NONE integer changes to the level of this pin will not trigger wake from light sleep
+---@field DRIVE_0 integer weakest drive strength
+---@field DRIVE_1 integer stronger drive strength
+---@field DRIVE_2 integer default drive strength
+---@field DRIVE_DEFAULT integer default drive strength (same as DRIVE_2)
+---@field DRIVE_3 integer maximum drive strength
 gpio = {}
 
 ---@class GpioConfig
@@ -53,9 +53,9 @@ function gpio.config(tbl, ...) end
 ---@nodiscard
 function gpio.read(pin) end
 
----Set the drive strength of a given GPIO pin. The higher the drive strength,\
----the more current can be sourced/sunk from the pin. The exact maximum\
----depends on the power domain of the pin and how much current other pins\
+---Set the drive strength of a given GPIO pin. The higher the drive strength,
+---the more current can be sourced/sunk from the pin. The exact maximum
+---depends on the power domain of the pin and how much current other pins
 ---in that domain are consuming.
 ---@param pin integer @a valid GPIO pin number.
 ---@param strength number @the drive strength to set, one of
